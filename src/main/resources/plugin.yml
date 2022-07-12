@@ -1,0 +1,28 @@
+name: 'SimpleGems'
+version: '${project.version}'
+main: me.refracdevelopment.simplegems.plugin.SimpleGems
+softdepend:
+  - PlaceholderAPI
+  - Skulls
+  - HeadDatabase
+api-version: 1.13
+authors:
+  - "RefracDevelopment"
+  - "Refrac"
+description: 'A new gems economy plugin'
+
+commands:
+  gems:
+    description: Allows you to check how many gems you have.
+  consolegems:
+    description: Allows you to use gems commands from console.
+    aliases:
+      - cgems
+  gemshop:
+    description: Allows you to open the gemshop.
+    aliases:
+      - gemsshop
+  gemsreload:
+    description: Allows you to reload the configuration files.
+  gemstop:
+    description: Allows you to see the top players.

@@ -1,0 +1,52 @@
+# SimpleGems by RefracDevelopment
+#--------------------------------------
+# Placeholders: (PlaceholderAPI placeholders work too)
+# %player% - Get the player's name
+# %gems% - Get the player's formatted gems
+# %gems_decimal% - Get the player's decimal formatted gems
+# %arrow% - Get an arrow for a message
+# %arrow_2% - Get alt arrow for a message
+# %star% - Get a star for a message
+# %circle% - Get a circle for a message
+# PlaceholderAPI:
+# %simplegems_balance% - Get the formatted gems amount
+# %simplegems_balance_decimal% - Get the decimal formatted gems amount
+#--------------------------------------
+gems-menu:
+  enabled: true
+  title: "&e&lGems Shop"
+  size: 36
+  fill:
+    material: STAINED_GLASS_PANE
+    data: 15
+    name: "&7"
+    lore:
+      - ""
+  items:
+    infoandbalanceItem:
+      material: DOUBLE_PLANT
+      data: 0
+      name: "&eWhat is the Gem Shop?"
+      lore:
+        - "&7The Gem Shop sells you items"
+        - "&7you can not get in /shop. Recive"
+        - "&7gems by killing mobs, fishing,"
+        - "&7mining, and cutting down trees."
+        - ""
+        - "&eYour Gem Balance: &b&l%star% &f%gems%"
+      slot: 4
+    '1':
+      material: STICK
+      data: 0
+      name: "&dMagic Stick"
+      lore:
+        - "&7Be special and buy a stick for %cost% gem"
+      message:
+        enabled: true
+        broadcast: true
+        text:
+          - "%prefix% &e%player% bought %item% &efrom &f/gemshop&e."
+      commands:
+        - "give %player% stick 1"
+      cost: 1
+      slot: 10

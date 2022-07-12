@@ -1,0 +1,42 @@
+# SimpleGems by RefracDevelopment
+#--------------------------------------
+# Placeholders: (PlaceholderAPI placeholders work too)
+# %player% - Get the player's name
+# %gems% - Get the player's formatted gems
+# %gems_decimal% - Get the player's decimal formatted gems
+# %arrow% - Get an arrow for a message
+# %arrow_2% - Get alt arrow for a message
+# %star% - Get a star for a message
+# %circle% - Get a circle for a message
+# PlaceholderAPI:
+# %simplegems_balance% - Get the formatted gems amount
+# %simplegems_balance_decimal% - Get the decimal formatted gems amount
+#--------------------------------------
+# This will auto save all online player's gems data in seconds
+save-interval: 1800 # 1800 = 30 Minutes
+# Set to false if you don't want to auto save WARNING: It is HIGHLY recommended leaving this option on
+# to prevent potential saving issues
+save: true
+
+# make sure your credentials are correct
+# never share this with anyone
+mysql:
+  host: "127.0.0.1"
+  username: "root"
+  password: "test"
+  database: "test"
+  port: 3306
+
+gems-top:
+  title: "&e&lGems %arrow2% &6&lTop %entries%"
+  format: "&6&l%number%. &e%player% &7- &e%value%"
+  top-entries: 10
+
+# used for withdrawing gems
+gems-item:
+  material: DIAMOND
+  data: 0
+  name: "&e&lGems &7(Right Click)"
+  lore:
+    - "&7&oRight click to redeem these gems you"
+    - "&7&ohave obtained through your journey"
