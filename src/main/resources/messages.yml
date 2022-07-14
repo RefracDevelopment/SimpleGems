@@ -1,4 +1,4 @@
-# SimpleGems by Refrac
+# SimpleGems by RefracDevelopment
 #--------------------------------------
 # Placeholders: (PlaceholderAPI placeholders work too)
 # %player% - Get the player's name
@@ -17,7 +17,7 @@ messages:
   prefix: "&e&lGems &8&l%arrow%"
   no-permission: "&cYou don't have permission to execute this command."
   reload: "&7Config files reloaded. Changes should be live in-game."
-  save-broadcast: "%prefix% &8&l%arrow% &7Saved all online players data."
+  save-broadcast: "%prefix% &7Saved all online players data."
   invalid-gems: "&c%player% does not have enough gems for you to take."
   invalid-amount: "&cYou provided an invalid amount."
   invalid-player: "&cYou provided an invalid player."
@@ -36,21 +36,22 @@ messages:
   gems-set: "%prefix% &eYou've set &d%player%'s &egems to &c%gems%&e."
   gems-setted: "%prefix% &eYour gems have been set to &c%gems%&e."
   gems-balance: "%prefix% &d%player% &ehas &c%gems% &egems."
-  gems-wipe: "%prefix% &cIf you are sure you want to wipe ALL player data then type &e/gems wipe confirm"
-  gems-wipe-confirm: "%prefix% &eYou've wiped &d%player%'s &egems."
+
+error-messages:
+  kick-profile-not-created: "Error: Profile could not be created."
+  kick-profile-not-loaded: "Error: Player profile could not be loaded!"
 
 # You can customize all the messages in SimpleGems!
 help-page:
   - ""
-  - "&e&l[!] Usage: /gemshop"
-  - "&e&l[!] Usage: /gemstop"
-  - "&e&l[!] Usage: /gems pay <player> <amount>"
-  - "&e&l[!] Usage: /gems withdraw <amount>"
-  - "&e&l[!] Usage: /gems give <player> <amount>"
-  - "&e&l[!] Usage: /gems take <player> <amount>"
-  - "&e&l[!] Usage: /gems set <player> <amount>"
-  - "&e&l[!] Usage: /gems wipe"
+  - "&e&lUsage: /gemshop"
+  - "&e&lUsage: /gemstop"
+  - "&e&lUsage: /gems pay <player> <amount>"
+  - "&e&lUsage: /gems withdraw <amount>"
+  - "&e&lUsage: /gems give <player> <amount>"
+  - "&e&lUsage: /gems take <player> <amount>"
+  - "&e&lUsage: /gems set <player> <amount>"
   - ""
-  - "&e&l[!] &eYou currently have &f&n%gems%&e gems!"
+  - "&e&l&eYou currently have &f&n%gems%&e gems!"
   - "&7&o(( &f&oTip&7&o: You can get gems by doing &e&oevents&7&o! ))"
   - ""

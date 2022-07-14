@@ -18,6 +18,11 @@ save-interval: 1800 # 1800 = 30 Minutes
 # to prevent potential saving issues
 save: true
 
+# Choose your data saving type:
+# MYSQL - Database saving
+# YAML - Local saving in the "UserData" folder
+data-type: "YAML"
+
 # make sure your credentials are correct
 # never share this with anyone
 mysql:

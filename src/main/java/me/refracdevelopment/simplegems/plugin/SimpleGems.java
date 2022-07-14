@@ -28,15 +28,16 @@ import me.refracdevelopment.simplegems.plugin.commands.*;
 import me.refracdevelopment.simplegems.plugin.listeners.DepositListener;
 import me.refracdevelopment.simplegems.plugin.listeners.JoinListener;
 import me.refracdevelopment.simplegems.plugin.manager.ProfileManager;
+import me.refracdevelopment.simplegems.plugin.manager.database.DataType;
 import me.refracdevelopment.simplegems.plugin.manager.database.SQLManager;
 import me.refracdevelopment.simplegems.plugin.menu.GemShop;
 import me.refracdevelopment.simplegems.plugin.utilities.Logger;
 import me.refracdevelopment.simplegems.plugin.utilities.Methods;
 import me.refracdevelopment.simplegems.plugin.utilities.Settings;
 import me.refracdevelopment.simplegems.plugin.utilities.chat.PlaceHolderExpansion;
+import me.refracdevelopment.simplegems.plugin.utilities.files.Config;
 import me.refracdevelopment.simplegems.plugin.utilities.files.Files;
 import org.bstats.bukkit.Metrics;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -47,9 +48,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 @Getter
 @Setter
 public final class SimpleGems extends JavaPlugin {
+
     @Getter
     private static SimpleGems instance;
 
+    private DataType dataType;
     private SQLManager sqlManager;
     private ProfileManager profileManager;
     private GemShop gemShop;
@@ -62,9 +65,23 @@ public final class SimpleGems extends JavaPlugin {
 
         Files.loadFiles(this);
 
-        (this.sqlManager = new SQLManager()).connect();
+        switch (Config.DATA_TYPE.toUpperCase()) {
+            case "MYSQL":
+                this.dataType = DataType.MYSQL;
+                break;
+            case "YAML":
+                this.dataType = DataType.YAML;
+                break;
+            default:
+                this.dataType = DataType.YAML;
+                break;
+        }
 
-        if (this.sqlManager != null && this.sqlManager.getConnection() == null) {
+        if (this.dataType == DataType.MYSQL) {
+            (this.sqlManager = new SQLManager()).connect();
+        }
+
+        if (this.sqlManager != null && this.sqlManager.getConnection() == null && this.dataType == DataType.MYSQL) {
             Logger.ERROR.out("Disabling SimpleGems due to issues with connection for MySQL servers, check your SQL information.");
             this.getServer().getPluginManager().disablePlugin(this);
             return;
@@ -76,7 +93,7 @@ public final class SimpleGems extends JavaPlugin {
         this.loadCommands();
         this.loadListeners();
 
-        if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
+        if (this.getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
             new PlaceHolderExpansion().register();
             Logger.INFO.out("Placeholder API expansion successfully registered.");
         }
@@ -91,31 +108,33 @@ public final class SimpleGems extends JavaPlugin {
         Logger.NONE.out(" &f[*] &6Version&f: &b" + Settings.getVersion);
         Logger.NONE.out(" &f[*] &6Name&f: &b" + Settings.getName);
         Logger.NONE.out(" &f[*] &6Author&f: &b" + Settings.getDeveloper);
-        Logger.SUCCESS.out("SimpleGems is using &2MySQL &aas a database.");
+        if (this.dataType != DataType.YAML) {
+            Logger.SUCCESS.out("SimpleGems is using &2MySQL &aas a database.");
+        }
         Logger.NONE.out("&8&m==&c&m=====&f&m======================&c&m=====&8&m==");
     }
 
     @Override
     public void onDisable() {
         instance = null;
-        for (Player player : Bukkit.getOnlinePlayers())
+        for (Player player : this.getServer().getOnlinePlayers())
             this.profileManager.getProfile(player.getUniqueId()).getData().save();
         this.sqlManager.close();
-        getServer().getScheduler().cancelTasks(this);
+        this.getServer().getScheduler().cancelTasks(this);
     }
 
     private void loadCommands() {
-        getCommand("gems").setExecutor(new GemsCommand(this));
-        getCommand("gems").setTabCompleter(new GemsCommand(this));
-        getCommand("consolegems").setExecutor(new ConsoleGemsCommand(this));
-        getCommand("gemsreload").setExecutor(new GemsReloadCommand(this));
-        getCommand("gemshop").setExecutor(new GemShopCommand(this));
-        getCommand("gemstop").setExecutor(new GemsTopCommand(this));
+        this.getCommand("gems").setExecutor(new GemsCommand(this));
+        this.getCommand("gems").setTabCompleter(new GemsCommand(this));
+        this.getCommand("consolegems").setExecutor(new ConsoleGemsCommand(this));
+        this.getCommand("gemsreload").setExecutor(new GemsReloadCommand(this));
+        this.getCommand("gemshop").setExecutor(new GemShopCommand(this));
+        this.getCommand("gemstop").setExecutor(new GemsTopCommand(this));
     }
 
     private void loadListeners() {
-        getServer().getPluginManager().registerEvents(new JoinListener(this), this);
-        getServer().getPluginManager().registerEvents(new DepositListener(this), this);
+        this.getServer().getPluginManager().registerEvents(new JoinListener(this), this);
+        this.getServer().getPluginManager().registerEvents(new DepositListener(this), this);
         this.gemShop = new GemShop(this);
     }
 }

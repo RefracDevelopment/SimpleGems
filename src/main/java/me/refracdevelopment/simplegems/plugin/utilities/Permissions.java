@@ -45,6 +45,4 @@ public class Permissions {
 
     public static String GEMS_SET = "simplegems.set";
 
-    public static String GEMS_WIPE = "simplegems.wipe";
-
 }

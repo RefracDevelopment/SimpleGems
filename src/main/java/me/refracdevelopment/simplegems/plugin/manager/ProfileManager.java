@@ -34,6 +34,7 @@ import java.util.UUID;
  * Created: 2021-10-8
  */
 public class ProfileManager extends Manager {
+
     private Map<UUID, Profile> profiles = new HashMap<>();
 
     public ProfileManager(SimpleGems plugin) {

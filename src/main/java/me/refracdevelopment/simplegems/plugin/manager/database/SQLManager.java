@@ -43,6 +43,7 @@ import java.util.UUID;
 @Setter
 @RequiredArgsConstructor
 public class SQLManager {
+
     private final SimpleGems plugin = SimpleGems.getInstance();
     private final String host = Files.getConfig().getString("mysql.host");
     private final String username = Files.getConfig().getString("mysql.username");

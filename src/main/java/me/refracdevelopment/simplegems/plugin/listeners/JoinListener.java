@@ -25,6 +25,8 @@ import me.refracdevelopment.simplegems.plugin.SimpleGems;
 import me.refracdevelopment.simplegems.plugin.manager.Profile;
 import me.refracdevelopment.simplegems.plugin.utilities.Manager;
 import me.refracdevelopment.simplegems.plugin.utilities.Settings;
+import me.refracdevelopment.simplegems.plugin.utilities.chat.Color;
+import me.refracdevelopment.simplegems.plugin.utilities.files.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -48,7 +50,7 @@ public class JoinListener extends Manager implements Listener {
         try {
             plugin.getProfileManager().handleProfileCreation(event.getUniqueId(), event.getName());
         } catch (NullPointerException e) {
-            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_FULL, "Error: Profile could not be created");
+            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_FULL, Color.translate(Bukkit.getPlayer(event.getName()), Messages.KICK_PROFILE_NOT_CREATED));
         }
     }
 
@@ -58,14 +60,16 @@ public class JoinListener extends Manager implements Listener {
         Profile profile = plugin.getProfileManager().getProfile(player);
 
         try {
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> profile.getData().load());
+            plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> profile.getData().load());
         } catch (NullPointerException e) {
-            player.kickPlayer("Error: Player profile could not be loaded!");
+            player.kickPlayer(Color.translate(player, Messages.KICK_PROFILE_NOT_LOADED));
         }
 
-        if (!player.getUniqueId().toString().equalsIgnoreCase(Settings.getDevUUID)) return;
-
-        Settings.devMessage(player);
+        if (player.getUniqueId().toString().equalsIgnoreCase(Settings.getDevUUID)) {
+            Settings.devMessage(player);
+        } else if (player.getUniqueId().toString().equalsIgnoreCase(Settings.getDevUUID2)) {
+            Settings.devMessage(player);
+        }
     }
 
     @EventHandler
@@ -74,7 +78,7 @@ public class JoinListener extends Manager implements Listener {
         Profile profile = plugin.getProfileManager().getProfile(player);
 
         if (profile != null) {
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> profile.getData().save());
+            plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> profile.getData().save());
             profile.getData().getGems().remove(player.getUniqueId());
         }
     }

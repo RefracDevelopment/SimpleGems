@@ -2,7 +2,7 @@ package me.refracdevelopment.simplegems.plugin.utilities.chat;
 
 import com.iridium.iridiumcolorapi.IridiumColorAPI;
 import me.clip.placeholderapi.PlaceholderAPI;
-import org.bukkit.Bukkit;
+import me.refracdevelopment.simplegems.plugin.SimpleGems;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -19,7 +19,7 @@ public class Color {
     public static String translate(Player player, String source) {
         source = Placeholders.setPlaceholders(player, source);
 
-        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+        if (SimpleGems.getInstance().getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
             return PlaceholderAPI.setPlaceholders(player, Color.translate(source));
         } else return Color.translate(source);
     }
@@ -41,7 +41,7 @@ public class Color {
         if (placeholders) source = Placeholders.setPlaceholders(sender, source);
 
         if (sender instanceof Player) {
-            if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            if (SimpleGems.getInstance().getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
                 source = PlaceholderAPI.setPlaceholders((Player) sender, source);
             }
         }

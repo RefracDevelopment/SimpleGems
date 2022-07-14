@@ -7,6 +7,8 @@ import java.util.List;
  * Created: 2021-10-8
  */
 public class Messages {
+
+    // General Messages
     public static String PREFIX;
     public static String NO_PERMISSION;
     public static String RELOAD;
@@ -29,11 +31,14 @@ public class Messages {
     public static String GEMS_SET;
     public static String GEMS_SETTED;
     public static String GEMS_BALANCE;
-    public static String GEMS_WIPE;
-    public static String GEMS_WIPE_CONFIRM;
     public static List<String> HELP_PAGE;
 
+    // Error Messages
+    public static String KICK_PROFILE_NOT_CREATED;
+    public static String KICK_PROFILE_NOT_LOADED;
+
     public static void loadMessages() {
+        // General Messages
         PREFIX = Files.getMessages().getString("messages.prefix");
         NO_PERMISSION = Files.getMessages().getString("messages.no-permission");
         RELOAD = Files.getMessages().getString("messages.reload");
@@ -56,8 +61,10 @@ public class Messages {
         GEMS_SET = Files.getMessages().getString("messages.gems-set");
         GEMS_SETTED = Files.getMessages().getString("messages.gems-setted");
         GEMS_BALANCE = Files.getMessages().getString("messages.gems-balance");
-        GEMS_WIPE = Files.getMessages().getString("messages.gems-wipe");
-        GEMS_WIPE_CONFIRM = Files.getMessages().getString("messages.gems-wipe-confirm");
         HELP_PAGE = Files.getMessages().getStringList("help-page");
+
+        // Error Messages
+        KICK_PROFILE_NOT_CREATED = Files.getMessages().getString("error-messages.kick-profile-not-created");
+        KICK_PROFILE_NOT_LOADED = Files.getMessages().getString("error-messages.kick-profile-not-loaded");
     }
 }

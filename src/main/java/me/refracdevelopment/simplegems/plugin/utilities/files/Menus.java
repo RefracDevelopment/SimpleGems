@@ -11,6 +11,7 @@ import java.util.Objects;
  * Created: 2021-10-8
  */
 public class Menus {
+
     // Gems Shop
     public static boolean GEM_SHOP_ENABLED;
     public static String GEM_SHOP_TITLE;

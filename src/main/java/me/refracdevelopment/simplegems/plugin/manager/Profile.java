@@ -34,6 +34,7 @@ import java.util.UUID;
 @Getter
 @Setter
 public class Profile {
+
     private SimpleGems plugin = SimpleGems.getInstance();
 
     private ProfileData data;

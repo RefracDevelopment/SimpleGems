@@ -33,6 +33,7 @@ import java.util.Map;
  * Created: 2021-10-8
  */
 public class GemShop extends Manager {
+
     private final GemShopGUI shop;
     private final Map<String, GemShopItem> items;
 

@@ -23,15 +23,18 @@ package me.refracdevelopment.simplegems.plugin.utilities;
 
 import me.refracdevelopment.simplegems.plugin.SimpleGems;
 import me.refracdevelopment.simplegems.plugin.manager.Profile;
+import me.refracdevelopment.simplegems.plugin.manager.database.DataType;
 import me.refracdevelopment.simplegems.plugin.utilities.chat.Color;
 import me.refracdevelopment.simplegems.plugin.utilities.files.Config;
 import me.refracdevelopment.simplegems.plugin.utilities.files.Messages;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.io.File;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -48,13 +51,16 @@ import java.util.TreeMap;
  */
 public class Methods {
 
+    private static File configFile;
+    private static FileConfiguration config;
+
     /**
      * This will save all online player's data.
      */
     public static void saveTask() {
         if (!Config.AUTO_SAVE_ENABLED) return;
-        Bukkit.getScheduler().runTaskTimerAsynchronously(SimpleGems.getInstance(), () -> {
-            for (Player player : Bukkit.getOnlinePlayers()) {
+        SimpleGems.getInstance().getServer().getScheduler().runTaskTimerAsynchronously(SimpleGems.getInstance(), () -> {
+            for (Player player : SimpleGems.getInstance().getServer().getOnlinePlayers()) {
                 SimpleGems.getInstance().getProfileManager().getProfile(player.getUniqueId()).getData().save();
                 Color.sendMessage(player, Messages.SAVE_BROADCAST, true, true);
             }
@@ -66,39 +72,51 @@ public class Methods {
      * save a specified player's data
      */
     public static void saveOffline(OfflinePlayer player, double amount) {
-        try {
-            PreparedStatement statement = SimpleGems.getInstance().getSqlManager().getConnection().prepareStatement("SELECT * FROM simplegems WHERE uuid=?");
-            statement.setString(1, player.getUniqueId().toString());
+        if (SimpleGems.getInstance().getDataType() == DataType.MYSQL) {
+            try {
+                PreparedStatement statement = SimpleGems.getInstance().getSqlManager().getConnection().prepareStatement("SELECT * FROM simplegems WHERE uuid=?");
+                statement.setString(1, player.getUniqueId().toString());
 
-            ResultSet result = statement.executeQuery();
+                ResultSet result = statement.executeQuery();
 
-            if (result.next()) {
-                PreparedStatement update = SimpleGems.getInstance().getSqlManager().getConnection().prepareStatement("UPDATE simplegems SET "
-                        + "name=?,uuid=?,gems=? WHERE uuid=?");
+                if (result.next()) {
+                    PreparedStatement update = SimpleGems.getInstance().getSqlManager().getConnection().prepareStatement("UPDATE simplegems SET "
+                            + "name=?,uuid=?,gems=? WHERE uuid=?");
 
-                update.setString(1, player.getName());
-                update.setString(2, player.getUniqueId().toString());
-                update.setDouble(3, amount);
-                update.setString(4, player.getUniqueId().toString());
+                    update.setString(1, player.getName());
+                    update.setString(2, player.getUniqueId().toString());
+                    update.setDouble(3, amount);
+                    update.setString(4, player.getUniqueId().toString());
 
-                update.executeUpdate();
-                update.close();
-            } else {
-                PreparedStatement insert = SimpleGems.getInstance().getSqlManager().getConnection().prepareStatement("INSERT INTO simplegems ("
-                        + "name,uuid,gems) VALUES ("
-                        + "?,?,?)");
+                    update.executeUpdate();
+                    update.close();
+                } else {
+                    PreparedStatement insert = SimpleGems.getInstance().getSqlManager().getConnection().prepareStatement("INSERT INTO simplegems ("
+                            + "name,uuid,gems) VALUES ("
+                            + "?,?,?)");
 
-                insert.setString(1, player.getName());
-                insert.setString(2, player.getUniqueId().toString());
-                insert.setDouble(3, amount);
+                    insert.setString(1, player.getName());
+                    insert.setString(2, player.getUniqueId().toString());
+                    insert.setDouble(3, amount);
 
-                insert.executeUpdate();
-                insert.close();
+                    insert.executeUpdate();
+                    insert.close();
+                }
+
+                SimpleGems.getInstance().getSqlManager().close(statement, result);
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-
-            SimpleGems.getInstance().getSqlManager().close(statement, result);
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } else if (SimpleGems.getInstance().getDataType() == DataType.YAML) {
+            loadConfig(player);
+            config.set("data", player.getUniqueId().toString());
+            config.set("data." + player.getUniqueId().toString() + ".name", player.getName());
+            config.set("data." + player.getUniqueId().toString() + ".gems", amount);
+            try {
+                config.save(configFile);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -142,7 +160,7 @@ public class Methods {
     }
     
     public static void setOfflineGems(OfflinePlayer player, double amount) {
-        Bukkit.getScheduler().runTaskAsynchronously(SimpleGems.getInstance(), () -> saveOffline(player, amount));
+        SimpleGems.getInstance().getServer().getScheduler().runTaskAsynchronously(SimpleGems.getInstance(), () -> saveOffline(player, amount));
     }
     
     public static void giveGems(Player player, double amount) {
@@ -206,7 +224,7 @@ public class Methods {
     }
 
     public static void payOfflineGems(Player player, OfflinePlayer target, double amount) {
-        Bukkit.getScheduler().runTaskAsynchronously(SimpleGems.getInstance(), () -> {
+        SimpleGems.getInstance().getServer().getScheduler().runTaskAsynchronously(SimpleGems.getInstance(), () -> {
             if (hasGems(player, amount)) {
                 takeGems(player, amount);
                 giveOfflineGems(target, amount);
@@ -272,6 +290,24 @@ public class Methods {
         item.setDurability(data);
 
         return item.toItemStack();
+    }
+
+    private static void loadConfig(OfflinePlayer player) {
+        File folder = new File(SimpleGems.getInstance().getDataFolder(), "UserData");
+
+        if (!folder.exists()) {
+            folder.mkdirs();
+        }
+
+        configFile = new File(folder, player.getUniqueId().toString() + ".yml");
+        if (!configFile.exists()) {
+            try {
+                configFile.createNewFile();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        config = YamlConfiguration.loadConfiguration(configFile);
     }
 
     public static String formatDec(double amount) {

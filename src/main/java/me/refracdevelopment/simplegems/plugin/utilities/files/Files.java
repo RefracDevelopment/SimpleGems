@@ -12,6 +12,7 @@ import java.io.*;
  * Created: 2021-10-8
  */
 public class Files {
+
     private static File configFile;
     private static FileConfiguration config;
 

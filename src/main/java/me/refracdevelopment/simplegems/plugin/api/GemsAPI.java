@@ -22,28 +22,30 @@
 package me.refracdevelopment.simplegems.plugin.api;
 
 import me.refracdevelopment.simplegems.plugin.SimpleGems;
-import me.refracdevelopment.simplegems.plugin.manager.ProfileData;
+import me.refracdevelopment.simplegems.plugin.api.manager.*;
 import me.refracdevelopment.simplegems.plugin.utilities.Logger;
-import me.refracdevelopment.simplegems.plugin.utilities.Methods;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 /**
  * Author:  Zachary (Refrac) Baldwin
  * Created: 2021-10-8
  */
 public class GemsAPI {
+
     /**
      * The SimpleGemsAPI allows you to hook into SimpleGems to either modify and grab data
      * or to add new features and events.
      */
     public static SimpleGems plugin = SimpleGems.getInstance();
     public static GemsAPI INSTANCE;
+    private final ProfileManager profileManager;
+    private final ProfileData profileData;
 
     public GemsAPI() {
         INSTANCE = this;
-        Logger.NONE.out("&eSimpleGems API has been enabled!");
+        profileManager = new ProfileManager();
+        profileData = new ProfileData();
+        Logger.NONE.out("&eSimpleGemsAPI has been enabled!");
+        Logger.NONE.out("&aWiki & Download: https://refracdevelopment.gitbook.io/simplegems-1/");
     }
 
     /**
@@ -54,150 +56,21 @@ public class GemsAPI {
     }
 
     /**
-     * Used to get a player's profile data.
+     * The #getProfileManager method allows you to use settings inside the
+     * profile management class.
      *
-     * @return Player's profile data
+     * @return player's profile.
      */
-    public ProfileData getProfileData(Player player) {
-        return SimpleGems.getInstance().getProfileManager().getProfile(player.getUniqueId()).getData();
+    public ProfileManager getProfileManager() {
+        return profileManager;
     }
 
     /**
-     * Used to get player gems.
+     * The #getProfileData method allows you to get a player's profile data.
      *
-     * @param player data
-     * @return Player's gems
+     * @return player's profile data.
      */
-    public double getGems(Player player) {
-        if (getProfileData(player) == null) {
-            return 0;
-        }
-
-        return Methods.getGems(player);
-    }
-
-    /**
-     * Used to get offline player gems.
-     *
-     * @param player data
-     * @return Player's gems
-     */
-    public double getOfflineGems(OfflinePlayer player) {
-        return Methods.getOfflineGems(player);
-    }
-
-    /**
-     * This will give gems in item form
-     * to the player who withdraw them or
-     * received them by doing events etc
-     *
-     * @param player player profile
-     * @param amount gems to remove and turn into an item
-     */
-    public void giveGemsItem(Player player, int amount) {
-        if (getProfileData(player) == null) return;
-
-        Methods.giveGemsItem(player, amount);
-    }
-
-    /**
-     * This will give gems in item form
-     * to the player who withdraw them or
-     * received them by doing events etc
-     *
-     * @return an item stack to redeem gems
-     */
-    public ItemStack getGemsItem() {
-        return Methods.getGemsItem();
-    }
-
-    /**
-     * Used to check if the player has enough gems
-     *
-     * @param player player
-     * @param amount gems
-     * @return If the player has enough gems
-     */
-    public boolean hasGems(Player player, double amount) {
-        if (getProfileData(player) == null) return false;
-
-        return Methods.hasGems(player, amount);
-    }
-
-    /**
-     * Used to check if the offline player has enough gems
-     *
-     * @param player player
-     * @param amount gems
-     * @return If the player has enough gems
-     */
-    public boolean hasGems(OfflinePlayer player, double amount) {
-        return Methods.hasOfflineGems(player, amount);
-    }
-
-    /**
-     * Used to give player gems.
-     *
-     * @param player player
-     * @param amount gems
-     */
-    public void giveGems(Player player, double amount) {
-        if (getProfileData(player) == null) return;
-
-        Methods.giveGems(player, amount);
-    }
-
-    /**
-     * Used to give offline player gems.
-     *
-     * @param player player
-     * @param amount gems
-     */
-    public void giveOfflineGems(OfflinePlayer player, double amount) {
-        Methods.giveOfflineGems(player, amount);
-    }
-
-    /**
-     * Used to take player gems.
-     *
-     * @param player player
-     * @param amount gems
-     */
-    public void takeGems(Player player, double amount) {
-        if (getProfileData(player) == null) return;
-
-        Methods.takeGems(player, amount);
-    }
-
-    /**
-     * Used to take offline player gems.
-     *
-     * @param player player
-     * @param amount gems
-     */
-    public void takeOfflineGems(OfflinePlayer player, double amount) {
-        Methods.takeOfflineGems(player, amount);
-    }
-
-    /**
-     * Used to set player gems.
-     *
-     * @param player player
-     * @param amount gems
-     */
-    public void setGems(Player player, double amount) {
-        if (getProfileData(player) == null) return;
-
-        Methods.setGems(player, amount);
-    }
-
-    /**
-     * Used to set offline player gems.
-     *
-     * @param player player
-     * @param amount gems
-     */
-    public void setOfflineGems(OfflinePlayer player, double amount) {
-        Methods.setOfflineGems(player, amount);
+    public ProfileData getProfileData() {
+        return profileData;
     }
 }

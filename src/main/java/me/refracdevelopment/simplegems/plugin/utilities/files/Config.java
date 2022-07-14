@@ -10,9 +10,13 @@ import java.util.Objects;
  * Created: 2021-10-8
  */
 public class Config {
+
     // AutoSave Timer
     public static boolean AUTO_SAVE_ENABLED;
     public static long AUTO_SAVE_INTERVAL;
+
+    // Database
+    public static String DATA_TYPE;
 
     // Gems Top
     public static String GEMS_TOP_TITLE;
@@ -29,6 +33,9 @@ public class Config {
         // AutoSave Timer
         AUTO_SAVE_ENABLED = Files.getConfig().getBoolean("save");
         AUTO_SAVE_INTERVAL = Files.getConfig().getLong("save-interval");
+
+        // Database
+        DATA_TYPE = Files.getConfig().getString("data-type");
 
         // Gems Top
         GEMS_TOP_TITLE = Files.getConfig().getString("gems-top.title");

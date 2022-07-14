@@ -30,7 +30,6 @@ import me.refracdevelopment.simplegems.plugin.utilities.chat.Color;
 import me.refracdevelopment.simplegems.plugin.utilities.files.Files;
 import me.refracdevelopment.simplegems.plugin.utilities.files.Menus;
 import me.refracdevelopment.simplegems.plugin.utilities.files.Messages;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -54,7 +53,7 @@ public class GemsReloadCommand extends Manager implements CommandExecutor {
         }
 
         Files.reloadFiles(plugin);
-        Bukkit.getScheduler().cancelTasks(plugin);
+        plugin.getServer().getScheduler().cancelTasks(plugin);
         Methods.saveTask();
         plugin.getGemShop().getItems().clear();
         for (String item : Menus.GEM_SHOP_ITEMS.getKeys(false))

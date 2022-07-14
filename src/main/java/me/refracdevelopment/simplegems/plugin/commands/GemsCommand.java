@@ -29,7 +29,6 @@ import me.refracdevelopment.simplegems.plugin.utilities.Permissions;
 import me.refracdevelopment.simplegems.plugin.utilities.chat.Color;
 import me.refracdevelopment.simplegems.plugin.utilities.files.Menus;
 import me.refracdevelopment.simplegems.plugin.utilities.files.Messages;
-import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -98,16 +97,16 @@ public class GemsCommand extends Manager implements CommandExecutor, TabComplete
                     return true;
                 }
 
-                if (Bukkit.getPlayer(args[1]) != null) {
-                    Player target = Bukkit.getPlayer(args[1]);
+                if (plugin.getServer().getPlayer(args[1]) != null) {
+                    Player target = plugin.getServer().getPlayer(args[1]);
 
                     double amount = Methods.getGems(target);
 
                     Color.sendMessage(player, Messages.GEMS_BALANCE.replace("%gems%", Methods.format(amount)).replace("%player%", target.getName())
                             .replace("%gems_decimal%", Methods.formatDec(amount)), true, true);
-                } else if (Bukkit.getOfflinePlayer(args[1]) != null && Bukkit.getOfflinePlayer(args[1]).hasPlayedBefore()) {
-                    Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-                        OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
+                } else if (plugin.getServer().getOfflinePlayer(args[1]) != null && plugin.getServer().getOfflinePlayer(args[1]).hasPlayedBefore()) {
+                    plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
+                        OfflinePlayer target = plugin.getServer().getOfflinePlayer(args[1]);
 
                         double amount = Methods.getOfflineGems(target);
 
@@ -138,8 +137,8 @@ public class GemsCommand extends Manager implements CommandExecutor, TabComplete
                     return true;
                 }
 
-                if (Bukkit.getPlayer(args[1]) != null) {
-                    Player target = Bukkit.getPlayer(args[1]);
+                if (plugin.getServer().getPlayer(args[1]) != null) {
+                    Player target = plugin.getServer().getPlayer(args[1]);
 
                     double amount;
 
@@ -153,8 +152,8 @@ public class GemsCommand extends Manager implements CommandExecutor, TabComplete
                     boolean silent = message.contains("-s") && player.hasPermission(Permissions.GEMS_ADMIN);
 
                     Methods.payGems(player, target, amount, silent);
-                } else if (Bukkit.getOfflinePlayer(args[1]) != null && Bukkit.getOfflinePlayer(args[1]).hasPlayedBefore()) {
-                    OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
+                } else if (plugin.getServer().getOfflinePlayer(args[1]) != null && plugin.getServer().getOfflinePlayer(args[1]).hasPlayedBefore()) {
+                    OfflinePlayer target = plugin.getServer().getOfflinePlayer(args[1]);
 
                     double amount;
 
@@ -174,8 +173,8 @@ public class GemsCommand extends Manager implements CommandExecutor, TabComplete
                     return true;
                 }
 
-                if (Bukkit.getPlayer(args[1]) != null) {
-                    Player target = Bukkit.getPlayer(args[1]);
+                if (plugin.getServer().getPlayer(args[1]) != null) {
+                    Player target = plugin.getServer().getPlayer(args[1]);
 
                     double amount;
 
@@ -191,8 +190,8 @@ public class GemsCommand extends Manager implements CommandExecutor, TabComplete
                     Color.sendMessage(player, Messages.GEMS_GIVEN.replace("%gems%", Methods.format(amount)).replace("%player%", target.getName()), true, true);
                     if (message.contains("-s")) return true;
                     Color.sendMessage(target, Messages.GEMS_GAINED.replace("%gems%", Methods.format(amount)), true, true);
-                } else if (Bukkit.getOfflinePlayer(args[1]) != null && Bukkit.getOfflinePlayer(args[1]).hasPlayedBefore()) {
-                    OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
+                } else if (plugin.getServer().getOfflinePlayer(args[1]) != null && plugin.getServer().getOfflinePlayer(args[1]).hasPlayedBefore()) {
+                    OfflinePlayer target = plugin.getServer().getOfflinePlayer(args[1]);
 
                     double amount;
 
@@ -214,8 +213,8 @@ public class GemsCommand extends Manager implements CommandExecutor, TabComplete
                     return true;
                 }
 
-                if (Bukkit.getPlayer(args[1]) != null) {
-                    Player target = Bukkit.getPlayer(args[1]);
+                if (plugin.getServer().getPlayer(args[1]) != null) {
+                    Player target = plugin.getServer().getPlayer(args[1]);
 
                     double amount;
 
@@ -236,8 +235,8 @@ public class GemsCommand extends Manager implements CommandExecutor, TabComplete
                     Color.sendMessage(player, Messages.GEMS_TAKEN.replace("%gems%", Methods.format(amount)).replace("%player%", target.getName()), true, true);
                     if (message.contains("-s")) return true;
                     Color.sendMessage(target, Messages.GEMS_LOST.replace("%gems%", Methods.format(amount)), true, true);
-                } else if (Bukkit.getOfflinePlayer(args[1]) != null && Bukkit.getOfflinePlayer(args[1]).hasPlayedBefore()) {
-                    OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
+                } else if (plugin.getServer().getOfflinePlayer(args[1]) != null && plugin.getServer().getOfflinePlayer(args[1]).hasPlayedBefore()) {
+                    OfflinePlayer target = plugin.getServer().getOfflinePlayer(args[1]);
 
                     double amount;
 
@@ -264,8 +263,8 @@ public class GemsCommand extends Manager implements CommandExecutor, TabComplete
                     return true;
                 }
 
-                if (Bukkit.getPlayer(args[1]) != null) {
-                    Player target = Bukkit.getPlayer(args[1]);
+                if (plugin.getServer().getPlayer(args[1]) != null) {
+                    Player target = plugin.getServer().getPlayer(args[1]);
 
                     double amount;
 
@@ -281,8 +280,8 @@ public class GemsCommand extends Manager implements CommandExecutor, TabComplete
                     Color.sendMessage(player, Messages.GEMS_SET.replace("%gems%", Methods.format(amount)).replace("%player%", target.getName()), true, true);
                     if (message.contains("-s")) return true;
                     Color.sendMessage(target, Messages.GEMS_SETTED.replace("%gems%", Methods.format(amount)), true, true);
-                } else if (Bukkit.getOfflinePlayer(args[1]) != null && Bukkit.getOfflinePlayer(args[1]).hasPlayedBefore()) {
-                    OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
+                } else if (plugin.getServer().getOfflinePlayer(args[1]) != null && plugin.getServer().getOfflinePlayer(args[1]).hasPlayedBefore()) {
+                    OfflinePlayer target = plugin.getServer().getOfflinePlayer(args[1]);
 
                     double amount;
 

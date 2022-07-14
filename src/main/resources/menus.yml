@@ -29,9 +29,7 @@ gems-menu:
       name: "&eWhat is the Gem Shop?"
       lore:
         - "&7The Gem Shop sells you items"
-        - "&7you can not get in /shop. Recive"
-        - "&7gems by killing mobs, fishing,"
-        - "&7mining, and cutting down trees."
+        - "&7you can not get in /shop."
         - ""
         - "&eYour Gem Balance: &b&l%star% &f%gems%"
       slot: 4

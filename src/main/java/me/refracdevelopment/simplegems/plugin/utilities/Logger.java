@@ -21,8 +21,8 @@
  */
 package me.refracdevelopment.simplegems.plugin.utilities;
 
+import me.refracdevelopment.simplegems.plugin.SimpleGems;
 import me.refracdevelopment.simplegems.plugin.utilities.chat.Color;
-import org.bukkit.Bukkit;
 
 /**
  * Author:  Zachary (Refrac) Baldwin
@@ -38,6 +38,6 @@ public enum Logger {
 
     public void out(String message) {
         message = Color.translate(String.format("&%c%s", this.color, message));
-        Bukkit.getServer().getConsoleSender().sendMessage(message);
+        SimpleGems.getInstance().getServer().getConsoleSender().sendMessage(message);
     }
 }

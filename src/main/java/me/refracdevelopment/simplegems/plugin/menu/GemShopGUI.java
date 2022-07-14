@@ -26,7 +26,6 @@ import me.refracdevelopment.simplegems.plugin.utilities.ItemBuilder;
 import me.refracdevelopment.simplegems.plugin.utilities.Manager;
 import me.refracdevelopment.simplegems.plugin.utilities.chat.Color;
 import me.refracdevelopment.simplegems.plugin.utilities.files.Menus;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -44,7 +43,7 @@ public class GemShopGUI extends Manager implements Listener {
 
     public GemShopGUI(SimpleGems plugin) {
         super(plugin);
-        Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
     private String homeTitle;
@@ -53,7 +52,7 @@ public class GemShopGUI extends Manager implements Listener {
     public void openInventory(Player player) {
         homeTitle = Color.translate(player, Menus.GEM_SHOP_TITLE);
         homeSize = Menus.GEM_SHOP_SIZE;
-        Inventory inv = Bukkit.createInventory(null, homeSize, homeTitle);
+        Inventory inv = plugin.getServer().createInventory(null, homeSize, homeTitle);
 
         for (GemShopItem item : plugin.getGemShop().getItems().values())
             inv.setItem(item.getSlot(), item.getItem(player));

@@ -24,6 +24,7 @@ package me.refracdevelopment.simplegems.plugin.menu;
 import ca.tweetzy.skulls.Skulls;
 import ca.tweetzy.skulls.api.interfaces.Skull;
 import me.arcaniax.hdb.api.HeadDatabaseAPI;
+import me.refracdevelopment.simplegems.plugin.SimpleGems;
 import me.refracdevelopment.simplegems.plugin.utilities.Methods;
 import me.refracdevelopment.simplegems.plugin.utilities.chat.Color;
 import me.refracdevelopment.simplegems.plugin.utilities.ItemBuilder;
@@ -42,6 +43,7 @@ import java.util.*;
  * Created: 2021-10-8
  */
 public class GemShopItem {
+
     private final Material material;
     private final String skullOwner;
     private final boolean skulls, headDatabase;
@@ -94,7 +96,7 @@ public class GemShopItem {
     public void sendMessage(Player player) {
         if (!this.messageEnabled) return;
         if (this.broadcastMessage) {
-            for (Player p : Bukkit.getOnlinePlayers()) {
+            for (Player p : SimpleGems.getInstance().getServer().getOnlinePlayers()) {
                 for (String message : this.messages)
                     Color.sendMessage(p, message.replace("%item%", this.name).replace("%cost%", Methods.formatDec(this.cost)), true, true);
             }
@@ -106,7 +108,7 @@ public class GemShopItem {
 
     public void runCommands(Player player) {
         for (String command : this.commands)
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), Placeholders.setPlaceholders(player, command));
+            SimpleGems.getInstance().getServer().dispatchCommand(SimpleGems.getInstance().getServer().getConsoleSender(), Placeholders.setPlaceholders(player, command));
     }
 
     public ItemStack getItem(Player player) {

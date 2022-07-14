@@ -21,8 +21,8 @@
  */
 package me.refracdevelopment.simplegems.plugin.utilities;
 
+import me.refracdevelopment.simplegems.plugin.SimpleGems;
 import me.refracdevelopment.simplegems.plugin.utilities.chat.Color;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 /**
@@ -34,15 +34,16 @@ public class Settings {
     public static String getName = "SimpleGems";
     public static String getDeveloper = "Refrac";
     public static String getDevUUID = "d9c670ed-d7d5-45fb-a144-8b8be86c4a2d";
+    public static String getDevUUID2 = "ab898e40-9088-45eb-9d69-e0b78e872627";
     public static String getVersion = "2.0";
 
     public static void devMessage(Player player) {
         player.sendMessage(" ");
-        Color.sendMessage(player, "&aWelcome " + Settings.getName + " Developer!", true, true);
-        Color.sendMessage(player, "&aThis server is currently running " + Settings.getName + " &bv" + Settings.getVersion + "&a.", true, true);
-        Color.sendMessage(player, "&aPlugin name&7: &f" + Settings.getName, true, true);
+        Color.sendMessage(player, "&aWelcome " + getDeveloper + " Developer!", true, true);
+        Color.sendMessage(player, "&aThis server is currently running " + getName + " &bv" + getVersion + "&a.", true, true);
+        Color.sendMessage(player, "&aPlugin name&7: &f" + getName, true, true);
         player.sendMessage(" ");
-        Color.sendMessage(player, "&aServer version&7: &f" + Bukkit.getVersion(), true, true);
+        Color.sendMessage(player, "&aServer version&7: &f" + SimpleGems.getInstance().getServer().getVersion(), true, true);
         player.sendMessage(" ");
     }
 

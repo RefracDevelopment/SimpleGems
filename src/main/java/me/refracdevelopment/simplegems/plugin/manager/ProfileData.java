@@ -23,7 +23,11 @@ package me.refracdevelopment.simplegems.plugin.manager;
 
 import lombok.Getter;
 import me.refracdevelopment.simplegems.plugin.SimpleGems;
+import me.refracdevelopment.simplegems.plugin.manager.database.DataType;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 
+import java.io.File;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -37,9 +41,13 @@ import java.util.UUID;
  */
 @Getter
 public class ProfileData {
+
     private final SimpleGems plugin = SimpleGems.getInstance();
     private final String name;
     private final UUID uuid;
+
+    private File configFile;
+    private FileConfiguration config;
 
     private final Map<UUID, Double> gems = new HashMap<>();
     
@@ -47,22 +55,29 @@ public class ProfileData {
         this.uuid = uuid;
         this.name = name;
     }
-    
+
     /**
      * The #load method allows you to
      * load a specified player's data
      */
     public void load() {
-        try {
-            PreparedStatement statement = plugin.getSqlManager().getConnection().prepareStatement("SELECT * FROM simplegems WHERE uuid=?");
-            statement.setString(1, this.uuid.toString());
-            ResultSet result = statement.executeQuery();
+        if (plugin.getDataType() == DataType.MYSQL) {
+            try {
+                PreparedStatement statement = plugin.getSqlManager().getConnection().prepareStatement("SELECT * FROM simplegems WHERE uuid=?");
+                statement.setString(1, this.uuid.toString());
+                ResultSet result = statement.executeQuery();
 
-            if (result.next()) {
-                this.gems.put(this.uuid, result.getDouble("gems"));
-            } else this.save();
-        } catch (SQLException e) {
-            e.printStackTrace();
+                if (result.next()) {
+                    this.gems.put(this.uuid, result.getDouble("gems"));
+                } else {
+                    this.save();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } else if (plugin.getDataType() == DataType.YAML) {
+            this.loadConfig();
+            this.gems.putIfAbsent(this.uuid, this.config.getDouble("data." + this.uuid.toString() + ".gems"));
         }
     }
 
@@ -71,39 +86,68 @@ public class ProfileData {
      * save a specified player's data
      */
     public void save() {
-        try {
-            PreparedStatement statement = plugin.getSqlManager().getConnection().prepareStatement("SELECT * FROM simplegems WHERE uuid=?");
-            statement.setString(1, this.uuid.toString());
+        if (plugin.getDataType() == DataType.MYSQL) {
+            try {
+                PreparedStatement statement = plugin.getSqlManager().getConnection().prepareStatement("SELECT * FROM simplegems WHERE uuid=?");
+                statement.setString(1, this.uuid.toString());
 
-            ResultSet result = statement.executeQuery();
+                ResultSet result = statement.executeQuery();
 
-            if (result.next()) {
-                PreparedStatement update = plugin.getSqlManager().getConnection().prepareStatement("UPDATE simplegems SET "
-                        + "name=?,uuid=?,gems=? WHERE uuid=?");
+                if (result.next()) {
+                    PreparedStatement update = plugin.getSqlManager().getConnection().prepareStatement("UPDATE simplegems SET "
+                            + "name=?,uuid=?,gems=? WHERE uuid=?");
 
-                update.setString(1, this.name);
-                update.setString(2, this.uuid.toString());
-                update.setDouble(3, this.gems.getOrDefault(this.uuid, 0.0));
-                update.setString(4, this.uuid.toString());
+                    update.setString(1, this.name);
+                    update.setString(2, this.uuid.toString());
+                    update.setDouble(3, this.gems.getOrDefault(this.uuid, 0.0));
+                    update.setString(4, this.uuid.toString());
 
-                update.executeUpdate();
-                update.close();
-            } else {
-                PreparedStatement insert = plugin.getSqlManager().getConnection().prepareStatement("INSERT INTO simplegems ("
-                        + "name,uuid,gems) VALUES ("
-                        + "?,?,?)");
+                    update.executeUpdate();
+                    update.close();
+                } else {
+                    PreparedStatement insert = plugin.getSqlManager().getConnection().prepareStatement("INSERT INTO simplegems ("
+                            + "name,uuid,gems) VALUES ("
+                            + "?,?,?)");
 
-                insert.setString(1, this.name);
-                insert.setString(2, this.uuid.toString());
-                insert.setDouble(3, this.gems.getOrDefault(this.uuid, 0.0));
+                    insert.setString(1, this.name);
+                    insert.setString(2, this.uuid.toString());
+                    insert.setDouble(3, this.gems.getOrDefault(this.uuid, 0.0));
 
-                insert.executeUpdate();
-                insert.close();
+                    insert.executeUpdate();
+                    insert.close();
+                }
+
+                plugin.getSqlManager().close(statement, result);
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-
-            plugin.getSqlManager().close(statement, result);
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } else if (plugin.getDataType() == DataType.YAML) {
+            this.config.set("data", this.uuid.toString());
+            this.config.set("data." + this.uuid.toString() + ".name", this.name);
+            this.config.set("data." + this.uuid.toString() + ".gems", this.gems.get(this.uuid));
+            try {
+                this.config.save(this.configFile);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
+    }
+
+    private void loadConfig() {
+        File folder = new File(SimpleGems.getInstance().getDataFolder(), "UserData");
+
+        if (!folder.exists()) {
+            folder.mkdirs();
+        }
+
+        this.configFile = new File(folder, this.uuid.toString() + ".yml");
+        if (!this.configFile.exists()) {
+            try {
+                this.configFile.createNewFile();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        this.config = YamlConfiguration.loadConfiguration(this.configFile);
     }
 }
