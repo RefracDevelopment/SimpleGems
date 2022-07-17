@@ -25,6 +25,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import me.refracdevelopment.simplegems.plugin.SimpleGems;
+import me.refracdevelopment.simplegems.plugin.utilities.files.Config;
 import me.refracdevelopment.simplegems.plugin.utilities.files.Files;
 
 import java.sql.Connection;
@@ -59,14 +60,18 @@ public class SQLManager {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-
-        try {
-            this.connection = DriverManager.getConnection("jdbc:mysql://" +
-                            host + ":" + port + "/" + database +
-                    "?characterEncoding=latin1&useConfigs=maxPerformance?autoReconnect=true", username, password);
-        } catch (SQLException e) {
+        if (Config.DATA_TYPE.equalsIgnoreCase("MYSQL")) {
+            try {
+                this.connection = DriverManager.getConnection("jdbc:mysql://" +
+                        host + ":" + port + "/" + database +
+                        "?characterEncoding=latin1&useConfigs=maxPerformance&autoReconnect=true", username, password);
+            } catch (SQLException e) {
+                this.connection = null;
+                e.printStackTrace();
+                return;
+            }
+        } else {
             this.connection = null;
-            e.printStackTrace();
             return;
         }
 

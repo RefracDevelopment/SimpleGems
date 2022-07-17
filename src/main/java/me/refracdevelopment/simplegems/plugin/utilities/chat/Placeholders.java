@@ -1,5 +1,7 @@
 package me.refracdevelopment.simplegems.plugin.utilities.chat;
 
+import me.refracdevelopment.simplegems.plugin.SimpleGems;
+import me.refracdevelopment.simplegems.plugin.manager.Profile;
 import me.refracdevelopment.simplegems.plugin.utilities.Methods;
 import me.refracdevelopment.simplegems.plugin.utilities.files.Messages;
 import org.apache.commons.lang.StringEscapeUtils;
@@ -16,9 +18,11 @@ public class Placeholders {
         placeholder = placeholder.replace("%prefix%", Messages.PREFIX);
         if (sender instanceof Player) {
             Player player = (Player) sender;
+            Profile profile = SimpleGems.getInstance().getProfileManager().getProfile(player.getUniqueId());
+
             placeholder = placeholder.replace("%player%", player.getName());
-            placeholder = placeholder.replace("%gems%", Methods.format(Methods.getGems(player)));
-            placeholder = placeholder.replace("%gems_decimal%", Methods.formatDec(Methods.getGems(player)));
+            placeholder = placeholder.replace("%gems%", Methods.format(profile.getData().getGems().getStat()));
+            placeholder = placeholder.replace("%gems_decimal%", Methods.formatDec(profile.getData().getGems().getStat()));
             placeholder = placeholder.replace("%displayname%", player.getDisplayName());
         }
         placeholder = placeholder.replace("%arrow%", StringEscapeUtils.unescapeJava("\u00BB"));

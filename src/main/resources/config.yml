@@ -23,7 +23,7 @@ save: true
 # YAML - Local saving in the "UserData" folder
 data-type: "YAML"
 
-# make sure your credentials are correct
+# Make sure your credentials are correct
 # never share this with anyone
 mysql:
   host: "127.0.0.1"
@@ -32,12 +32,13 @@ mysql:
   database: "test"
   port: 3306
 
+# This is used for viewing top players
 gems-top:
   title: "&e&lGems %arrow2% &6&lTop %entries%"
   format: "&6&l%number%. &e%player% &7- &e%value%"
   top-entries: 10
 
-# used for withdrawing gems
+# This is used for withdrawing gems
 gems-item:
   material: DIAMOND
   data: 0

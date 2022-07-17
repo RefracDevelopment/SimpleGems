@@ -24,15 +24,11 @@ package me.refracdevelopment.simplegems.plugin.manager;
 import lombok.Getter;
 import me.refracdevelopment.simplegems.plugin.SimpleGems;
 import me.refracdevelopment.simplegems.plugin.manager.database.DataType;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
+import me.refracdevelopment.simplegems.plugin.utilities.files.Files;
 
-import java.io.File;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -46,11 +42,8 @@ public class ProfileData {
     private final String name;
     private final UUID uuid;
 
-    private File configFile;
-    private FileConfiguration config;
+    private final Stat gems = new Stat();
 
-    private final Map<UUID, Double> gems = new HashMap<>();
-    
     public ProfileData(UUID uuid, String name) {
         this.uuid = uuid;
         this.name = name;
@@ -68,7 +61,7 @@ public class ProfileData {
                 ResultSet result = statement.executeQuery();
 
                 if (result.next()) {
-                    this.gems.put(this.uuid, result.getDouble("gems"));
+                    this.gems.setStat(result.getDouble("gems"));
                 } else {
                     this.save();
                 }
@@ -76,8 +69,7 @@ public class ProfileData {
                 e.printStackTrace();
             }
         } else if (plugin.getDataType() == DataType.YAML) {
-            this.loadConfig();
-            this.gems.putIfAbsent(this.uuid, this.config.getDouble("data." + this.uuid.toString() + ".gems"));
+            this.gems.setStat(Files.getData().getDouble("data." + this.uuid.toString() + ".gems"));
         }
     }
 
@@ -99,7 +91,7 @@ public class ProfileData {
 
                     update.setString(1, this.name);
                     update.setString(2, this.uuid.toString());
-                    update.setDouble(3, this.gems.getOrDefault(this.uuid, 0.0));
+                    update.setDouble(3, this.gems.getStat());
                     update.setString(4, this.uuid.toString());
 
                     update.executeUpdate();
@@ -111,7 +103,7 @@ public class ProfileData {
 
                     insert.setString(1, this.name);
                     insert.setString(2, this.uuid.toString());
-                    insert.setDouble(3, this.gems.getOrDefault(this.uuid, 0.0));
+                    insert.setDouble(3, this.gems.getStat());
 
                     insert.executeUpdate();
                     insert.close();
@@ -122,32 +114,9 @@ public class ProfileData {
                 e.printStackTrace();
             }
         } else if (plugin.getDataType() == DataType.YAML) {
-            this.config.set("data", this.uuid.toString());
-            this.config.set("data." + this.uuid.toString() + ".name", this.name);
-            this.config.set("data." + this.uuid.toString() + ".gems", this.gems.get(this.uuid));
-            try {
-                this.config.save(this.configFile);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            Files.getData().set("data." + this.uuid.toString() + ".name", this.name);
+            Files.getData().set("data." + this.uuid.toString() + ".gems", this.gems.getStat());
+            Files.saveData();
         }
-    }
-
-    private void loadConfig() {
-        File folder = new File(SimpleGems.getInstance().getDataFolder(), "UserData");
-
-        if (!folder.exists()) {
-            folder.mkdirs();
-        }
-
-        this.configFile = new File(folder, this.uuid.toString() + ".yml");
-        if (!this.configFile.exists()) {
-            try {
-                this.configFile.createNewFile();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        this.config = YamlConfiguration.loadConfiguration(this.configFile);
     }
 }

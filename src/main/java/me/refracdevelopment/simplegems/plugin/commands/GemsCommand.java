@@ -21,72 +21,50 @@
  */
 package me.refracdevelopment.simplegems.plugin.commands;
 
+import co.aikar.commands.BaseCommand;
+import co.aikar.commands.annotation.*;
 import com.google.common.base.Joiner;
 import me.refracdevelopment.simplegems.plugin.SimpleGems;
-import me.refracdevelopment.simplegems.plugin.utilities.Manager;
+import me.refracdevelopment.simplegems.plugin.manager.Profile;
 import me.refracdevelopment.simplegems.plugin.utilities.Methods;
 import me.refracdevelopment.simplegems.plugin.utilities.Permissions;
 import me.refracdevelopment.simplegems.plugin.utilities.chat.Color;
 import me.refracdevelopment.simplegems.plugin.utilities.files.Menus;
 import me.refracdevelopment.simplegems.plugin.utilities.files.Messages;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
-import org.bukkit.util.StringUtil;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Author:  Zachary (Refrac) Baldwin
  * Created: 2021-10-8
  */
-public class GemsCommand extends Manager implements CommandExecutor, TabCompleter {
+@CommandAlias("gems")
+@Description("Allows you to check how many gems you have.")
+@Conditions("noconsole")
+public class GemsCommand extends BaseCommand {
 
-    public GemsCommand(SimpleGems plugin) {
-        super(plugin);
-    }
+    @Dependency
+    private SimpleGems plugin;
 
-    private static final List<String> COMMANDS = Arrays.asList("shop", "balance", "withdraw", "pay", "give", "add", "take", "remove", "set");
-
-    @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-        if (!(sender instanceof Player)) {
-            Color.sendMessage(sender, "&cYou must be a player to execute this command.", true, true);
-            return true;
-        }
-
+    @Default
+    public void onDefault(CommandSender sender, String[] args) {
         Player player = (Player) sender;
+        Profile profile = plugin.getProfileManager().getProfile(player.getUniqueId());
 
         if (args.length == 0) {
-            for (String message : Messages.HELP_PAGE)
+            for (String message : Messages.GEMS_BALANCE)
                 Color.sendMessage(player, message, true, true);
         } else if (args.length == 1) {
             if (args[0].equalsIgnoreCase("shop")) {
                 if (!player.hasPermission(Permissions.GEMS_SHOP)) {
                     Color.sendMessage(player, Messages.NO_PERMISSION, true, true);
-                    return true;
+                    return;
                 }
 
                 if (Menus.GEM_SHOP_ENABLED) {
                     plugin.getGemShop().getGemShop().openInventory(player);
                 } else Color.sendMessage(player, Messages.SHOP_DISABLED, true, true);
-                return true;
-            } else if (args[0].equalsIgnoreCase("balance")) {
-                if (!player.hasPermission(Permissions.GEMS_BALANCE)) {
-                    Color.sendMessage(player, Messages.NO_PERMISSION, true, true);
-                    return true;
-                }
-
-                double amount = Methods.getGems(player);
-
-                Color.sendMessage(player, Messages.GEMS_BALANCE.replace("%gems%", Methods.format(amount)).replace("%player%", player.getName())
-                        .replace("%gems_decimal%", Methods.formatDec(amount)), true, true);
             }
         } else if (args.length >= 1) {
             String message = Joiner.on(" ").join(args);
@@ -94,15 +72,16 @@ public class GemsCommand extends Manager implements CommandExecutor, TabComplete
             if (args[0].equalsIgnoreCase("balance")) {
                 if (!player.hasPermission(Permissions.GEMS_ADMIN)) {
                     Color.sendMessage(player, Messages.NO_PERMISSION, true, true);
-                    return true;
+                    return;
                 }
 
                 if (plugin.getServer().getPlayer(args[1]) != null) {
                     Player target = plugin.getServer().getPlayer(args[1]);
+                    Profile targetProfile = plugin.getProfileManager().getProfile(target.getUniqueId());
 
-                    double amount = Methods.getGems(target);
+                    double amount = targetProfile.getData().getGems().getStat();
 
-                    Color.sendMessage(player, Messages.GEMS_BALANCE.replace("%gems%", Methods.format(amount)).replace("%player%", target.getName())
+                    Color.sendMessage(player, Messages.GEMS_BALANCE_ADMIN.replace("%gems%", Methods.format(amount)).replace("%player%", target.getName())
                             .replace("%gems_decimal%", Methods.formatDec(amount)), true, true);
                 } else if (plugin.getServer().getOfflinePlayer(args[1]) != null && plugin.getServer().getOfflinePlayer(args[1]).hasPlayedBefore()) {
                     plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
@@ -110,15 +89,14 @@ public class GemsCommand extends Manager implements CommandExecutor, TabComplete
 
                         double amount = Methods.getOfflineGems(target);
 
-                        Color.sendMessage(player, Messages.GEMS_BALANCE.replace("%gems%", Methods.format(amount)).replace("%player%", target.getName())
+                        Color.sendMessage(player, Messages.GEMS_BALANCE_ADMIN.replace("%gems%", Methods.format(amount)).replace("%player%", target.getName())
                                 .replace("%gems_decimal%", Methods.formatDec(amount)), true, true);
                     });
                 } else Color.sendMessage(player, Messages.INVALID_PLAYER, true, true);
-                return true;
             } else if (args[0].equalsIgnoreCase("withdraw")) {
                 if (!player.hasPermission(Permissions.GEMS_WITHDRAW)) {
                     Color.sendMessage(player, Messages.NO_PERMISSION, true, false);
-                    return true;
+                    return;
                 }
 
                 int amount;
@@ -127,14 +105,14 @@ public class GemsCommand extends Manager implements CommandExecutor, TabComplete
                     amount = Integer.parseInt(args[1]);
                 } catch (NumberFormatException e) {
                     Color.sendMessage(player, Messages.INVALID_AMOUNT.replace("%amount%", args[2]), true, true);
-                    return true;
+                    return;
                 }
 
                 Methods.withdrawGems(player, amount);
             } else if (args[0].equalsIgnoreCase("pay")) {
                 if (!player.hasPermission(Permissions.GEMS_PAY)) {
                     Color.sendMessage(player, Messages.NO_PERMISSION, true, true);
-                    return true;
+                    return;
                 }
 
                 if (plugin.getServer().getPlayer(args[1]) != null) {
@@ -146,7 +124,7 @@ public class GemsCommand extends Manager implements CommandExecutor, TabComplete
                         amount = Double.parseDouble(args[2]);
                     } catch (NumberFormatException e) {
                         Color.sendMessage(player, Messages.INVALID_AMOUNT.replace("%amount%", args[2]), true, true);
-                        return true;
+                        return;
                     }
 
                     boolean silent = message.contains("-s") && player.hasPermission(Permissions.GEMS_ADMIN);
@@ -161,20 +139,20 @@ public class GemsCommand extends Manager implements CommandExecutor, TabComplete
                         amount = Double.parseDouble(args[2]);
                     } catch (NumberFormatException e) {
                         Color.sendMessage(player, Messages.INVALID_AMOUNT.replace("%amount%", args[2]), true, true);
-                        return true;
+                        return;
                     }
 
                     Methods.payOfflineGems(player, target, amount);
                 } else Color.sendMessage(player, Messages.INVALID_PLAYER.replace("%player%", args[1]), true, true);
-                return true;
             } else if (args[0].equalsIgnoreCase("give") || args[0].equalsIgnoreCase("add")) {
                 if (!player.hasPermission(Permissions.GEMS_GIVE)) {
                     Color.sendMessage(player, Messages.NO_PERMISSION, true, true);
-                    return true;
+                    return;
                 }
 
                 if (plugin.getServer().getPlayer(args[1]) != null) {
                     Player target = plugin.getServer().getPlayer(args[1]);
+                    Profile targetProfile = plugin.getProfileManager().getProfile(target.getUniqueId());
 
                     double amount;
 
@@ -182,13 +160,13 @@ public class GemsCommand extends Manager implements CommandExecutor, TabComplete
                         amount = Double.parseDouble(args[2]);
                     } catch (NumberFormatException e) {
                         Color.sendMessage(player, Messages.INVALID_AMOUNT.replace("%amount%", args[2]), true, true);
-                        return true;
+                        return;
                     }
 
-                    Methods.giveGems(target, amount);
+                    targetProfile.getData().getGems().incrementStat(amount);
 
                     Color.sendMessage(player, Messages.GEMS_GIVEN.replace("%gems%", Methods.format(amount)).replace("%player%", target.getName()), true, true);
-                    if (message.contains("-s")) return true;
+                    if (message.contains("-s")) return;
                     Color.sendMessage(target, Messages.GEMS_GAINED.replace("%gems%", Methods.format(amount)), true, true);
                 } else if (plugin.getServer().getOfflinePlayer(args[1]) != null && plugin.getServer().getOfflinePlayer(args[1]).hasPlayedBefore()) {
                     OfflinePlayer target = plugin.getServer().getOfflinePlayer(args[1]);
@@ -199,22 +177,22 @@ public class GemsCommand extends Manager implements CommandExecutor, TabComplete
                         amount = Double.parseDouble(args[2]);
                     } catch (NumberFormatException e) {
                         Color.sendMessage(player, Messages.INVALID_AMOUNT.replace("%amount%", args[2]), true, true);
-                        return true;
+                        return;
                     }
 
                     Methods.giveOfflineGems(target, amount);
 
                     Color.sendMessage(player, Messages.GEMS_GIVEN.replace("%gems%", Methods.format(amount)).replace("%player%", target.getName()), true, true);
                 } else Color.sendMessage(player, Messages.INVALID_PLAYER.replace("%player%", args[1]), true, true);
-                return true;
             } else if (args[0].equalsIgnoreCase("take") || args[0].equalsIgnoreCase("remove")) {
                 if (!player.hasPermission(Permissions.GEMS_TAKE)) {
                     Color.sendMessage(player, Messages.NO_PERMISSION, true, true);
-                    return true;
+                    return;
                 }
 
                 if (plugin.getServer().getPlayer(args[1]) != null) {
                     Player target = plugin.getServer().getPlayer(args[1]);
+                    Profile targetProfile = plugin.getProfileManager().getProfile(target.getUniqueId());
 
                     double amount;
 
@@ -222,18 +200,18 @@ public class GemsCommand extends Manager implements CommandExecutor, TabComplete
                         amount = Double.parseDouble(args[2]);
                     } catch (NumberFormatException e) {
                         Color.sendMessage(player, Messages.INVALID_AMOUNT.replace("%amount%", args[2]), true, true);
-                        return true;
+                        return;
                     }
 
-                    if (!Methods.hasGems(target, amount)) {
+                    if (!targetProfile.getData().getGems().hasStat(amount)) {
                         Color.sendMessage(player, Messages.INVALID_GEMS.replace("%player%", target.getName()), true, false);
-                        return true;
+                        return;
                     }
 
-                    Methods.takeGems(target, amount);
+                    targetProfile.getData().getGems().decrementStat(amount);
 
                     Color.sendMessage(player, Messages.GEMS_TAKEN.replace("%gems%", Methods.format(amount)).replace("%player%", target.getName()), true, true);
-                    if (message.contains("-s")) return true;
+                    if (message.contains("-s")) return;
                     Color.sendMessage(target, Messages.GEMS_LOST.replace("%gems%", Methods.format(amount)), true, true);
                 } else if (plugin.getServer().getOfflinePlayer(args[1]) != null && plugin.getServer().getOfflinePlayer(args[1]).hasPlayedBefore()) {
                     OfflinePlayer target = plugin.getServer().getOfflinePlayer(args[1]);
@@ -244,27 +222,27 @@ public class GemsCommand extends Manager implements CommandExecutor, TabComplete
                         amount = Double.parseDouble(args[2]);
                     } catch (NumberFormatException e) {
                         Color.sendMessage(player, Messages.INVALID_AMOUNT.replace("%amount%", args[2]), true, true);
-                        return true;
+                        return;
                     }
 
                     if (!Methods.hasOfflineGems(target, amount)) {
                         Color.sendMessage(player, Messages.INVALID_GEMS.replace("%player%", target.getName()), true, false);
-                        return true;
+                        return;
                     }
 
                     Methods.takeOfflineGems(target, amount);
 
                     Color.sendMessage(player, Messages.GEMS_TAKEN.replace("%gems%", Methods.format(amount)).replace("%player%", target.getName()), true, true);
                 } else Color.sendMessage(player, Messages.INVALID_PLAYER.replace("%player%", args[1]), true, true);
-                return true;
             } else if (args[0].equalsIgnoreCase("set")) {
                 if (!player.hasPermission(Permissions.GEMS_SET)) {
                     Color.sendMessage(player, Messages.NO_PERMISSION, true, true);
-                    return true;
+                    return;
                 }
 
                 if (plugin.getServer().getPlayer(args[1]) != null) {
                     Player target = plugin.getServer().getPlayer(args[1]);
+                    Profile targetProfile = plugin.getProfileManager().getProfile(target.getUniqueId());
 
                     double amount;
 
@@ -272,13 +250,13 @@ public class GemsCommand extends Manager implements CommandExecutor, TabComplete
                         amount = Double.parseDouble(args[2]);
                     } catch (NumberFormatException e) {
                         Color.sendMessage(player, Messages.INVALID_AMOUNT.replace("%amount%", args[2]), true, true);
-                        return true;
+                        return;
                     }
 
-                    Methods.setGems(target, amount);
+                    targetProfile.getData().getGems().setStat(amount);
 
                     Color.sendMessage(player, Messages.GEMS_SET.replace("%gems%", Methods.format(amount)).replace("%player%", target.getName()), true, true);
-                    if (message.contains("-s")) return true;
+                    if (message.contains("-s")) return;
                     Color.sendMessage(target, Messages.GEMS_SETTED.replace("%gems%", Methods.format(amount)), true, true);
                 } else if (plugin.getServer().getOfflinePlayer(args[1]) != null && plugin.getServer().getOfflinePlayer(args[1]).hasPlayedBefore()) {
                     OfflinePlayer target = plugin.getServer().getOfflinePlayer(args[1]);
@@ -289,21 +267,14 @@ public class GemsCommand extends Manager implements CommandExecutor, TabComplete
                         amount = Double.parseDouble(args[2]);
                     } catch (NumberFormatException e) {
                         Color.sendMessage(player, Messages.INVALID_AMOUNT.replace("%amount%", args[2]), true, true);
-                        return true;
+                        return;
                     }
 
                     Methods.setOfflineGems(target, amount);
 
                     Color.sendMessage(player, Messages.GEMS_SET.replace("%gems%", Methods.format(amount)).replace("%player%", target.getName()), true, true);
                 } else Color.sendMessage(player, Messages.INVALID_PLAYER.replace("%player%", args[1]), true, true);
-                return true;
             }
         }
-        return true;
-    }
-
-    @Override
-    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        return (args.length == 1) ? StringUtil.copyPartialMatches(args[0], COMMANDS, new ArrayList<>()) : null;
     }
 }

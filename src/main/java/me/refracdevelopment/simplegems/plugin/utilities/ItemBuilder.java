@@ -23,7 +23,10 @@ package me.refracdevelopment.simplegems.plugin.utilities;
 
 import com.cryptomorin.xseries.XMaterial;
 import me.refracdevelopment.simplegems.plugin.utilities.chat.Color;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.DyeColor;
+import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -86,13 +89,6 @@ public class ItemBuilder {
     public ItemBuilder setUnColoredName(String name) {
         ItemMeta im = is.getItemMeta();
         im.setDisplayName(name);
-        is.setItemMeta(im);
-        return this;
-    }
-
-    public ItemBuilder setUnTranslatedName(String name) {
-        ItemMeta im = is.getItemMeta();
-        im.setDisplayName(Color.translate(name));
         is.setItemMeta(im);
         return this;
     }

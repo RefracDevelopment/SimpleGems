@@ -26,33 +26,25 @@ import me.refracdevelopment.simplegems.plugin.manager.Profile;
 import me.refracdevelopment.simplegems.plugin.manager.database.DataType;
 import me.refracdevelopment.simplegems.plugin.utilities.chat.Color;
 import me.refracdevelopment.simplegems.plugin.utilities.files.Config;
+import me.refracdevelopment.simplegems.plugin.utilities.files.Files;
 import me.refracdevelopment.simplegems.plugin.utilities.files.Messages;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.io.File;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * Author:  Zachary (Refrac) Baldwin
  * Created: 2021-10-8
  */
 public class Methods {
-
-    private static File configFile;
-    private static FileConfiguration config;
 
     /**
      * This will save all online player's data.
@@ -108,29 +100,54 @@ public class Methods {
                 e.printStackTrace();
             }
         } else if (SimpleGems.getInstance().getDataType() == DataType.YAML) {
-            loadConfig(player);
-            config.set("data", player.getUniqueId().toString());
-            config.set("data." + player.getUniqueId().toString() + ".name", player.getName());
-            config.set("data." + player.getUniqueId().toString() + ".gems", amount);
-            try {
-                config.save(configFile);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            Files.getData().set("data", player.getUniqueId().toString());
+            Files.getData().set("data." + player.getUniqueId().toString() + ".name", player.getName());
+            Files.getData().set("data." + player.getUniqueId().toString() + ".gems", amount);
+            Files.saveData();
         }
     }
 
     public static void getTop10(Player player) {
         Map<String, Double> gemsList = new HashMap<>();
 
-        try {
-            PreparedStatement statement = SimpleGems.getInstance().getSqlManager().getConnection().prepareStatement("SELECT * FROM simplegems ORDER BY gems DESC LIMIT " +
-                    Config.GEMS_TOP_ENTRIES);
-            ResultSet result = statement.executeQuery();
+        if (SimpleGems.getInstance().getDataType() == DataType.MYSQL) {
+            try {
+                PreparedStatement statement = SimpleGems.getInstance().getSqlManager().getConnection().prepareStatement("SELECT * FROM simplegems ORDER BY gems DESC LIMIT " +
+                        Config.GEMS_TOP_ENTRIES);
+                ResultSet result = statement.executeQuery();
 
-            while (result.next()) {
-                String name = result.getString("name");
-                double gems = result.getDouble("gems");
+                while (result.next()) {
+                    String name = result.getString("name");
+                    double gems = result.getDouble("gems");
+                    gemsList.put(name, gems);
+                }
+
+                ValueComparator<String> vc = new ValueComparator<>(gemsList);
+                TreeMap<String, Double> sorted = new TreeMap<>(vc);
+                sorted.putAll(gemsList);
+
+                Color.sendMessage(player, Config.GEMS_TOP_TITLE.replace("%entries%", String.valueOf(Config.GEMS_TOP_ENTRIES)), true, true);
+                for (int i = 0; i < sorted.size(); ++i) {
+                    Map.Entry<String, Double> e = sorted.pollFirstEntry();
+                    Color.sendMessage(player, Config.GEMS_TOP_FORMAT.replace("%number%", String.valueOf(i + 1)).replace("%player%", e.getKey())
+                            .replace("%value%", format(e.getValue())).replace("%value_decimal%", formatDec(e.getValue())), true, true);
+                }
+
+                SimpleGems.getInstance().getSqlManager().close(statement, result);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } else if (SimpleGems.getInstance().getDataType() == DataType.YAML) {
+            for (Player p : SimpleGems.getInstance().getServer().getOnlinePlayers()) {
+                Profile profile = SimpleGems.getInstance().getProfileManager().getProfile(p.getUniqueId());
+                String name = profile.getData().getName();
+                double gems = profile.getData().getGems().getStat();
+                gemsList.put(name, gems);
+            }
+
+            for (OfflinePlayer op : SimpleGems.getInstance().getServer().getOfflinePlayers()) {
+                String name = op.getName();
+                double gems = getOfflineGems(op);
                 gemsList.put(name, gems);
             }
 
@@ -139,71 +156,45 @@ public class Methods {
             sorted.putAll(gemsList);
 
             Color.sendMessage(player, Config.GEMS_TOP_TITLE.replace("%entries%", String.valueOf(Config.GEMS_TOP_ENTRIES)), true, true);
-            for (int i = 0; i < sorted.size(); ++i) {
+            for (int i = 0; i < sorted.entrySet().stream().limit(Config.GEMS_TOP_ENTRIES).count(); ++i) {
                 Map.Entry<String, Double> e = sorted.pollFirstEntry();
                 Color.sendMessage(player, Config.GEMS_TOP_FORMAT.replace("%number%", String.valueOf(i + 1)).replace("%player%", e.getKey())
                         .replace("%value%", format(e.getValue())).replace("%value_decimal%", formatDec(e.getValue())), true, true);
             }
-
-            SimpleGems.getInstance().getSqlManager().close(statement, result);
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
-    public static void setGems(Player player, double amount) {
-        Profile profile = SimpleGems.getInstance().getProfileManager().getProfile(player.getUniqueId());
-
-        if (profile != null) {
-            profile.getData().getGems().put(player.getUniqueId(), amount);
-        }
-    }
-    
     public static void setOfflineGems(OfflinePlayer player, double amount) {
         SimpleGems.getInstance().getServer().getScheduler().runTaskAsynchronously(SimpleGems.getInstance(), () -> saveOffline(player, amount));
-    }
-    
-    public static void giveGems(Player player, double amount) {
-        setGems(player, getGems(player) + amount);
     }
 
     public static void giveOfflineGems(OfflinePlayer player, double amount) {
         setOfflineGems(player, getOfflineGems(player) + amount);
     }
-
-    public static void takeGems(Player player, double amount) {
-        setGems(player, getGems(player) - amount);
-    }
     
     public static void takeOfflineGems(OfflinePlayer player, double amount) {
         setOfflineGems(player, getOfflineGems(player) - amount);
     }
-    
-    public static double getGems(Player player) {
-        Profile profile = SimpleGems.getInstance().getProfileManager().getProfile(player.getUniqueId());
-
-        return profile.getData().getGems().getOrDefault(player.getUniqueId(), 0.0);
-    }
 
     public static double getOfflineGems(OfflinePlayer player) {
-        try {
-            PreparedStatement statement = SimpleGems.getInstance().getSqlManager().getConnection().prepareStatement("SELECT * FROM simplegems WHERE uuid=?");
-            statement.setString(1, player.getUniqueId().toString());
-            ResultSet result = statement.executeQuery();
+        if (SimpleGems.getInstance().getDataType() == DataType.MYSQL) {
+            try {
+                PreparedStatement statement = SimpleGems.getInstance().getSqlManager().getConnection().prepareStatement("SELECT * FROM simplegems WHERE uuid=?");
+                statement.setString(1, player.getUniqueId().toString());
+                ResultSet result = statement.executeQuery();
 
-            if (result.next()) {
-                return result.getDouble("gems");
+                if (result.next()) {
+                    return result.getDouble("gems");
+                }
+
+                SimpleGems.getInstance().getSqlManager().close(statement, result);
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-
-            SimpleGems.getInstance().getSqlManager().close(statement, result);
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } else if (SimpleGems.getInstance().getDataType() == DataType.YAML) {
+            return Files.getData().getDouble("data." + player.getUniqueId().toString() + ".gems");
         }
         return 0.0;
-    }
-
-    public static boolean hasGems(Player player, double amount) {
-        return getGems(player) >= amount;
     }
     
     public static boolean hasOfflineGems(OfflinePlayer player, double amount) {
@@ -211,9 +202,12 @@ public class Methods {
     }
 
     public static void payGems(Player player, Player target, double amount, boolean silent) {
-        if (hasGems(player, amount)) {
-            takeGems(player, amount);
-            giveGems(target, amount);
+        Profile profile = SimpleGems.getInstance().getProfileManager().getProfile(player.getUniqueId());
+        Profile targetProfile = SimpleGems.getInstance().getProfileManager().getProfile(target.getUniqueId());
+
+        if (profile.getData().getGems().hasStat(amount)) {
+            profile.getData().getGems().decrementStat(amount);
+            targetProfile.getData().getGems().incrementStat(amount);
 
             if (silent) return;
             Color.sendMessage(player, Messages.GEMS_PAID.replace("%player%", target.getName()).replaceAll("%gems%", amount + ""), true, true);
@@ -224,9 +218,12 @@ public class Methods {
     }
 
     public static void payOfflineGems(Player player, OfflinePlayer target, double amount) {
+        Profile profile = SimpleGems.getInstance().getProfileManager().getProfile(player.getUniqueId());
+        Profile targetProfile = SimpleGems.getInstance().getProfileManager().getProfile(target.getUniqueId());
+
         SimpleGems.getInstance().getServer().getScheduler().runTaskAsynchronously(SimpleGems.getInstance(), () -> {
-            if (hasGems(player, amount)) {
-                takeGems(player, amount);
+            if (profile.getData().getGems().hasStat(amount)) {
+                profile.getData().getGems().decrementStat(amount);
                 giveOfflineGems(target, amount);
 
                 Color.sendMessage(player, Messages.GEMS_PAID.replace("%player%", target.getName()).replace("%gems%", Methods.format(amount))
@@ -241,9 +238,11 @@ public class Methods {
     public static void withdrawGems(Player player, int amount) {
         if (amount > 2304) return; // Used to reduce lag
 
-        if (hasGems(player, amount)) {
+        Profile profile = SimpleGems.getInstance().getProfileManager().getProfile(player.getUniqueId());
+
+        if (profile.getData().getGems().hasStat(amount)) {
             giveGemsItem(player, amount);
-            takeGems(player, amount);
+            profile.getData().getGems().decrementStat(amount);
 
             Color.sendMessage(player, Messages.GEMS_WITHDRAWN.replace("%gems%", format(amount)).replace("%gems_decimal%", formatDec(amount)), true, true);
         } else {
@@ -290,24 +289,6 @@ public class Methods {
         item.setDurability(data);
 
         return item.toItemStack();
-    }
-
-    private static void loadConfig(OfflinePlayer player) {
-        File folder = new File(SimpleGems.getInstance().getDataFolder(), "UserData");
-
-        if (!folder.exists()) {
-            folder.mkdirs();
-        }
-
-        configFile = new File(folder, player.getUniqueId().toString() + ".yml");
-        if (!configFile.exists()) {
-            try {
-                configFile.createNewFile();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        config = YamlConfiguration.loadConfiguration(configFile);
     }
 
     public static String formatDec(double amount) {

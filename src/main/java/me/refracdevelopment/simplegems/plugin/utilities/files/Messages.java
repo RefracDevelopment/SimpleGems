@@ -30,8 +30,8 @@ public class Messages {
     public static String GEMS_LOST;
     public static String GEMS_SET;
     public static String GEMS_SETTED;
-    public static String GEMS_BALANCE;
-    public static List<String> HELP_PAGE;
+    public static String GEMS_BALANCE_ADMIN;
+    public static List<String> GEMS_BALANCE;
 
     // Error Messages
     public static String KICK_PROFILE_NOT_CREATED;
@@ -60,8 +60,8 @@ public class Messages {
         GEMS_LOST = Files.getMessages().getString("messages.gems-lost");
         GEMS_SET = Files.getMessages().getString("messages.gems-set");
         GEMS_SETTED = Files.getMessages().getString("messages.gems-setted");
-        GEMS_BALANCE = Files.getMessages().getString("messages.gems-balance");
-        HELP_PAGE = Files.getMessages().getStringList("help-page");
+        GEMS_BALANCE_ADMIN = Files.getMessages().getString("messages.gems-balance");
+        GEMS_BALANCE = Files.getMessages().getStringList("gems-balance");
 
         // Error Messages
         KICK_PROFILE_NOT_CREATED = Files.getMessages().getString("error-messages.kick-profile-not-created");

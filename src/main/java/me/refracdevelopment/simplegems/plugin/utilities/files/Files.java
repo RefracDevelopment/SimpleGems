@@ -22,6 +22,8 @@ public class Files {
     private static File menusFile;
     private static FileConfiguration menus;
 
+    private static File dataFile;
+    private static FileConfiguration data;
 
     public static void loadFiles(SimpleGems plugin) {
         if (!plugin.getDataFolder().exists()) {
@@ -46,6 +48,12 @@ public class Files {
         }
         menus = YamlConfiguration.loadConfiguration(menusFile);
 
+        dataFile = new File(plugin.getDataFolder(), "data.yml");
+        if (!dataFile.exists()) {
+            plugin.saveResource("data.yml", false);
+        }
+        data = YamlConfiguration.loadConfiguration(dataFile);
+
         Config.loadConfig();
         Menus.loadMenus();
         Messages.loadMessages();
@@ -65,6 +73,19 @@ public class Files {
 
     public static FileConfiguration getMenus() {
         return menus;
+    }
+
+    public static FileConfiguration getData() {
+        return data;
+    }
+
+    public static void saveData() {
+        try {
+            data.save(dataFile);
+        } catch (Exception e) {
+            Logger.ERROR.out("Failed to save the data file!");
+            e.printStackTrace();
+        }
     }
 
     public static void reloadFiles(SimpleGems plugin) {
@@ -89,6 +110,14 @@ public class Files {
             menus = YamlConfiguration.loadConfiguration(menusFile);
         } catch (Exception e) {
             Logger.ERROR.out("Failed to reload the menus file!");
+            e.printStackTrace();
+        }
+
+        dataFile = new File(plugin.getDataFolder(), "data.yml");
+        try {
+            data = YamlConfiguration.loadConfiguration(dataFile);
+        } catch (Exception e) {
+            Logger.ERROR.out("Failed to reload the data file!");
             e.printStackTrace();
         }
 

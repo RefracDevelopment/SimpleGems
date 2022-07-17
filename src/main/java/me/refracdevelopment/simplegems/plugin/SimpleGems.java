@@ -21,6 +21,9 @@
  */
 package me.refracdevelopment.simplegems.plugin;
 
+import co.aikar.commands.BukkitCommandIssuer;
+import co.aikar.commands.BukkitCommandManager;
+import co.aikar.commands.ConditionFailedException;
 import lombok.Getter;
 import lombok.Setter;
 import me.refracdevelopment.simplegems.plugin.api.GemsAPI;
@@ -119,17 +122,31 @@ public final class SimpleGems extends JavaPlugin {
         instance = null;
         for (Player player : this.getServer().getOnlinePlayers())
             this.profileManager.getProfile(player.getUniqueId()).getData().save();
-        this.sqlManager.close();
+        if (this.dataType == DataType.MYSQL) {
+            this.sqlManager.close();
+        }
         this.getServer().getScheduler().cancelTasks(this);
     }
 
     private void loadCommands() {
-        this.getCommand("gems").setExecutor(new GemsCommand(this));
-        this.getCommand("gems").setTabCompleter(new GemsCommand(this));
-        this.getCommand("consolegems").setExecutor(new ConsoleGemsCommand(this));
-        this.getCommand("gemsreload").setExecutor(new GemsReloadCommand(this));
-        this.getCommand("gemshop").setExecutor(new GemShopCommand(this));
-        this.getCommand("gemstop").setExecutor(new GemsTopCommand(this));
+        BukkitCommandManager manager = new BukkitCommandManager(this);
+        manager.getCommandConditions().addCondition("noconsole", (context) -> {
+            BukkitCommandIssuer issuer = context.getIssuer();
+            if (!issuer.isPlayer()) {
+                throw new ConditionFailedException("Only players can execute this command.");
+            }
+        });
+        manager.getCommandConditions().addCondition("noplayer", (context) -> {
+            BukkitCommandIssuer issuer = context.getIssuer();
+            if (issuer.isPlayer()) {
+                throw new ConditionFailedException("Only console can execute this command.");
+            }
+        });
+        manager.registerCommand(new GemsCommand());
+        manager.registerCommand(new ConsoleGemsCommand());
+        manager.registerCommand(new GemShopCommand());
+        manager.registerCommand(new GemsReloadCommand());
+        manager.registerCommand(new GemsTopCommand());
     }
 
     private void loadListeners() {

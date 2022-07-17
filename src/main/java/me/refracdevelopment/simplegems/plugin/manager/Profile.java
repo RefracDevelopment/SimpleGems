@@ -41,7 +41,7 @@ public class Profile {
     private UUID UUID;
     private String playerName;
 
-    public Profile(java.util.UUID uuid, String name) {
+    public Profile(UUID uuid, String name) {
         this.UUID = uuid;
         this.playerName = name;
         this.data = new ProfileData(uuid, name);

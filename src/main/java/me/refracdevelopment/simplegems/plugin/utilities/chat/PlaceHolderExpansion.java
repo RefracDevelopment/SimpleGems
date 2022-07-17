@@ -1,6 +1,8 @@
 package me.refracdevelopment.simplegems.plugin.utilities.chat;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import me.refracdevelopment.simplegems.plugin.SimpleGems;
+import me.refracdevelopment.simplegems.plugin.manager.Profile;
 import me.refracdevelopment.simplegems.plugin.utilities.Methods;
 import me.refracdevelopment.simplegems.plugin.utilities.Settings;
 import org.bukkit.entity.Player;
@@ -34,11 +36,13 @@ public class PlaceHolderExpansion extends PlaceholderExpansion {
 
     @Override
     public String onPlaceholderRequest(Player player, @NotNull String params) {
+        Profile profile = SimpleGems.getInstance().getProfileManager().getProfile(player.getUniqueId());
+
         if (params.equalsIgnoreCase("balance")) {
-            return Methods.format(Methods.getGems(player));
+            return Methods.format(profile.getData().getGems().getStat());
         }
         if (params.equalsIgnoreCase("balance_decimal")) {
-            return Methods.formatDec(Methods.getGems(player));
+            return Methods.formatDec(profile.getData().getGems().getStat());
         }
         return null;
     }

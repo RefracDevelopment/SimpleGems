@@ -42,15 +42,7 @@ error-messages:
   kick-profile-not-loaded: "Error: Player profile could not be loaded!"
 
 # You can customize all the messages in SimpleGems!
-help-page:
-  - ""
-  - "&e&lUsage: /gemshop"
-  - "&e&lUsage: /gemstop"
-  - "&e&lUsage: /gems pay <player> <amount>"
-  - "&e&lUsage: /gems withdraw <amount>"
-  - "&e&lUsage: /gems give <player> <amount>"
-  - "&e&lUsage: /gems take <player> <amount>"
-  - "&e&lUsage: /gems set <player> <amount>"
+gems-balance:
   - ""
   - "&e&l&eYou currently have &f&n%gems%&e gems!"
   - "&7&o(( &f&oTip&7&o: You can get gems by doing &e&oevents&7&o! ))"

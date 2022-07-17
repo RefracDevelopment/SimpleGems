@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Author:  Zachary (Refrac) Baldwin
@@ -31,9 +32,7 @@ public class Color {
     }
 
     public static List<String> translate(List<String> source) {
-        source = IridiumColorAPI.process(source);
-
-        return Collections.singletonList(ChatColor.translateAlternateColorCodes('&', String.valueOf(source)));
+        return source.stream().map(Color::translate).collect(Collectors.toList());
     }
 
     public static void sendMessage(CommandSender sender, String source, boolean color, boolean placeholders) {

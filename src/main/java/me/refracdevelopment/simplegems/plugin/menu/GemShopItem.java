@@ -25,13 +25,13 @@ import ca.tweetzy.skulls.Skulls;
 import ca.tweetzy.skulls.api.interfaces.Skull;
 import me.arcaniax.hdb.api.HeadDatabaseAPI;
 import me.refracdevelopment.simplegems.plugin.SimpleGems;
+import me.refracdevelopment.simplegems.plugin.manager.Profile;
 import me.refracdevelopment.simplegems.plugin.utilities.Methods;
 import me.refracdevelopment.simplegems.plugin.utilities.chat.Color;
 import me.refracdevelopment.simplegems.plugin.utilities.ItemBuilder;
 import me.refracdevelopment.simplegems.plugin.utilities.chat.Placeholders;
 import me.refracdevelopment.simplegems.plugin.utilities.files.Menus;
 import me.refracdevelopment.simplegems.plugin.utilities.files.Messages;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -145,8 +145,10 @@ public class GemShopItem {
     }
 
     public void handlePurchase(Player player) {
-        if (Methods.hasGems(player, this.cost)) {
-            Methods.takeGems(player, this.cost);
+        Profile profile = SimpleGems.getInstance().getProfileManager().getProfile(player.getUniqueId());
+
+        if (profile.getData().getGems().hasStat(this.cost)) {
+            profile.getData().getGems().decrementStat(this.cost);
             this.runCommands(player);
             this.sendMessage(player);
         } else Color.sendMessage(player, Messages.NOT_ENOUGH_GEMS.replace("%item%", this.name)

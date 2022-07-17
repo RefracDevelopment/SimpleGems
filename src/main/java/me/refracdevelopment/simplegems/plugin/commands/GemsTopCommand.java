@@ -21,43 +21,33 @@
  */
 package me.refracdevelopment.simplegems.plugin.commands;
 
+import co.aikar.commands.BaseCommand;
+import co.aikar.commands.annotation.*;
 import me.refracdevelopment.simplegems.plugin.SimpleGems;
-import me.refracdevelopment.simplegems.plugin.utilities.Manager;
 import me.refracdevelopment.simplegems.plugin.utilities.Methods;
 import me.refracdevelopment.simplegems.plugin.utilities.Permissions;
 import me.refracdevelopment.simplegems.plugin.utilities.chat.Color;
 import me.refracdevelopment.simplegems.plugin.utilities.files.Messages;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Author:  Zachary (Refrac) Baldwin
  * Created: 2021-10-8
  */
-public class GemsTopCommand extends Manager implements CommandExecutor {
+@CommandAlias("gemstop|gemtop")
+@Description("Allows you to see the top players.")
+@CommandPermission(Permissions.GEMS_TOP)
+@Conditions("noconsole")
+public class GemsTopCommand extends BaseCommand {
 
-    public GemsTopCommand(SimpleGems plugin) {
-        super(plugin);
-    }
+    @Dependency
+    private SimpleGems plugin;
 
-    @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if (!(sender instanceof Player)) {
-            Color.sendMessage(sender, "&cYou must be a player to execute this command.", true, true);
-            return true;
-        }
-
+    @Default
+    public void onDefault(CommandSender sender, String[] args) {
         Player player = (Player) sender;
 
-        if (!player.hasPermission(Permissions.GEMS_TOP)) {
-            Color.sendMessage(player, Messages.NO_PERMISSION, true, false);
-            return true;
-        }
-
         Methods.getTop10(player);
-        return true;
     }
 }

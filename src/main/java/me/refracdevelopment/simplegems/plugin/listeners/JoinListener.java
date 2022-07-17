@@ -79,7 +79,6 @@ public class JoinListener extends Manager implements Listener {
 
         if (profile != null) {
             plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> profile.getData().save());
-            profile.getData().getGems().remove(player.getUniqueId());
         }
     }
 }

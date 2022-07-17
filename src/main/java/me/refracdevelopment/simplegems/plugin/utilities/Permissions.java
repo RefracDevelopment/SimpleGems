@@ -27,22 +27,22 @@ package me.refracdevelopment.simplegems.plugin.utilities;
  */
 public class Permissions {
 
-    public static String GEMS_SHOP = "simplegems.shop";
+    public static final String GEMS_SHOP = "simplegems.shop";
 
-    public static String GEMS_BALANCE = "simplegems.balance";
+    public static final String GEMS_BALANCE = "simplegems.balance";
 
-    public static String GEMS_WITHDRAW = "simplegems.withdraw";
+    public static final String GEMS_WITHDRAW = "simplegems.withdraw";
 
-    public static String GEMS_PAY = "simplegems.pay";
+    public static final String GEMS_PAY = "simplegems.pay";
 
-    public static String GEMS_TOP = "simplegems.top";
+    public static final String GEMS_TOP = "simplegems.top";
 
-    public static String GEMS_ADMIN = "simplegems.admin";
+    public static final String GEMS_ADMIN = "simplegems.admin";
 
-    public static String GEMS_GIVE = "simplegems.give";
+    public static final String GEMS_GIVE = "simplegems.give";
 
-    public static String GEMS_TAKE = "simplegems.take";
+    public static final String GEMS_TAKE = "simplegems.take";
 
-    public static String GEMS_SET = "simplegems.set";
+    public static final String GEMS_SET = "simplegems.set";
 
 }

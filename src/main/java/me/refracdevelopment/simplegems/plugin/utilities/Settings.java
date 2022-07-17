@@ -35,7 +35,7 @@ public class Settings {
     public static String getDeveloper = "Refrac";
     public static String getDevUUID = "d9c670ed-d7d5-45fb-a144-8b8be86c4a2d";
     public static String getDevUUID2 = "ab898e40-9088-45eb-9d69-e0b78e872627";
-    public static String getVersion = "2.0";
+    public static String getVersion = "2.1";
 
     public static void devMessage(Player player) {
         player.sendMessage(" ");

@@ -21,37 +21,34 @@
  */
 package me.refracdevelopment.simplegems.plugin.commands;
 
+import co.aikar.commands.BaseCommand;
+import co.aikar.commands.annotation.*;
 import me.refracdevelopment.simplegems.plugin.SimpleGems;
 import me.refracdevelopment.simplegems.plugin.menu.GemShopItem;
-import me.refracdevelopment.simplegems.plugin.utilities.Manager;
 import me.refracdevelopment.simplegems.plugin.utilities.Methods;
 import me.refracdevelopment.simplegems.plugin.utilities.Permissions;
 import me.refracdevelopment.simplegems.plugin.utilities.chat.Color;
 import me.refracdevelopment.simplegems.plugin.utilities.files.Files;
 import me.refracdevelopment.simplegems.plugin.utilities.files.Menus;
 import me.refracdevelopment.simplegems.plugin.utilities.files.Messages;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Author:  Zachary (Refrac) Baldwin
  * Created: 2021-10-8
  */
-public class GemsReloadCommand extends Manager implements CommandExecutor {
+@CommandAlias("gemsreload")
+@Description("Reloads the config files")
+@CommandPermission(Permissions.GEMS_ADMIN)
+@Conditions("noconsole")
+public class GemsReloadCommand extends BaseCommand {
 
-    public GemsReloadCommand(SimpleGems plugin) {
-        super(plugin);
-    }
+    @Dependency
+    private SimpleGems plugin;
 
-    @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-        if (!sender.hasPermission(Permissions.GEMS_ADMIN)) {
-            Color.sendMessage(sender, Messages.NO_PERMISSION, true, true);
-            return true;
-        }
 
+    @Default
+    public void onDefault(CommandSender sender, String[] args) {
         Files.reloadFiles(plugin);
         plugin.getServer().getScheduler().cancelTasks(plugin);
         Methods.saveTask();
@@ -59,6 +56,5 @@ public class GemsReloadCommand extends Manager implements CommandExecutor {
         for (String item : Menus.GEM_SHOP_ITEMS.getKeys(false))
             plugin.getGemShop().getItems().put(item, new GemShopItem(item));
         Color.sendMessage(sender, Messages.RELOAD, true, true);
-        return true;
     }
 }

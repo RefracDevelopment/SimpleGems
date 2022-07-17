@@ -22,6 +22,7 @@
 package me.refracdevelopment.simplegems.plugin.listeners;
 
 import me.refracdevelopment.simplegems.plugin.SimpleGems;
+import me.refracdevelopment.simplegems.plugin.manager.Profile;
 import me.refracdevelopment.simplegems.plugin.utilities.Manager;
 import me.refracdevelopment.simplegems.plugin.utilities.Methods;
 import me.refracdevelopment.simplegems.plugin.utilities.chat.Color;
@@ -48,6 +49,8 @@ public class DepositListener extends Manager implements Listener {
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
+        Profile profile = plugin.getProfileManager().getProfile(player.getUniqueId());
+
         ItemStack gemsItem = Methods.getGemsItem();
         if (player.getItemInHand() == null) return;
         ItemStack item = player.getItemInHand();
@@ -59,7 +62,7 @@ public class DepositListener extends Manager implements Listener {
         if (!item.getItemMeta().getDisplayName().equals(Objects.requireNonNull(gemsItem.getItemMeta()).getDisplayName())) return;
         if (event.getAction() != Action.RIGHT_CLICK_AIR || event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
 
-        Methods.giveGems(player, item.getAmount());
+        profile.getData().getGems().incrementStat(item.getAmount());
         Color.sendMessage(player, Messages.GEMS_DEPOSITED.replace("%gems%", Methods.format(item.getAmount()))
                         .replace("%gems_decimal%", Methods.formatDec(item.getAmount())),
                 true, true);
