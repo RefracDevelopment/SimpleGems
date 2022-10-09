@@ -57,7 +57,7 @@ public class JoinListener extends Manager implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        Profile profile = plugin.getProfileManager().getProfile(player);
+        Profile profile = plugin.getProfileManager().getProfile(player.getUniqueId());
 
         try {
             plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> profile.getData().load());
@@ -65,9 +65,9 @@ public class JoinListener extends Manager implements Listener {
             player.kickPlayer(Color.translate(player, Messages.KICK_PROFILE_NOT_LOADED));
         }
 
-        if (player.getUniqueId().toString().equalsIgnoreCase(Settings.getDevUUID)) {
+        if (player.getUniqueId().equals(Settings.getDevUUID)) {
             Settings.devMessage(player);
-        } else if (player.getUniqueId().toString().equalsIgnoreCase(Settings.getDevUUID2)) {
+        } else if (player.getUniqueId().equals(Settings.getDevUUID2)) {
             Settings.devMessage(player);
         }
     }
@@ -75,7 +75,7 @@ public class JoinListener extends Manager implements Listener {
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        Profile profile = plugin.getProfileManager().getProfile(player);
+        Profile profile = plugin.getProfileManager().getProfile(player.getUniqueId());
 
         if (profile != null) {
             plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> profile.getData().save());

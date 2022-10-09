@@ -52,20 +52,17 @@ public class DepositListener extends Manager implements Listener {
         Profile profile = plugin.getProfileManager().getProfile(player.getUniqueId());
 
         ItemStack gemsItem = Methods.getGemsItem();
-        if (player.getItemInHand() == null) return;
         ItemStack item = player.getItemInHand();
 
+        if (item.getItemMeta() == null) return;
         if (!item.hasItemMeta()) return;
-        if (!Objects.requireNonNull(item.getItemMeta()).hasLore()) return;
         if (item.getType() != gemsItem.getType()) return;
-        if (!item.getItemMeta().hasDisplayName()) return;
-        if (!item.getItemMeta().getDisplayName().equals(Objects.requireNonNull(gemsItem.getItemMeta()).getDisplayName())) return;
-        if (event.getAction() != Action.RIGHT_CLICK_AIR || event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        if (!item.getItemMeta().getDisplayName().equals(gemsItem.getItemMeta().getDisplayName())) return;
 
+        player.setItemInHand(null);
         profile.getData().getGems().incrementStat(item.getAmount());
         Color.sendMessage(player, Messages.GEMS_DEPOSITED.replace("%gems%", Methods.format(item.getAmount()))
                         .replace("%gems_decimal%", Methods.formatDec(item.getAmount())),
                 true, true);
-        player.getInventory().setItemInHand(null);
     }
 }

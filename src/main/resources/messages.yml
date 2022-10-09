@@ -11,7 +11,7 @@
 # %empty% - Disable any message with this placeholder
 # PlaceholderAPI:
 # %simplegems_balance% - Get the formatted gems amount
-# %simplegems_balance_decimal% - Get the decimal formatted gems amount
+# %simplegems_balance_formatted% - Get the decimal formatted gems amount
 #--------------------------------------
 messages:
   prefix: "&e&lGems &8&l%arrow%"

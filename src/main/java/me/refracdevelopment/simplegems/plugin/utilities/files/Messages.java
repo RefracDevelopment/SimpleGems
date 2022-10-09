@@ -12,7 +12,6 @@ public class Messages {
     public static String PREFIX;
     public static String NO_PERMISSION;
     public static String RELOAD;
-    public static String SAVE_BROADCAST;
     public static String INVALID_GEMS;
     public static String INVALID_AMOUNT;
     public static String INVALID_PLAYER;
@@ -42,7 +41,6 @@ public class Messages {
         PREFIX = Files.getMessages().getString("messages.prefix");
         NO_PERMISSION = Files.getMessages().getString("messages.no-permission");
         RELOAD = Files.getMessages().getString("messages.reload");
-        SAVE_BROADCAST = Files.getMessages().getString("messages.save-broadcast");
         INVALID_GEMS = Files.getMessages().getString("messages.invalid-gems");
         INVALID_AMOUNT = Files.getMessages().getString("messages.invalid-amount");
         INVALID_PLAYER = Files.getMessages().getString("messages.invalid-player");

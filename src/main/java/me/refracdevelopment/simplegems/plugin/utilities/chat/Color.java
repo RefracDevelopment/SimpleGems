@@ -1,14 +1,17 @@
 package me.refracdevelopment.simplegems.plugin.utilities.chat;
 
-import com.iridium.iridiumcolorapi.IridiumColorAPI;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.refracdevelopment.simplegems.plugin.SimpleGems;
-import org.bukkit.ChatColor;
+import me.refracdevelopment.simplegems.plugin.utilities.VersionCheck;
+import me.refracdevelopment.simplegems.plugin.utilities.files.Messages;
+import org.apache.commons.lang.StringEscapeUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.Collections;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -16,6 +19,8 @@ import java.util.stream.Collectors;
  * Created: 2021-10-8
  */
 public class Color {
+
+    private static final Pattern HEX_PATTERN = Pattern.compile("(&#[0-9a-fA-F]{6})");
 
     public static String translate(Player player, String source) {
         source = Placeholders.setPlaceholders(player, source);
@@ -26,9 +31,21 @@ public class Color {
     }
 
     public static String translate(String source) {
-        source = IridiumColorAPI.process(source);
+        String hexColored = source;
 
-        return ChatColor.translateAlternateColorCodes('&', source);
+        if (VersionCheck.isOnePointSixteenPlus()) {
+            Matcher matcher = HEX_PATTERN.matcher(source);
+            StringBuffer sb = new StringBuffer();
+            while (matcher.find()) {
+                String hex = matcher.group(1).substring(1);
+                matcher.appendReplacement(sb, net.md_5.bungee.api.ChatColor.of(hex) + "");
+            }
+            matcher.appendTail(sb);
+
+            hexColored = sb.toString();
+        }
+
+        return org.bukkit.ChatColor.translateAlternateColorCodes('&', hexColored);
     }
 
     public static List<String> translate(List<String> source) {
@@ -48,5 +65,16 @@ public class Color {
         if (color) source = translate(source);
 
         sender.sendMessage(source);
+    }
+
+    public static void log(String message) {
+        Bukkit.getConsoleSender().sendMessage(translate(Messages.PREFIX
+                .replace("%arrow%", StringEscapeUtils.unescapeJava("\u00BB"))
+                .replace("%arrow_2%", StringEscapeUtils.unescapeJava("\u27A5"))
+                .replace("%star%", StringEscapeUtils.unescapeJava("\u2726"))
+                .replace("%circle%", StringEscapeUtils.unescapeJava("\u2219"))
+                .replace("|", StringEscapeUtils.unescapeJava("\u2503"))
+                + " " + message
+        ));
     }
 }

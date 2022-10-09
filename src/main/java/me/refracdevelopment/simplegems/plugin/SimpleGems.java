@@ -21,27 +21,26 @@
  */
 package me.refracdevelopment.simplegems.plugin;
 
-import co.aikar.commands.BukkitCommandIssuer;
-import co.aikar.commands.BukkitCommandManager;
-import co.aikar.commands.ConditionFailedException;
 import lombok.Getter;
 import lombok.Setter;
 import me.refracdevelopment.simplegems.plugin.api.GemsAPI;
-import me.refracdevelopment.simplegems.plugin.commands.*;
 import me.refracdevelopment.simplegems.plugin.listeners.DepositListener;
 import me.refracdevelopment.simplegems.plugin.listeners.JoinListener;
+import me.refracdevelopment.simplegems.plugin.manager.CommandManager;
 import me.refracdevelopment.simplegems.plugin.manager.ProfileManager;
 import me.refracdevelopment.simplegems.plugin.manager.database.DataType;
 import me.refracdevelopment.simplegems.plugin.manager.database.SQLManager;
 import me.refracdevelopment.simplegems.plugin.menu.GemShop;
-import me.refracdevelopment.simplegems.plugin.utilities.Logger;
+import me.refracdevelopment.simplegems.plugin.utilities.Glow;
 import me.refracdevelopment.simplegems.plugin.utilities.Methods;
 import me.refracdevelopment.simplegems.plugin.utilities.Settings;
+import me.refracdevelopment.simplegems.plugin.utilities.VersionCheck;
+import me.refracdevelopment.simplegems.plugin.utilities.chat.Color;
 import me.refracdevelopment.simplegems.plugin.utilities.chat.PlaceHolderExpansion;
 import me.refracdevelopment.simplegems.plugin.utilities.files.Config;
 import me.refracdevelopment.simplegems.plugin.utilities.files.Files;
 import org.bstats.bukkit.Metrics;
-import org.bukkit.entity.Player;
+import org.bukkit.NamespacedKey;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -58,6 +57,7 @@ public final class SimpleGems extends JavaPlugin {
     private DataType dataType;
     private SQLManager sqlManager;
     private ProfileManager profileManager;
+    private Glow glow;
     private GemShop gemShop;
     private GemsAPI gemsAPI;
 
@@ -81,72 +81,44 @@ public final class SimpleGems extends JavaPlugin {
         }
 
         if (this.dataType == DataType.MYSQL) {
-            (this.sqlManager = new SQLManager()).connect();
-        }
-
-        if (this.sqlManager != null && this.sqlManager.getConnection() == null && this.dataType == DataType.MYSQL) {
-            Logger.ERROR.out("Disabling SimpleGems due to issues with connection for MySQL servers, check your SQL information.");
-            this.getServer().getPluginManager().disablePlugin(this);
-            return;
+            this.sqlManager = new SQLManager(this);
         }
 
         this.profileManager = new ProfileManager(this);
         this.gemsAPI = new GemsAPI();
 
-        this.loadCommands();
+        CommandManager.registerAll();
         this.loadListeners();
+
+        if(VersionCheck.isOnePointThirteenPlus()) {
+            this.glow = new Glow(NamespacedKey.minecraft("glow"));
+            this.glow.register();
+            Color.log("Enabled glow for Spigot 1.13+");
+        }
 
         if (this.getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
             new PlaceHolderExpansion().register();
-            Logger.INFO.out("Placeholder API expansion successfully registered.");
+            Color.log("&aPlaceholder API expansion enabled.");
         }
+
+        new Metrics(this, 13117);
 
         // Save all online players every x seconds
         Methods.saveTask();
 
-        new Metrics(this, 13117);
-
-        Logger.NONE.out("&8&m==&c&m=====&f&m======================&c&m=====&8&m==");
-        Logger.NONE.out("&e" + Settings.getName + " has been enabled.");
-        Logger.NONE.out(" &f[*] &6Version&f: &b" + Settings.getVersion);
-        Logger.NONE.out(" &f[*] &6Name&f: &b" + Settings.getName);
-        Logger.NONE.out(" &f[*] &6Author&f: &b" + Settings.getDeveloper);
-        if (this.dataType != DataType.YAML) {
-            Logger.SUCCESS.out("SimpleGems is using &2MySQL &aas a database.");
-        }
-        Logger.NONE.out("&8&m==&c&m=====&f&m======================&c&m=====&8&m==");
+        Color.log("&8&m==&c&m=====&f&m======================&c&m=====&8&m==");
+        Color.log("&e" + Settings.getName + " has been enabled.");
+        Color.log(" &f[*] &6Version&f: &b" + Settings.getVersion);
+        Color.log(" &f[*] &6Name&f: &b" + Settings.getName);
+        Color.log(" &f[*] &6Author&f: &b" + Settings.getDeveloper);
+        Color.log("&8&m==&c&m=====&f&m======================&c&m=====&8&m==");
     }
 
     @Override
     public void onDisable() {
-        instance = null;
-        for (Player player : this.getServer().getOnlinePlayers())
-            this.profileManager.getProfile(player.getUniqueId()).getData().save();
-        if (this.dataType == DataType.MYSQL) {
-            this.sqlManager.close();
-        }
-        this.getServer().getScheduler().cancelTasks(this);
-    }
-
-    private void loadCommands() {
-        BukkitCommandManager manager = new BukkitCommandManager(this);
-        manager.getCommandConditions().addCondition("noconsole", (context) -> {
-            BukkitCommandIssuer issuer = context.getIssuer();
-            if (!issuer.isPlayer()) {
-                throw new ConditionFailedException("Only players can execute this command.");
-            }
-        });
-        manager.getCommandConditions().addCondition("noplayer", (context) -> {
-            BukkitCommandIssuer issuer = context.getIssuer();
-            if (issuer.isPlayer()) {
-                throw new ConditionFailedException("Only console can execute this command.");
-            }
-        });
-        manager.registerCommand(new GemsCommand());
-        manager.registerCommand(new ConsoleGemsCommand());
-        manager.registerCommand(new GemShopCommand());
-        manager.registerCommand(new GemsReloadCommand());
-        manager.registerCommand(new GemsTopCommand());
+       this.getServer().getOnlinePlayers().forEach(player -> {
+           this.profileManager.getProfile(player.getUniqueId()).getData().save();
+       });
     }
 
     private void loadListeners() {

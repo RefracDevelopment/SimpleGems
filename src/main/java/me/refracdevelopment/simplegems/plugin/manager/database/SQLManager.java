@@ -1,133 +1,138 @@
-/*
- * The MIT License (MIT)
- *
- * Copyright (c) 2022 RefracDevelopment
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
- * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
- * PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
- * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
- * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- */
 package me.refracdevelopment.simplegems.plugin.manager.database;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import me.refracdevelopment.simplegems.plugin.SimpleGems;
-import me.refracdevelopment.simplegems.plugin.utilities.files.Config;
+import me.refracdevelopment.simplegems.plugin.utilities.Manager;
+import me.refracdevelopment.simplegems.plugin.utilities.chat.Color;
 import me.refracdevelopment.simplegems.plugin.utilities.files.Files;
+import org.bukkit.Bukkit;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.UUID;
 
-/**
- * Author:  Zachary (Refrac) Baldwin
- * Created: 2021-10-8
- */
-@Getter
-@Setter
-@RequiredArgsConstructor
-public class SQLManager {
+public class SQLManager extends Manager {
 
-    private final SimpleGems plugin = SimpleGems.getInstance();
+    private HikariDataSource hikariDataSource;
     private final String host = Files.getConfig().getString("mysql.host");
     private final String username = Files.getConfig().getString("mysql.username");
     private final String password = Files.getConfig().getString("mysql.password");
     private final String database = Files.getConfig().getString("mysql.database");
-    private final int port = Files.getConfig().getInt("mysql.port");
+    private final String port = Files.getConfig().getString("mysql.port");
 
-    private Connection connection;
-
-    public void connect() {
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        if (Config.DATA_TYPE.equalsIgnoreCase("MYSQL")) {
-            try {
-                this.connection = DriverManager.getConnection("jdbc:mysql://" +
-                        host + ":" + port + "/" + database +
-                        "?characterEncoding=latin1&useConfigs=maxPerformance&autoReconnect=true", username, password);
-            } catch (SQLException e) {
-                this.connection = null;
-                e.printStackTrace();
-                return;
-            }
+    public SQLManager(SimpleGems plugin) {
+        super(plugin);
+        Color.log("&eEnabling MySQL support!");
+        Exception ex = connect();
+        if (ex != null) {
+            Color.log("&cThere was an error connecting to your database. Here's the suspect: &e" + ex.getLocalizedMessage());
+            ex.printStackTrace();
+            Bukkit.getPluginManager().disablePlugin(plugin);
         } else {
-            this.connection = null;
-            return;
+            Color.log("&aManaged to successfully connect to: &e" + database + "&a!");
         }
-
-        this.createTable();
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, this::createTables);
     }
 
-    public void createTable() {
+    public Exception connect() {
         try {
-            PreparedStatement ps = this.connection.prepareStatement("CREATE TABLE IF NOT EXISTS simplegems"
-                    + "(name VARCHAR(16) NOT NULL, uuid VARCHAR(48) NOT NULL, gems DOUBLE NOT NULL)");
-            ps.executeUpdate();
-            ps.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
+            HikariConfig hikariConfig = new HikariConfig();
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            hikariConfig.setDriverClassName("com.mysql.cj.jdbc.Driver");
+            hikariConfig.setJdbcUrl("jdbc:mysql://" + host + ':' + port + '/' + database);
+            hikariConfig.setUsername(username);
+            hikariConfig.setPassword(password);
+            hikariConfig.setConnectionTimeout(10 * 1000);
+            hikariConfig.setMaxLifetime(30 * 1000);
+
+            hikariDataSource = new HikariDataSource(hikariConfig);
+        } catch (Exception exception) {
+            hikariDataSource = null;
+            return exception;
         }
+        return null;
+    }
+
+    public void createTables() {
+        createTable("simplegems", "uuid VARCHAR(36) NOT NULL PRIMARY KEY, name VARCHAR(16), gems BIGINT(50) DEFAULT 0");
+    }
+
+    public boolean isInitiated() {
+        return hikariDataSource != null;
     }
 
     public void close() {
-        try {
-            if (this.connection != null && !this.connection.isClosed()) {
-                this.connection.close();
+        this.hikariDataSource.close();
+    }
+
+
+    /**
+     * @return A new database connecting, provided by the Hikari pool.
+     * @throws SQLException
+     */
+    public Connection getConnection() throws SQLException {
+        return hikariDataSource.getConnection();
+    }
+
+    /**
+     * Create a new table in the database.
+     *
+     * @param name The name of the table.
+     * @param info The table info between the round VALUES() brackets.
+     */
+    public void createTable(String name, String info) {
+        new Thread(() -> {
+            try (Connection resource = getConnection(); PreparedStatement statement = resource.prepareStatement("CREATE TABLE IF NOT EXISTS " + name + "(" + info + ");")) {
+                statement.execute();
+            } catch (SQLException exception) {
+                Color.log("An error occurred while creating database table " + name + ".");
+                exception.printStackTrace();
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        }).start();
     }
 
-    public void close(AutoCloseable... closeables) {
-        Arrays.stream(closeables).filter(Objects::nonNull).forEach(closeable -> {
-            try {
-                closeable.close();
-            } catch (Exception e) {
-                e.printStackTrace();
+    /**
+     * Execute an update to the database.
+     *
+     * @param query  The statement to the database.
+     * @param values The values to be inserted into the statement.
+     */
+    public void execute(String query, Object... values) {
+        new Thread(() -> {
+            try (Connection resource = getConnection(); PreparedStatement statement = resource.prepareStatement(query)) {
+                for (int i = 0; i < values.length; i++) {
+                    statement.setObject((i + 1), values[i]);
+                }
+                statement.execute();
+            } catch (SQLException exception) {
+                Color.log("An error occurred while executing an update on the database.");
+                Color.log("MySQL#execute : " + query);
+                exception.printStackTrace();
             }
-        });
+        }).start();
     }
 
-    // DELETE ALL DATA
-    public void emptyTable() {
-        try {
-            PreparedStatement ps = this.connection.prepareStatement("TRUNCATE simplegems");
-            ps.executeUpdate();
-            ps.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    /**
+     * Execute a query to the database.
+     *
+     * @param query    The statement to the database.
+     * @param callback The data callback (Async).
+     * @param values   The values to be inserted into the statement.
+     */
+    public void select(String query, SelectCall callback, Object... values) {
+        new Thread(() -> {
+            try (Connection resource = getConnection(); PreparedStatement statement = resource.prepareStatement(query)) {
+                for (int i = 0; i < values.length; i++) {
+                    statement.setObject((i + 1), values[i]);
+                }
+                callback.call(statement.executeQuery());
+            } catch (SQLException exception) {
+                Color.log("An error occurred while executing a query on the database.");
+                Color.log("MySQL#select : " + query);
+                exception.printStackTrace();
+            }
+        }).start();
     }
 
-    public void remove(UUID uuid) {
-        try {
-            PreparedStatement ps = this.connection.prepareStatement("DELETE FROM simplegems WHERE uuid=?");
-            ps.setString(1, uuid.toString());
-            ps.executeUpdate();
-            ps.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 }

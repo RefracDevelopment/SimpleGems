@@ -10,17 +10,11 @@
 # %circle% - Get a circle for a message
 # PlaceholderAPI:
 # %simplegems_balance% - Get the formatted gems amount
-# %simplegems_balance_decimal% - Get the decimal formatted gems amount
+# %simplegems_balance_formatted% - Get the decimal formatted gems amount
 #--------------------------------------
-# This will auto save all online player's gems data in seconds
-save-interval: 1800 # 1800 = 30 Minutes
-# Set to false if you don't want to auto save WARNING: It is HIGHLY recommended leaving this option on
-# to prevent potential saving issues
-save: true
-
 # Choose your data saving type:
 # MYSQL - Database saving
-# YAML - Local saving in the "UserData" folder
+# YAML - Local saving in the data.yml file
 data-type: "YAML"
 
 # Make sure your credentials are correct
@@ -30,7 +24,7 @@ mysql:
   username: "root"
   password: "test"
   database: "test"
-  port: 3306
+  port: "3306"
 
 # This is used for viewing top players
 gems-top:
@@ -43,6 +37,35 @@ gems-item:
   material: DIAMOND
   data: 0
   name: "&e&lGems &7(Right Click)"
+  glow: true
   lore:
     - "&7&oRight click to redeem these gems you"
     - "&7&ohave obtained through your journey"
+
+# A restart is required for command changes
+commands:
+  console-gems:
+    enabled: true
+    command: "consolegems"
+    aliases:
+      - "cgems"
+  gems:
+    enabled: true
+    command: "gems"
+    aliases:
+      - ""
+  gems-shop:
+    enabled: true
+    command: "gemsshop"
+    aliases:
+      - "gemshop"
+  gems-reload:
+    enabled: true
+    command: "gemsreload"
+    aliases:
+      - ""
+  gems-top:
+    enabled: true
+    command: "gemstop"
+    aliases:
+      - "gemtop"

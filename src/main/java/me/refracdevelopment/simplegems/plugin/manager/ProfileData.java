@@ -24,10 +24,9 @@ package me.refracdevelopment.simplegems.plugin.manager;
 import lombok.Getter;
 import me.refracdevelopment.simplegems.plugin.SimpleGems;
 import me.refracdevelopment.simplegems.plugin.manager.database.DataType;
+import me.refracdevelopment.simplegems.plugin.utilities.chat.Color;
 import me.refracdevelopment.simplegems.plugin.utilities.files.Files;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
 
@@ -55,19 +54,17 @@ public class ProfileData {
      */
     public void load() {
         if (plugin.getDataType() == DataType.MYSQL) {
-            try {
-                PreparedStatement statement = plugin.getSqlManager().getConnection().prepareStatement("SELECT * FROM simplegems WHERE uuid=?");
-                statement.setString(1, this.uuid.toString());
-                ResultSet result = statement.executeQuery();
-
-                if (result.next()) {
-                    this.gems.setStat(result.getDouble("gems"));
-                } else {
-                    this.save();
+            plugin.getSqlManager().select("SELECT * FROM simplegems WHERE uuid=?", resultSet -> {
+                try {
+                    if (resultSet.next()) {
+                        this.gems.setStat(resultSet.getDouble("gems"));
+                    } else {
+                        this.save();
+                    }
+                } catch (SQLException e) {
+                    Color.log(e.getMessage());
                 }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            }, uuid.toString());
         } else if (plugin.getDataType() == DataType.YAML) {
             this.gems.setStat(Files.getData().getDouble("data." + this.uuid.toString() + ".gems"));
         }
@@ -79,40 +76,17 @@ public class ProfileData {
      */
     public void save() {
         if (plugin.getDataType() == DataType.MYSQL) {
-            try {
-                PreparedStatement statement = plugin.getSqlManager().getConnection().prepareStatement("SELECT * FROM simplegems WHERE uuid=?");
-                statement.setString(1, this.uuid.toString());
+            SimpleGems.getInstance().getSqlManager().execute("INSERT INTO simplegems (name,uuid,gems) VALUES (?,?,?) ON DUPLICATE KEY UPDATE name=?,gems=?",
 
-                ResultSet result = statement.executeQuery();
+                    // INSERT
+                    name,
+                    uuid.toString(),
+                    gems.getStat(),
+                    // UPDATE
+                    name,
+                    gems.getStat()
 
-                if (result.next()) {
-                    PreparedStatement update = plugin.getSqlManager().getConnection().prepareStatement("UPDATE simplegems SET "
-                            + "name=?,uuid=?,gems=? WHERE uuid=?");
-
-                    update.setString(1, this.name);
-                    update.setString(2, this.uuid.toString());
-                    update.setDouble(3, this.gems.getStat());
-                    update.setString(4, this.uuid.toString());
-
-                    update.executeUpdate();
-                    update.close();
-                } else {
-                    PreparedStatement insert = plugin.getSqlManager().getConnection().prepareStatement("INSERT INTO simplegems ("
-                            + "name,uuid,gems) VALUES ("
-                            + "?,?,?)");
-
-                    insert.setString(1, this.name);
-                    insert.setString(2, this.uuid.toString());
-                    insert.setDouble(3, this.gems.getStat());
-
-                    insert.executeUpdate();
-                    insert.close();
-                }
-
-                plugin.getSqlManager().close(statement, result);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            );
         } else if (plugin.getDataType() == DataType.YAML) {
             Files.getData().set("data." + this.uuid.toString() + ".name", this.name);
             Files.getData().set("data." + this.uuid.toString() + ".gems", this.gems.getStat());

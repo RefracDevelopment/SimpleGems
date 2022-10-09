@@ -23,7 +23,7 @@ package me.refracdevelopment.simplegems.plugin.api;
 
 import me.refracdevelopment.simplegems.plugin.SimpleGems;
 import me.refracdevelopment.simplegems.plugin.api.manager.*;
-import me.refracdevelopment.simplegems.plugin.utilities.Logger;
+import me.refracdevelopment.simplegems.plugin.utilities.chat.Color;
 
 /**
  * Author:  Zachary (Refrac) Baldwin
@@ -44,8 +44,8 @@ public class GemsAPI {
         INSTANCE = this;
         profileManager = new ProfileManager();
         profileData = new ProfileData();
-        Logger.NONE.out("&eSimpleGemsAPI has been enabled!");
-        Logger.NONE.out("&aWiki & Download: https://refracdevelopment.gitbook.io/simplegems-1/");
+        Color.log("&eSimpleGemsAPI has been enabled!");
+        Color.log("&aWiki & Download: https://simplegems.refracdev.ml");
     }
 
     /**

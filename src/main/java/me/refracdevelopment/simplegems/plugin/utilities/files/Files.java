@@ -1,7 +1,7 @@
 package me.refracdevelopment.simplegems.plugin.utilities.files;
 
 import me.refracdevelopment.simplegems.plugin.SimpleGems;
-import me.refracdevelopment.simplegems.plugin.utilities.Logger;
+import me.refracdevelopment.simplegems.plugin.utilities.chat.Color;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -58,9 +58,9 @@ public class Files {
         Menus.loadMenus();
         Messages.loadMessages();
 
-        Logger.NONE.out("&c==========================================");
-        Logger.NONE.out("&aAll files have been loaded correctly!");
-        Logger.NONE.out("&c==========================================");
+        Color.log("&c==========================================");
+        Color.log("&aAll files have been loaded correctly!");
+        Color.log("&c==========================================");
     }
 
     public static FileConfiguration getConfig() {
@@ -83,8 +83,8 @@ public class Files {
         try {
             data.save(dataFile);
         } catch (Exception e) {
-            Logger.ERROR.out("Failed to save the data file!");
-            e.printStackTrace();
+            Color.log("&cFailed to save the data file!");
+            Color.log(e.getMessage());
         }
     }
 
@@ -93,40 +93,40 @@ public class Files {
         try {
             config = YamlConfiguration.loadConfiguration(configFile);
         } catch (Exception e) {
-            Logger.ERROR.out("Failed to reload the config file!");
-            e.printStackTrace();
+            Color.log("&cFailed to reload the config file!");
+            Color.log(e.getMessage());
         }
 
         messagesFile = new File(plugin.getDataFolder(), "messages.yml");
         try {
             messages = YamlConfiguration.loadConfiguration(messagesFile);
         } catch (Exception e) {
-            Logger.ERROR.out("Failed to reload the messages file!");
-            e.printStackTrace();
+            Color.log("&cFailed to reload the messages file!");
+            Color.log(e.getMessage());
         }
 
         menusFile = new File(plugin.getDataFolder(), "menus.yml");
         try {
             menus = YamlConfiguration.loadConfiguration(menusFile);
         } catch (Exception e) {
-            Logger.ERROR.out("Failed to reload the menus file!");
-            e.printStackTrace();
+            Color.log("&cFailed to reload the menus file!");
+            Color.log(e.getMessage());
         }
 
         dataFile = new File(plugin.getDataFolder(), "data.yml");
         try {
             data = YamlConfiguration.loadConfiguration(dataFile);
         } catch (Exception e) {
-            Logger.ERROR.out("Failed to reload the data file!");
-            e.printStackTrace();
+            Color.log("&cFailed to reload the data file!");
+            Color.log(e.getMessage());
         }
 
         Config.loadConfig();
         Menus.loadMenus();
         Messages.loadMessages();
 
-        Logger.NONE.out("&c==========================================");
-        Logger.NONE.out("&aAll files have been reloaded correctly!");
-        Logger.NONE.out("&c==========================================");
+        Color.log("&c==========================================");
+        Color.log("&aAll files have been reloaded correctly!");
+        Color.log("&c==========================================");
     }
 }

@@ -41,7 +41,7 @@ public class PlaceHolderExpansion extends PlaceholderExpansion {
         if (params.equalsIgnoreCase("balance")) {
             return Methods.format(profile.getData().getGems().getStat());
         }
-        if (params.equalsIgnoreCase("balance_decimal")) {
+        if (params.equalsIgnoreCase("balance_formatted")) {
             return Methods.formatDec(profile.getData().getGems().getStat());
         }
         return null;

@@ -10,7 +10,7 @@
 # %circle% - Get a circle for a message
 # PlaceholderAPI:
 # %simplegems_balance% - Get the formatted gems amount
-# %simplegems_balance_decimal% - Get the decimal formatted gems amount
+# %simplegems_balance_formatted% - Get the decimal formatted gems amount
 #--------------------------------------
 gems-menu:
   enabled: true

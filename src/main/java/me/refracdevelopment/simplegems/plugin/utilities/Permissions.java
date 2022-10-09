@@ -29,8 +29,6 @@ public class Permissions {
 
     public static final String GEMS_SHOP = "simplegems.shop";
 
-    public static final String GEMS_BALANCE = "simplegems.balance";
-
     public static final String GEMS_WITHDRAW = "simplegems.withdraw";
 
     public static final String GEMS_PAY = "simplegems.pay";

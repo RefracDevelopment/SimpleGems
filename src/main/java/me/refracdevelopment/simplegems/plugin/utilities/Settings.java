@@ -25,6 +25,8 @@ import me.refracdevelopment.simplegems.plugin.SimpleGems;
 import me.refracdevelopment.simplegems.plugin.utilities.chat.Color;
 import org.bukkit.entity.Player;
 
+import java.util.UUID;
+
 /**
  * Author:  Zachary (Refrac) Baldwin
  * Created: 2021-10-1
@@ -32,10 +34,10 @@ import org.bukkit.entity.Player;
 public class Settings {
 
     public static String getName = "SimpleGems";
-    public static String getDeveloper = "Refrac";
-    public static String getDevUUID = "d9c670ed-d7d5-45fb-a144-8b8be86c4a2d";
-    public static String getDevUUID2 = "ab898e40-9088-45eb-9d69-e0b78e872627";
-    public static String getVersion = "2.1";
+    public static String getDeveloper = "RefracDevelopment";
+    public static UUID getDevUUID = UUID.fromString("d9c670ed-d7d5-45fb-a144-8b8be86c4a2d");
+    public static UUID getDevUUID2 = UUID.fromString("ab898e40-9088-45eb-9d69-e0b78e872627");
+    public static String getVersion = "2.2";
 
     public static void devMessage(Player player) {
         player.sendMessage(" ");
