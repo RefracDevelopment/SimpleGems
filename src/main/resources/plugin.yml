@@ -1,13 +1,11 @@
-name: 'SimpleGems'
-version: '${project.version}'
-main: me.refracdevelopment.simplegems.plugin.SimpleGems
+name: SimpleGems
+version: '@version@'
+main: me.refracdevelopment.simplegems.SimpleGems
+author: RefracDevelopment
+api-version: "1.13"
 softdepend:
-  - 'PlaceholderAPI'
-  - 'Skulls'
-  - 'HeadDatabase'
-api-version: 1.13
-authors:
-  - 'RefracDevelopment'
-  - 'Refrac'
-description: 'A new gems economy plugin'
-website: 'https://discord.refracdev.ml'
+  - PlaceholderAPI
+  - Skulls
+  - HeadDatabase
+description: A simple gems economy plugin
+website: https://discord.refracdev.ml/

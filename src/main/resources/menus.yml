@@ -10,21 +10,21 @@
 # %circle% - Get a circle for a message
 # PlaceholderAPI:
 # %simplegems_balance% - Get the formatted gems amount
-# %simplegems_balance_formatted% - Get the decimal formatted gems amount
+# %simplegems_balance_decimal% - Get the decimal formatted gems amount
 #--------------------------------------
 gems-menu:
   enabled: true
   title: "&e&lGems Shop"
   size: 36
   fill:
-    material: STAINED_GLASS_PANE
-    data: 15
+    material: BLACK_STAINED_GLASS_PANE
+    data: 0
     name: "&7"
     lore:
       - ""
   items:
     infoandbalanceItem:
-      material: DOUBLE_PLANT
+      material: SUNFLOWER
       data: 0
       name: "&eWhat is the Gem Shop?"
       lore:
