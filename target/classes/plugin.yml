@@ -1,0 +1,11 @@
+name: SimpleGems
+version: '2.3-rc.2'
+main: me.refracdevelopment.simplegems.SimpleGems
+author: RefracDevelopment
+api-version: "1.13"
+softdepend:
+  - PlaceholderAPI
+  - Skulls
+  - HeadDatabase
+description: A simple gems economy plugin
+website: https://discord.refracdev.ml/

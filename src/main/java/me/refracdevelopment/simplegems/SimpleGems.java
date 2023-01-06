@@ -7,22 +7,19 @@ import dev.rosewood.rosegarden.manager.Manager;
 import dev.rosewood.rosegarden.utils.NMSUtil;
 import lombok.Getter;
 import lombok.Setter;
-import me.refracdevelopment.simplegems.listeners.DepositListener;
-import me.refracdevelopment.simplegems.listeners.JoinListener;
+import me.refracdevelopment.simplegems.data.DataType;
+import me.refracdevelopment.simplegems.data.ProfileManager;
+import me.refracdevelopment.simplegems.data.SQLManager;
+import me.refracdevelopment.simplegems.leaderboard.LeaderboardManager;
+import me.refracdevelopment.simplegems.listeners.PlayerListener;
 import me.refracdevelopment.simplegems.manager.CommandManager;
 import me.refracdevelopment.simplegems.manager.ConfigurationManager;
 import me.refracdevelopment.simplegems.manager.LocaleManager;
-import me.refracdevelopment.simplegems.manager.data.DataType;
-import me.refracdevelopment.simplegems.manager.data.ProfileManager;
-import me.refracdevelopment.simplegems.manager.data.SQLManager;
 import me.refracdevelopment.simplegems.menu.GemShop;
-import me.refracdevelopment.simplegems.utilities.Glow;
 import me.refracdevelopment.simplegems.utilities.chat.Color;
 import me.refracdevelopment.simplegems.utilities.chat.PlaceHolderExpansion;
 import me.refracdevelopment.simplegems.utilities.files.Config;
 import me.refracdevelopment.simplegems.utilities.files.Files;
-import org.bukkit.Bukkit;
-import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.PluginManager;
 
@@ -43,9 +40,9 @@ public final class SimpleGems extends RosePlugin {
     private DataType dataType;
     private SQLManager sqlManager;
     private ProfileManager profileManager;
-    private Glow glow;
-    private GemShop gemShop;
     private SimpleGemsAPI gemsAPI;
+    private LeaderboardManager leaderboardManager;
+    private GemShop gemShop;
 
     public SimpleGems() {
         super(96827, 13117, ConfigurationManager.class, null, LocaleManager.class, CommandManager.class);
@@ -58,7 +55,7 @@ public final class SimpleGems extends RosePlugin {
         long startTiming = System.currentTimeMillis();
         PluginManager pluginManager = this.getServer().getPluginManager();
 
-        getManager(Files.class).loadFiles();
+        Files.loadFiles(this);
 
         // Make sure the server has PlaceholderAPI
         if (!pluginManager.isPluginEnabled("PlaceholderAPI")) {
@@ -67,13 +64,44 @@ public final class SimpleGems extends RosePlugin {
             return;
         }
 
-        // Make sure the server is on MC 1.13
-        if (NMSUtil.getVersionNumber() < 13) {
-            Color.log("&cThis plugin only supports 1.13+ Minecraft.");
+        // Make sure the server is on MC 1.16
+        if (NMSUtil.getVersionNumber() < 16) {
+            Color.log("&cThis plugin only supports 1.16+ Minecraft.");
             this.getServer().getPluginManager().disablePlugin(this);
             return;
         }
 
+        this.loadManagers();
+        Color.log("&aLoaded commands.");
+        this.loadListeners();
+
+        new PlaceHolderExpansion().register();
+
+        Color.log("&8&m==&c&m=====&f&m======================&c&m=====&8&m==");
+        Color.log("&e" + this.getDescription().getName() + " has been enabled. (" + (System.currentTimeMillis() - startTiming) + "ms)");
+        Color.log(" &f[*] &6Version&f: &b" + this.getDescription().getVersion());
+        Color.log(" &f[*] &6Name&f: &b" + this.getDescription().getName());
+        Color.log(" &f[*] &6Author&f: &b" + this.getDescription().getAuthors().get(0));
+        Color.log("&8&m==&c&m=====&f&m======================&c&m=====&8&m==");
+
+        updateCheck(this.getServer().getConsoleSender(), true);
+    }
+
+    @Override
+    protected void disable() {
+        // Plugin shutdown logic
+        if (this.dataType == DataType.MYSQL) {
+            this.sqlManager.shutdown();
+        }
+        this.getServer().getScheduler().cancelTasks(this);
+    }
+
+    @Override
+    protected List<Class<? extends Manager>> getManagerLoadPriority() {
+        return Collections.emptyList();
+    }
+
+    private void loadManagers() {
         switch (Config.DATA_TYPE.toUpperCase()) {
             case "MYSQL":
                 dataType = DataType.MYSQL;
@@ -92,44 +120,18 @@ public final class SimpleGems extends RosePlugin {
 
         profileManager = new ProfileManager();
         gemsAPI = new SimpleGemsAPI();
-
-        Color.log("&aLoaded commands.");
-        loadListeners();
-        Color.log("&aLoaded listeners.");
-
-        glow = new Glow(NamespacedKey.minecraft("glow"));
-        glow.register();
-
-        new PlaceHolderExpansion().register();
-
-        Color.log("&aChecking for updates!");
-        updateCheck(Bukkit.getConsoleSender(), true);
-
-        Color.log("&8&m==&c&m=====&f&m======================&c&m=====&8&m==");
-        Color.log("&e" + this.getDescription().getName() + " has been enabled. (" + (System.currentTimeMillis() - startTiming) + "ms)");
-        Color.log(" &f[*] &6Version&f: &b" + this.getDescription().getVersion());
-        Color.log(" &f[*] &6Name&f: &b" + this.getDescription().getName());
-        Color.log(" &f[*] &6Author&f: &b" + this.getDescription().getAuthors().get(0));
-        Color.log("&8&m==&c&m=====&f&m======================&c&m=====&8&m==");
-    }
-
-    @Override
-    protected void disable() {
-       // unused
-    }
-
-    @Override
-    protected List<Class<? extends Manager>> getManagerLoadPriority() {
-        return Collections.emptyList();
+        leaderboardManager = new LeaderboardManager();
+        Color.log("&aLoaded managers.");
     }
 
     private void loadListeners() {
-        getServer().getPluginManager().registerEvents(new JoinListener(), this);
-        getServer().getPluginManager().registerEvents(new DepositListener(), this);
-        gemShop = new GemShop(this);
+        getServer().getPluginManager().registerEvents(new PlayerListener(), this);
+        gemShop = new GemShop();
+        Color.log("&aLoaded listeners.");
     }
 
     public void updateCheck(CommandSender sender, boolean console) {
+        Color.log("&aChecking for updates!");
         try {
             String urlString = "https://updatecheck.refracdev.ml/";
             URL url = new URL(urlString);

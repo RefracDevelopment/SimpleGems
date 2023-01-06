@@ -1,14 +1,14 @@
 package me.refracdevelopment.simplegems.utilities.files;
 
 import dev.rosewood.rosegarden.RosePlugin;
-import dev.rosewood.rosegarden.manager.Manager;
+import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.utilities.chat.Color;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 
-public class Files extends Manager {
+public class Files {
 
     private static File menusFile;
     private static FileConfiguration menus;
@@ -16,24 +16,20 @@ public class Files extends Manager {
     private static File dataFile;
     private static FileConfiguration data;
 
-    public Files(RosePlugin rosePlugin) {
-        super(rosePlugin);
-    }
-
-    public void loadFiles() {
-        if (!rosePlugin.getDataFolder().exists()) {
-            this.rosePlugin.getDataFolder().mkdirs();
+    public static void loadFiles(SimpleGems plugin) {
+        if (!plugin.getDataFolder().exists()) {
+            plugin.getDataFolder().mkdirs();
         }
 
-        menusFile = new File(rosePlugin.getDataFolder(), "menus.yml");
+        menusFile = new File(plugin.getDataFolder(), "menus.yml");
         if (!menusFile.exists()) {
-            this.rosePlugin.saveResource("menus.yml", false);
+            plugin.saveResource("menus.yml", false);
         }
         menus = YamlConfiguration.loadConfiguration(menusFile);
 
-        dataFile = new File(rosePlugin.getDataFolder(), "data.yml");
+        dataFile = new File(plugin.getDataFolder(), "data.yml");
         if (!dataFile.exists()) {
-            this.rosePlugin.saveResource("data.yml", false);
+            plugin.saveResource("data.yml", false);
         }
         data = YamlConfiguration.loadConfiguration(dataFile);
 
@@ -53,7 +49,7 @@ public class Files extends Manager {
         return data;
     }
 
-    public void saveData() {
+    public static void saveData() {
         try {
             data.save(dataFile);
         } catch (Exception exception) {
@@ -62,8 +58,8 @@ public class Files extends Manager {
         }
     }
 
-    public void reloadFiles() {
-        menusFile = new File(this.rosePlugin.getDataFolder(), "menus.yml");
+    public static void reloadFiles(SimpleGems plugin) {
+        menusFile = new File(plugin.getDataFolder(), "menus.yml");
         try {
             menus = YamlConfiguration.loadConfiguration(menusFile);
         } catch (Exception exception) {
@@ -71,7 +67,7 @@ public class Files extends Manager {
             exception.printStackTrace();
         }
 
-        dataFile = new File(this.rosePlugin.getDataFolder(), "data.yml");
+        dataFile = new File(plugin.getDataFolder(), "data.yml");
         try {
             data = YamlConfiguration.loadConfiguration(dataFile);
         } catch (Exception exception) {
@@ -81,15 +77,5 @@ public class Files extends Manager {
 
         Config.loadConfig();
         Menus.loadMenus();
-    }
-
-    @Override
-    public void reload() {
-        reloadFiles();
-    }
-
-    @Override
-    public void disable() {
-
     }
 }

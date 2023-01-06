@@ -20,8 +20,6 @@ gems-menu:
     material: BLACK_STAINED_GLASS_PANE
     data: 0
     name: "&7"
-    lore:
-      - ""
   items:
     infoandbalanceItem:
       material: SUNFLOWER

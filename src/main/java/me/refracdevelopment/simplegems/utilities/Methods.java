@@ -4,207 +4,132 @@ import com.cryptomorin.xseries.XMaterial;
 import dev.rosewood.rosegarden.utils.NMSUtil;
 import dev.rosewood.rosegarden.utils.StringPlaceholders;
 import me.refracdevelopment.simplegems.SimpleGems;
+import me.refracdevelopment.simplegems.data.DataType;
+import me.refracdevelopment.simplegems.data.Profile;
+import me.refracdevelopment.simplegems.data.ProfileData;
 import me.refracdevelopment.simplegems.manager.LocaleManager;
-import me.refracdevelopment.simplegems.manager.data.DataType;
-import me.refracdevelopment.simplegems.manager.data.Profile;
-import me.refracdevelopment.simplegems.manager.data.ProfileData;
 import me.refracdevelopment.simplegems.utilities.chat.Color;
 import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
 import me.refracdevelopment.simplegems.utilities.files.Config;
 import me.refracdevelopment.simplegems.utilities.files.Files;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class Methods {
-
-    /**
-     * This will save all online player's data.
-     */
-    public static void saveTask() {
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(SimpleGems.getInstance(), () -> {
-            Bukkit.getOnlinePlayers().forEach(player -> {
-                SimpleGems.getInstance().getProfileManager().getProfile(player.getUniqueId()).getData().save();
-            });
-        }, 2L, 2L);
-    }
 
     /**
      * The #saveOffline method allows you to
      * save a specified player's data
      */
-    public static void saveOffline(OfflinePlayer player, double amount) {
-        if (SimpleGems.getInstance().getDataType() == DataType.MYSQL) {
-            SimpleGems.getInstance().getSqlManager().execute("INSERT INTO simplegems (name,uuid,gems) VALUES (?,?,?) ON DUPLICATE KEY UPDATE name=?,gems=?",
-
-                    // INSERT
-                    player.getName(),
-                    player.getUniqueId().toString(),
-                    amount,
-                    // UPDATE
-                    player.getName(),
-                    amount
-
-            );
-        } else if (SimpleGems.getInstance().getDataType() == DataType.YAML) {
-            Files.getData().set("data." + player.getUniqueId().toString() + ".name", player.getName());
-            Files.getData().set("data." + player.getUniqueId().toString() + ".gems", amount);
-            SimpleGems.getInstance().getManager(Files.class).saveData();
-        }
-    }
-
-    public static void getTop10(Player player) {
-        Map<String, Double> gemsList = new HashMap<>();
-
-        final LocaleManager locale = SimpleGems.getInstance().getManager(LocaleManager.class);
-
-        if (SimpleGems.getInstance().getDataType() == DataType.MYSQL) {
-            Bukkit.getOnlinePlayers().forEach(p -> {
-                Profile profile = SimpleGems.getInstance().getProfileManager().getProfile(p.getUniqueId());
-
-                if (profile != null) {
-                    gemsList.put(profile.getPlayerName(), profile.getData().getGems().getStat());
-                }
-            });
-
-            SimpleGems.getInstance().getSqlManager().select("SELECT * FROM simplegems ORDER BY gems", resultSet -> {
-                try {
-                    while (resultSet.next()) {
-                        gemsList.put(resultSet.getString("name"), resultSet.getDouble("gems"));
-                    }
-                } catch (SQLException exception) {
-                    exception.printStackTrace();
-                }
-            });
-
-            ValueComparator<String> vc = new ValueComparator<>(gemsList);
-            TreeMap<String, Double> sorted = new TreeMap<>(vc);
-            sorted.putAll(gemsList);
-
-            locale.sendCustomMessage(player, Placeholders.setPlaceholders(player, Config.GEMS_TOP_TITLE.replace("%entries%", String.valueOf(Config.GEMS_TOP_ENTRIES))));
-            try {
-                for (int i = 0; i <= Config.GEMS_TOP_ENTRIES; i++) {
-                    Map.Entry<String, Double> e = sorted.pollFirstEntry();
-                    locale.sendCustomMessage(player, Placeholders.setPlaceholders(player, Config.GEMS_TOP_FORMAT.replace("%number%", String.valueOf(i + 1)).replace("%player%", e.getKey())
-                            .replace("%value%", format(e.getValue())).replace("%value_decimal%", formatDec(e.getValue()))));
-                }
-            } catch (Exception ignored) {}
-        } else if (SimpleGems.getInstance().getDataType() == DataType.YAML) {
-            Bukkit.getOnlinePlayers().forEach(p -> {
-                Profile profile = SimpleGems.getInstance().getProfileManager().getProfile(p.getUniqueId());
-
-                if (profile != null) {
-                    gemsList.put(profile.getData().getName(), profile.getData().getGems().getStat());
-                }
-            });
-
-            for (OfflinePlayer op : Bukkit.getOfflinePlayers()) {
-                String name = op.getName();
-                double gems = getOfflineGems(op);
-                gemsList.put(name, gems);
+    public static void saveOffline(OfflinePlayer player, long amount) {
+        Bukkit.getScheduler().runTaskAsynchronously(SimpleGems.getInstance(), () -> {
+            if (SimpleGems.getInstance().getDataType() == DataType.MYSQL) {
+                SimpleGems.getInstance().getSqlManager().execute("UPDATE SimpleGems SET gems=? WHERE uuid=?",
+                        amount, player.getUniqueId().toString());
+            } else if (SimpleGems.getInstance().getDataType() == DataType.YAML) {
+                Files.getData().set("data." + player.getUniqueId().toString() + ".gems", amount);
+                Files.saveData();
             }
-
-            ValueComparator<String> vc = new ValueComparator<>(gemsList);
-            TreeMap<String, Double> sorted = new TreeMap<>(vc);
-            sorted.putAll(gemsList);
-
-            locale.sendCustomMessage(player, Placeholders.setPlaceholders(player, Config.GEMS_TOP_TITLE.replace("%entries%", String.valueOf(Config.GEMS_TOP_ENTRIES))));
-            try {
-                for (int i = 0; i <= Config.GEMS_TOP_ENTRIES; i++) {
-                    Map.Entry<String, Double> e = sorted.pollFirstEntry();
-                    locale.sendCustomMessage(player, Placeholders.setPlaceholders(player, Config.GEMS_TOP_FORMAT.replace("%number%", String.valueOf(i + 1)).replace("%player%", e.getKey())
-                            .replace("%value%", format(e.getValue())).replace("%value_decimal%", formatDec(e.getValue()))));
-                }
-            } catch (Exception ignored) {}
-        }
+        });
     }
 
-    public static void setOfflineGems(OfflinePlayer player, double amount) {
+    public static void setOfflineGems(OfflinePlayer player, long amount) {
         saveOffline(player, amount);
     }
 
-    public static void giveOfflineGems(OfflinePlayer player, double amount) {
+    public static void giveOfflineGems(OfflinePlayer player, long amount) {
         setOfflineGems(player, getOfflineGems(player) + amount);
     }
     
-    public static void takeOfflineGems(OfflinePlayer player, double amount) {
+    public static void takeOfflineGems(OfflinePlayer player, long amount) {
         setOfflineGems(player, getOfflineGems(player) - amount);
     }
 
-    public static double getOfflineGems(OfflinePlayer player) {
+    public static long getOfflineGems(OfflinePlayer player) {
         if (SimpleGems.getInstance().getDataType() == DataType.MYSQL) {
-            AtomicReference<Double> gems = new AtomicReference<>(0.0);
-            SimpleGems.getInstance().getSqlManager().select("SELECT * FROM simplegems WHERE uuid=?", resultSet -> {
-                try {
-                    if (resultSet.next()) {
-                        gems.set(resultSet.getDouble("gems"));
+            AtomicLong gems = new AtomicLong();
+            Bukkit.getScheduler().runTaskAsynchronously(SimpleGems.getInstance(), () -> {
+                SimpleGems.getInstance().getSqlManager().select("SELECT * FROM SimpleGems WHERE uuid=?", resultSet -> {
+                    try {
+                        if (resultSet.next()) {
+                            gems.set(resultSet.getLong("gems"));
+                        }
+                    } catch (SQLException exception) {
+                        Color.log(exception.getMessage());
                     }
-                } catch (SQLException exception) {
-                    exception.printStackTrace();
-                }
-            }, player.getUniqueId().toString());
+                }, player.getUniqueId().toString());
+            });
             return gems.get();
         } else if (SimpleGems.getInstance().getDataType() == DataType.YAML) {
-            return Files.getData().getDouble("data." + player.getUniqueId().toString() + ".gems");
+            return Files.getData().getLong("data." + player.getUniqueId().toString() + ".gems");
         }
-        return 0.0;
+        return 0;
     }
     
-    public static boolean hasOfflineGems(OfflinePlayer player, double amount) {
+    public static boolean hasOfflineGems(OfflinePlayer player, long amount) {
         return getOfflineGems(player) >= amount;
     }
 
-    public static void payGems(Player player, Player target, double amount, boolean silent) {
+    public static void payGems(Player player, Player target, long amount, boolean silent) {
         ProfileData profile = SimpleGems.getInstance().getProfileManager().getProfile(player.getUniqueId()).getData();
         ProfileData targetProfile = SimpleGems.getInstance().getProfileManager().getProfile(target.getUniqueId()).getData();
         final LocaleManager locale = SimpleGems.getInstance().getManager(LocaleManager.class);
+
+        StringPlaceholders placeholders = StringPlaceholders.builder()
+                .addPlaceholder("gems", String.valueOf(amount))
+                .addAll(Placeholders.setPlaceholders(target))
+                .build();
 
         if (player == target) {
             locale.sendCustomMessage(player, "&cYou can't pay yourself.");
             return;
         }
 
-        if (profile.getGems().hasStat(amount)) {
-            profile.getGems().decrementStat(amount);
-            targetProfile.getGems().incrementStat(amount);
-
-            StringPlaceholders placeholders = StringPlaceholders.builder()
-                    .addPlaceholder("gems", String.valueOf(amount))
-                    .addAll(Placeholders.setPlaceholders(target))
-                    .build();
+        if (profile.getGems().hasAmount(amount)) {
+            profile.getGems().decrementAmount(amount);
+            targetProfile.getGems().incrementAmount(amount);
+            Bukkit.getScheduler().runTaskAsynchronously(SimpleGems.getInstance(), () -> {
+                profile.save(player);
+                targetProfile.save(target);
+            });
 
             locale.sendMessage(player, "gems-paid", placeholders);
             if (silent) return;
             locale.sendMessage(target, "gems-received", placeholders);
         } else {
-            locale.sendMessage(player, "not-enough-pay");
+            locale.sendMessage(player, "not-enough-pay", placeholders);
         }
     }
 
-    public static void payOfflineGems(Player player, OfflinePlayer target, double amount) {
+    public static void payOfflineGems(Player player, OfflinePlayer target, long amount) {
         ProfileData profile = SimpleGems.getInstance().getProfileManager().getProfile(player.getUniqueId()).getData();
         final LocaleManager locale = SimpleGems.getInstance().getManager(LocaleManager.class);
 
-        if (profile.getGems().hasStat(amount)) {
-            profile.getGems().decrementStat(amount);
-            giveOfflineGems(target, amount);
+        StringPlaceholders placeholders = StringPlaceholders.builder()
+                .addPlaceholder("player", target.getName())
+                .addPlaceholder("gems", String.valueOf(amount))
+                .addAll(Placeholders.setPlaceholders(player))
+                .build();
 
-            StringPlaceholders placeholders = StringPlaceholders.builder()
-                    .addPlaceholder("player", target.getName())
-                    .addPlaceholder("gems", String.valueOf(amount))
-                    .addAll(Placeholders.setPlaceholders(player))
-                    .build();
+        if (profile.getGems().hasAmount(amount)) {
+            profile.getGems().decrementAmount(amount);
+            giveOfflineGems(target, amount);
 
             locale.sendMessage(player, "gems-paid", placeholders);
         } else {
-            locale.sendMessage(player, "not-enough-pay");
+            locale.sendMessage(player, "not-enough-pay", placeholders);
         }
     }
 
@@ -214,18 +139,18 @@ public class Methods {
         Profile profile = SimpleGems.getInstance().getProfileManager().getProfile(player.getUniqueId());
         final LocaleManager locale = SimpleGems.getInstance().getManager(LocaleManager.class);
 
-        if (profile.getData().getGems().hasStat(amount)) {
-            giveGemsItem(player, amount);
-            profile.getData().getGems().decrementStat(amount);
+        StringPlaceholders placeholders = StringPlaceholders.builder()
+                .addAll(Placeholders.setPlaceholders(player))
+                .addPlaceholder("gems", String.valueOf(amount))
+                .build();
 
-            StringPlaceholders placeholders = StringPlaceholders.builder()
-                    .addAll(Placeholders.setPlaceholders(player))
-                    .addPlaceholder("gems", String.valueOf(amount))
-                    .build();
+        if (profile.getData().getGems().hasAmount(amount)) {
+            giveGemsItem(player, amount);
+            profile.getData().getGems().decrementAmount(amount);
 
             locale.sendMessage(player, "gems-withdrawn", placeholders);
         } else {
-            locale.sendMessage(player, "not-enough-withdraw");
+            locale.sendMessage(player, "not-enough-withdraw", placeholders);
         }
     }
 
@@ -266,11 +191,14 @@ public class Methods {
         XMaterial material = Utilities.getMaterial(Config.GEMS_ITEM);
         int data = Config.GEMS_ITEM_DATA;
         List<String> lore = Config.GEMS_ITEM_LORE;
-        if (Config.GEMS_ITEM_CUSTOM_DATA) {
-            ItemBuilder item = new ItemBuilder(material.parseMaterial());
+        ItemBuilder item = new ItemBuilder(material.parseMaterial());
 
+        if (Config.GEMS_ITEM_CUSTOM_DATA) {
             if (Config.GEMS_ITEM_GLOW) {
-                item.addEnchant(SimpleGems.getInstance().getGlow(), 1);
+                item.addEnchant(Enchantment.ARROW_DAMAGE, 1);
+                ItemMeta itemMeta = item.toItemStack().getItemMeta();
+                itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+                item.toItemStack().setItemMeta(itemMeta);
             }
 
             if (NMSUtil.getVersionNumber() > 13) {
@@ -281,40 +209,31 @@ public class Methods {
             item.setName(name);
             lore.forEach(s -> item.addLoreLine(Color.translate(s)));
             item.setDurability(data);
-
-            return item.toItemStack();
         } else {
-            ItemBuilder item = new ItemBuilder(material.parseMaterial());
-
             if (Config.GEMS_ITEM_GLOW) {
-                item.addEnchant(SimpleGems.getInstance().getGlow(), 1);
+                item.addEnchant(Enchantment.ARROW_DAMAGE, 1);
+                ItemMeta itemMeta = item.toItemStack().getItemMeta();
+                itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+                item.toItemStack().setItemMeta(itemMeta);
             }
 
             item.setName(name);
             lore.forEach(s -> item.addLoreLine(Color.translate(s)));
             item.setDurability(data);
-
-            return item.toItemStack();
         }
+
+        return item.toItemStack();
     }
 
-    public static String formatDec(double amount) {
+    public static String formatDec(long amount) {
         DecimalFormat decimalFormat = new DecimalFormat("###,###");
         return decimalFormat.format(amount);
     }
 
-    public static String format(double amount) {
+    public static String format(long amount) {
         String fin = "none";
         if (amount <= 0.0) {
             fin = String.valueOf(0);
-        } else if (amount >= 1.0E30) {
-            fin = String.format("%.1fN", amount / 1.0E30);
-        } else if (amount >= 1.0E27) {
-            fin = String.format("%.1fO", amount / 1.0E27);
-        } else if (amount >= 1.0E24) {
-            fin = String.format("%.1fSP", amount / 1.0E24);
-        } else if (amount >= 1.0E21) {
-            fin = String.format("%.1fS", amount / 1.0E21);
         } else if (amount >= 1.0E18) {
             fin = String.format("%.1fQT", amount / 1.0E18);
         } else if (amount >= 1.0E15) {

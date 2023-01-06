@@ -7,6 +7,7 @@ import java.util.Objects;
 
 public class Config {
     // Database
+    public static int LEADERBOARD_UPDATE_INTERVAL;
     public static String DATA_TYPE;
 
     // Gems Top
@@ -28,6 +29,7 @@ public class Config {
 
     public static void loadConfig() {
         // Database
+        LEADERBOARD_UPDATE_INTERVAL = ConfigurationManager.Setting.LEADERBOARD_UPDATE_INTERVAL.getInt();
         DATA_TYPE = ConfigurationManager.Setting.DATA_TYPE.getString();
 
         // Gems Top

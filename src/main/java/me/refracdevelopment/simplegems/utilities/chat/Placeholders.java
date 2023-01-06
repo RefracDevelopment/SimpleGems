@@ -2,8 +2,8 @@ package me.refracdevelopment.simplegems.utilities.chat;
 
 import dev.rosewood.rosegarden.utils.StringPlaceholders;
 import me.refracdevelopment.simplegems.SimpleGems;
+import me.refracdevelopment.simplegems.data.Profile;
 import me.refracdevelopment.simplegems.manager.LocaleManager;
-import me.refracdevelopment.simplegems.manager.data.Profile;
 import me.refracdevelopment.simplegems.utilities.Methods;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -17,8 +17,8 @@ public class Placeholders {
             Profile profile = SimpleGems.getInstance().getProfileManager().getProfile(player.getUniqueId());
 
             placeholder = placeholder.replace("%player%", player.getName());
-            placeholder = placeholder.replace("%gems%", Methods.format(profile.getData().getGems().getStat()));
-            placeholder = placeholder.replace("%gems_decimal%", Methods.formatDec(profile.getData().getGems().getStat()));
+            placeholder = placeholder.replace("%gems%", Methods.format(profile.getData().getGems().getAmount()));
+            placeholder = placeholder.replace("%gems_decimal%", Methods.formatDec(profile.getData().getGems().getAmount()));
             placeholder = placeholder.replace("%displayname%", player.getDisplayName());
         }
         placeholder = placeholder.replace("%arrow%", "\u00BB");
@@ -40,8 +40,8 @@ public class Placeholders {
             Profile profile = SimpleGems.getInstance().getProfileManager().getProfile(player.getUniqueId());
 
             placeholders.addPlaceholder("player", player.getName());
-            placeholders.addPlaceholder("gems", Methods.format(profile.getData().getGems().getStat()));
-            placeholders.addPlaceholder("gems_decimal", Methods.formatDec(profile.getData().getGems().getStat()));
+            placeholders.addPlaceholder("gems", Methods.format(profile.getData().getGems().getAmount()));
+            placeholders.addPlaceholder("gems_decimal", Methods.formatDec(profile.getData().getGems().getAmount()));
             placeholders.addPlaceholder("displayname", player.getDisplayName());
         }
         placeholders.addPlaceholder("arrow", "\u00BB");

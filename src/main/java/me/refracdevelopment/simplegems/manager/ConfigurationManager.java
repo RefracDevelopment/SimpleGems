@@ -12,12 +12,13 @@ public class ConfigurationManager extends AbstractConfigurationManager {
 
     public enum Setting implements RoseSetting {
         // Config Settings
+        LEADERBOARD_UPDATE_INTERVAL("leaderboard-update-interval", 1800, "Allows changing how long data is cached for /gems top"),
         DATA_TYPE("data-type", "YAML", "Choose your data saving type:", "MYSQL - Database saving", "YAML - Local saving in the data.yml file"),
         MYSQL_HOST("mysql.host", "127.0.0.1"),
         MYSQL_USERNAME("mysql.username", "root"),
         MYSQL_PASSWORD("mysql.password", "test"),
         MYSQL_DATABASE("mysql.database", "test"),
-        MYSQL_PORT("mysql.port", 3306),
+        MYSQL_PORT("mysql.port", "3306"),
         GEMS_TOP_TITLE("gems-top.title", "&e&lGems %arrow2% &6&lTop %entries%", "This is used for viewing top players"),
         GEMS_TOP_FORMAT("gems-top.format", "&6&l%number%. &e%player% &7- &e%value%"),
         GEMS_TOP_ENTRIES("gems-top.top-entries", 10),

@@ -23,7 +23,8 @@ public class SimpleCommandWrapper extends RoseCommandWrapper {
         return Arrays.asList(
                 "simplegems",
                 "consolegems",
-                "cgems"
+                "cgems",
+                "silentgems"
         );
     }
 
@@ -44,6 +45,6 @@ public class SimpleCommandWrapper extends RoseCommandWrapper {
 
     @Override
     public boolean includeReloadCommand() {
-        return true;
+        return false;
     }
 }

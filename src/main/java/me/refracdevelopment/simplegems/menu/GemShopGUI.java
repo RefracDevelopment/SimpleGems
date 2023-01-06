@@ -39,7 +39,6 @@ public class GemShopGUI implements Listener {
                 ItemBuilder item = new ItemBuilder(material);
 
                 item.setName(Color.translate(player, name));
-                lore.forEach(s -> item.addLoreLine(Color.translate(player, s)));
                 item.setDurability(data);
 
                 inv.setItem(i, item.toItemStack());

@@ -22,14 +22,12 @@ public class GemsCommand extends BaseCommand {
 
         // Make sure the sender is a player.
         if (!(context.getSender() instanceof Player)) {
-            locale.sendMessage(context.getSender(), "no-console", Placeholders.setPlaceholders(context.getSender()));
+            locale.sendCommandMessage(context.getSender(), "no-console", Placeholders.setPlaceholders(context.getSender()));
             return;
         }
 
         Player player = (Player) context.getSender();
 
-        Config.GEMS_BALANCE.forEach(message -> {
-            this.rosePlugin.getManager(LocaleManager.class).sendCustomMessage(player, Placeholders.setPlaceholders(player, message));
-        });
+        Config.GEMS_BALANCE.forEach(message -> locale.sendCustomMessage(player, Placeholders.setPlaceholders(player, message)));
     }
 }

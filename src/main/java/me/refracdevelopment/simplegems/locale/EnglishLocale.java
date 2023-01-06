@@ -19,21 +19,19 @@ public class EnglishLocale implements Locale {
 
     @Override
     public Map<String, Object> getDefaultLocaleValues() {
-        return new LinkedHashMap() {{
+        return new LinkedHashMap<String, Object>() {{
             this.put("#0", "Plugin Message Prefix");
             this.put("prefix", "<g:#8A2387:#E94057:#F27121>SimpleGems &8| &f");
 
             this.put("#1", "Generic Command Messages");
             this.put("no-permission", "&cYou don't have permission for that!");
             this.put("no-console", "&cOnly players may execute this command.");
-            this.put("unknown-command", "Unknown command, use #00B4DB/%cmd%&f help for more info");
+            this.put("unknown-command", "Unknown command, use &d/%cmd%&f help for more info");
+            this.put("leaderboard-update", "&eThe &d/%cmd%&e top leaderboard has been updated.");
 
             this.put("#2", "Error Messages");
-            this.put("invalid-gems", "&c%player% does not have enough gems for you to take.");
-            this.put("invalid-amount", "&cYou provided an invalid amount.");
             this.put("invalid-player", "&cYou provided an invalid player.");
-            this.put("kick-profile-not-created", "Error: Profile could not be created.");
-            this.put("kick-profile-not-loaded", "Error: Player profile could not be loaded!");
+            this.put("leaderboard-empty", "&cError: The leaderboard is empty.");
 
             this.put("#3", "Base Command Message");
             this.put("base-command-color", "&e");
@@ -95,7 +93,10 @@ public class EnglishLocale implements Locale {
             this.put("command-reload-success", "&aConfiguration and locale files were reloaded.");
 
             this.put("#16", "Version Command");
-            this.put("command-version-description", "Display the version info for SimpleLinks");
+            this.put("command-version-description", "Display the version info for SimpleGems");
+
+            this.put("#17", "Update Command");
+            this.put("command-update-description", "Allows you to force update /%cmd% top cache");
         }};
     }
 }

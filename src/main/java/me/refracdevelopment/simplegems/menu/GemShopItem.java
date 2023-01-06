@@ -8,8 +8,8 @@ import lombok.Getter;
 import lombok.Setter;
 import me.arcaniax.hdb.api.HeadDatabaseAPI;
 import me.refracdevelopment.simplegems.SimpleGems;
+import me.refracdevelopment.simplegems.data.Profile;
 import me.refracdevelopment.simplegems.manager.LocaleManager;
-import me.refracdevelopment.simplegems.manager.data.Profile;
 import me.refracdevelopment.simplegems.utilities.ItemBuilder;
 import me.refracdevelopment.simplegems.utilities.Methods;
 import me.refracdevelopment.simplegems.utilities.Utilities;
@@ -17,8 +17,11 @@ import me.refracdevelopment.simplegems.utilities.chat.Color;
 import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
 import me.refracdevelopment.simplegems.utilities.files.Menus;
 import org.bukkit.Bukkit;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
 
@@ -31,7 +34,7 @@ public class GemShopItem {
     private final boolean skulls, headDatabase, messageEnabled, broadcastMessage, customData, glow;
     private final int data, slot, customModelData;
     private final List<String> lore, commands, messages;
-    private final double cost;
+    private final long cost;
 
     public GemShopItem(String item) {
         this.material = Utilities.getMaterial(Menus.GEM_SHOP_ITEMS.getString(item + ".material"));
@@ -64,7 +67,7 @@ public class GemShopItem {
         } else {
             this.glow = false;
         }
-        this.cost = Menus.GEM_SHOP_ITEMS.getDouble(item + ".cost");
+        this.cost = Menus.GEM_SHOP_ITEMS.getLong(item + ".cost");
         this.slot = Menus.GEM_SHOP_ITEMS.getInt(item + ".slot");
     }
 
@@ -97,35 +100,40 @@ public class GemShopItem {
             HeadDatabaseAPI api = new HeadDatabaseAPI();
             ItemBuilder item = new ItemBuilder(api.getItemHead(this.skullOwner));
 
-            if (glow) {
-                item.addEnchant(SimpleGems.getInstance().getGlow(), 1);
+            if (this.glow) {
+                item.addEnchant(Enchantment.ARROW_DAMAGE, 1);
+                ItemMeta itemMeta = item.toItemStack().getItemMeta();
+                itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+                item.toItemStack().setItemMeta(itemMeta);
             }
 
             item.setName(Color.translate(player, this.name));
-            this.lore.forEach(s -> {
-                item.addLoreLine(Color.translate(player, s.replace("%item%", this.name).replace("%cost%", String.valueOf(this.cost))));
-            });
+            this.lore.forEach(s -> item.addLoreLine(Color.translate(player, s.replace("%item%", this.name).replace("%cost%", String.valueOf(this.cost)))));
 
             return item.toItemStack();
         } else if (skulls) {
             Skull api = Skulls.getAPI().getSkull(Integer.parseInt(this.skullOwner));
             ItemBuilder item = new ItemBuilder(api.getItemStack());
 
-            if (glow) {
-                item.addEnchant(SimpleGems.getInstance().getGlow(), 1);
+            if (this.glow) {
+                item.addEnchant(Enchantment.ARROW_DAMAGE, 1);
+                ItemMeta itemMeta = item.toItemStack().getItemMeta();
+                itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+                item.toItemStack().setItemMeta(itemMeta);
             }
 
             item.setName(Color.translate(player, this.name));
-            this.lore.forEach(s -> {
-                item.addLoreLine(Color.translate(player, s.replace("%item%", this.name).replace("%cost%", String.valueOf(this.cost))));
-            });
+            this.lore.forEach(s -> item.addLoreLine(Color.translate(player, s.replace("%item%", this.name).replace("%cost%", String.valueOf(this.cost)))));
 
             return item.toItemStack();
         } else if (customData) {
             ItemBuilder item = new ItemBuilder(this.material.parseMaterial());
 
-            if (glow) {
-                item.addEnchant(SimpleGems.getInstance().getGlow(), 1);
+            if (this.glow) {
+                item.addEnchant(Enchantment.ARROW_DAMAGE, 1);
+                ItemMeta itemMeta = item.toItemStack().getItemMeta();
+                itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+                item.toItemStack().setItemMeta(itemMeta);
             }
 
             if (NMSUtil.getVersionNumber() > 13) {
@@ -134,9 +142,7 @@ public class GemShopItem {
                 Color.log("&cAn error occurred when trying to set custom model data. Make sure your only using custom model data when on 1.14+.");
             }
             item.setName(this.name);
-            this.lore.forEach(s -> {
-                item.addLoreLine(Color.translate(player, s.replace("%item%", this.name).replace("%cost%", String.valueOf(this.cost))));
-            });
+            this.lore.forEach(s -> item.addLoreLine(Color.translate(player, s.replace("%item%", this.name).replace("%cost%", String.valueOf(this.cost)))));
             item.setDurability(this.data);
             item.setSkullOwner(this.skullOwner);
 
@@ -144,14 +150,15 @@ public class GemShopItem {
         } else {
             ItemBuilder item = new ItemBuilder(this.material.parseMaterial());
 
-            if (glow) {
-                item.addEnchant(SimpleGems.getInstance().getGlow(), 1);
+            if (this.glow) {
+                item.addEnchant(Enchantment.ARROW_DAMAGE, 1);
+                ItemMeta itemMeta = item.toItemStack().getItemMeta();
+                itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+                item.toItemStack().setItemMeta(itemMeta);
             }
 
             item.setName(Color.translate(player, this.name));
-            this.lore.forEach(s -> {
-                item.addLoreLine(Color.translate(player, s.replace("%item%", this.name).replace("%cost%", String.valueOf(this.cost))));
-            });
+            this.lore.forEach(s -> item.addLoreLine(Color.translate(player, s.replace("%item%", this.name).replace("%cost%", String.valueOf(this.cost)))));
             item.setDurability(this.data);
             item.setSkullOwner(this.skullOwner);
 
@@ -163,8 +170,8 @@ public class GemShopItem {
         Profile profile = SimpleGems.getInstance().getProfileManager().getProfile(player.getUniqueId());
         final LocaleManager locale = SimpleGems.getInstance().getManager(LocaleManager.class);
 
-        if (profile.getData().getGems().hasStat(this.cost)) {
-            profile.getData().getGems().decrementStat(this.cost);
+        if (profile.getData().getGems().hasAmount(this.cost)) {
+            profile.getData().getGems().decrementAmount(this.cost);
             this.runCommands(player);
             this.sendMessage(player);
         } else locale.sendMessage(player, "not-enough-gems", Placeholders.setPlaceholders(player));

@@ -1,5 +1,6 @@
 package me.refracdevelopment.simplegems.utilities.files;
 
+import me.refracdevelopment.simplegems.utilities.Utilities;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -23,7 +24,7 @@ public class Menus {
         GEM_SHOP_ENABLED = Files.getMenus().getBoolean("gems-menu.enabled");
         GEM_SHOP_TITLE = Files.getMenus().getString("gems-menu.title");
         GEM_SHOP_SIZE = Files.getMenus().getInt("gems-menu.size");
-        GEM_SHOP_FILL_MATERIAL = Material.getMaterial(Objects.requireNonNull(Files.getMenus().getString("gems-menu.fill.material")));
+        GEM_SHOP_FILL_MATERIAL = Utilities.getMaterial(Objects.requireNonNull(Files.getMenus().getString("gems-menu.fill.material"))).parseMaterial();
         GEM_SHOP_FILL_DATA = Files.getMenus().getInt("gems-menu.fill.data");
         GEM_SHOP_FILL_NAME = Files.getMenus().getString("gems-menu.fill.name");
         GEM_SHOP_FILL_LORE = Files.getMenus().getStringList("gems-menu.fill.lore");

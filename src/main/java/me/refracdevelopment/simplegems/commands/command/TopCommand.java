@@ -5,8 +5,8 @@ import dev.rosewood.rosegarden.command.framework.CommandContext;
 import dev.rosewood.rosegarden.command.framework.RoseCommand;
 import dev.rosewood.rosegarden.command.framework.RoseCommandWrapper;
 import dev.rosewood.rosegarden.command.framework.annotation.RoseExecutable;
+import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.manager.LocaleManager;
-import me.refracdevelopment.simplegems.utilities.Methods;
 import me.refracdevelopment.simplegems.utilities.Permissions;
 import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
 import org.bukkit.entity.Player;
@@ -18,18 +18,18 @@ public class TopCommand extends RoseCommand {
     }
 
     @RoseExecutable
-    public void onDefault(CommandContext context) {
+    public void execute(CommandContext context) {
         final LocaleManager locale = this.rosePlugin.getManager(LocaleManager.class);
 
         // Make sure the sender is a player.
         if (!(context.getSender() instanceof Player)) {
-            locale.sendMessage(context.getSender(), "no-console", Placeholders.setPlaceholders(context.getSender()));
+            locale.sendCommandMessage(context.getSender(), "no-console", Placeholders.setPlaceholders(context.getSender()));
             return;
         }
 
         Player player = (Player) context.getSender();
 
-        Methods.getTop10(player);
+        SimpleGems.getInstance().getLeaderboardManager().getTop10(player);
     }
 
     @Override
