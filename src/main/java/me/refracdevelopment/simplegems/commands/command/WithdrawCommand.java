@@ -23,12 +23,13 @@ public class WithdrawCommand extends RoseCommand {
 
         // Make sure the sender is a player.
         if (!(context.getSender() instanceof Player)) {
-            locale.sendMessage(context.getSender(), "no-console", Placeholders.setPlaceholders(context.getSender()));
+            locale.sendCommandMessage(context.getSender(), "no-console", Placeholders.setPlaceholders(context.getSender()));
             return;
         }
 
         Player player = (Player) context.getSender();
 
+        if (context.getArgs()[0].contains("-")) return;
         Methods.withdrawGems(player, amount);
     }
 

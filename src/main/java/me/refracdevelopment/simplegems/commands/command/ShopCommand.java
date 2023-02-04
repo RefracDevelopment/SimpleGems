@@ -9,7 +9,7 @@ import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.manager.LocaleManager;
 import me.refracdevelopment.simplegems.utilities.Permissions;
 import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
-import me.refracdevelopment.simplegems.utilities.files.Menus;
+import me.refracdevelopment.simplegems.utilities.config.Menus;
 import org.bukkit.entity.Player;
 
 public class ShopCommand extends RoseCommand {

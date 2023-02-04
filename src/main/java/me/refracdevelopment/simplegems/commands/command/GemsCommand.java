@@ -7,7 +7,7 @@ import dev.rosewood.rosegarden.command.framework.RoseCommandWrapper;
 import dev.rosewood.rosegarden.command.framework.annotation.RoseExecutable;
 import me.refracdevelopment.simplegems.manager.LocaleManager;
 import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
-import me.refracdevelopment.simplegems.utilities.files.Config;
+import me.refracdevelopment.simplegems.utilities.config.Config;
 import org.bukkit.entity.Player;
 
 public class GemsCommand extends BaseCommand {

@@ -91,7 +91,7 @@ public class SimpleGemsAPI {
     /**
      * Used to check if the player has enough gems
      *
-     * @param player player
+     * @param player online player
      * @param amount amount of gems to check
      * @return If the player has enough gems
      */
@@ -115,7 +115,7 @@ public class SimpleGemsAPI {
     /**
      * Used to give player gems.
      *
-     * @param player offline player
+     * @param player online player
      * @param amount amount of gems to give
      */
     public void giveGems(Player player, long amount) {
@@ -138,7 +138,7 @@ public class SimpleGemsAPI {
     /**
      * Used to take player gems.
      *
-     * @param player offline player
+     * @param player online player
      * @param amount amount of gems to take
      */
     public void takeGems(Player player, long amount) {
@@ -161,7 +161,7 @@ public class SimpleGemsAPI {
     /**
      * Used to set player gems.
      *
-     * @param player player
+     * @param player online player
      * @param amount gems
      */
     public void setGems(Player player, long amount) {

@@ -10,8 +10,8 @@ import me.refracdevelopment.simplegems.data.ProfileData;
 import me.refracdevelopment.simplegems.manager.LocaleManager;
 import me.refracdevelopment.simplegems.utilities.chat.Color;
 import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
-import me.refracdevelopment.simplegems.utilities.files.Config;
-import me.refracdevelopment.simplegems.utilities.files.Files;
+import me.refracdevelopment.simplegems.utilities.config.Config;
+import me.refracdevelopment.simplegems.utilities.config.Files;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.enchantments.Enchantment;
@@ -60,17 +60,15 @@ public class Methods {
     public static long getOfflineGems(OfflinePlayer player) {
         if (SimpleGems.getInstance().getDataType() == DataType.MYSQL) {
             AtomicLong gems = new AtomicLong();
-            Bukkit.getScheduler().runTaskAsynchronously(SimpleGems.getInstance(), () -> {
-                SimpleGems.getInstance().getSqlManager().select("SELECT * FROM SimpleGems WHERE uuid=?", resultSet -> {
-                    try {
-                        if (resultSet.next()) {
-                            gems.set(resultSet.getLong("gems"));
-                        }
-                    } catch (SQLException exception) {
-                        Color.log(exception.getMessage());
+            SimpleGems.getInstance().getSqlManager().select("SELECT * FROM SimpleGems WHERE uuid=?", resultSet -> {
+                try {
+                    if (resultSet.next()) {
+                        gems.set(resultSet.getLong("gems"));
                     }
-                }, player.getUniqueId().toString());
-            });
+                } catch (SQLException exception) {
+                    Color.log(exception.getMessage());
+                }
+            }, player.getUniqueId().toString());
             return gems.get();
         } else if (SimpleGems.getInstance().getDataType() == DataType.YAML) {
             return Files.getData().getLong("data." + player.getUniqueId().toString() + ".gems");
@@ -147,6 +145,7 @@ public class Methods {
         if (profile.getData().getGems().hasAmount(amount)) {
             giveGemsItem(player, amount);
             profile.getData().getGems().decrementAmount(amount);
+            Bukkit.getScheduler().runTaskAsynchronously(SimpleGems.getInstance(), () -> profile.getData().save(player));
 
             locale.sendMessage(player, "gems-withdrawn", placeholders);
         } else {

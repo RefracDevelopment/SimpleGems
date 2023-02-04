@@ -13,7 +13,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.player.*;
+import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class PlayerListener implements Listener {
@@ -81,6 +84,7 @@ public class PlayerListener implements Listener {
 
         player.getInventory().setItemInMainHand(null);
         profile.getData().getGems().incrementAmount(item.getAmount());
+        Bukkit.getScheduler().runTaskAsynchronously(SimpleGems.getInstance(), () -> profile.getData().save(player));
         locale.sendMessage(player, "gems-deposited", placeholders);
     }
 }

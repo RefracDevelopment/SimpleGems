@@ -3,7 +3,7 @@ package me.refracdevelopment.simplegems.menu;
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.utilities.ItemBuilder;
 import me.refracdevelopment.simplegems.utilities.chat.Color;
-import me.refracdevelopment.simplegems.utilities.files.Menus;
+import me.refracdevelopment.simplegems.utilities.config.Menus;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

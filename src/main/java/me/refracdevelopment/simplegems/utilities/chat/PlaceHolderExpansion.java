@@ -4,7 +4,6 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.data.Profile;
 import me.refracdevelopment.simplegems.utilities.Methods;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 

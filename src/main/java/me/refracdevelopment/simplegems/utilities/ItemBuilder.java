@@ -62,14 +62,6 @@ public class ItemBuilder {
         return this;
     }
 
-    /*public ItemBuilder setNameWithArrows(String name) {
-        String color = "&f";
-        ItemMeta im = is.getItemMeta();
-        im.setDisplayName(net.fatehub.plugin.utilities.chat.Color.translate(color + Symbols.ARROW_RIGHT + " " + name + " " + color + Symbols.ARROW_LEFT));
-        is.setItemMeta(im);
-        return this;
-    }*/
-
     public ItemBuilder setUnColoredName(String name) {
         ItemMeta im = is.getItemMeta();
         im.setDisplayName(name);

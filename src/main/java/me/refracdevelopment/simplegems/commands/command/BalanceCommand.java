@@ -6,13 +6,14 @@ import dev.rosewood.rosegarden.command.framework.RoseCommand;
 import dev.rosewood.rosegarden.command.framework.RoseCommandWrapper;
 import dev.rosewood.rosegarden.command.framework.annotation.RoseExecutable;
 import dev.rosewood.rosegarden.utils.StringPlaceholders;
-import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.manager.LocaleManager;
 import me.refracdevelopment.simplegems.utilities.Methods;
 import me.refracdevelopment.simplegems.utilities.Permissions;
 import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
-import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class BalanceCommand extends RoseCommand {
 
@@ -43,6 +44,11 @@ public class BalanceCommand extends RoseCommand {
     @Override
     protected String getDefaultName() {
         return "balance";
+    }
+
+    @Override
+    protected List<String> getDefaultAliases() {
+        return Arrays.asList("bal");
     }
 
     @Override

@@ -16,6 +16,9 @@ import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class TakeCommand extends RoseCommand {
 
     public TakeCommand(RosePlugin rosePlugin, RoseCommandWrapper parent) {
@@ -25,6 +28,8 @@ public class TakeCommand extends RoseCommand {
     @RoseExecutable
     public void execute(CommandContext context, OfflinePlayer target, long amount, @Optional String silent) {
         final LocaleManager locale = this.rosePlugin.getManager(LocaleManager.class);
+
+        if (context.getArgs()[1].contains("-")) return;
 
         if (target.isOnline()) {
             ProfileData targetProfile = SimpleGems.getInstance().getProfileManager().getProfile(target.getUniqueId()).getData();
@@ -69,6 +74,11 @@ public class TakeCommand extends RoseCommand {
     @Override
     protected String getDefaultName() {
         return "take";
+    }
+
+    @Override
+    protected List<String> getDefaultAliases() {
+        return Arrays.asList("remove");
     }
 
     @Override

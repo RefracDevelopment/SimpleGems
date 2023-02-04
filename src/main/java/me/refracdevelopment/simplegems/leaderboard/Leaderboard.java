@@ -31,17 +31,17 @@ public class Leaderboard {
                 String name = player.getName();
                 long gems = profileData.getGems().getAmount();
                 if (!this.topGems.containsKey(name)) {
-                    this.topGems.put(player.getUniqueId().toString(), new TopGems(name, gems));
+                    this.topGems.putIfAbsent(name, new TopGems(name, gems));
                 }
             });
 
-            this.plugin.getSqlManager().select("SELECT * FROM SimpleGems ORDER BY gems DESC", resultSet -> {
+            this.plugin.getSqlManager().select("SELECT * FROM SimpleGems ORDER BY gems", resultSet -> {
                 try {
                     while (resultSet.next()) {
                         String name = resultSet.getString("name");
                         long gems = resultSet.getLong("gems");
                         if (!this.topGems.containsKey(name)) {
-                            this.topGems.put(Bukkit.getOfflinePlayer(name).getUniqueId().toString(), new TopGems(name, gems));
+                            this.topGems.putIfAbsent(name, new TopGems(name, gems));
                         }
                     }
                 } catch (SQLException exception) {
@@ -60,7 +60,7 @@ public class Leaderboard {
                 String name = player.getName();
                 long gems = profileData.getGems().getAmount();
                 if (!this.topGems.containsKey(name)) {
-                    this.topGems.put(player.getUniqueId().toString(), new TopGems(name, gems));
+                    this.topGems.putIfAbsent(name, new TopGems(name, gems));
                 }
             });
 
@@ -68,7 +68,7 @@ public class Leaderboard {
                 String name = op.getName();
                 long gems = Methods.getOfflineGems(op);
                 if (!this.topGems.containsKey(name)) {
-                    this.topGems.put(op.getUniqueId().toString(), new TopGems(name, gems));
+                    this.topGems.putIfAbsent(name, new TopGems(name, gems));
                 }
             }
 

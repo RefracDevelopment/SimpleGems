@@ -26,6 +26,8 @@ public class SetCommand extends RoseCommand {
     public void execute(CommandContext context, OfflinePlayer target, long amount, @Optional String silent) {
         final LocaleManager locale = this.rosePlugin.getManager(LocaleManager.class);
 
+        if (context.getArgs()[1].contains("-")) return;
+
         if (target.isOnline()) {
             ProfileData targetProfile = SimpleGems.getInstance().getProfileManager().getProfile(target.getUniqueId()).getData();
 

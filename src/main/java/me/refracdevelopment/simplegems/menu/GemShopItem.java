@@ -15,7 +15,7 @@ import me.refracdevelopment.simplegems.utilities.Methods;
 import me.refracdevelopment.simplegems.utilities.Utilities;
 import me.refracdevelopment.simplegems.utilities.chat.Color;
 import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
-import me.refracdevelopment.simplegems.utilities.files.Menus;
+import me.refracdevelopment.simplegems.utilities.config.Menus;
 import org.bukkit.Bukkit;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;

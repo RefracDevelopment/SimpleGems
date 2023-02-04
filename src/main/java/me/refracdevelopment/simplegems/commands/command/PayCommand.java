@@ -23,9 +23,11 @@ public class PayCommand extends RoseCommand {
     public void execute(CommandContext context, OfflinePlayer target, long amount, @Optional String silent) {
         final LocaleManager locale = this.rosePlugin.getManager(LocaleManager.class);
 
+        if (context.getArgs()[1].contains("-")) return;
+
         // Make sure the sender is a player.
         if (!(context.getSender() instanceof Player)) {
-            locale.sendMessage(context.getSender(), "no-console", Placeholders.setPlaceholders(context.getSender()));
+            locale.sendCommandMessage(context.getSender(), "no-console", Placeholders.setPlaceholders(context.getSender()));
             return;
         }
 
@@ -35,7 +37,7 @@ public class PayCommand extends RoseCommand {
             Methods.payGems(player, target.getPlayer(), amount, silent != null && silent.equals("-s"));
         } else if (!target.isOnline() && target.hasPlayedBefore()) {
             Methods.payOfflineGems(player, target, amount);
-        } else locale.sendMessage(player, "invalid-player", Placeholders.setPlaceholders(player));
+        } else locale.sendCommandMessage(player, "invalid-player", Placeholders.setPlaceholders(player));
     }
 
     @Override

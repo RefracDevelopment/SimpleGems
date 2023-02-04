@@ -1,10 +1,8 @@
 C:\Users\zacha\IdeaProjects\SimpleGems\src\main\java\me\refracdevelopment\simplegems\commands\command\GiveCommand.java
 C:\Users\zacha\IdeaProjects\SimpleGems\src\main\java\me\refracdevelopment\simplegems\menu\GemShopGUI.java
-C:\Users\zacha\IdeaProjects\SimpleGems\src\main\java\me\refracdevelopment\simplegems\utilities\files\Menus.java
 C:\Users\zacha\IdeaProjects\SimpleGems\src\main\java\me\refracdevelopment\simplegems\utilities\ItemBuilder.java
 C:\Users\zacha\IdeaProjects\SimpleGems\src\main\java\me\refracdevelopment\simplegems\commands\command\GemsCommand.java
 C:\Users\zacha\IdeaProjects\SimpleGems\src\main\java\me\refracdevelopment\simplegems\SimpleGemsAPI.java
-C:\Users\zacha\IdeaProjects\SimpleGems\src\main\java\me\refracdevelopment\simplegems\utilities\files\Config.java
 C:\Users\zacha\IdeaProjects\SimpleGems\src\main\java\me\refracdevelopment\simplegems\manager\CommandManager.java
 C:\Users\zacha\IdeaProjects\SimpleGems\src\main\java\me\refracdevelopment\simplegems\commands\command\PayCommand.java
 C:\Users\zacha\IdeaProjects\SimpleGems\src\main\java\me\refracdevelopment\simplegems\data\ProfileManager.java
@@ -21,6 +19,7 @@ C:\Users\zacha\IdeaProjects\SimpleGems\src\main\java\me\refracdevelopment\simple
 C:\Users\zacha\IdeaProjects\SimpleGems\src\main\java\me\refracdevelopment\simplegems\commands\command\SetCommand.java
 C:\Users\zacha\IdeaProjects\SimpleGems\src\main\java\me\refracdevelopment\simplegems\data\Stat.java
 C:\Users\zacha\IdeaProjects\SimpleGems\src\main\java\me\refracdevelopment\simplegems\menu\GemShopItem.java
+C:\Users\zacha\IdeaProjects\SimpleGems\src\main\java\me\refracdevelopment\simplegems\utilities\config\Config.java
 C:\Users\zacha\IdeaProjects\SimpleGems\src\main\java\me\refracdevelopment\simplegems\commands\command\UpdateCommand.java
 C:\Users\zacha\IdeaProjects\SimpleGems\src\main\java\me\refracdevelopment\simplegems\leaderboard\ValueComparator.java
 C:\Users\zacha\IdeaProjects\SimpleGems\src\main\java\me\refracdevelopment\simplegems\utilities\chat\PlaceHolderExpansion.java
@@ -40,5 +39,6 @@ C:\Users\zacha\IdeaProjects\SimpleGems\src\main\java\me\refracdevelopment\simple
 C:\Users\zacha\IdeaProjects\SimpleGems\src\main\java\me\refracdevelopment\simplegems\commands\command\TopCommand.java
 C:\Users\zacha\IdeaProjects\SimpleGems\src\main\java\me\refracdevelopment\simplegems\commands\command\VersionCommand.java
 C:\Users\zacha\IdeaProjects\SimpleGems\src\main\java\me\refracdevelopment\simplegems\leaderboard\LeaderboardManager.java
+C:\Users\zacha\IdeaProjects\SimpleGems\src\main\java\me\refracdevelopment\simplegems\utilities\config\Files.java
+C:\Users\zacha\IdeaProjects\SimpleGems\src\main\java\me\refracdevelopment\simplegems\utilities\config\Menus.java
 C:\Users\zacha\IdeaProjects\SimpleGems\src\main\java\me\refracdevelopment\simplegems\commands\command\WithdrawCommand.java
-C:\Users\zacha\IdeaProjects\SimpleGems\src\main\java\me\refracdevelopment\simplegems\utilities\files\Files.java

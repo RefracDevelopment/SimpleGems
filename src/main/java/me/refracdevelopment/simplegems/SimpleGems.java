@@ -18,8 +18,8 @@ import me.refracdevelopment.simplegems.manager.LocaleManager;
 import me.refracdevelopment.simplegems.menu.GemShop;
 import me.refracdevelopment.simplegems.utilities.chat.Color;
 import me.refracdevelopment.simplegems.utilities.chat.PlaceHolderExpansion;
-import me.refracdevelopment.simplegems.utilities.files.Config;
-import me.refracdevelopment.simplegems.utilities.files.Files;
+import me.refracdevelopment.simplegems.utilities.config.Config;
+import me.refracdevelopment.simplegems.utilities.config.Files;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.PluginManager;
 
@@ -125,7 +125,7 @@ public final class SimpleGems extends RosePlugin {
     }
 
     private void loadListeners() {
-        getServer().getPluginManager().registerEvents(new PlayerListener(), this);
+        this.getServer().getPluginManager().registerEvents(new PlayerListener(), this);
         gemShop = new GemShop();
         Color.log("&aLoaded listeners.");
     }

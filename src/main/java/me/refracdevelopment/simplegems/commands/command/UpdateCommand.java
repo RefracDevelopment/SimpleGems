@@ -5,10 +5,12 @@ import dev.rosewood.rosegarden.command.framework.CommandContext;
 import dev.rosewood.rosegarden.command.framework.RoseCommand;
 import dev.rosewood.rosegarden.command.framework.RoseCommandWrapper;
 import dev.rosewood.rosegarden.command.framework.annotation.RoseExecutable;
+import dev.rosewood.rosegarden.utils.StringPlaceholders;
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.manager.LocaleManager;
 import me.refracdevelopment.simplegems.utilities.Permissions;
 import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class UpdateCommand extends RoseCommand {
@@ -23,11 +25,12 @@ public class UpdateCommand extends RoseCommand {
 
         // Make sure the sender is a player.
         if (!(context.getSender() instanceof Player)) {
-            locale.sendMessage(context.getSender(), "no-console", Placeholders.setPlaceholders(context.getSender()));
+            locale.sendCommandMessage(context.getSender(), "no-console", Placeholders.setPlaceholders(context.getSender()));
             return;
         }
 
         SimpleGems.getInstance().getLeaderboardManager().update();
+        Bukkit.getOnlinePlayers().forEach(player -> locale.sendCommandMessage(player, "leaderboard-update", StringPlaceholders.single("%cmd%", parent.getName())));
     }
 
     @Override

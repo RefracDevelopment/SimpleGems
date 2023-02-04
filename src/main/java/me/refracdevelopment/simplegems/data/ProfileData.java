@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.utilities.chat.Color;
-import me.refracdevelopment.simplegems.utilities.files.Files;
+import me.refracdevelopment.simplegems.utilities.config.Files;
 import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
@@ -18,7 +18,7 @@ public class ProfileData {
     private final String name;
     private final UUID uuid;
 
-    private final Stat gems = new Stat();
+    private Stat gems = new Stat();
 
     public ProfileData(UUID uuid, String name) {
         this.uuid = uuid;

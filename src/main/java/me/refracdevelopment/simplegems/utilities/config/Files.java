@@ -1,6 +1,5 @@
-package me.refracdevelopment.simplegems.utilities.files;
+package me.refracdevelopment.simplegems.utilities.config;
 
-import dev.rosewood.rosegarden.RosePlugin;
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.utilities.chat.Color;
 import org.bukkit.configuration.file.FileConfiguration;
