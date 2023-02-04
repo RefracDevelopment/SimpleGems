@@ -12,6 +12,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
 import java.sql.SQLException;
+import java.util.Comparator;
 import java.util.TreeMap;
 
 @RequiredArgsConstructor
@@ -26,17 +27,11 @@ public class Leaderboard {
         this.topGems.clear();
 
         if (this.plugin.getDataType() == DataType.MYSQL) {
-            Bukkit.getOnlinePlayers().forEach(player -> {
-                ProfileData profileData = plugin.getProfileManager().getProfile(player.getUniqueId()).getData();
-                String name = player.getName();
-                long gems = profileData.getGems().getAmount();
-                if (!this.topGems.containsKey(name)) {
-                    this.topGems.putIfAbsent(name, new TopGems(name, gems));
-                }
-            });
 
-            this.plugin.getSqlManager().select("SELECT * FROM SimpleGems ORDER BY gems", resultSet -> {
+            // get top 10 gems from database in order of highest to lowest to the map
+            this.plugin.getSqlManager().select("SELECT * FROM SimpleGems ORDER BY gems DESC LIMIT 10", resultSet -> {
                 try {
+                    // order from highest to lowest
                     while (resultSet.next()) {
                         String name = resultSet.getString("name");
                         long gems = resultSet.getLong("gems");
@@ -49,7 +44,7 @@ public class Leaderboard {
                 }
             });
 
-            ValueComparator<String> vc = new ValueComparator<>(this.topGems);
+            Comparator<Object> vc = new ValueComparator<>(this.topGems).reversed();
             TreeMap<String, TopGems> sorted = new TreeMap<>(vc);
             sorted.putAll(this.topGems);
             this.topGems.clear();
@@ -72,7 +67,7 @@ public class Leaderboard {
                 }
             }
 
-            ValueComparator<String> vc = new ValueComparator<>(this.topGems);
+            Comparator<Object> vc = new ValueComparator<>(this.topGems).reversed();
             TreeMap<String, TopGems> sorted = new TreeMap<>(vc);
             sorted.putAll(this.topGems);
             this.topGems.clear();

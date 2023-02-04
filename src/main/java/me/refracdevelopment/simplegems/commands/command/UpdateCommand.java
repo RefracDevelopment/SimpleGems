@@ -30,7 +30,7 @@ public class UpdateCommand extends RoseCommand {
         }
 
         SimpleGems.getInstance().getLeaderboardManager().update();
-        Bukkit.getOnlinePlayers().forEach(player -> locale.sendCommandMessage(player, "leaderboard-update", StringPlaceholders.single("%cmd%", parent.getName())));
+        Bukkit.getOnlinePlayers().forEach(player -> locale.sendCommandMessage(player, "leaderboard-update", StringPlaceholders.single("cmd", parent.getName())));
     }
 
     @Override

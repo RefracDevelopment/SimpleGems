@@ -9,7 +9,6 @@ import me.refracdevelopment.simplegems.utilities.config.Config;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -18,7 +17,7 @@ public class LeaderboardManager {
     private final SimpleGems plugin = SimpleGems.getInstance();
     private final Leaderboard leaderboard;
 
-    private TreeMap<String, TopGems> gems = new TreeMap<>(Collections.reverseOrder());
+    private TreeMap<String, TopGems> gems = new TreeMap<>();
 
     public LeaderboardManager() {
         this.leaderboard = new Leaderboard(this.plugin, new TreeMap<>());
