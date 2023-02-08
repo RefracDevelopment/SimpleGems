@@ -5,14 +5,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.data.DataType;
-import me.refracdevelopment.simplegems.data.ProfileData;
-import me.refracdevelopment.simplegems.utilities.Methods;
 import me.refracdevelopment.simplegems.utilities.chat.Color;
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
+import me.refracdevelopment.simplegems.utilities.config.Config;
+import me.refracdevelopment.simplegems.utilities.config.Files;
 
 import java.sql.SQLException;
-import java.util.Comparator;
 import java.util.TreeMap;
 
 @RequiredArgsConstructor
@@ -21,7 +18,7 @@ import java.util.TreeMap;
 public class Leaderboard {
 
     private final SimpleGems plugin;
-    private final TreeMap<String, TopGems> topGems;
+    private final TreeMap<String, Long> topGems;
 
     public void load() {
         this.topGems.clear();
@@ -29,46 +26,33 @@ public class Leaderboard {
         if (this.plugin.getDataType() == DataType.MYSQL) {
 
             // get top 10 gems from database in order of highest to lowest to the map
-            this.plugin.getSqlManager().select("SELECT * FROM SimpleGems ORDER BY gems DESC LIMIT 10", resultSet -> {
+            this.plugin.getSqlManager().select("SELECT * FROM SimpleGems ORDER BY gems DESC LIMIT " + Config.GEMS_TOP_ENTRIES, resultSet -> {
                 try {
                     // order from highest to lowest
                     while (resultSet.next()) {
                         String name = resultSet.getString("name");
                         long gems = resultSet.getLong("gems");
-                        if (!this.topGems.containsKey(name)) {
-                            this.topGems.putIfAbsent(name, new TopGems(name, gems));
-                        }
+                        this.topGems.put(name, gems);
                     }
                 } catch (SQLException exception) {
                     Color.log(exception.getMessage());
                 }
             });
 
-            Comparator<Object> vc = new ValueComparator<>(this.topGems).reversed();
-            TreeMap<String, TopGems> sorted = new TreeMap<>(vc);
+            ValueComparator<String> vc = new ValueComparator<>(this.topGems);
+            TreeMap<String, Long> sorted = new TreeMap<>(vc);
             sorted.putAll(this.topGems);
             this.topGems.clear();
             this.topGems.putAll(sorted);
         } else if (this.plugin.getDataType() == DataType.YAML) {
-            Bukkit.getOnlinePlayers().forEach(player -> {
-                ProfileData profileData = plugin.getProfileManager().getProfile(player.getUniqueId()).getData();
-                String name = player.getName();
-                long gems = profileData.getGems().getAmount();
-                if (!this.topGems.containsKey(name)) {
-                    this.topGems.putIfAbsent(name, new TopGems(name, gems));
-                }
+            Files.getData().getKeys(false).stream().limit(Config.GEMS_TOP_ENTRIES).sorted().forEach(data -> {
+                String name = Files.getData().getString("data." + data + ".name");
+                long gems = Files.getData().getLong("data." + data + ".gems");
+                this.topGems.put(name, gems);
             });
 
-            for (OfflinePlayer op : Bukkit.getOfflinePlayers()) {
-                String name = op.getName();
-                long gems = Methods.getOfflineGems(op);
-                if (!this.topGems.containsKey(name)) {
-                    this.topGems.putIfAbsent(name, new TopGems(name, gems));
-                }
-            }
-
-            Comparator<Object> vc = new ValueComparator<>(this.topGems).reversed();
-            TreeMap<String, TopGems> sorted = new TreeMap<>(vc);
+            ValueComparator<String> vc = new ValueComparator<>(this.topGems);
+            TreeMap<String, Long> sorted = new TreeMap<>(vc);
             sorted.putAll(this.topGems);
             this.topGems.clear();
             this.topGems.putAll(sorted);
