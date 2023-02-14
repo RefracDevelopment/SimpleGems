@@ -18,7 +18,7 @@ import java.util.TreeMap;
 public class Leaderboard {
 
     private final SimpleGems plugin;
-    private final TreeMap<String, Long> topGems;
+    private final TreeMap<String, Double> topGems;
 
     public void load() {
         this.topGems.clear();
@@ -31,7 +31,7 @@ public class Leaderboard {
                     // order from highest to lowest
                     while (resultSet.next()) {
                         String name = resultSet.getString("name");
-                        long gems = resultSet.getLong("gems");
+                        double gems = resultSet.getDouble("gems");
                         this.topGems.put(name, gems);
                     }
                 } catch (SQLException exception) {
@@ -40,19 +40,19 @@ public class Leaderboard {
             });
 
             ValueComparator<String> vc = new ValueComparator<>(this.topGems);
-            TreeMap<String, Long> sorted = new TreeMap<>(vc);
+            TreeMap<String, Double> sorted = new TreeMap<>(vc);
             sorted.putAll(this.topGems);
             this.topGems.clear();
             this.topGems.putAll(sorted);
         } else if (this.plugin.getDataType() == DataType.YAML) {
             Files.getData().getKeys(false).stream().limit(Config.GEMS_TOP_ENTRIES).sorted().forEach(data -> {
                 String name = Files.getData().getString("data." + data + ".name");
-                long gems = Files.getData().getLong("data." + data + ".gems");
+                double gems = Files.getData().getDouble("data." + data + ".gems");
                 this.topGems.put(name, gems);
             });
 
             ValueComparator<String> vc = new ValueComparator<>(this.topGems);
-            TreeMap<String, Long> sorted = new TreeMap<>(vc);
+            TreeMap<String, Double> sorted = new TreeMap<>(vc);
             sorted.putAll(this.topGems);
             this.topGems.clear();
             this.topGems.putAll(sorted);

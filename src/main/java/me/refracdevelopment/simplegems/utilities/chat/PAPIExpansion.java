@@ -7,7 +7,7 @@ import me.refracdevelopment.simplegems.utilities.Methods;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-public class PlaceHolderExpansion extends PlaceholderExpansion {
+public class PAPIExpansion extends PlaceholderExpansion {
 
     @Override
     public @NotNull String getAuthor() {
@@ -34,9 +34,12 @@ public class PlaceHolderExpansion extends PlaceholderExpansion {
         Profile profile = SimpleGems.getInstance().getProfileManager().getProfile(player.getUniqueId());
 
         if (params.equalsIgnoreCase("balance")) {
-            return Methods.format(profile.getData().getGems().getAmount());
+            return String.valueOf(profile.getData().getGems().getAmount());
         }
         if (params.equalsIgnoreCase("balance_formatted")) {
+            return Methods.format(profile.getData().getGems().getAmount());
+        }
+        if (params.equalsIgnoreCase("balance_decimal")) {
             return Methods.formatDec(profile.getData().getGems().getAmount());
         }
 

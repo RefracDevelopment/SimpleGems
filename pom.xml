@@ -43,7 +43,11 @@
                             <relocations>
                                 <relocation>
                                     <pattern>dev.rosewood.rosegarden</pattern>
-                                    <shadedPattern>me.refracdevelopment.example.rosegarden</shadedPattern>
+                                    <shadedPattern>me.refracdevelopment.simplegems.rosegarden</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>com.cryptomorin.xseries</pattern>
+                                    <shadedPattern>me.refracdevelopment.simplegems.xseries</shadedPattern>
                                 </relocation>
                             </relocations>
                         </configuration>

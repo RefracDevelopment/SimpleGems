@@ -34,7 +34,7 @@ public class GemShopItem {
     private final boolean skulls, headDatabase, messageEnabled, broadcastMessage, customData, glow;
     private final int data, slot, customModelData;
     private final List<String> lore, commands, messages;
-    private final long cost;
+    private final double cost;
 
     public GemShopItem(String item) {
         this.material = Utilities.getMaterial(Menus.GEM_SHOP_ITEMS.getString(item + ".material"));
@@ -67,7 +67,7 @@ public class GemShopItem {
         } else {
             this.glow = false;
         }
-        this.cost = Menus.GEM_SHOP_ITEMS.getLong(item + ".cost");
+        this.cost = Menus.GEM_SHOP_ITEMS.getDouble(item + ".cost");
         this.slot = Menus.GEM_SHOP_ITEMS.getInt(item + ".slot");
     }
 
@@ -108,7 +108,8 @@ public class GemShopItem {
             }
 
             item.setName(Color.translate(player, this.name));
-            this.lore.forEach(s -> item.addLoreLine(Color.translate(player, s.replace("%item%", this.name).replace("%cost%", String.valueOf(this.cost)))));
+            this.lore.forEach(s -> item.addLoreLine(Color.translate(player, s.replace("%item%", this.name)
+                    .replace("%cost%", String.valueOf(this.cost)).replace("%price%", String.valueOf(this.cost)))));
 
             return item.toItemStack();
         } else if (skulls) {
@@ -123,7 +124,9 @@ public class GemShopItem {
             }
 
             item.setName(Color.translate(player, this.name));
-            this.lore.forEach(s -> item.addLoreLine(Color.translate(player, s.replace("%item%", this.name).replace("%cost%", String.valueOf(this.cost)))));
+            this.lore.forEach(s -> item.addLoreLine(Color.translate(player, s.replace("%item%", this.name)
+                    .replace("%cost%", String.valueOf(this.cost))
+                    .replace("%price%", String.valueOf(this.cost)))));
 
             return item.toItemStack();
         } else if (customData) {
@@ -142,7 +145,9 @@ public class GemShopItem {
                 Color.log("&cAn error occurred when trying to set custom model data. Make sure your only using custom model data when on 1.14+.");
             }
             item.setName(this.name);
-            this.lore.forEach(s -> item.addLoreLine(Color.translate(player, s.replace("%item%", this.name).replace("%cost%", String.valueOf(this.cost)))));
+            this.lore.forEach(s -> item.addLoreLine(Color.translate(player, s.replace("%item%", this.name)
+                    .replace("%cost%", String.valueOf(this.cost))
+                    .replace("%price%", String.valueOf(this.cost)))));
             item.setDurability(this.data);
             item.setSkullOwner(this.skullOwner);
 
@@ -158,7 +163,9 @@ public class GemShopItem {
             }
 
             item.setName(Color.translate(player, this.name));
-            this.lore.forEach(s -> item.addLoreLine(Color.translate(player, s.replace("%item%", this.name).replace("%cost%", String.valueOf(this.cost)))));
+            this.lore.forEach(s -> item.addLoreLine(Color.translate(player, s.replace("%item%", this.name)
+                    .replace("%cost%", String.valueOf(this.cost))
+                    .replace("%price%", String.valueOf(this.cost)))));
             item.setDurability(this.data);
             item.setSkullOwner(this.skullOwner);
 

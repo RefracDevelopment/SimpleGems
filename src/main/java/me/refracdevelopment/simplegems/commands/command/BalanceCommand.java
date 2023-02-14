@@ -28,13 +28,14 @@ public class BalanceCommand extends RoseCommand {
         if (target.isOnline()) {
             locale.sendCommandMessage(context.getSender(), "gems-balance", Placeholders.setPlaceholders(target.getPlayer()));
         } else if (!target.isOnline() && target.hasPlayedBefore()) {
-            long amount = Methods.getOfflineGems(target);
+            double amount = Methods.getOfflineGems(target);
 
             StringPlaceholders placeholders = StringPlaceholders.builder()
                     .addAll(Placeholders.setPlaceholders(context.getSender()))
                     .addPlaceholder("player", target.getName())
-                    .addPlaceholder("gems", Methods.format(amount))
-                    .addPlaceholder("gems-decimal", Methods.formatDec(amount))
+                    .addPlaceholder("gems", String.valueOf(amount))
+                    .addPlaceholder("gems_formatted", Methods.format(amount))
+                    .addPlaceholder("gems_decimal", Methods.formatDec(amount))
                     .build();
 
             locale.sendCommandMessage(context.getSender(), "gems-balance", placeholders);

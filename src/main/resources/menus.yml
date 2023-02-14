@@ -9,13 +9,14 @@
 # %star% - Get a star for a message
 # %circle% - Get a circle for a message
 # PlaceholderAPI:
-# %simplegems_balance% - Get the formatted gems amount
-# %simplegems_balance_decimal% - Get the decimal formatted gems amount
+# %simplegems_balance% - Get the unformatted gems amount (100000)
+# %simplegems_balance_formatted% - Get the formatted gems amount (100k)
+# %simplegems_balance_decimal% - Get the decimal formatted gems amount (100000.0)
 #--------------------------------------
 gems-menu:
   enabled: true
   title: "&e&lGems Shop"
-  size: 36
+  size: 27
   fill:
     material: BLACK_STAINED_GLASS_PANE
     data: 0

@@ -18,7 +18,7 @@ public class LeaderboardManager {
     private final SimpleGems plugin = SimpleGems.getInstance();
     private final Leaderboard leaderboard;
 
-    private TreeMap<String, Long> gems = new TreeMap<>(Collections.reverseOrder());
+    private TreeMap<String, Double> gems = new TreeMap<>(Collections.reverseOrder());
 
     public LeaderboardManager() {
         this.leaderboard = new Leaderboard(this.plugin, new TreeMap<>());
@@ -40,7 +40,7 @@ public class LeaderboardManager {
         locale.sendCustomMessage(player, Placeholders.setPlaceholders(player, Config.GEMS_TOP_TITLE
                 .replace("%entries%", String.valueOf(this.gems.size()))));
         int pos = 1;
-        for (Map.Entry<String, Long> top : this.gems.entrySet()) {
+        for (Map.Entry<String, Double> top : this.gems.entrySet()) {
             locale.sendCustomMessage(player, Placeholders.setPlaceholders(player, Config.GEMS_TOP_FORMAT
                     .replace("%number%", String.valueOf(pos))
                     .replace("%player%", top.getKey())

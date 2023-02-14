@@ -17,7 +17,7 @@ import me.refracdevelopment.simplegems.manager.ConfigurationManager;
 import me.refracdevelopment.simplegems.manager.LocaleManager;
 import me.refracdevelopment.simplegems.menu.GemShop;
 import me.refracdevelopment.simplegems.utilities.chat.Color;
-import me.refracdevelopment.simplegems.utilities.chat.PlaceHolderExpansion;
+import me.refracdevelopment.simplegems.utilities.chat.PAPIExpansion;
 import me.refracdevelopment.simplegems.utilities.config.Config;
 import me.refracdevelopment.simplegems.utilities.config.Files;
 import org.bukkit.command.CommandSender;
@@ -75,7 +75,7 @@ public final class SimpleGems extends RosePlugin {
         Color.log("&aLoaded commands.");
         this.loadListeners();
 
-        new PlaceHolderExpansion().register();
+        new PAPIExpansion().register();
 
         Color.log("&8&m==&c&m=====&f&m======================&c&m=====&8&m==");
         Color.log("&e" + this.getDescription().getName() + " has been enabled. (" + (System.currentTimeMillis() - startTiming) + "ms)");

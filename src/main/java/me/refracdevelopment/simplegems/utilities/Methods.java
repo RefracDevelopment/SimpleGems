@@ -1,6 +1,7 @@
 package me.refracdevelopment.simplegems.utilities;
 
 import com.cryptomorin.xseries.XMaterial;
+import com.google.common.util.concurrent.AtomicDouble;
 import dev.rosewood.rosegarden.utils.NMSUtil;
 import dev.rosewood.rosegarden.utils.StringPlaceholders;
 import me.refracdevelopment.simplegems.SimpleGems;
@@ -25,7 +26,6 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.atomic.AtomicLong;
 
 public class Methods {
 
@@ -33,7 +33,7 @@ public class Methods {
      * The #saveOffline method allows you to
      * save a specified player's data
      */
-    public static void saveOffline(OfflinePlayer player, long amount) {
+    public static void saveOffline(OfflinePlayer player, double amount) {
         Bukkit.getScheduler().runTaskAsynchronously(SimpleGems.getInstance(), () -> {
             if (SimpleGems.getInstance().getDataType() == DataType.MYSQL) {
                 SimpleGems.getInstance().getSqlManager().execute("UPDATE SimpleGems SET gems=? WHERE uuid=?",
@@ -45,25 +45,25 @@ public class Methods {
         });
     }
 
-    public static void setOfflineGems(OfflinePlayer player, long amount) {
+    public static void setOfflineGems(OfflinePlayer player, double amount) {
         saveOffline(player, amount);
     }
 
-    public static void giveOfflineGems(OfflinePlayer player, long amount) {
+    public static void giveOfflineGems(OfflinePlayer player, double amount) {
         setOfflineGems(player, getOfflineGems(player) + amount);
     }
     
-    public static void takeOfflineGems(OfflinePlayer player, long amount) {
+    public static void takeOfflineGems(OfflinePlayer player, double amount) {
         setOfflineGems(player, getOfflineGems(player) - amount);
     }
 
-    public static long getOfflineGems(OfflinePlayer player) {
+    public static double getOfflineGems(OfflinePlayer player) {
         if (SimpleGems.getInstance().getDataType() == DataType.MYSQL) {
-            AtomicLong gems = new AtomicLong();
+            AtomicDouble gems = new AtomicDouble();
             SimpleGems.getInstance().getSqlManager().select("SELECT * FROM SimpleGems WHERE uuid=?", resultSet -> {
                 try {
                     if (resultSet.next()) {
-                        gems.set(resultSet.getLong("gems"));
+                        gems.set(resultSet.getDouble("gems"));
                     }
                 } catch (SQLException exception) {
                     Color.log(exception.getMessage());
@@ -71,16 +71,16 @@ public class Methods {
             }, player.getUniqueId().toString());
             return gems.get();
         } else if (SimpleGems.getInstance().getDataType() == DataType.YAML) {
-            return Files.getData().getLong("data." + player.getUniqueId().toString() + ".gems");
+            return Files.getData().getDouble("data." + player.getUniqueId().toString() + ".gems");
         }
         return 0;
     }
     
-    public static boolean hasOfflineGems(OfflinePlayer player, long amount) {
+    public static boolean hasOfflineGems(OfflinePlayer player, double amount) {
         return getOfflineGems(player) >= amount;
     }
 
-    public static void payGems(Player player, Player target, long amount, boolean silent) {
+    public static void payGems(Player player, Player target, double amount, boolean silent) {
         ProfileData profile = SimpleGems.getInstance().getProfileManager().getProfile(player.getUniqueId()).getData();
         ProfileData targetProfile = SimpleGems.getInstance().getProfileManager().getProfile(target.getUniqueId()).getData();
         final LocaleManager locale = SimpleGems.getInstance().getManager(LocaleManager.class);
@@ -111,14 +111,16 @@ public class Methods {
         }
     }
 
-    public static void payOfflineGems(Player player, OfflinePlayer target, long amount) {
+    public static void payOfflineGems(Player player, OfflinePlayer target, double amount) {
         ProfileData profile = SimpleGems.getInstance().getProfileManager().getProfile(player.getUniqueId()).getData();
         final LocaleManager locale = SimpleGems.getInstance().getManager(LocaleManager.class);
 
         StringPlaceholders placeholders = StringPlaceholders.builder()
+                .addAll(Placeholders.setPlaceholders(player))
                 .addPlaceholder("player", target.getName())
                 .addPlaceholder("gems", String.valueOf(amount))
-                .addAll(Placeholders.setPlaceholders(player))
+                .addPlaceholder("gems_formatted", Methods.format(amount))
+                .addPlaceholder("gems_decimal", Methods.formatDec(amount))
                 .build();
 
         if (profile.getGems().hasAmount(amount)) {
@@ -224,27 +226,27 @@ public class Methods {
         return item.toItemStack();
     }
 
-    public static String formatDec(long amount) {
-        DecimalFormat decimalFormat = new DecimalFormat("###,###");
-        return decimalFormat.format(amount);
+    public static String formatDec(double amount) {
+        DecimalFormat decimalFormat = new DecimalFormat("0.00");
+        return decimalFormat.format(amount).replaceAll("\\.00$", "");
     }
 
-    public static String format(long amount) {
+    public static String format(double amount) {
         String fin = "none";
         if (amount <= 0.0) {
             fin = String.valueOf(0);
         } else if (amount >= 1.0E18) {
-            fin = String.format("%.1fQT", amount / 1.0E18);
+            fin = String.format("%.1fQ", amount / 1.0E18);
         } else if (amount >= 1.0E15) {
-            fin = String.format("%.1fQ", amount / 1.0E15);
+            fin = String.format("%.1fq", amount / 1.0E15);
         } else if (amount >= 1.0E12) {
             fin = String.format("%.1fT", amount / 1.0E12);
         } else if (amount >= 1.0E9) {
             fin = String.format("%.1fB", amount / 1.0E9);
-        } else if (amount >= 1000000.0) {
-            fin = String.format("%.1fM", amount / 1000000.0);
-        } else if (amount >= 1000.0) {
-            fin = String.format("%.1fK", amount / 1000.0);
+        } else if (amount >= 1.0E6) {
+            fin = String.format("%.1fM", amount / 1.0E6);
+        } else if (amount >= 1.0E3) {
+            fin = String.format("%.1fK", amount / 1.0E3);
         }
         if (fin.contains(".0")) {
             fin = fin.replace(".0", "");

@@ -20,7 +20,7 @@ public class SimpleGemsAPI {
     public SimpleGemsAPI() {
         INSTANCE = this;
         Color.log("&aSimpleGemsAPI has been enabled!");
-        Color.log("&aWiki & Download: https://simplegems.refracdev.ml");
+        Color.log("&aWiki & Download: https://simplegems.refracdev.ml/");
     }
 
     /**
@@ -31,9 +31,9 @@ public class SimpleGemsAPI {
     }
 
     /**
-     * Used to get a cached player's profile data.
+     * Used to get a cached online player's profile data.
      *
-     * @return Player's cached profile data
+     * @return online player's cached profile data
      */
     public ProfileData getProfileData(Player player) {
         return plugin.getProfileManager().getProfile(player.getUniqueId()).getData();
@@ -42,10 +42,10 @@ public class SimpleGemsAPI {
     /**
      * Used to get player gems.
      *
-     * @param player player
-     * @return player's gems amount
+     * @param player online player
+     * @return online player's gems amount
      */
-    public long getGems(Player player) {
+    public double getGems(Player player) {
         if (getProfileData(player) == null) {
             return 0;
         }
@@ -59,7 +59,7 @@ public class SimpleGemsAPI {
      * @param player offline player
      * @return offline player's gems amount
      */
-    public long getGems(OfflinePlayer player) {
+    public double getGems(OfflinePlayer player) {
         return Methods.getOfflineGems(player);
     }
 
@@ -95,7 +95,7 @@ public class SimpleGemsAPI {
      * @param amount amount of gems to check
      * @return If the player has enough gems
      */
-    public boolean hasGems(Player player, long amount) {
+    public boolean hasGems(Player player, double amount) {
         if (getProfileData(player) == null) return false;
 
         return getProfileData(player).getGems().hasAmount(amount);
@@ -108,7 +108,7 @@ public class SimpleGemsAPI {
      * @param amount amount of gems to check
      * @return If the player has enough gems
      */
-    public boolean hasGems(OfflinePlayer player, long amount) {
+    public boolean hasGems(OfflinePlayer player, double amount) {
         return Methods.hasOfflineGems(player, amount);
     }
 
@@ -118,7 +118,7 @@ public class SimpleGemsAPI {
      * @param player online player
      * @param amount amount of gems to give
      */
-    public void giveGems(Player player, long amount) {
+    public void giveGems(Player player, double amount) {
         if (getProfileData(player) == null) return;
 
         getProfileData(player).getGems().incrementAmount(amount);
@@ -131,7 +131,7 @@ public class SimpleGemsAPI {
      * @param player offline player
      * @param amount amount of gems to give
      */
-    public void giveGems(OfflinePlayer player, long amount) {
+    public void giveGems(OfflinePlayer player, double amount) {
         Methods.giveOfflineGems(player, amount);
     }
 
@@ -141,7 +141,7 @@ public class SimpleGemsAPI {
      * @param player online player
      * @param amount amount of gems to take
      */
-    public void takeGems(Player player, long amount) {
+    public void takeGems(Player player, double amount) {
         if (getProfileData(player) == null) return;
 
         getProfileData(player).getGems().decrementAmount(amount);
@@ -152,9 +152,9 @@ public class SimpleGemsAPI {
      * Used to take offline player gems.
      *
      * @param player offline player
-     * @param amount gems
+     * @param amount amount of gems to take
      */
-    public void takeGems(OfflinePlayer player, long amount) {
+    public void takeGems(OfflinePlayer player, double amount) {
         Methods.takeOfflineGems(player, amount);
     }
 
@@ -162,9 +162,9 @@ public class SimpleGemsAPI {
      * Used to set player gems.
      *
      * @param player online player
-     * @param amount gems
+     * @param amount amount of gems to set
      */
-    public void setGems(Player player, long amount) {
+    public void setGems(Player player, double amount) {
         if (getProfileData(player) == null) return;
 
         getProfileData(player).getGems().setAmount(amount);
@@ -175,9 +175,9 @@ public class SimpleGemsAPI {
      * Used to set offline player gems.
      *
      * @param player offline player
-     * @param amount gems
+     * @param amount amount of gems to set
      */
-    public void setGems(OfflinePlayer player, long amount) {
+    public void setGems(OfflinePlayer player, double amount) {
         Methods.setOfflineGems(player, amount);
     }
 }

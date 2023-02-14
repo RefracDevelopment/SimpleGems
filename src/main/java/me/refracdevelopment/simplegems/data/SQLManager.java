@@ -55,7 +55,7 @@ public class SQLManager {
     }
 
     public void createTables() {
-        createTable("SimpleGems", "uuid VARCHAR(36) NOT NULL PRIMARY KEY, name VARCHAR(16), gems BIGINT(255)");
+        createTable("SimpleGems", "uuid VARCHAR(36) NOT NULL PRIMARY KEY, name VARCHAR(16), gems DOUBLE");
     }
 
     public boolean isInitiated() {

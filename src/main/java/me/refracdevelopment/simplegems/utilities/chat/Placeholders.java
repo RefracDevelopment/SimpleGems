@@ -17,7 +17,8 @@ public class Placeholders {
             Profile profile = SimpleGems.getInstance().getProfileManager().getProfile(player.getUniqueId());
 
             placeholder = placeholder.replace("%player%", player.getName());
-            placeholder = placeholder.replace("%gems%", Methods.format(profile.getData().getGems().getAmount()));
+            placeholder = placeholder.replace("%gems%", String.valueOf(profile.getData().getGems().getAmount()));
+            placeholder = placeholder.replace("%gems_formatted%", Methods.format(profile.getData().getGems().getAmount()));
             placeholder = placeholder.replace("%gems_decimal%", Methods.formatDec(profile.getData().getGems().getAmount()));
             placeholder = placeholder.replace("%displayname%", player.getDisplayName());
         }
@@ -40,7 +41,8 @@ public class Placeholders {
             Profile profile = SimpleGems.getInstance().getProfileManager().getProfile(player.getUniqueId());
 
             placeholders.addPlaceholder("player", player.getName());
-            placeholders.addPlaceholder("gems", Methods.format(profile.getData().getGems().getAmount()));
+            placeholders.addPlaceholder("gems", String.valueOf(profile.getData().getGems().getAmount()));
+            placeholders.addPlaceholder("gems_formatted", Methods.format(profile.getData().getGems().getAmount()));
             placeholders.addPlaceholder("gems_decimal", Methods.formatDec(profile.getData().getGems().getAmount()));
             placeholders.addPlaceholder("displayname", player.getDisplayName());
         }
