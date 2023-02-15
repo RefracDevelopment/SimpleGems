@@ -6,7 +6,6 @@ import dev.rosewood.rosegarden.RosePlugin;
 import dev.rosewood.rosegarden.manager.Manager;
 import dev.rosewood.rosegarden.utils.NMSUtil;
 import lombok.Getter;
-import lombok.Setter;
 import me.refracdevelopment.simplegems.data.DataType;
 import me.refracdevelopment.simplegems.data.ProfileManager;
 import me.refracdevelopment.simplegems.data.SQLManager;
@@ -31,7 +30,6 @@ import java.util.Collections;
 import java.util.List;
 
 @Getter
-@Setter
 public final class SimpleGems extends RosePlugin {
 
     @Getter

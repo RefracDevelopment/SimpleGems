@@ -5,9 +5,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.data.DataType;
+import me.refracdevelopment.simplegems.data.Profile;
+import me.refracdevelopment.simplegems.utilities.Methods;
 import me.refracdevelopment.simplegems.utilities.chat.Color;
 import me.refracdevelopment.simplegems.utilities.config.Config;
-import me.refracdevelopment.simplegems.utilities.config.Files;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 
 import java.sql.SQLException;
 import java.util.TreeMap;
@@ -45,11 +48,20 @@ public class Leaderboard {
             this.topGems.clear();
             this.topGems.putAll(sorted);
         } else if (this.plugin.getDataType() == DataType.YAML) {
-            Files.getData().getKeys(false).stream().limit(Config.GEMS_TOP_ENTRIES).sorted().forEach(data -> {
-                String name = Files.getData().getString("data." + data + ".name");
-                double gems = Files.getData().getDouble("data." + data + ".gems");
+            Bukkit.getOnlinePlayers().forEach(player -> {
+                Profile profile = plugin.getProfileManager().getProfile(player.getUniqueId());
+                String name = player.getName();
+                double gems = profile.getData().getGems().getAmount();
+                if (this.topGems.size() >= Config.GEMS_TOP_ENTRIES-1) return;
                 this.topGems.put(name, gems);
             });
+
+            for (OfflinePlayer op : Bukkit.getOfflinePlayers()) {
+                String name = op.getName();
+                double gems = Methods.getOfflineGems(op);
+                if (this.topGems.size() >= Config.GEMS_TOP_ENTRIES-1) return;
+                this.topGems.put(name, gems);
+            }
 
             ValueComparator<String> vc = new ValueComparator<>(this.topGems);
             TreeMap<String, Double> sorted = new TreeMap<>(vc);
