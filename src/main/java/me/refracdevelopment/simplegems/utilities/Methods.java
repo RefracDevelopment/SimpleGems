@@ -1,7 +1,6 @@
 package me.refracdevelopment.simplegems.utilities;
 
 import com.cryptomorin.xseries.XMaterial;
-import com.google.common.util.concurrent.AtomicDouble;
 import dev.rosewood.rosegarden.utils.NMSUtil;
 import dev.rosewood.rosegarden.utils.StringPlaceholders;
 import me.refracdevelopment.simplegems.SimpleGems;
@@ -26,6 +25,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class Methods {
 
@@ -33,7 +33,7 @@ public class Methods {
      * The #saveOffline method allows you to
      * save a specified player's data
      */
-    public static void saveOffline(OfflinePlayer player, double amount) {
+    public static void saveOffline(OfflinePlayer player, long amount) {
         Bukkit.getScheduler().runTaskAsynchronously(SimpleGems.getInstance(), () -> {
             if (SimpleGems.getInstance().getDataType() == DataType.MYSQL) {
                 SimpleGems.getInstance().getSqlManager().execute("UPDATE SimpleGems SET gems=? WHERE uuid=?",
@@ -45,25 +45,25 @@ public class Methods {
         });
     }
 
-    public static void setOfflineGems(OfflinePlayer player, double amount) {
+    public static void setOfflineGems(OfflinePlayer player, long amount) {
         saveOffline(player, amount);
     }
 
-    public static void giveOfflineGems(OfflinePlayer player, double amount) {
+    public static void giveOfflineGems(OfflinePlayer player, long amount) {
         setOfflineGems(player, getOfflineGems(player) + amount);
     }
     
-    public static void takeOfflineGems(OfflinePlayer player, double amount) {
+    public static void takeOfflineGems(OfflinePlayer player, long amount) {
         setOfflineGems(player, getOfflineGems(player) - amount);
     }
 
-    public static double getOfflineGems(OfflinePlayer player) {
+    public static long getOfflineGems(OfflinePlayer player) {
         if (SimpleGems.getInstance().getDataType() == DataType.MYSQL) {
-            AtomicDouble gems = new AtomicDouble();
+            AtomicLong gems = new AtomicLong();
             SimpleGems.getInstance().getSqlManager().select("SELECT * FROM SimpleGems WHERE uuid=?", resultSet -> {
                 try {
                     if (resultSet.next()) {
-                        gems.set(resultSet.getDouble("gems"));
+                        gems.set(resultSet.getLong("gems"));
                     }
                 } catch (SQLException exception) {
                     Color.log(exception.getMessage());
@@ -71,16 +71,16 @@ public class Methods {
             }, player.getUniqueId().toString());
             return gems.get();
         } else if (SimpleGems.getInstance().getDataType() == DataType.YAML) {
-            return Files.getData().getDouble("data." + player.getUniqueId().toString() + ".gems");
+            return Files.getData().getLong("data." + player.getUniqueId().toString() + ".gems");
         }
         return 0;
     }
     
-    public static boolean hasOfflineGems(OfflinePlayer player, double amount) {
+    public static boolean hasOfflineGems(OfflinePlayer player, long amount) {
         return getOfflineGems(player) >= amount;
     }
 
-    public static void payGems(Player player, Player target, double amount, boolean silent) {
+    public static void payGems(Player player, Player target, long amount, boolean silent) {
         ProfileData profile = SimpleGems.getInstance().getProfileManager().getProfile(player.getUniqueId()).getData();
         ProfileData targetProfile = SimpleGems.getInstance().getProfileManager().getProfile(target.getUniqueId()).getData();
         final LocaleManager locale = SimpleGems.getInstance().getManager(LocaleManager.class);
@@ -111,7 +111,7 @@ public class Methods {
         }
     }
 
-    public static void payOfflineGems(Player player, OfflinePlayer target, double amount) {
+    public static void payOfflineGems(Player player, OfflinePlayer target, long amount) {
         ProfileData profile = SimpleGems.getInstance().getProfileManager().getProfile(player.getUniqueId()).getData();
         final LocaleManager locale = SimpleGems.getInstance().getManager(LocaleManager.class);
 
@@ -226,12 +226,12 @@ public class Methods {
         return item.toItemStack();
     }
 
-    public static String formatDec(double amount) {
+    public static String formatDec(long amount) {
         DecimalFormat decimalFormat = new DecimalFormat("0.00");
         return decimalFormat.format(amount).replaceAll("\\.00$", "");
     }
 
-    public static String format(double amount) {
+    public static String format(long amount) {
         String fin = "none";
         if (amount <= 0.0) {
             fin = String.valueOf(0);

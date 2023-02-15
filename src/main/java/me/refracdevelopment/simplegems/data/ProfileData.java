@@ -34,7 +34,7 @@ public class ProfileData {
             plugin.getSqlManager().select("SELECT * FROM SimpleGems WHERE uuid=?", resultSet -> {
                 try {
                     if (resultSet.next()) {
-                        this.gems.setAmount(resultSet.getDouble("gems"));
+                        this.gems.setAmount(resultSet.getLong("gems"));
                         plugin.getSqlManager().execute("UPDATE SimpleGems SET name=? WHERE uuid=?",
                                 player.getName(), player.getUniqueId().toString());
                     } else {
@@ -46,7 +46,7 @@ public class ProfileData {
                 }
             }, player.getUniqueId().toString());
         } else if (plugin.getDataType() == DataType.YAML) {
-            this.gems.setAmount(Files.getData().getDouble("data." + player.getUniqueId().toString() + ".gems"));
+            this.gems.setAmount(Files.getData().getLong("data." + player.getUniqueId().toString() + ".gems"));
             Files.getData().set("data." + player.getUniqueId().toString() + ".name", player.getName());
             Files.saveData();
         }

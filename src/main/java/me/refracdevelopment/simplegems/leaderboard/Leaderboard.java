@@ -21,7 +21,7 @@ import java.util.TreeMap;
 public class Leaderboard {
 
     private final SimpleGems plugin;
-    private final TreeMap<String, Double> topGems;
+    private final TreeMap<String, Long> topGems;
 
     public void load() {
         this.topGems.clear();
@@ -34,7 +34,7 @@ public class Leaderboard {
                     // order from highest to lowest
                     while (resultSet.next()) {
                         String name = resultSet.getString("name");
-                        double gems = resultSet.getDouble("gems");
+                        long gems = resultSet.getLong("gems");
                         this.topGems.put(name, gems);
                     }
                 } catch (SQLException exception) {
@@ -43,7 +43,7 @@ public class Leaderboard {
             });
 
             ValueComparator<String> vc = new ValueComparator<>(this.topGems);
-            TreeMap<String, Double> sorted = new TreeMap<>(vc);
+            TreeMap<String, Long> sorted = new TreeMap<>(vc);
             sorted.putAll(this.topGems);
             this.topGems.clear();
             this.topGems.putAll(sorted);
@@ -51,20 +51,20 @@ public class Leaderboard {
             Bukkit.getOnlinePlayers().forEach(player -> {
                 Profile profile = plugin.getProfileManager().getProfile(player.getUniqueId());
                 String name = player.getName();
-                double gems = profile.getData().getGems().getAmount();
+                long gems = profile.getData().getGems().getAmount();
                 if (this.topGems.size() >= Config.GEMS_TOP_ENTRIES-1) return;
                 this.topGems.put(name, gems);
             });
 
             for (OfflinePlayer op : Bukkit.getOfflinePlayers()) {
                 String name = op.getName();
-                double gems = Methods.getOfflineGems(op);
+                long gems = Methods.getOfflineGems(op);
                 if (this.topGems.size() >= Config.GEMS_TOP_ENTRIES-1) return;
                 this.topGems.put(name, gems);
             }
 
             ValueComparator<String> vc = new ValueComparator<>(this.topGems);
-            TreeMap<String, Double> sorted = new TreeMap<>(vc);
+            TreeMap<String, Long> sorted = new TreeMap<>(vc);
             sorted.putAll(this.topGems);
             this.topGems.clear();
             this.topGems.putAll(sorted);

@@ -12,7 +12,7 @@ public class ConfigurationManager extends AbstractConfigurationManager {
 
     public enum Setting implements RoseSetting {
         // Config Settings
-        LEADERBOARD_UPDATE_INTERVAL("leaderboard-update-interval", 1800, "Allows changing how double data is cached for /gems top"),
+        LEADERBOARD_UPDATE_INTERVAL("leaderboard-update-interval", 1800, "Allows changing how long data is cached for /gems top"),
         DATA_TYPE("data-type", "YAML", "Choose your data saving type:", "MYSQL - Database saving", "YAML - Local saving in the data.yml file"),
         MYSQL_HOST("mysql.host", "127.0.0.1"),
         MYSQL_USERNAME("mysql.username", "root"),

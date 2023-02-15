@@ -45,7 +45,7 @@ public class SimpleGemsAPI {
      * @param player online player
      * @return online player's gems amount
      */
-    public double getGems(Player player) {
+    public long getGems(Player player) {
         if (getProfileData(player) == null) {
             return 0;
         }
@@ -59,7 +59,7 @@ public class SimpleGemsAPI {
      * @param player offline player
      * @return offline player's gems amount
      */
-    public double getGems(OfflinePlayer player) {
+    public long getGems(OfflinePlayer player) {
         return Methods.getOfflineGems(player);
     }
 
@@ -95,7 +95,7 @@ public class SimpleGemsAPI {
      * @param amount amount of gems to check
      * @return If the player has enough gems
      */
-    public boolean hasGems(Player player, double amount) {
+    public boolean hasGems(Player player, long amount) {
         if (getProfileData(player) == null) return false;
 
         return getProfileData(player).getGems().hasAmount(amount);
@@ -108,7 +108,7 @@ public class SimpleGemsAPI {
      * @param amount amount of gems to check
      * @return If the player has enough gems
      */
-    public boolean hasGems(OfflinePlayer player, double amount) {
+    public boolean hasGems(OfflinePlayer player, long amount) {
         return Methods.hasOfflineGems(player, amount);
     }
 
@@ -118,7 +118,7 @@ public class SimpleGemsAPI {
      * @param player online player
      * @param amount amount of gems to give
      */
-    public void giveGems(Player player, double amount) {
+    public void giveGems(Player player, long amount) {
         if (getProfileData(player) == null) return;
 
         getProfileData(player).getGems().incrementAmount(amount);
@@ -131,7 +131,7 @@ public class SimpleGemsAPI {
      * @param player offline player
      * @param amount amount of gems to give
      */
-    public void giveGems(OfflinePlayer player, double amount) {
+    public void giveGems(OfflinePlayer player, long amount) {
         Methods.giveOfflineGems(player, amount);
     }
 
@@ -141,7 +141,7 @@ public class SimpleGemsAPI {
      * @param player online player
      * @param amount amount of gems to take
      */
-    public void takeGems(Player player, double amount) {
+    public void takeGems(Player player, long amount) {
         if (getProfileData(player) == null) return;
 
         getProfileData(player).getGems().decrementAmount(amount);
@@ -154,7 +154,7 @@ public class SimpleGemsAPI {
      * @param player offline player
      * @param amount amount of gems to take
      */
-    public void takeGems(OfflinePlayer player, double amount) {
+    public void takeGems(OfflinePlayer player, long amount) {
         Methods.takeOfflineGems(player, amount);
     }
 
@@ -164,7 +164,7 @@ public class SimpleGemsAPI {
      * @param player online player
      * @param amount amount of gems to set
      */
-    public void setGems(Player player, double amount) {
+    public void setGems(Player player, long amount) {
         if (getProfileData(player) == null) return;
 
         getProfileData(player).getGems().setAmount(amount);
@@ -177,7 +177,7 @@ public class SimpleGemsAPI {
      * @param player offline player
      * @param amount amount of gems to set
      */
-    public void setGems(OfflinePlayer player, double amount) {
+    public void setGems(OfflinePlayer player, long amount) {
         Methods.setOfflineGems(player, amount);
     }
 }

@@ -26,7 +26,7 @@ public class GiveCommand extends RoseCommand {
     }
 
     @RoseExecutable
-    public void execute(CommandContext context, OfflinePlayer target, double amount, @Optional String silent) {
+    public void execute(CommandContext context, OfflinePlayer target, long amount, @Optional String silent) {
         final LocaleManager locale = this.rosePlugin.getManager(LocaleManager.class);
 
         if (context.getArgs()[1].contains("-")) return;

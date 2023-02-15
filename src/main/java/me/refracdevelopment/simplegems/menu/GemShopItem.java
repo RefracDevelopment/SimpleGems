@@ -34,7 +34,7 @@ public class GemShopItem {
     private final boolean skulls, headDatabase, messageEnabled, broadcastMessage, customData, glow;
     private final int data, slot, customModelData;
     private final List<String> lore, commands, messages;
-    private final double cost;
+    private final long cost;
 
     public GemShopItem(String item) {
         this.material = Utilities.getMaterial(Menus.GEM_SHOP_ITEMS.getString(item + ".material"));
@@ -67,7 +67,7 @@ public class GemShopItem {
         } else {
             this.glow = false;
         }
-        this.cost = Menus.GEM_SHOP_ITEMS.getDouble(item + ".cost");
+        this.cost = Menus.GEM_SHOP_ITEMS.getLong(item + ".cost");
         this.slot = Menus.GEM_SHOP_ITEMS.getInt(item + ".slot");
     }
 
