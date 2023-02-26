@@ -1,7 +1,7 @@
 # SimpleGems
 A gems economy/currency plugin.
 
-[Spigot](https://www.spigotmc.org/resources/96827/) [Polymart](https://polymart.org/resource/1597) [Songoda](https://marketplace.songoda.com/product/755) [MC-Market](https://www.mc-market.org/resources/21583/)
+[Spigot](https://www.spigotmc.org/resources/96827/) [Songoda](https://marketplace.songoda.com/product/755) [MC-Market](https://www.mc-market.org/resources/21583/)
 
 ### Issue Reporting/Support
 
