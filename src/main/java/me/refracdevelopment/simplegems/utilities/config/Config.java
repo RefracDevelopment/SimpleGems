@@ -6,7 +6,8 @@ import java.util.List;
 import java.util.Objects;
 
 public class Config {
-    // Database
+    // Settings
+    public static boolean UPDATE_ON_JOIN;
     public static int LEADERBOARD_UPDATE_INTERVAL;
     public static String DATA_TYPE;
 
@@ -28,7 +29,8 @@ public class Config {
     public static List<String> GEMS_ITEM_LORE;
 
     public static void loadConfig() {
-        // Database
+        // Settings
+        UPDATE_ON_JOIN = ConfigurationManager.Setting.UPDATE_ON_JOIN.getBoolean();
         LEADERBOARD_UPDATE_INTERVAL = ConfigurationManager.Setting.LEADERBOARD_UPDATE_INTERVAL.getInt();
         DATA_TYPE = ConfigurationManager.Setting.DATA_TYPE.getString();
 

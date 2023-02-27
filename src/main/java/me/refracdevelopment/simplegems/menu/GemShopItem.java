@@ -79,12 +79,16 @@ public class GemShopItem {
         if (this.broadcastMessage) {
             Bukkit.getOnlinePlayers().forEach(p -> {
                 this.messages.forEach(message -> {
-                    locale.sendCustomMessage(p, Placeholders.setPlaceholders(player, message.replace("%item%", this.name).replace("%cost%", Methods.formatDec(this.cost))));
+                    locale.sendCustomMessage(p, Placeholders.setPlaceholders(player, message
+                            .replace("%item%", this.name)
+                            .replace("%cost%", Methods.formatDec(this.cost))));
                 });
             });
         } else {
             this.messages.forEach(message -> {
-                locale.sendCustomMessage(player, Placeholders.setPlaceholders(player, message.replace("%item%", this.name).replace("%cost%", Methods.formatDec(this.cost))));
+                locale.sendCustomMessage(player, Placeholders.setPlaceholders(player, message
+                        .replace("%item%", this.name)
+                        .replace("%cost%", Methods.formatDec(this.cost))));
             });
         }
     }

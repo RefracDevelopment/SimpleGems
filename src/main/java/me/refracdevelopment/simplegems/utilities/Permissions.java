@@ -24,4 +24,6 @@ public class Permissions {
 
     public static final String GEMS_UPDATE = "simplegems.command.update";
 
+    public static final String UPDATE_ON_JOIN = "simplegems.update";
+
 }

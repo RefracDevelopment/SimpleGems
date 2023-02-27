@@ -13,12 +13,15 @@ import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
 import me.refracdevelopment.simplegems.utilities.config.Config;
 import me.refracdevelopment.simplegems.utilities.config.Files;
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.sql.SQLException;
 import java.text.DecimalFormat;
@@ -134,7 +137,7 @@ public class Methods {
     }
 
     public static void withdrawGems(Player player, int amount) {
-        if (amount > 2304) return; // Used to reduce lag
+        //if (amount > 2304) return; // Used to reduce lag
 
         Profile profile = SimpleGems.getInstance().getProfileManager().getProfile(player.getUniqueId());
         final LocaleManager locale = SimpleGems.getInstance().getManager(LocaleManager.class);
@@ -156,23 +159,8 @@ public class Methods {
     }
 
     public static void giveGemsItem(Player player, int amount) {
-        ItemStack gemsItem = getGemsItem();
-        int stacksToGive = 0;
-        while (amount > 64) {
-            ++stacksToGive;
-            amount -= 64;
-        }
-        while (stacksToGive > 0) {
-            gemsItem.setAmount(64);
-            if (player.getInventory().firstEmpty() != -1) {
-                player.getInventory().setItem(player.getInventory().firstEmpty(), gemsItem);
-                player.updateInventory();
-            } else {
-                player.getWorld().dropItem(player.getLocation(), gemsItem);
-            }
-            --stacksToGive;
-        }
-        gemsItem.setAmount(amount);
+        ItemStack gemsItem = getGemsItem(amount);
+
         if (player.getInventory().firstEmpty() != -1) {
             player.getInventory().setItem(player.getInventory().firstEmpty(), gemsItem);
             player.updateInventory();
@@ -187,19 +175,18 @@ public class Methods {
      *
      * @return an item stack to redeem gems
      */
-    public static ItemStack getGemsItem() {
+    public static ItemStack getGemsItem(int amount) {
         String name = Config.GEMS_ITEM_NAME;
         XMaterial material = Utilities.getMaterial(Config.GEMS_ITEM);
         int data = Config.GEMS_ITEM_DATA;
         List<String> lore = Config.GEMS_ITEM_LORE;
-        ItemBuilder item = new ItemBuilder(material.parseMaterial());
+        ItemBuilder item = new ItemBuilder(material.parseMaterial(), 1);
+        ItemMeta itemMeta = item.toItemStack().getItemMeta();
 
         if (Config.GEMS_ITEM_CUSTOM_DATA) {
             if (Config.GEMS_ITEM_GLOW) {
                 item.addEnchant(Enchantment.ARROW_DAMAGE, 1);
-                ItemMeta itemMeta = item.toItemStack().getItemMeta();
                 itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-                item.toItemStack().setItemMeta(itemMeta);
             }
 
             if (NMSUtil.getVersionNumber() > 13) {
@@ -207,19 +194,56 @@ public class Methods {
             } else {
                 Color.log("&cAn error occurred when trying to set custom model data. Make sure your only using custom model data when on 1.14+.");
             }
+
+            // Attempt to insert a NBT tag of the gems value instead of filling the inventory
+
+            NamespacedKey key = new NamespacedKey(SimpleGems.getInstance(), "gems-item-value");
+            PersistentDataContainer container = itemMeta.getPersistentDataContainer();
+            container.set(key, PersistentDataType.INTEGER, amount);
+            item.toItemStack().setItemMeta(itemMeta);
+
             item.setName(name);
-            lore.forEach(s -> item.addLoreLine(Color.translate(s)));
+
+            if(container.has(key, PersistentDataType.INTEGER)) {
+                int foundValue = container.get(key, PersistentDataType.INTEGER);
+                lore.forEach(s -> item.addLoreLine(Color.translate(s
+                        .replace("%value%", String.valueOf(foundValue))
+                        .replace("%gems%", String.valueOf(foundValue))
+                )));
+            } else {
+                lore.forEach(s -> item.addLoreLine(Color.translate(s
+                        .replace("%value%", String.valueOf(item.toItemStack().getAmount()))
+                        .replace("%gems%", String.valueOf(item.toItemStack().getAmount()))
+                )));
+            }
             item.setDurability(data);
         } else {
             if (Config.GEMS_ITEM_GLOW) {
                 item.addEnchant(Enchantment.ARROW_DAMAGE, 1);
-                ItemMeta itemMeta = item.toItemStack().getItemMeta();
                 itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-                item.toItemStack().setItemMeta(itemMeta);
             }
 
+            // Attempt to insert a NBT tag of the gems value instead of filling the inventory
+
+            NamespacedKey key = new NamespacedKey(SimpleGems.getInstance(), "gems-item-value");
+            PersistentDataContainer container = itemMeta.getPersistentDataContainer();
+            container.set(key, PersistentDataType.INTEGER, amount);
+            item.toItemStack().setItemMeta(itemMeta);
+
             item.setName(name);
-            lore.forEach(s -> item.addLoreLine(Color.translate(s)));
+
+            if(container.has(key, PersistentDataType.INTEGER)) {
+                int foundValue = container.get(key, PersistentDataType.INTEGER);
+                lore.forEach(s -> item.addLoreLine(Color.translate(s
+                        .replace("%value%", String.valueOf(foundValue))
+                        .replace("%gems%", String.valueOf(foundValue))
+                )));
+            } else {
+                lore.forEach(s -> item.addLoreLine(Color.translate(s
+                        .replace("%value%", String.valueOf(item.toItemStack().getAmount()))
+                        .replace("%gems%", String.valueOf(item.toItemStack().getAmount()))
+                )));
+            }
             item.setDurability(data);
         }
 

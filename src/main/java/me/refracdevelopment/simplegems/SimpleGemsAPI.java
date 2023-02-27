@@ -85,7 +85,7 @@ public class SimpleGemsAPI {
      * @return an item stack to redeem gems
      */
     public ItemStack getGemsItem() {
-        return Methods.getGemsItem();
+        return Methods.getGemsItem(1);
     }
 
     /**
