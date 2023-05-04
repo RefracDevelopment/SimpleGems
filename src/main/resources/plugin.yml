@@ -17,7 +17,6 @@ permissions:
     description: Gives all permissions
     children:
       simplegems.command.shop: true
-      simplegems.command.top: true
       simplegems.command.balance: true
       simplegems.command.withdraw: true
       simplegems.command.pay: true
@@ -25,15 +24,11 @@ permissions:
       simplegems.command.take: true
       simplegems.command.set: true
       simplegems.command.reload: true
-      simplegems.command.update: true
       simplegems.command.version: true
       simplegems.update: true
   simplegems.command.shop:
     default: op
     description: Opens the gems shop
-  simplegems.command.top:
-    default: op
-    description: Allows you to view top players balances
   simplegems.command.balance:
     default: op
     description: Shows player balances
@@ -55,9 +50,6 @@ permissions:
   simplegems.command.reload:
     default: op
     description: Allows you to reload the plugin and config files
-  simplegems.command.update:
-    default: op
-    description: Allows you to manually update /gems top
   simplegems.command.version:
     default: op
     description: Allows you to check your installed version of SimpleGems

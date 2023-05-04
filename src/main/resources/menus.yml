@@ -1,18 +1,24 @@
-# SimpleGems by RefracDevelopment
-#--------------------------------------
-# Placeholders: (PlaceholderAPI placeholders work too)
+#   ___________                __           ________
+#  /   _____/__| _____ ______ |  |   ____  /  _____/  ____   _____   ______
+#  \_____  \|  |/     \\____ \|  | _/ __ \/   \  ____/ __ \ /     \ /  ___/
+#  /        \  |  | |  \  |_\ \  |__  ___/_    \_\  \  ___/_  | |  \\___ \
+# /_______  /__|__|_|  /   ___/____/\___  /\______  /\___  /__|_|  /____  \
+#         \/         \/|__|             \/        \/     \/      \/     \/
+#---------------------------------------------------------------------------
+# Placeholders:
 # %player% - Get the player's name
-# %gems% - Get the player's formatted gems
+# %gems% - Get the player's gems
+# %gems_formatted% - Get the player's formatted gems
 # %gems_decimal% - Get the player's decimal formatted gems
-# %arrow% - Get an arrow for a message
-# %arrow_2% - Get alt arrow for a message
+# %arrowright% - Get right arrow for a message
+# %arrowleft% - Get left arrow for a message
 # %star% - Get a star for a message
 # %circle% - Get a circle for a message
 # PlaceholderAPI:
 # %simplegems_balance% - Get the unformatted gems amount (100000)
 # %simplegems_balance_formatted% - Get the formatted gems amount (100k)
-# %simplegems_balance_decimal% - Get the decimal formatted gems amount (100000.0)
-#--------------------------------------
+# %simplegems_balance_decimal% - Get the decimal formatted gems amount (100.0)
+#---------------------------------------------------------------------------
 gems-menu:
   enabled: true
   title: "&e&lGems Shop"
@@ -30,11 +36,14 @@ gems-menu:
         - "&7The Gem Shop sells you items"
         - "&7you can not get in /shop."
         - ""
-        - "&eYour Gem Balance: &b&l%star% &f%gems%"
+        - "&eYour Gem Balance: &b&l%star% &f%gems_formatted%"
       slot: 4
     '1':
       material: STICK
+      skulls: false
+      headDatabase: false
       data: 0
+      glow: false
       name: "&dMagic Stick"
       lore:
         - "&7Be special and buy a stick for %cost% gem"
@@ -43,6 +52,13 @@ gems-menu:
         broadcast: true
         text:
           - "%prefix% &e%player% bought %item% &efrom &f/gemshop&e."
+      action:
+        # If enabled will use this instead of commands
+        enabled: false
+        actions:
+          - "[console] give %player% stick 1" # gives the player an item from console
+          - "[message] %prefix% &e%player% bought %item% &efrom &f/gemshop&e." # sends a message to the player
+          - "[close]" # Closes the inventory
       commands:
         - "give %player% stick 1"
       cost: 1

@@ -6,10 +6,9 @@ import dev.rosewood.rosegarden.RosePlugin;
 import dev.rosewood.rosegarden.manager.Manager;
 import dev.rosewood.rosegarden.utils.NMSUtil;
 import lombok.Getter;
-import me.refracdevelopment.simplegems.data.DataType;
+import me.gabytm.util.actions.ActionManager;
+import me.refracdevelopment.simplegems.api.SimpleGemsAPI;
 import me.refracdevelopment.simplegems.data.ProfileManager;
-import me.refracdevelopment.simplegems.data.SQLManager;
-import me.refracdevelopment.simplegems.leaderboard.LeaderboardManager;
 import me.refracdevelopment.simplegems.listeners.PlayerListener;
 import me.refracdevelopment.simplegems.manager.CommandManager;
 import me.refracdevelopment.simplegems.manager.ConfigurationManager;
@@ -18,11 +17,14 @@ import me.refracdevelopment.simplegems.menu.GemShop;
 import me.refracdevelopment.simplegems.utilities.chat.Color;
 import me.refracdevelopment.simplegems.utilities.chat.PAPIExpansion;
 import me.refracdevelopment.simplegems.utilities.config.Config;
-import me.refracdevelopment.simplegems.utilities.config.Files;
+import me.refracdevelopment.simplegems.utilities.config.ConfigFile;
+import me.refracdevelopment.simplegems.utilities.config.Menus;
+import me.refracdevelopment.simplegems.utilities.config.PlayerMapper;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.PluginManager;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -35,12 +37,13 @@ public final class SimpleGems extends RosePlugin {
     @Getter
     private static SimpleGems instance;
 
-    private DataType dataType;
-    private SQLManager sqlManager;
     private ProfileManager profileManager;
+    private ActionManager actionManager;
     private SimpleGemsAPI gemsAPI;
-    private LeaderboardManager leaderboardManager;
     private GemShop gemShop;
+
+    private ConfigFile menusFile;
+    private PlayerMapper playerMapper;
 
     public SimpleGems() {
         super(96827, 13117, ConfigurationManager.class, null, LocaleManager.class, CommandManager.class);
@@ -52,8 +55,6 @@ public final class SimpleGems extends RosePlugin {
         // Plugin startup logic
         long startTiming = System.currentTimeMillis();
         PluginManager pluginManager = this.getServer().getPluginManager();
-
-        Files.loadFiles(this);
 
         // Make sure the server has PlaceholderAPI
         if (!pluginManager.isPluginEnabled("PlaceholderAPI")) {
@@ -68,6 +69,11 @@ public final class SimpleGems extends RosePlugin {
             this.getServer().getPluginManager().disablePlugin(this);
             return;
         }
+
+        Config.loadConfig();
+        menusFile = new ConfigFile(this, "menus.yml");
+        Menus.loadMenus(this);
+        playerMapper = new PlayerMapper(getDataFolder().getAbsolutePath() + File.separator + "playerdata");
 
         this.loadManagers();
         Color.log("&aLoaded commands.");
@@ -88,10 +94,9 @@ public final class SimpleGems extends RosePlugin {
     @Override
     protected void disable() {
         // Plugin shutdown logic
-        if (this.dataType == DataType.MYSQL) {
-            this.sqlManager.shutdown();
-        }
-        this.getServer().getScheduler().cancelTasks(this);
+        this.getServer().getScheduler().runTaskAsynchronously(this, () -> {
+            profileManager.getProfiles().values().forEach(profile -> profile.getData().save());
+        });
     }
 
     @Override
@@ -100,25 +105,9 @@ public final class SimpleGems extends RosePlugin {
     }
 
     private void loadManagers() {
-        switch (Config.DATA_TYPE.toUpperCase()) {
-            case "MYSQL":
-                dataType = DataType.MYSQL;
-                break;
-            case "YAML":
-                dataType = DataType.YAML;
-                break;
-            default:
-                dataType = DataType.YAML;
-                break;
-        }
-
-        if (dataType == DataType.MYSQL) {
-            sqlManager = new SQLManager();
-        }
-
         profileManager = new ProfileManager();
+        actionManager = new ActionManager(this);
         gemsAPI = new SimpleGemsAPI();
-        leaderboardManager = new LeaderboardManager();
         Color.log("&aLoaded managers.");
     }
 

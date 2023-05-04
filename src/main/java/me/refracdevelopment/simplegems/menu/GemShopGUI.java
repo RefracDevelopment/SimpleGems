@@ -12,8 +12,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 
-import java.util.List;
-
 public class GemShopGUI implements Listener {
 
     public GemShopGUI() {
@@ -32,7 +30,6 @@ public class GemShopGUI implements Listener {
 
         for (int i = 0; i < homeSize; i++) {
             if (inv.getItem(i) == null) {
-                List<String> lore = Menus.GEM_SHOP_FILL_LORE;
                 String name = Menus.GEM_SHOP_FILL_NAME;
                 Material material = Menus.GEM_SHOP_FILL_MATERIAL;
                 int data = Menus.GEM_SHOP_FILL_DATA;

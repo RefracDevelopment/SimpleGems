@@ -1,0 +1,68 @@
+# en_US translation by Refrac
+# Plugin Message Prefix
+prefix: <g:#8A2387:#E94057:#F27121>SimpleGems &8| &f
+
+# Generic Command Messages
+no-permission: '&cYou don''t have permission for that!'
+no-console: '&cOnly players may execute this command.'
+unknown-command: Unknown command, use &d/%cmd%&f help for more info
+invalid-player: '&cYou provided an invalid player.'
+
+# Base Command Message
+base-command-color: '&e'
+base-command-help: '&eUse &b/%cmd% help &efor command information.'
+
+# Gems Command Messages
+not-enough-gems: '&cYou don''t have enough gems to buy %item%&c.'
+not-enough-pay: '&cYou don''t have enough gems to pay %player%.'
+not-enough-withdraw: '&cYou don''t have enough gems to withdraw.'
+shop-disabled: '&cThe shop is currently disabled.'
+gems-balance: '&d%player% &ehas &c%gems_formatted% &egems.'
+gems-paid: '&eYou paid &d%player% &c%gems_formatted% &egems.'
+gems-withdrawn: '&eYou''ve withdrawn &cx%gems_formatted% &egems.'
+gems-deposited: '&eYou''ve deposited &c%gems_formatted% &egems.'
+gems-received: '&d%player% &ejust paid you &c%gems_formatted% &egems.'
+gems-given: '&eYou''ve given &c%gems_formatted% &egems to &d%player%&e.'
+gems-gained: '&eYou''ve received &c%gems_formatted% &egems.'
+gems-taken: '&eYou''ve taken &c%gems_formatted% &egems from &d%player%&b.'
+gems-lost: '&eYou''ve lost &c%gems_formatted% &egems.'
+gems-set: '&eYou''ve set &d%player%''s &egems to &c%gems_formatted%&e.'
+gems-setted: '&eYour gems have been set to &c%gems_formatted%&e.'
+
+# Help Command
+command-help-title: '&fAvailable Commands:'
+command-help-description: Displays the help menu.
+command-help-list-description: '&8 - &d/%cmd% %subcmd% %args% &7- %desc%'
+command-help-list-description-no-args: '&8 - &d/%cmd% %subcmd% &7- %desc%'
+
+# Shop Command
+command-shop-description: Opens the gems shop.
+
+# Deposit Command
+command-deposit-description: Allows you to deposit all gems in your inventory.
+
+# Balance Command
+command-balance-description: Display other players gems balance.
+
+# Withdraw Command
+command-withdraw-description: Allows you to withdraw gems in item form.
+
+# Pay Command
+command-pay-description: Allows you to pay someones' gems.
+
+# Give Command
+command-give-description: Allows you to give someones' gems.
+
+# Take Command
+command-take-description: Allows you to take away others' gems.
+
+# Set Command
+command-set-description: Allows you to set someones' gems.
+
+# Reload Command
+command-reload-description: Reloads the plugin
+command-reload-usage: '&cUsage: &e/%cmd% reload'
+command-reload-success: '&aConfiguration and locale files were reloaded.'
+
+# Version Command
+command-version-description: Display the version info for SimpleGems

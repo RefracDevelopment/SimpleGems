@@ -3,11 +3,9 @@ package me.refracdevelopment.simplegems.data;
 import lombok.Getter;
 import lombok.Setter;
 import me.refracdevelopment.simplegems.SimpleGems;
-import me.refracdevelopment.simplegems.utilities.chat.Color;
-import me.refracdevelopment.simplegems.utilities.config.Files;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.sql.SQLException;
 import java.util.UUID;
 
 @Getter
@@ -25,44 +23,16 @@ public class ProfileData {
         this.name = name;
     }
 
-    /**
-     * The #load method allows you to
-     * load a specified player's data
-     */
-    public void load(Player player) {
-        if (plugin.getDataType() == DataType.MYSQL) {
-            plugin.getSqlManager().select("SELECT * FROM SimpleGems WHERE uuid=?", resultSet -> {
-                try {
-                    if (resultSet.next()) {
-                        this.gems.setAmount(resultSet.getLong("gems"));
-                        plugin.getSqlManager().execute("UPDATE SimpleGems SET name=? WHERE uuid=?",
-                                player.getName(), player.getUniqueId().toString());
-                    } else {
-                        plugin.getSqlManager().execute("INSERT INTO SimpleGems (uuid, name, gems) VALUES (?,?,?)",
-                                player.getUniqueId().toString(), player.getName(), 0);
-                    }
-                } catch (SQLException exception) {
-                    Color.log(exception.getMessage());
-                }
-            }, player.getUniqueId().toString());
-        } else if (plugin.getDataType() == DataType.YAML) {
-            this.gems.setAmount(Files.getData().getLong("data." + player.getUniqueId().toString() + ".gems"));
-            Files.getData().set("data." + player.getUniqueId().toString() + ".name", player.getName());
-            Files.saveData();
-        }
+    public void load() {
+        plugin.getPlayerMapper().loadPlayerFile(uuid);
     }
 
-    /**
-     * The #save method allows you to
-     * save a specified player's data
-     */
-    public void save(Player player) {
-        if (plugin.getDataType() == DataType.MYSQL) {
-            plugin.getSqlManager().execute("UPDATE SimpleGems SET gems=? WHERE uuid=?",
-                    this.gems.getAmount(), player.getUniqueId().toString());
-        } else if (plugin.getDataType() == DataType.YAML) {
-            Files.getData().set("data." + player.getUniqueId().toString() + ".gems", this.gems.getAmount());
-            Files.saveData();
-        }
+    public void save() {
+        plugin.getPlayerMapper().savePlayer(this);
     }
+
+    public Player getPlayer() {
+        return Bukkit.getPlayer(uuid);
+    }
+
 }

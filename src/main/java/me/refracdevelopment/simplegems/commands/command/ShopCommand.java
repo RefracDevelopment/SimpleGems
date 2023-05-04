@@ -24,7 +24,7 @@ public class ShopCommand extends RoseCommand {
 
         // Make sure the sender is a player.
         if (!(context.getSender() instanceof Player)) {
-            locale.sendCommandMessage(context.getSender(), "no-console", Placeholders.setPlaceholders(context.getSender()));
+            locale.sendMessage(context.getSender(), "no-console", Placeholders.setPlaceholders(context.getSender()));
             return;
         }
 
@@ -32,7 +32,7 @@ public class ShopCommand extends RoseCommand {
 
         if (Menus.GEM_SHOP_ENABLED) {
             SimpleGems.getInstance().getGemShop().getGemShop().openInventory(player);
-        } else locale.sendCommandMessage(player, "shop-disabled", Placeholders.setPlaceholders(player));
+        } else locale.sendMessage(player, "shop-disabled", Placeholders.setPlaceholders(player));
     }
 
     @Override

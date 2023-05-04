@@ -6,6 +6,7 @@ import dev.rosewood.rosegarden.command.framework.RoseCommand;
 import dev.rosewood.rosegarden.command.framework.RoseCommandWrapper;
 import dev.rosewood.rosegarden.command.framework.annotation.RoseExecutable;
 import dev.rosewood.rosegarden.utils.StringPlaceholders;
+import me.refracdevelopment.simplegems.api.SimpleGemsAPI;
 import me.refracdevelopment.simplegems.manager.LocaleManager;
 import me.refracdevelopment.simplegems.utilities.Methods;
 import me.refracdevelopment.simplegems.utilities.Permissions;
@@ -26,20 +27,20 @@ public class BalanceCommand extends RoseCommand {
         final LocaleManager locale = this.rosePlugin.getManager(LocaleManager.class);
 
         if (target.isOnline()) {
-            locale.sendCommandMessage(context.getSender(), "gems-balance", Placeholders.setPlaceholders(target.getPlayer()));
+            locale.sendMessage(context.getSender(), "gems-balance", Placeholders.setPlaceholders(target.getPlayer()));
         } else if (!target.isOnline() && target.hasPlayedBefore()) {
-            long amount = Methods.getOfflineGems(target);
+            double amount = SimpleGemsAPI.INSTANCE.getOfflineGems(target);
 
             StringPlaceholders placeholders = StringPlaceholders.builder()
                     .addAll(Placeholders.setPlaceholders(context.getSender()))
-                    .addPlaceholder("player", target.getName())
-                    .addPlaceholder("gems", String.valueOf(amount))
-                    .addPlaceholder("gems_formatted", Methods.format(amount))
-                    .addPlaceholder("gems_decimal", Methods.formatDec(amount))
+                    .add("player", target.getName())
+                    .add("gems", String.valueOf(amount))
+                    .add("gems_formatted", Methods.format(amount))
+                    .add("gems_decimal", Methods.formatDec(amount))
                     .build();
 
-            locale.sendCommandMessage(context.getSender(), "gems-balance", placeholders);
-        } else locale.sendCommandMessage(context.getSender(), "invalid-player", Placeholders.setPlaceholders(context.getSender()));
+            locale.sendMessage(context.getSender(), "gems-balance", placeholders);
+        } else locale.sendMessage(context.getSender(), "invalid-player", Placeholders.setPlaceholders(context.getSender()));
     }
 
     @Override

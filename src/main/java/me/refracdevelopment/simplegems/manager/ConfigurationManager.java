@@ -12,20 +12,10 @@ public class ConfigurationManager extends AbstractConfigurationManager {
 
     public enum Setting implements RoseSetting {
         // Config Settings
-        UPDATE_ON_JOIN("update-on-join", true, "Enable this to receive a join message", "when there is an update available"),
-        LEADERBOARD_UPDATE_INTERVAL("leaderboard-update-interval", 1800, "Allows changing how long data is cached for /gems top"),
-        DATA_TYPE("data-type", "YAML", "Choose your data saving type:", "MYSQL - Database saving", "YAML - Local saving in the data.yml file"),
-        MYSQL_HOST("mysql.host", "127.0.0.1"),
-        MYSQL_USERNAME("mysql.username", "root"),
-        MYSQL_PASSWORD("mysql.password", "test"),
-        MYSQL_DATABASE("mysql.database", "test"),
-        MYSQL_PORT("mysql.port", "3306"),
-        GEMS_TOP_TITLE("gems-top.title", "&e&lGems %arrow2% &6&lTop %entries%", "This is used for viewing top players"),
-        GEMS_TOP_FORMAT("gems-top.format", "&6&l%number%. &e%player% &7- &e%value%"),
-        GEMS_TOP_ENTRIES("gems-top.top-entries", 10),
+        STARTING_GEMS("starting-gems", 100, "This is used to allow players to start with", "a defined amount of gems on first join"),
         GEMS_BALANCE("gems-balance", Arrays.asList(
                 "",
-                "&e&l&eYou currently have &f&n%gems%&e gems!",
+                "&e&l&eYou currently have &f&n%gems_formatted%&e gems!",
                 "&7&o(( &f&oTip&7&o: You can get gems by doing &e&oevents&7&o! ))",
                 ""
         )),

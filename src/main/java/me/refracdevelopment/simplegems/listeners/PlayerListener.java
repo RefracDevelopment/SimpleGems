@@ -2,14 +2,14 @@ package me.refracdevelopment.simplegems.listeners;
 
 import dev.rosewood.rosegarden.utils.StringPlaceholders;
 import me.refracdevelopment.simplegems.SimpleGems;
+import me.refracdevelopment.simplegems.api.SimpleGemsAPI;
 import me.refracdevelopment.simplegems.data.Profile;
 import me.refracdevelopment.simplegems.manager.LocaleManager;
 import me.refracdevelopment.simplegems.utilities.Methods;
-import me.refracdevelopment.simplegems.utilities.Permissions;
+import me.refracdevelopment.simplegems.utilities.Tasks;
 import me.refracdevelopment.simplegems.utilities.Utilities;
 import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
 import me.refracdevelopment.simplegems.utilities.config.Config;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
@@ -42,7 +42,7 @@ public class PlayerListener implements Listener {
         Profile profile = SimpleGems.getInstance().getProfileManager().getProfile(player.getUniqueId());
 
         try {
-            Bukkit.getScheduler().runTaskAsynchronously(SimpleGems.getInstance(), () -> profile.getData().load(player));
+            Tasks.runAsync(SimpleGems.getInstance(), () -> profile.getData().load());
         } catch (NullPointerException exception) {
             player.kickPlayer(ChatColor.RED + "ERROR: Profile returned null.");
             return;
@@ -53,16 +53,14 @@ public class PlayerListener implements Listener {
             return;
         }
 
+        if (!player.hasPlayedBefore()) {
+            SimpleGemsAPI.INSTANCE.giveGems(player, Config.STARTING_GEMS);
+        }
+
         if (player.getUniqueId().equals(Utilities.getDevUUID)) {
             Utilities.sendDevMessage(player);
         } else if (player.getUniqueId().equals(Utilities.getDevUUID2)) {
             Utilities.sendDevMessage(player);
-        }
-
-        if (Config.UPDATE_ON_JOIN) {
-            if (!player.hasPermission(Permissions.UPDATE_ON_JOIN)) return;
-
-            SimpleGems.getInstance().updateCheck(player, false);
         }
     }
 
@@ -73,7 +71,7 @@ public class PlayerListener implements Listener {
         if (profile == null) return;
         if (profile.getData() == null) return;
 
-        Bukkit.getScheduler().runTaskAsynchronously(SimpleGems.getInstance(), () -> profile.getData().save(player));
+        Tasks.runAsync(SimpleGems.getInstance(), () -> profile.getData().save());
     }
 
     @EventHandler
@@ -94,30 +92,27 @@ public class PlayerListener implements Listener {
         NamespacedKey key = new NamespacedKey(SimpleGems.getInstance(), "gems-item-value");
         PersistentDataContainer container = itemMeta.getPersistentDataContainer();
 
-        if (container.has(key, PersistentDataType.INTEGER)) {
-            int foundValue = container.get(key, PersistentDataType.INTEGER);
+        if (container.has(key, PersistentDataType.DOUBLE)) {
+            double foundValue = container.get(key, PersistentDataType.DOUBLE);
 
-            gemsItem = Methods.getGemsItem(foundValue);
-        } else {
-            gemsItem = Methods.getGemsItem(1);
-        }
+            gemsItem = SimpleGemsAPI.INSTANCE.getGemsItem(foundValue);
 
-        if (!item.isSimilar(gemsItem)) return;
-        if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) return;
-
-        if (container.has(key, PersistentDataType.INTEGER)) {
-            int foundValue = container.get(key, PersistentDataType.INTEGER);
+            if (!item.isSimilar(gemsItem)) return;
+            if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) return;
 
             StringPlaceholders placeholders = StringPlaceholders.builder()
                     .addAll(Placeholders.setPlaceholders(player))
-                    .addPlaceholder("gems", Methods.format(foundValue))
-                    .addPlaceholder("gems_decimal", Methods.formatDec(foundValue))
+                    .add("gems", String.valueOf(foundValue))
+                    .add("gems_formatted", Methods.format(foundValue))
+                    .add("gems_decimal", Methods.formatDec(foundValue))
                     .build();
 
             player.getInventory().setItemInMainHand(null);
-            profile.getData().getGems().incrementAmount(foundValue);
-            Bukkit.getScheduler().runTaskAsynchronously(SimpleGems.getInstance(), () -> profile.getData().save(player));
+            SimpleGemsAPI.INSTANCE.giveGems(player, foundValue);
             locale.sendMessage(player, "gems-deposited", placeholders);
+        } else {
+            // Should never happen but if it does then something went wrong
+            locale.sendCustomMessage(player, "&cSomething went wrong while depositing gems send this to an administrator. (code: 0x01)");
         }
     }
 }

@@ -7,16 +7,14 @@ import dev.rosewood.rosegarden.command.framework.RoseCommandWrapper;
 import dev.rosewood.rosegarden.command.framework.annotation.Optional;
 import dev.rosewood.rosegarden.command.framework.annotation.RoseExecutable;
 import dev.rosewood.rosegarden.utils.StringPlaceholders;
-import me.refracdevelopment.simplegems.SimpleGems;
-import me.refracdevelopment.simplegems.data.ProfileData;
+import me.refracdevelopment.simplegems.api.SimpleGemsAPI;
 import me.refracdevelopment.simplegems.manager.LocaleManager;
 import me.refracdevelopment.simplegems.utilities.Methods;
 import me.refracdevelopment.simplegems.utilities.Permissions;
 import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
-import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class TakeCommand extends RoseCommand {
@@ -26,43 +24,48 @@ public class TakeCommand extends RoseCommand {
     }
 
     @RoseExecutable
-    public void execute(CommandContext context, OfflinePlayer target, long amount, @Optional String silent) {
+    public void execute(CommandContext context, OfflinePlayer target, double amount, @Optional String silent) {
         final LocaleManager locale = this.rosePlugin.getManager(LocaleManager.class);
 
         if (context.getArgs()[1].contains("-")) return;
 
         if (target.isOnline()) {
-            ProfileData targetProfile = SimpleGems.getInstance().getProfileManager().getProfile(target.getUniqueId()).getData();
+            StringPlaceholders placeholders = StringPlaceholders.builder()
+                    .addAll(Placeholders.setPlaceholders(context.getSender()))
+                    .add("player", target.getName())
+                    .add("gems", String.valueOf(amount))
+                    .add("gems_formatted", Methods.format(amount))
+                    .add("gems_decimal", Methods.formatDec(amount))
+                    .build();
 
-            if (!targetProfile.getGems().hasAmount(amount)) {
-                locale.sendCommandMessage(context.getSender(), "invalid-gems", Placeholders.setPlaceholders(context.getSender()));
+            if (!SimpleGemsAPI.INSTANCE.hasGems(target.getPlayer(), amount)) {
+                locale.sendMessage(context.getSender(), "invalid-gems", placeholders);
                 return;
             }
 
-            targetProfile.getGems().decrementAmount(amount);
-            Bukkit.getScheduler().runTaskAsynchronously(SimpleGems.getInstance(), () -> targetProfile.save(target.getPlayer()));
+            SimpleGemsAPI.INSTANCE.takeGems(target.getPlayer(), amount);
 
-            locale.sendCommandMessage(context.getSender(), "gems-taken", Placeholders.setPlaceholders(target.getPlayer()));
-            if (silent != null && silent.equals("-s")) return;
-            locale.sendCommandMessage(target.getPlayer(), "gems-lost", Placeholders.setPlaceholders(target.getPlayer()));
+            locale.sendMessage(context.getSender(), "gems-taken", placeholders);
+            if (silent != null && silent.equalsIgnoreCase("-s")) return;
+            locale.sendMessage(target.getPlayer(), "gems-lost", placeholders);
         } else if (!target.isOnline() && target.hasPlayedBefore()) {
             StringPlaceholders placeholders = StringPlaceholders.builder()
                     .addAll(Placeholders.setPlaceholders(context.getSender()))
-                    .addPlaceholder("player", target.getName())
-                    .addPlaceholder("gems", String.valueOf(amount))
-                    .addPlaceholder("gems_formatted", Methods.format(amount))
-                    .addPlaceholder("gems_decimal", Methods.formatDec(amount))
+                    .add("player", target.getName())
+                    .add("gems", String.valueOf(amount))
+                    .add("gems_formatted", Methods.format(amount))
+                    .add("gems_decimal", Methods.formatDec(amount))
                     .build();
 
-            if (!Methods.hasOfflineGems(target, amount)) {
-                locale.sendCommandMessage(context.getSender(), "invalid-gems", placeholders);
+            if (!SimpleGemsAPI.INSTANCE.hasOfflineGems(target, amount)) {
+                locale.sendMessage(context.getSender(), "invalid-gems", placeholders);
                 return;
             }
 
-            Methods.takeOfflineGems(target, amount);
+            SimpleGemsAPI.INSTANCE.takeOfflineGems(target, amount);
 
-            locale.sendCommandMessage(context.getSender(), "gems-taken", placeholders);
-        } else locale.sendCommandMessage(context.getSender(),"invalid-player");
+            locale.sendMessage(context.getSender(), "gems-taken", placeholders);
+        } else locale.sendMessage(context.getSender(),"invalid-player");
     }
 
     @Override
@@ -72,7 +75,7 @@ public class TakeCommand extends RoseCommand {
 
     @Override
     protected List<String> getDefaultAliases() {
-        return Arrays.asList("remove");
+        return Collections.singletonList("remove");
     }
 
     @Override

@@ -6,6 +6,7 @@ import dev.rosewood.rosegarden.command.framework.CommandContext;
 import dev.rosewood.rosegarden.command.framework.RoseCommandWrapper;
 import dev.rosewood.rosegarden.command.framework.annotation.RoseExecutable;
 import me.refracdevelopment.simplegems.manager.LocaleManager;
+import me.refracdevelopment.simplegems.utilities.chat.Color;
 import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
 import me.refracdevelopment.simplegems.utilities.config.Config;
 import org.bukkit.entity.Player;
@@ -22,12 +23,12 @@ public class GemsCommand extends BaseCommand {
 
         // Make sure the sender is a player.
         if (!(context.getSender() instanceof Player)) {
-            locale.sendCommandMessage(context.getSender(), "no-console", Placeholders.setPlaceholders(context.getSender()));
+            locale.sendMessage(context.getSender(), "no-console", Placeholders.setPlaceholders(context.getSender()));
             return;
         }
 
         Player player = (Player) context.getSender();
 
-        Config.GEMS_BALANCE.forEach(message -> locale.sendCustomMessage(player, Placeholders.setPlaceholders(player, message)));
+        Config.GEMS_BALANCE.forEach(message -> locale.sendCustomMessage(player, Color.translate(player, message)));
     }
 }

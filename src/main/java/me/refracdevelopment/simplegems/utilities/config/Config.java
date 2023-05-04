@@ -7,20 +7,13 @@ import java.util.Objects;
 
 public class Config {
     // Settings
-    public static boolean UPDATE_ON_JOIN;
-    public static int LEADERBOARD_UPDATE_INTERVAL;
-    public static String DATA_TYPE;
-
-    // Gems Top
-    public static String GEMS_TOP_TITLE;
-    public static String GEMS_TOP_FORMAT;
-    public static int GEMS_TOP_ENTRIES;
+    public static double STARTING_GEMS;
 
     // Messages
     public static List<String> GEMS_BALANCE;
 
     // Gems Item
-    public static String GEMS_ITEM;
+    public static String GEMS_ITEM_MATERIAL;
     public static int GEMS_ITEM_DATA;
     public static boolean GEMS_ITEM_CUSTOM_DATA;
     public static int GEMS_ITEM_CUSTOM_MODEL_DATA;
@@ -30,20 +23,13 @@ public class Config {
 
     public static void loadConfig() {
         // Settings
-        UPDATE_ON_JOIN = ConfigurationManager.Setting.UPDATE_ON_JOIN.getBoolean();
-        LEADERBOARD_UPDATE_INTERVAL = ConfigurationManager.Setting.LEADERBOARD_UPDATE_INTERVAL.getInt();
-        DATA_TYPE = ConfigurationManager.Setting.DATA_TYPE.getString();
-
-        // Gems Top
-        GEMS_TOP_TITLE = ConfigurationManager.Setting.GEMS_TOP_TITLE.getString();
-        GEMS_TOP_FORMAT = ConfigurationManager.Setting.GEMS_TOP_FORMAT.getString();
-        GEMS_TOP_ENTRIES = ConfigurationManager.Setting.GEMS_TOP_ENTRIES.getInt();
+        STARTING_GEMS = ConfigurationManager.Setting.STARTING_GEMS.getDouble();
 
         // Messages
         GEMS_BALANCE = ConfigurationManager.Setting.GEMS_BALANCE.getStringList();
 
         // Gems Item
-        GEMS_ITEM = Objects.requireNonNull(ConfigurationManager.Setting.GEMS_ITEM_MATERIAL.getString());
+        GEMS_ITEM_MATERIAL = Objects.requireNonNull(ConfigurationManager.Setting.GEMS_ITEM_MATERIAL.getString());
         GEMS_ITEM_DATA = ConfigurationManager.Setting.GEMS_ITEM_DATA.getInt();
         GEMS_ITEM_CUSTOM_DATA = ConfigurationManager.Setting.GEMS_ITEM_CUSTOM_DATA.getBoolean();
         GEMS_ITEM_CUSTOM_MODEL_DATA = ConfigurationManager.Setting.GEMS_ITEM_CUSTOM_MODEL_DATA.getInt();

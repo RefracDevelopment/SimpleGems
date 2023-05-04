@@ -5,8 +5,8 @@ import dev.rosewood.rosegarden.command.framework.CommandContext;
 import dev.rosewood.rosegarden.command.framework.RoseCommand;
 import dev.rosewood.rosegarden.command.framework.RoseCommandWrapper;
 import dev.rosewood.rosegarden.command.framework.annotation.RoseExecutable;
+import me.refracdevelopment.simplegems.api.SimpleGemsAPI;
 import me.refracdevelopment.simplegems.manager.LocaleManager;
-import me.refracdevelopment.simplegems.utilities.Methods;
 import me.refracdevelopment.simplegems.utilities.Permissions;
 import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
 import org.bukkit.entity.Player;
@@ -18,19 +18,19 @@ public class WithdrawCommand extends RoseCommand {
     }
 
     @RoseExecutable
-    public void execute(CommandContext context, int amount) {
+    public void execute(CommandContext context, double amount) {
         final LocaleManager locale = this.rosePlugin.getManager(LocaleManager.class);
 
         // Make sure the sender is a player.
         if (!(context.getSender() instanceof Player)) {
-            locale.sendCommandMessage(context.getSender(), "no-console", Placeholders.setPlaceholders(context.getSender()));
+            locale.sendMessage(context.getSender(), "no-console", Placeholders.setPlaceholders(context.getSender()));
             return;
         }
 
         Player player = (Player) context.getSender();
 
         if (context.getArgs()[0].contains("-")) return;
-        Methods.withdrawGems(player, amount);
+        SimpleGemsAPI.INSTANCE.withdrawGems(player, amount);
     }
 
     @Override
