@@ -110,9 +110,6 @@ public class PlayerListener implements Listener {
             player.getInventory().setItemInMainHand(null);
             SimpleGemsAPI.INSTANCE.giveGems(player, foundValue);
             locale.sendMessage(player, "gems-deposited", placeholders);
-        } else {
-            // Should never happen but if it does then something went wrong
-            locale.sendCustomMessage(player, "&cSomething went wrong while depositing gems send this to an administrator. (code: 0x01)");
         }
     }
 }
