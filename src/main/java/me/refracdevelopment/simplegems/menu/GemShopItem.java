@@ -86,14 +86,14 @@ public class GemShopItem {
                 this.messages.forEach(message -> {
                     locale.sendCustomMessage(p, Color.translate(player, message
                             .replace("%item%", this.name)
-                            .replace("%cost%", Methods.formatDec(this.cost))));
+                            .replace("%cost%", Methods.formatDecimal(this.cost))));
                 });
             });
         } else {
             this.messages.forEach(message -> {
                 locale.sendCustomMessage(player, Color.translate(player, message
                         .replace("%item%", this.name)
-                        .replace("%cost%", Methods.formatDec(this.cost))));
+                        .replace("%cost%", Methods.formatDecimal(this.cost))));
             });
         }
     }

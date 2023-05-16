@@ -104,7 +104,7 @@ public class PlayerListener implements Listener {
                     .addAll(Placeholders.setPlaceholders(player))
                     .add("gems", String.valueOf(foundValue))
                     .add("gems_formatted", Methods.format(foundValue))
-                    .add("gems_decimal", Methods.formatDec(foundValue))
+                    .add("gems_decimal", Methods.formatDecimal(foundValue))
                     .build();
 
             player.getInventory().setItemInMainHand(null);

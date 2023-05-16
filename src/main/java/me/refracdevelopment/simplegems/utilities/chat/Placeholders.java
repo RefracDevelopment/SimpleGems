@@ -18,7 +18,7 @@ public class Placeholders {
             placeholder = placeholder.replace("%player%", player.getName());
             placeholder = placeholder.replace("%gems%", String.valueOf(SimpleGemsAPI.INSTANCE.getGems(player)));
             placeholder = placeholder.replace("%gems_formatted%", Methods.format(SimpleGemsAPI.INSTANCE.getGems(player)));
-            placeholder = placeholder.replace("%gems_decimal%", Methods.formatDec(SimpleGemsAPI.INSTANCE.getGems(player)));
+            placeholder = placeholder.replace("%gems_decimal%", Methods.formatDecimal(SimpleGemsAPI.INSTANCE.getGems(player)));
             placeholder = placeholder.replace("%displayname%", player.getDisplayName());
         }
         placeholder = placeholder.replace("%arrow%", "\u00BB");
@@ -41,7 +41,7 @@ public class Placeholders {
             placeholders.add("player", player.getName());
             placeholders.add("gems", String.valueOf(SimpleGemsAPI.INSTANCE.getGems(player)));
             placeholders.add("gems_formatted", Methods.format(SimpleGemsAPI.INSTANCE.getGems(player)));
-            placeholders.add("gems_decimal", Methods.formatDec(SimpleGemsAPI.INSTANCE.getGems(player)));
+            placeholders.add("gems_decimal", Methods.formatDecimal(SimpleGemsAPI.INSTANCE.getGems(player)));
             placeholders.add("displayname", player.getDisplayName());
         }
         placeholders.add("arrow", "\u00BB");

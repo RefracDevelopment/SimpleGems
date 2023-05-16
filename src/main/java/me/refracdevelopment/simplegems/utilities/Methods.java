@@ -98,7 +98,7 @@ public class Methods {
                 .add("player", target.getName())
                 .add("gems", String.valueOf(amount))
                 .add("gems_formatted", Methods.format(amount))
-                .add("gems_decimal", Methods.formatDec(amount))
+                .add("gems_decimal", Methods.formatDecimal(amount))
                 .build();
 
         if (profile.getGems().hasAmount(amount)) {
@@ -118,7 +118,7 @@ public class Methods {
                 .addAll(Placeholders.setPlaceholders(player))
                 .add("gems", String.valueOf(amount))
                 .add("gems_formatted", Methods.format(amount))
-                .add("gems_decimal", Methods.formatDec(amount))
+                .add("gems_decimal", Methods.formatDecimal(amount))
                 .build();
 
         if (SimpleGemsAPI.INSTANCE.hasGems(player, amount)) {
@@ -217,7 +217,7 @@ public class Methods {
         return item.toItemStack();
     }
 
-    public static String formatDec(double amount) {
+    public static String formatDecimal(double amount) {
         DecimalFormat decimalFormat = new DecimalFormat("###,###");
         return decimalFormat.format(amount);
     }

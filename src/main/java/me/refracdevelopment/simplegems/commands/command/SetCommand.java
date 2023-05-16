@@ -34,7 +34,7 @@ public class SetCommand extends RoseCommand {
                     .add("player", target.getName())
                     .add("gems", String.valueOf(amount))
                     .add("gems_formatted", Methods.format(amount))
-                    .add("gems_decimal", Methods.formatDec(amount))
+                    .add("gems_decimal", Methods.formatDecimal(amount))
                     .build();
 
             locale.sendMessage(context.getSender(), "gems-set", placeholders);
@@ -48,7 +48,7 @@ public class SetCommand extends RoseCommand {
                     .add("player", target.getName())
                     .add("gems", String.valueOf(amount))
                     .add("gems_formatted", Methods.format(amount))
-                    .add("gems_decimal", Methods.formatDec(amount))
+                    .add("gems_decimal", Methods.formatDecimal(amount))
                     .build();
 
             locale.sendMessage(context.getSender(), "gems-set", placeholders);

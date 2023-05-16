@@ -35,7 +35,7 @@ public class TakeCommand extends RoseCommand {
                     .add("player", target.getName())
                     .add("gems", String.valueOf(amount))
                     .add("gems_formatted", Methods.format(amount))
-                    .add("gems_decimal", Methods.formatDec(amount))
+                    .add("gems_decimal", Methods.formatDecimal(amount))
                     .build();
 
             if (!SimpleGemsAPI.INSTANCE.hasGems(target.getPlayer(), amount)) {
@@ -54,7 +54,7 @@ public class TakeCommand extends RoseCommand {
                     .add("player", target.getName())
                     .add("gems", String.valueOf(amount))
                     .add("gems_formatted", Methods.format(amount))
-                    .add("gems_decimal", Methods.formatDec(amount))
+                    .add("gems_decimal", Methods.formatDecimal(amount))
                     .build();
 
             if (!SimpleGemsAPI.INSTANCE.hasOfflineGems(target, amount)) {
