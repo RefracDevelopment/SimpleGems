@@ -7,9 +7,9 @@ import org.bukkit.entity.Player;
 @Getter
 public class GemsSetEvent extends SimpleEvent {
 
-    private final double setGems;
+    private final long setGems;
 
-    public GemsSetEvent(Player player, double amount) {
+    public GemsSetEvent(Player player, long amount) {
         super(player);
         this.setGems = amount;
     }

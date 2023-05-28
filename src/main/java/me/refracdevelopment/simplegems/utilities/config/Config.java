@@ -7,7 +7,14 @@ import java.util.Objects;
 
 public class Config {
     // Settings
-    public static double STARTING_GEMS;
+    public static long STARTING_GEMS;
+    public static int LEADERBOARD_UPDATE_INTERVAL;
+    public static String DATA_TYPE;
+
+    // Top
+    public static String GEMS_TOP_TITLE;
+    public static String GEMS_TOP_FORMAT;
+    public static int GEMS_TOP_ENTRIES;
 
     // Messages
     public static List<String> GEMS_BALANCE;
@@ -23,7 +30,14 @@ public class Config {
 
     public static void loadConfig() {
         // Settings
-        STARTING_GEMS = ConfigurationManager.Setting.STARTING_GEMS.getDouble();
+        STARTING_GEMS = ConfigurationManager.Setting.STARTING_GEMS.getLong();
+        LEADERBOARD_UPDATE_INTERVAL = ConfigurationManager.Setting.LEADERBOARD_UPDATE_INTERVAL.getInt();
+        DATA_TYPE = ConfigurationManager.Setting.DATA_TYPE.getString();
+
+        // Top
+        GEMS_TOP_TITLE = ConfigurationManager.Setting.GEMS_TOP_TITLE.getString();
+        GEMS_TOP_FORMAT = ConfigurationManager.Setting.GEMS_TOP_FORMAT.getString();
+        GEMS_TOP_ENTRIES = ConfigurationManager.Setting.GEMS_TOP_ENTRIES.getInt();
 
         // Messages
         GEMS_BALANCE = ConfigurationManager.Setting.GEMS_BALANCE.getStringList();

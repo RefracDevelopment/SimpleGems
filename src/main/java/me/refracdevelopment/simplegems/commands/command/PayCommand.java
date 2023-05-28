@@ -13,7 +13,6 @@ import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -24,7 +23,7 @@ public class PayCommand extends RoseCommand {
     }
 
     @RoseExecutable
-    public void execute(CommandContext context, OfflinePlayer target, double amount, @Optional String silent) {
+    public void execute(CommandContext context, OfflinePlayer target, long amount, @Optional String silent) {
         final LocaleManager locale = this.rosePlugin.getManager(LocaleManager.class);
 
         if (context.getArgs()[1].contains("-")) return;

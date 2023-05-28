@@ -92,8 +92,8 @@ public class PlayerListener implements Listener {
         NamespacedKey key = new NamespacedKey(SimpleGems.getInstance(), "gems-item-value");
         PersistentDataContainer container = itemMeta.getPersistentDataContainer();
 
-        if (container.has(key, PersistentDataType.DOUBLE)) {
-            double foundValue = container.get(key, PersistentDataType.DOUBLE);
+        if (container.has(key, PersistentDataType.LONG)) {
+            long foundValue = container.get(key, PersistentDataType.LONG);
 
             gemsItem = SimpleGemsAPI.INSTANCE.getGemsItem(foundValue);
 

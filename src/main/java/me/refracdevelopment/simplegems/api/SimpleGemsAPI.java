@@ -25,8 +25,8 @@ public class SimpleGemsAPI {
 
     public SimpleGemsAPI() {
         INSTANCE = this;
-        Color.log("&aSimpleGemsAPI has been enabled!");
-        Color.log("&aWiki & Download: https://simplegems.refracdev.ml/");
+        Color.log("&eSimpleGemsAPI has been enabled!");
+        Color.log("&eWiki & Download: https://simplegems.refracdev.ml/");
     }
 
     /**
@@ -51,7 +51,7 @@ public class SimpleGemsAPI {
      * @param player online player
      * @return online player's gems amount
      */
-    public double getGems(Player player) {
+    public long getGems(Player player) {
         if (getProfileData(player) == null) {
             return 0;
         }
@@ -65,7 +65,7 @@ public class SimpleGemsAPI {
      * @param player offline player
      * @return offline player's gems amount
      */
-    public double getOfflineGems(OfflinePlayer player) {
+    public long getOfflineGems(OfflinePlayer player) {
         return Methods.getOfflineGems(player);
     }
 
@@ -90,7 +90,7 @@ public class SimpleGemsAPI {
      * @param amount The amount of the item.
      * @return an item stack to redeem gems
      */
-    public ItemStack getGemsItem(double amount) {
+    public ItemStack getGemsItem(long amount) {
         return Methods.getGemsItem(amount);
     }
 
@@ -101,7 +101,7 @@ public class SimpleGemsAPI {
      * @param amount amount of gems to check
      * @return If the player has enough gems
      */
-    public boolean hasGems(Player player, double amount) {
+    public boolean hasGems(Player player, long amount) {
         if (getProfileData(player) == null) return false;
 
         return getProfileData(player).getGems().hasAmount(amount);
@@ -114,7 +114,7 @@ public class SimpleGemsAPI {
      * @param amount amount of gems to check
      * @return If the player has enough gems
      */
-    public boolean hasOfflineGems(OfflinePlayer player, double amount) {
+    public boolean hasOfflineGems(OfflinePlayer player, long amount) {
         return Methods.hasOfflineGems(player, amount);
     }
 
@@ -124,7 +124,7 @@ public class SimpleGemsAPI {
      * @param player online player
      * @param amount amount of gems to give
      */
-    public void giveGems(Player player, double amount) {
+    public void giveGems(Player player, long amount) {
         if (getProfileData(player) == null) return;
 
         GemsAddEvent event = new GemsAddEvent(player, amount);
@@ -139,7 +139,7 @@ public class SimpleGemsAPI {
      * @param player offline player
      * @param amount amount of gems to give
      */
-    public void giveOfflineGems(OfflinePlayer player, double amount) {
+    public void giveOfflineGems(OfflinePlayer player, long amount) {
         Methods.giveOfflineGems(player, amount);
     }
 
@@ -149,7 +149,7 @@ public class SimpleGemsAPI {
      * @param player online player
      * @param amount amount of gems to take
      */
-    public void takeGems(Player player, double amount) {
+    public void takeGems(Player player, long amount) {
         if (getProfileData(player) == null) return;
 
         GemsRemoveEvent event = new GemsRemoveEvent(player, amount);
@@ -164,7 +164,7 @@ public class SimpleGemsAPI {
      * @param player offline player
      * @param amount amount of gems to take
      */
-    public void takeOfflineGems(OfflinePlayer player, double amount) {
+    public void takeOfflineGems(OfflinePlayer player, long amount) {
         Methods.takeOfflineGems(player, amount);
     }
 
@@ -174,7 +174,7 @@ public class SimpleGemsAPI {
      * @param player online player
      * @param amount amount of gems to set
      */
-    public void setGems(Player player, double amount) {
+    public void setGems(Player player, long amount) {
         if (getProfileData(player) == null) return;
 
         GemsSetEvent event = new GemsSetEvent(player, amount);
@@ -189,7 +189,7 @@ public class SimpleGemsAPI {
      * @param player offline player
      * @param amount amount of gems to set
      */
-    public void setOfflineGems(OfflinePlayer player, double amount) {
+    public void setOfflineGems(OfflinePlayer player, long amount) {
         Methods.setOfflineGems(player, amount);
     }
 
@@ -200,7 +200,7 @@ public class SimpleGemsAPI {
      * @param target online target
      * @param amount amount of gems to pay
      */
-    public void payGems(Player player, Player target, double amount, boolean silent) {
+    public void payGems(Player player, Player target, long amount, boolean silent) {
         GemsPayEvent event = new GemsPayEvent(player, target, amount);
         Bukkit.getServer().getPluginManager().callEvent(event);
         Methods.payGems(player, target, amount, silent);
@@ -213,7 +213,7 @@ public class SimpleGemsAPI {
      * @param target offline target
      * @param amount amount of gems to pay
      */
-    public void payOfflineGems(Player player, OfflinePlayer target, double amount) {
+    public void payOfflineGems(Player player, OfflinePlayer target, long amount) {
         Methods.payOfflineGems(player, target, amount);
     }
 
@@ -223,7 +223,7 @@ public class SimpleGemsAPI {
      * @param player online player
      * @param amount amount of gems to withdraw
      */
-    public void withdrawGems(Player player, double amount) {
+    public void withdrawGems(Player player, long amount) {
         GemsRemoveEvent event = new GemsRemoveEvent(player, amount);
         Bukkit.getServer().getPluginManager().callEvent(event);
         Methods.withdrawGems(player, amount);

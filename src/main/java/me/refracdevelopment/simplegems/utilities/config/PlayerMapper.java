@@ -38,7 +38,7 @@ public class PlayerMapper {
             FileReader reader = new FileReader(this.directory + File.separator + uuid + ".json");
             JsonObject obj = (JsonObject) this.parser.parse(reader);
             reader.close();
-            double gems = obj.get("gems").getAsDouble();
+            long gems = obj.get("gems").getAsLong();
             SimpleGems.getInstance().getProfileManager().getProfile(uuid).getData().getGems().setAmount(gems);
         } catch (IOException e) {
             e.printStackTrace();
@@ -65,7 +65,7 @@ public class PlayerMapper {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("uuid", uuid.toString());
         jsonObject.addProperty("name", name);
-        jsonObject.addProperty("gems", 0.0);
+        jsonObject.addProperty("gems", 0L);
         this.saveFile(uuid, jsonObject);
     }
 
@@ -87,12 +87,12 @@ public class PlayerMapper {
         }
     }
 
-    public double getGems(UUID uuid) {
+    public long getGems(UUID uuid) {
         try {
             FileReader reader = new FileReader(this.directory + File.separator + uuid + ".json");
             JsonObject obj = (JsonObject) this.parser.parse(reader);
             reader.close();
-            return obj.get("gems").getAsDouble();
+            return obj.get("gems").getAsLong();
         } catch (IOException e) {
             e.printStackTrace();
         }

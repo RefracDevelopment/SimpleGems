@@ -3,9 +3,8 @@ version: '@version@'
 main: me.refracdevelopment.simplegems.SimpleGems
 author: RefracDevelopment
 api-version: "1.13"
-depend:
-  - PlaceholderAPI
 softdepend:
+  - PlaceholderAPI
   - Skulls
   - HeadDatabase
 description: A simple gems economy plugin

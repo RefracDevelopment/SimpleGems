@@ -29,7 +29,7 @@ public class BalanceCommand extends RoseCommand {
         if (target.isOnline()) {
             locale.sendMessage(context.getSender(), "gems-balance", Placeholders.setPlaceholders(target.getPlayer()));
         } else if (!target.isOnline() && target.hasPlayedBefore()) {
-            double amount = SimpleGemsAPI.INSTANCE.getOfflineGems(target);
+            long amount = SimpleGemsAPI.INSTANCE.getOfflineGems(target);
 
             StringPlaceholders placeholders = StringPlaceholders.builder()
                     .addAll(Placeholders.setPlaceholders(context.getSender()))

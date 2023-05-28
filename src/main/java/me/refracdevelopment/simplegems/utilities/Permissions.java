@@ -20,6 +20,6 @@ public class Permissions {
 
     public static final String GEMS_VERSION = "simplegems.command.version";
 
-    public static final String UPDATE_ON_JOIN = "simplegems.update";
-
+    public static final String GEMS_TOP = "simplegems.command.top";
+    public static final String GEMS_UPDATE = "simplegems.command.update";
 }

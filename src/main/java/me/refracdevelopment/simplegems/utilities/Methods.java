@@ -1,15 +1,18 @@
 package me.refracdevelopment.simplegems.utilities;
 
 import com.cryptomorin.xseries.XMaterial;
-import dev.rosewood.rosegarden.utils.NMSUtil;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.UpdateOptions;
 import dev.rosewood.rosegarden.utils.StringPlaceholders;
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.api.SimpleGemsAPI;
 import me.refracdevelopment.simplegems.data.ProfileData;
+import me.refracdevelopment.simplegems.database.DataType;
 import me.refracdevelopment.simplegems.manager.LocaleManager;
 import me.refracdevelopment.simplegems.utilities.chat.Color;
 import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
 import me.refracdevelopment.simplegems.utilities.config.Config;
+import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
@@ -21,10 +24,12 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
+import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class Methods {
 
@@ -32,33 +37,66 @@ public class Methods {
      * The #saveOffline method allows you to
      * save a specified player's data
      */
-    public static void saveOffline(OfflinePlayer player, double amount) {
+    public static void saveOffline(OfflinePlayer player, long amount) {
         Bukkit.getScheduler().runTaskAsynchronously(SimpleGems.getInstance(), () -> {
-            SimpleGems.getInstance().getPlayerMapper().saveOfflinePlayer(player.getUniqueId(), player.getName(), amount);
+            if (SimpleGems.getInstance().getDataType() == DataType.MONGO) {
+                Document document = new Document();
+                document.put("name", player.getName());
+                document.put("uuid", player.getUniqueId().toString());
+                document.put("gems", amount);
+
+                SimpleGems.getInstance().getMongoManager().getStatsCollection().replaceOne(Filters.eq("uuid", player.getUniqueId().toString()), document, new UpdateOptions().upsert(true));
+            } else if (SimpleGems.getInstance().getDataType() == DataType.MYSQL) {
+                SimpleGems.getInstance().getMySQLManager().execute("UPDATE SimpleGems SET gems=? WHERE uuid=?",
+                        amount, player.getUniqueId().toString());
+            } else if (SimpleGems.getInstance().getDataType() == DataType.FLAT_FILE) {
+                SimpleGems.getInstance().getPlayerMapper().saveOfflinePlayer(player.getUniqueId(), player.getName(), amount);
+            }
         });
     }
 
-    public static void setOfflineGems(OfflinePlayer player, double amount) {
+    public static void setOfflineGems(OfflinePlayer player, long amount) {
         saveOffline(player, amount);
     }
 
-    public static void giveOfflineGems(OfflinePlayer player, double amount) {
+    public static void giveOfflineGems(OfflinePlayer player, long amount) {
         setOfflineGems(player, getOfflineGems(player) + amount);
     }
     
-    public static void takeOfflineGems(OfflinePlayer player, double amount) {
+    public static void takeOfflineGems(OfflinePlayer player, long amount) {
         setOfflineGems(player, getOfflineGems(player) - amount);
     }
 
-    public static double getOfflineGems(OfflinePlayer player) {
-        return SimpleGems.getInstance().getPlayerMapper().getGems(player.getUniqueId());
+    public static long getOfflineGems(OfflinePlayer player) {
+        if (SimpleGems.getInstance().getDataType() == DataType.MONGO) {
+            Document document = SimpleGems.getInstance().getMongoManager().getStatsCollection().find(Filters.eq("uuid", player.getUniqueId().toString())).first();
+
+            if (document != null) {
+                return document.getLong("gems");
+            }
+        } else if (SimpleGems.getInstance().getDataType() == DataType.MYSQL) {
+            AtomicLong gems = new AtomicLong(0);
+            SimpleGems.getInstance().getMySQLManager().select("SELECT * FROM SimpleGems WHERE uuid=?", resultSet -> {
+                try {
+                    if (resultSet.next()) {
+                        gems.set(resultSet.getLong("gems"));
+                    }
+                } catch (SQLException exception) {
+                    Color.log(exception.getMessage());
+                }
+            }, player.getUniqueId().toString());
+            return gems.get();
+        } else if (SimpleGems.getInstance().getDataType() == DataType.FLAT_FILE) {
+            return SimpleGems.getInstance().getPlayerMapper().getGems(player.getUniqueId());
+        }
+        return 0;
     }
     
-    public static boolean hasOfflineGems(OfflinePlayer player, double amount) {
+    public static boolean hasOfflineGems(OfflinePlayer player, long amount) {
         return getOfflineGems(player) >= amount;
     }
 
-    public static void payGems(Player player, Player target, double amount, boolean silent) {
+    public static void payGems(Player player, Player target, long amount, boolean silent) {
         ProfileData profile = SimpleGems.getInstance().getProfileManager().getProfile(player.getUniqueId()).getData();
         ProfileData targetProfile = SimpleGems.getInstance().getProfileManager().getProfile(target.getUniqueId()).getData();
         final LocaleManager locale = SimpleGems.getInstance().getManager(LocaleManager.class);
@@ -89,7 +127,7 @@ public class Methods {
         }
     }
 
-    public static void payOfflineGems(Player player, OfflinePlayer target, double amount) {
+    public static void payOfflineGems(Player player, OfflinePlayer target, long amount) {
         ProfileData profile = SimpleGems.getInstance().getProfileManager().getProfile(player.getUniqueId()).getData();
         final LocaleManager locale = SimpleGems.getInstance().getManager(LocaleManager.class);
 
@@ -111,7 +149,7 @@ public class Methods {
         }
     }
 
-    public static void withdrawGems(Player player, double amount) {
+    public static void withdrawGems(Player player, long amount) {
         final LocaleManager locale = SimpleGems.getInstance().getManager(LocaleManager.class);
 
         StringPlaceholders placeholders = StringPlaceholders.builder()
@@ -131,7 +169,7 @@ public class Methods {
         }
     }
 
-    public static void giveGemsItem(Player player, double amount) {
+    public static void giveGemsItem(Player player, long amount) {
         ItemStack gemsItem = getGemsItem(amount);
 
         if (player.getInventory().firstEmpty() != -1) {
@@ -142,7 +180,7 @@ public class Methods {
         }
     }
 
-    public static ItemStack getGemsItem(double amount) {
+    public static ItemStack getGemsItem(long amount) {
         String name = Config.GEMS_ITEM_NAME;
         XMaterial material = Utilities.getMaterial(Config.GEMS_ITEM_MATERIAL);
         int data = Config.GEMS_ITEM_DATA;
@@ -150,69 +188,42 @@ public class Methods {
         ItemBuilder item = new ItemBuilder(material.parseMaterial(), 1);
         ItemMeta itemMeta = item.toItemStack().getItemMeta();
 
-        if (Config.GEMS_ITEM_CUSTOM_DATA) {
-            if (Config.GEMS_ITEM_GLOW) {
-                item.addEnchant(Enchantment.ARROW_DAMAGE, 1);
-                itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-            }
-
-            if (NMSUtil.getVersionNumber() > 13) {
-                item.setCustomModelData(Config.GEMS_ITEM_CUSTOM_MODEL_DATA);
-            } else {
-                Color.log("&cAn error occurred when trying to set custom model data. Make sure your only using custom model data when on 1.14+.");
-            }
-
-            // Attempt to insert a NBT tag of the gems value instead of filling the inventory
-
-            NamespacedKey key = new NamespacedKey(SimpleGems.getInstance(), "gems-item-value");
-            PersistentDataContainer container = itemMeta.getPersistentDataContainer();
-            container.set(key, PersistentDataType.DOUBLE, amount);
-            item.toItemStack().setItemMeta(itemMeta);
-
-            item.setName(name);
-
-            if(container.has(key, PersistentDataType.DOUBLE)) {
-                double foundValue = container.get(key, PersistentDataType.DOUBLE);
-                lore.forEach(s -> item.addLoreLine(Color.translate(s
-                        .replace("%value%", String.valueOf(foundValue))
-                        .replace("%gems%", String.valueOf(foundValue))
-                )));
-            } else {
-                lore.forEach(s -> item.addLoreLine(Color.translate(s
-                        .replace("%value%", String.valueOf(item.toItemStack().getAmount()))
-                        .replace("%gems%", String.valueOf(item.toItemStack().getAmount()))
-                )));
-            }
-            item.setDurability(data);
-        } else {
-            if (Config.GEMS_ITEM_GLOW) {
-                item.addEnchant(Enchantment.ARROW_DAMAGE, 1);
-                itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-            }
-
-            // Attempt to insert a NBT tag of the gems value instead of filling the inventory
-
-            NamespacedKey key = new NamespacedKey(SimpleGems.getInstance(), "gems-item-value");
-            PersistentDataContainer container = itemMeta.getPersistentDataContainer();
-            container.set(key, PersistentDataType.DOUBLE, amount);
-            item.toItemStack().setItemMeta(itemMeta);
-
-            item.setName(name);
-
-            if(container.has(key, PersistentDataType.DOUBLE)) {
-                double foundValue = container.get(key, PersistentDataType.DOUBLE);
-                lore.forEach(s -> item.addLoreLine(Color.translate(s
-                        .replace("%value%", String.valueOf(foundValue))
-                        .replace("%gems%", String.valueOf(foundValue))
-                )));
-            } else {
-                lore.forEach(s -> item.addLoreLine(Color.translate(s
-                        .replace("%value%", String.valueOf(item.toItemStack().getAmount()))
-                        .replace("%gems%", String.valueOf(item.toItemStack().getAmount()))
-                )));
-            }
-            item.setDurability(data);
+        if (Config.GEMS_ITEM_GLOW) {
+            item.addEnchant(Enchantment.ARROW_DAMAGE, 1);
+            itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         }
+
+        if (Config.GEMS_ITEM_CUSTOM_DATA) {
+            try {
+                item.setCustomModelData(Config.GEMS_ITEM_CUSTOM_MODEL_DATA);
+            } catch (Exception exception) {
+                Color.log("ERROR: Failed to set custom model data on withdrawn gems item.");
+                exception.printStackTrace();
+            }
+        }
+
+        // Attempt to insert a NBT tag of the gems value instead of filling the inventory
+
+        NamespacedKey key = new NamespacedKey(SimpleGems.getInstance(), "gems-item-value");
+        PersistentDataContainer container = itemMeta.getPersistentDataContainer();
+        container.set(key, PersistentDataType.LONG, amount);
+        item.toItemStack().setItemMeta(itemMeta);
+
+        item.setName(name);
+
+        if(container.has(key, PersistentDataType.LONG)) {
+            double foundValue = container.get(key, PersistentDataType.LONG);
+            lore.forEach(s -> item.addLoreLine(Color.translate(s
+                    .replace("%value%", String.valueOf(foundValue))
+                    .replace("%gems%", String.valueOf(foundValue))
+            )));
+        } else {
+            lore.forEach(s -> item.addLoreLine(Color.translate(s
+                    .replace("%value%", String.valueOf(item.toItemStack().getAmount()))
+                    .replace("%gems%", String.valueOf(item.toItemStack().getAmount()))
+            )));
+        }
+        item.setDurability(data);
 
         return item.toItemStack();
     }

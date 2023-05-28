@@ -7,6 +7,7 @@ no-permission: '&cYou don''t have permission for that!'
 no-console: '&cOnly players may execute this command.'
 unknown-command: Unknown command, use &d/%cmd%&f help for more info
 invalid-player: '&cYou provided an invalid player.'
+leaderboard-update: '&eThe leaderboard has been updated.'
 
 # Base Command Message
 base-command-color: '&e'
@@ -66,3 +67,9 @@ command-reload-success: '&aConfiguration and locale files were reloaded.'
 
 # Version Command
 command-version-description: Display the version info for SimpleGems
+
+# Top Command
+command-top-description: Display the top leaderboard info for SimpleGems
+
+# Update Command
+command-update-description: Update the top leaderboard info for SimpleGems

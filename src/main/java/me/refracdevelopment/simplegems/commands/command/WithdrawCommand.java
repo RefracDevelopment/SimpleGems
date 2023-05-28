@@ -18,7 +18,7 @@ public class WithdrawCommand extends RoseCommand {
     }
 
     @RoseExecutable
-    public void execute(CommandContext context, double amount) {
+    public void execute(CommandContext context, long amount) {
         final LocaleManager locale = this.rosePlugin.getManager(LocaleManager.class);
 
         // Make sure the sender is a player.

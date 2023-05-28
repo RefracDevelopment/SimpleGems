@@ -17,7 +17,7 @@
 # PlaceholderAPI:
 # %simplegems_balance% - Get the unformatted gems amount (100000)
 # %simplegems_balance_formatted% - Get the formatted gems amount (100k)
-# %simplegems_balance_decimal% - Get the decimal formatted gems amount (100.0)
+# %simplegems_balance_decimal% - Get the decimal formatted gems amount (100000.0)
 #---------------------------------------------------------------------------
 gems-menu:
   enabled: true
@@ -42,6 +42,7 @@ gems-menu:
       material: STICK
       skulls: false
       headDatabase: false
+      skullOwner: ""
       data: 0
       glow: false
       name: "&dMagic Stick"
