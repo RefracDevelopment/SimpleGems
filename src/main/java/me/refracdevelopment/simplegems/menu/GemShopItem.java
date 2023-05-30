@@ -3,18 +3,19 @@ package me.refracdevelopment.simplegems.menu;
 import ca.tweetzy.skulls.Skulls;
 import ca.tweetzy.skulls.api.interfaces.Skull;
 import com.cryptomorin.xseries.XMaterial;
+import dev.rosewood.rosegarden.utils.NMSUtil;
 import lombok.Getter;
 import lombok.Setter;
 import me.arcaniax.hdb.api.HeadDatabaseAPI;
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.api.SimpleGemsAPI;
+import me.refracdevelopment.simplegems.config.Menus;
 import me.refracdevelopment.simplegems.manager.LocaleManager;
 import me.refracdevelopment.simplegems.utilities.ItemBuilder;
 import me.refracdevelopment.simplegems.utilities.Methods;
 import me.refracdevelopment.simplegems.utilities.Utilities;
 import me.refracdevelopment.simplegems.utilities.chat.Color;
 import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
-import me.refracdevelopment.simplegems.utilities.config.Menus;
 import org.bukkit.Bukkit;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -160,7 +161,11 @@ public class GemShopItem {
                 item.toItemStack().setItemMeta(itemMeta);
             }
 
-            item.setCustomModelData(this.customModelData);
+            if (NMSUtil.getVersionNumber() >= 14) {
+                item.setCustomModelData(this.customModelData);
+            } else {
+                Color.log("&cAn error occurred when trying to set custom model data. Make sure your only using custom model data when on 1.14+.");
+            }
             item.setName(this.name);
             this.lore.forEach(s -> item.addLoreLine(Color.translate(player, s.replace("%item%", this.name)
                     .replace("%cost%", String.valueOf(this.cost))

@@ -8,6 +8,10 @@ import dev.rosewood.rosegarden.utils.NMSUtil;
 import lombok.Getter;
 import me.gabytm.util.actions.ActionManager;
 import me.refracdevelopment.simplegems.api.SimpleGemsAPI;
+import me.refracdevelopment.simplegems.config.Config;
+import me.refracdevelopment.simplegems.config.ConfigFile;
+import me.refracdevelopment.simplegems.config.Menus;
+import me.refracdevelopment.simplegems.config.PlayerMapper;
 import me.refracdevelopment.simplegems.data.ProfileManager;
 import me.refracdevelopment.simplegems.database.DataType;
 import me.refracdevelopment.simplegems.database.mongo.MongoManager;
@@ -19,12 +23,9 @@ import me.refracdevelopment.simplegems.manager.LeaderboardManager;
 import me.refracdevelopment.simplegems.manager.LocaleManager;
 import me.refracdevelopment.simplegems.menu.GemShop;
 import me.refracdevelopment.simplegems.utilities.DownloadUtil;
+import me.refracdevelopment.simplegems.utilities.Tasks;
 import me.refracdevelopment.simplegems.utilities.chat.Color;
 import me.refracdevelopment.simplegems.utilities.chat.PAPIExpansion;
-import me.refracdevelopment.simplegems.utilities.config.Config;
-import me.refracdevelopment.simplegems.utilities.config.ConfigFile;
-import me.refracdevelopment.simplegems.utilities.config.Menus;
-import me.refracdevelopment.simplegems.utilities.config.PlayerMapper;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.PluginManager;
 
@@ -33,6 +34,7 @@ import java.io.File;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Collections;
 import java.util.List;
 
 @Getter
@@ -74,18 +76,18 @@ public final class SimpleGems extends RosePlugin {
             return;
         }
 
-        // Make sure the server is on MC 1.16
-        if (NMSUtil.getVersionNumber() < 16) {
-            Color.log("&cThis plugin only supports 1.16+ Minecraft.");
+        // Check if the server is on 1.7
+        if (NMSUtil.getVersionNumber() == 7) {
+            Color.log("&cSimpleGems 1.7 is in legacy mode, please update to 1.8+");
             this.getServer().getPluginManager().disablePlugin(this);
             return;
         }
 
-        if (getServer().getPluginManager().getPlugin("Skulls") != null) {
+        if (pluginManager.getPlugin("Skulls") != null) {
             Color.log("&eSkulls Detected!");
         }
 
-        if (getServer().getPluginManager().getPlugin("HeadDatabase") != null) {
+        if (pluginManager.getPlugin("HeadDatabase") != null) {
             Color.log("&eHeadDatabase Detected!");
         }
 
@@ -112,7 +114,7 @@ public final class SimpleGems extends RosePlugin {
     @Override
     protected void disable() {
         // Plugin shutdown logic
-        this.getServer().getScheduler().runTaskAsynchronously(this, () -> {
+        Tasks.runAsync(this, () -> {
             profileManager.getProfiles().values().forEach(profile -> profile.getData().save());
         });
         this.getServer().getScheduler().cancelTasks(this);
@@ -120,7 +122,7 @@ public final class SimpleGems extends RosePlugin {
 
     @Override
     protected List<Class<? extends Manager>> getManagerLoadPriority() {
-        return List.of();
+        return Collections.emptyList();
     }
 
     private void loadManagers() {

@@ -6,11 +6,11 @@ import dev.rosewood.rosegarden.command.framework.RoseCommand;
 import dev.rosewood.rosegarden.command.framework.RoseCommandWrapper;
 import dev.rosewood.rosegarden.command.framework.annotation.RoseExecutable;
 import me.refracdevelopment.simplegems.SimpleGems;
+import me.refracdevelopment.simplegems.config.Config;
+import me.refracdevelopment.simplegems.config.Menus;
 import me.refracdevelopment.simplegems.manager.LocaleManager;
 import me.refracdevelopment.simplegems.menu.GemShopItem;
 import me.refracdevelopment.simplegems.utilities.Permissions;
-import me.refracdevelopment.simplegems.utilities.config.Config;
-import me.refracdevelopment.simplegems.utilities.config.Menus;
 import org.bukkit.Bukkit;
 
 public class ReloadCommand extends RoseCommand {

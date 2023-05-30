@@ -1,4 +1,4 @@
-package me.refracdevelopment.simplegems.utilities.config;
+package me.refracdevelopment.simplegems.config;
 
 import me.refracdevelopment.simplegems.utilities.chat.Color;
 import org.bukkit.ChatColor;

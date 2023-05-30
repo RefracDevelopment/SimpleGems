@@ -1,4 +1,4 @@
-package me.refracdevelopment.simplegems.utilities.config;
+package me.refracdevelopment.simplegems.config;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -34,15 +34,7 @@ public class PlayerMapper {
         if (!playerFile.exists()) {
             this.generateDefaultFile(uuid, SimpleGems.getInstance().getProfileManager().getProfile(uuid).getData().getName());
         }
-        try {
-            FileReader reader = new FileReader(this.directory + File.separator + uuid + ".json");
-            JsonObject obj = (JsonObject) this.parser.parse(reader);
-            reader.close();
-            long gems = obj.get("gems").getAsLong();
-            SimpleGems.getInstance().getProfileManager().getProfile(uuid).getData().getGems().setAmount(gems);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        SimpleGems.getInstance().getProfileManager().getProfile(uuid).getData().getGems().setAmount(getGems(uuid));
     }
 
     public void savePlayer(ProfileData player) {

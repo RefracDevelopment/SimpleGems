@@ -3,26 +3,25 @@ package me.refracdevelopment.simplegems.utilities;
 import com.cryptomorin.xseries.XMaterial;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.UpdateOptions;
+import de.tr7zw.nbtapi.NBTItem;
+import dev.rosewood.rosegarden.utils.NMSUtil;
 import dev.rosewood.rosegarden.utils.StringPlaceholders;
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.api.SimpleGemsAPI;
+import me.refracdevelopment.simplegems.config.Config;
 import me.refracdevelopment.simplegems.data.ProfileData;
 import me.refracdevelopment.simplegems.database.DataType;
 import me.refracdevelopment.simplegems.manager.LocaleManager;
 import me.refracdevelopment.simplegems.utilities.chat.Color;
 import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
-import me.refracdevelopment.simplegems.utilities.config.Config;
 import org.bson.Document;
 import org.bukkit.Bukkit;
-import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataType;
 
 import java.sql.SQLException;
 import java.text.DecimalFormat;
@@ -186,33 +185,32 @@ public class Methods {
         int data = Config.GEMS_ITEM_DATA;
         List<String> lore = Config.GEMS_ITEM_LORE;
         ItemBuilder item = new ItemBuilder(material.parseMaterial(), 1);
-        ItemMeta itemMeta = item.toItemStack().getItemMeta();
 
         if (Config.GEMS_ITEM_GLOW) {
             item.addEnchant(Enchantment.ARROW_DAMAGE, 1);
+            ItemMeta itemMeta = item.toItemStack().getItemMeta();
             itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+            item.toItemStack().setItemMeta(itemMeta);
         }
 
         if (Config.GEMS_ITEM_CUSTOM_DATA) {
-            try {
+            if (NMSUtil.getVersionNumber() >= 14) {
                 item.setCustomModelData(Config.GEMS_ITEM_CUSTOM_MODEL_DATA);
-            } catch (Exception exception) {
-                Color.log("ERROR: Failed to set custom model data on withdrawn gems item.");
-                exception.printStackTrace();
+            } else {
+                Color.log("&cAn error occurred when trying to set custom model data. Make sure your only using custom model data when on 1.14+.");
             }
         }
 
-        // Attempt to insert a NBT tag of the gems value instead of filling the inventory
-
-        NamespacedKey key = new NamespacedKey(SimpleGems.getInstance(), "gems-item-value");
-        PersistentDataContainer container = itemMeta.getPersistentDataContainer();
-        container.set(key, PersistentDataType.LONG, amount);
-        item.toItemStack().setItemMeta(itemMeta);
-
         item.setName(name);
 
-        if(container.has(key, PersistentDataType.LONG)) {
-            double foundValue = container.get(key, PersistentDataType.LONG);
+        // Attempt to insert a NBT tag of the gems value instead of filling the inventory
+
+        NBTItem nbtItem = new NBTItem(item.toItemStack());
+        nbtItem.setLong("gems-item-value", amount);
+        nbtItem.applyNBT(item.toItemStack());
+
+        if(nbtItem.hasTag("gems-item-value")) {
+            long foundValue = nbtItem.getLong("gems-item-value");
             lore.forEach(s -> item.addLoreLine(Color.translate(s
                     .replace("%value%", String.valueOf(foundValue))
                     .replace("%gems%", String.valueOf(foundValue))

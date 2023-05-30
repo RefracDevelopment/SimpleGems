@@ -1,17 +1,17 @@
 package me.refracdevelopment.simplegems.listeners;
 
+import de.tr7zw.nbtapi.NBTItem;
 import dev.rosewood.rosegarden.utils.StringPlaceholders;
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.api.SimpleGemsAPI;
+import me.refracdevelopment.simplegems.config.Config;
 import me.refracdevelopment.simplegems.data.Profile;
 import me.refracdevelopment.simplegems.manager.LocaleManager;
 import me.refracdevelopment.simplegems.utilities.Methods;
 import me.refracdevelopment.simplegems.utilities.Tasks;
 import me.refracdevelopment.simplegems.utilities.Utilities;
 import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
-import me.refracdevelopment.simplegems.utilities.config.Config;
 import org.bukkit.ChatColor;
-import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -22,8 +22,6 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataType;
 
 public class PlayerListener implements Listener {
 
@@ -89,11 +87,10 @@ public class PlayerListener implements Listener {
 
         if (itemMeta == null) return;
 
-        NamespacedKey key = new NamespacedKey(SimpleGems.getInstance(), "gems-item-value");
-        PersistentDataContainer container = itemMeta.getPersistentDataContainer();
+        NBTItem nbtItem = new NBTItem(item);
 
-        if (container.has(key, PersistentDataType.LONG)) {
-            long foundValue = container.get(key, PersistentDataType.LONG);
+        if(nbtItem.hasTag("gems-item-value")) {
+            long foundValue = nbtItem.getLong("gems-item-value");
 
             gemsItem = SimpleGemsAPI.INSTANCE.getGemsItem(foundValue);
 

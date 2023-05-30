@@ -1,12 +1,12 @@
 package me.refracdevelopment.simplegems.manager;
 
 import me.refracdevelopment.simplegems.SimpleGems;
+import me.refracdevelopment.simplegems.config.Config;
 import me.refracdevelopment.simplegems.database.DataType;
 import me.refracdevelopment.simplegems.utilities.Methods;
 import me.refracdevelopment.simplegems.utilities.Tasks;
 import me.refracdevelopment.simplegems.utilities.chat.Color;
 import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
-import me.refracdevelopment.simplegems.utilities.config.Config;
 import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;

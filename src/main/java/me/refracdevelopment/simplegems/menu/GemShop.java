@@ -1,6 +1,6 @@
 package me.refracdevelopment.simplegems.menu;
 
-import me.refracdevelopment.simplegems.utilities.config.Menus;
+import me.refracdevelopment.simplegems.config.Menus;
 
 import java.util.HashMap;
 import java.util.Map;
