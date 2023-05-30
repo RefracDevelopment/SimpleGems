@@ -2,6 +2,7 @@ package me.refracdevelopment.simplegems.manager;
 
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.config.Config;
+import me.refracdevelopment.simplegems.data.ProfileData;
 import me.refracdevelopment.simplegems.database.DataType;
 import me.refracdevelopment.simplegems.utilities.Methods;
 import me.refracdevelopment.simplegems.utilities.Tasks;
@@ -31,6 +32,7 @@ public class LeaderboardManager {
     }
 
     public void load() {
+        if (Bukkit.getOnlinePlayers().size() == 0) return;
         if (cachedMap.isEmpty() || unsortedMap.isEmpty()) {
 
             if (plugin.getDataType() == DataType.MONGO) {
@@ -59,8 +61,9 @@ public class LeaderboardManager {
                 });
             } else if (plugin.getDataType() == DataType.FLAT_FILE) {
                 Bukkit.getOnlinePlayers().stream().limit(Config.GEMS_TOP_ENTRIES).forEach(onlinePlayer -> {
+                    ProfileData profile = plugin.getProfileManager().getProfile(onlinePlayer.getUniqueId()).getData();
                     String name = onlinePlayer.getName();
-                    long gems = plugin.getPlayerMapper().getGems(onlinePlayer.getUniqueId());
+                    long gems = profile.getGems().getAmount();
                     if (this.unsortedMap.size() >= Config.GEMS_TOP_ENTRIES-1) return;
                     unsortedMap.putIfAbsent(name, gems);
                     cachedMap.putIfAbsent(name, gems);
@@ -106,7 +109,9 @@ public class LeaderboardManager {
             load();
             Map<String, Long> sortedMap = sortByValue(unsortedMap);
 
-            locale.sendCustomMessage(player, Color.translate(player, Config.GEMS_TOP_TITLE));
+            locale.sendCustomMessage(player, Color.translate(player, Config.GEMS_TOP_TITLE
+                    .replace("%entries%", String.valueOf(Config.GEMS_TOP_ENTRIES))
+            ));
             int number = 1;
             for (Map.Entry<String, Long> entry : sortedMap.entrySet()) {
                 String key = entry.getKey();
@@ -149,6 +154,7 @@ public class LeaderboardManager {
 
         @Override
         public void run() {
+            if (Bukkit.getOnlinePlayers().size() == 0) return;
             final LocaleManager locale = plugin.getManager(LocaleManager.class);
             cachedMap.clear();
             unsortedMap.clear();

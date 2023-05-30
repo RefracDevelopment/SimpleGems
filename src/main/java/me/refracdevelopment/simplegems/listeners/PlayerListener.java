@@ -81,7 +81,7 @@ public class PlayerListener implements Listener {
         if (profile == null) return;
         if (profile.getData() == null) return;
 
-        ItemStack item = player.getInventory().getItemInMainHand();
+        ItemStack item = player.getItemInHand();
         ItemStack gemsItem;
         ItemMeta itemMeta = item.getItemMeta();
 
@@ -104,7 +104,7 @@ public class PlayerListener implements Listener {
                     .add("gems_decimal", Methods.formatDecimal(foundValue))
                     .build();
 
-            player.getInventory().setItemInMainHand(null);
+            player.getInventory().setItemInHand(null);
             SimpleGemsAPI.INSTANCE.giveGems(player, foundValue);
             locale.sendMessage(player, "gems-deposited", placeholders);
         }
