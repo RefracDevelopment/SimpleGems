@@ -22,13 +22,14 @@ public class ReloadCommand extends RoseCommand {
     @RoseExecutable
     public void execute(CommandContext context) {
         this.rosePlugin.reload();
-        Config.loadConfig();
         SimpleGems.getInstance().getMenusFile().load();
+        Config.loadConfig();
+        Menus.loadMenus();
         Bukkit.getScheduler().cancelTasks(SimpleGems.getInstance());
         SimpleGems.getInstance().getLeaderboardManager().updateTask();
         SimpleGems.getInstance().getGemShop().getItems().clear();
         Menus.GEM_SHOP_ITEMS.getKeys(false).forEach(item -> SimpleGems.getInstance().getGemShop().getItems().put(item, new GemShopItem(item)));
-        this.rosePlugin.getManager(LocaleManager.class).sendCommandMessage(context.getSender(), "command-reload-success");
+        this.rosePlugin.getManager(LocaleManager.class).sendMessage(context.getSender(), "command-reload-success");
     }
 
     @Override

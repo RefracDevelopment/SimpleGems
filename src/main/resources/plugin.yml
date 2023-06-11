@@ -24,7 +24,6 @@ permissions:
       simplegems.command.set: true
       simplegems.command.reload: true
       simplegems.command.version: true
-      simplegems.update: true
   simplegems.command.shop:
     default: op
     description: Opens the gems shop
@@ -52,6 +51,3 @@ permissions:
   simplegems.command.version:
     default: op
     description: Allows you to check your installed version of SimpleGems
-  simplegems.update:
-    default: op
-    description: Allows you to see an update notification on join

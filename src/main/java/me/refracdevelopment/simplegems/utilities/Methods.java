@@ -231,18 +231,10 @@ public class Methods {
         return decimalFormat.format(amount);
     }
 
-    public static String format(double amount) {
+    public static String format(long amount) {
         String fin = "none";
         if (amount <= 0.0) {
             fin = String.valueOf(0);
-        } else if (amount >= 1.0E30) {
-            fin = String.format("%.1fN", amount / 1.0E30);
-        } else if (amount >= 1.0E27) {
-            fin = String.format("%.1fO", amount / 1.0E27);
-        } else if (amount >= 1.0E24) {
-            fin = String.format("%.1fST", amount / 1.0E24);
-        } else if (amount >= 1.0E21) {
-            fin = String.format("%.1fS", amount / 1.0E21);
         } else if (amount >= 1.0E18) {
             fin = String.format("%.1fQT", amount / 1.0E18);
         } else if (amount >= 1.0E15) {

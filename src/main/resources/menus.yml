@@ -31,6 +31,11 @@ gems-menu:
     infoandbalanceItem:
       material: SUNFLOWER
       data: 0
+      skulls: false
+      headDatabase: false
+      skullOwner: ""
+      customData: true
+      customModelData: YOURIDHERE
       name: "&eWhat is the Gem Shop?"
       lore:
         - "&7The Gem Shop sells you items"
@@ -43,6 +48,8 @@ gems-menu:
       skulls: false
       headDatabase: false
       skullOwner: ""
+      customData: true
+      customModelData: YOURIDHERE
       data: 0
       glow: false
       name: "&dMagic Stick"

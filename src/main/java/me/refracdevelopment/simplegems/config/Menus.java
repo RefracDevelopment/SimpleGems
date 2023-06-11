@@ -18,14 +18,14 @@ public class Menus {
     public static String GEM_SHOP_FILL_NAME;
     public static ConfigurationSection GEM_SHOP_ITEMS;
 
-    public static void loadMenus(SimpleGems plugin) {
+    public static void loadMenus() {
         // Gems Shop
-        GEM_SHOP_ENABLED = plugin.getMenusFile().getBoolean("gems-menu.enabled");
-        GEM_SHOP_TITLE = plugin.getMenusFile().getString("gems-menu.title");
-        GEM_SHOP_SIZE = plugin.getMenusFile().getInt("gems-menu.size");
-        GEM_SHOP_FILL_MATERIAL = Utilities.getMaterial(Objects.requireNonNull(plugin.getMenusFile().getString("gems-menu.fill.material"))).parseMaterial();
-        GEM_SHOP_FILL_DATA = plugin.getMenusFile().getInt("gems-menu.fill.data");
-        GEM_SHOP_FILL_NAME = plugin.getMenusFile().getString("gems-menu.fill.name");
-        GEM_SHOP_ITEMS = plugin.getMenusFile().getConfigurationSection("gems-menu.items");
+        GEM_SHOP_ENABLED = SimpleGems.getInstance().getMenusFile().getBoolean("gems-menu.enabled");
+        GEM_SHOP_TITLE = SimpleGems.getInstance().getMenusFile().getString("gems-menu.title");
+        GEM_SHOP_SIZE = SimpleGems.getInstance().getMenusFile().getInt("gems-menu.size");
+        GEM_SHOP_FILL_MATERIAL = Utilities.getMaterial(Objects.requireNonNull(SimpleGems.getInstance().getMenusFile().getString("gems-menu.fill.material"))).parseMaterial();
+        GEM_SHOP_FILL_DATA = SimpleGems.getInstance().getMenusFile().getInt("gems-menu.fill.data");
+        GEM_SHOP_FILL_NAME = SimpleGems.getInstance().getMenusFile().getString("gems-menu.fill.name");
+        GEM_SHOP_ITEMS = SimpleGems.getInstance().getMenusFile().getConfigurationSection("gems-menu.items");
     }
 }

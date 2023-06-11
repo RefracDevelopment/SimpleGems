@@ -6,7 +6,7 @@
 
     <groupId>me.refracdevelopment</groupId>
     <artifactId>SimpleGems</artifactId>
-    <version>3.0-SNAPSHOT-4</version>
+    <version>3.0</version>
     <packaging>jar</packaging>
 
     <name>SimpleGems</name>
@@ -109,7 +109,7 @@
         <dependency>
             <groupId>com.github.cryptomorin</groupId>
             <artifactId>XSeries</artifactId>
-            <version>9.3.1</version>
+            <version>9.4.0</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>

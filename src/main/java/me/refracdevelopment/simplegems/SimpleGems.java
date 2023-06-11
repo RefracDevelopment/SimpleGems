@@ -69,15 +69,8 @@ public final class SimpleGems extends RosePlugin {
 
         DownloadUtil.downloadAndEnable();
 
-        // Make sure the server has PlaceholderAPI
-        if (!pluginManager.isPluginEnabled("PlaceholderAPI")) {
-            Color.log("&cPlease install PlaceholderAPI onto your server to use this plugin.");
-            this.getServer().getPluginManager().disablePlugin(this);
-            return;
-        }
-
         // Check if the server is on 1.7
-        if (NMSUtil.getVersionNumber() == 7) {
+        if (NMSUtil.getVersionNumber() <= 7) {
             Color.log("&cSimpleGems 1.7 is in legacy mode, please update to 1.8+");
             this.getServer().getPluginManager().disablePlugin(this);
             return;
@@ -91,9 +84,10 @@ public final class SimpleGems extends RosePlugin {
             Color.log("&eHeadDatabase Detected!");
         }
 
-        Config.loadConfig();
         menusFile = new ConfigFile(this, "menus.yml");
-        Menus.loadMenus(this);
+        menusFile.load();
+        Config.loadConfig();
+        Menus.loadMenus();
 
         this.loadManagers();
         Color.log("&eLoaded commands.");
