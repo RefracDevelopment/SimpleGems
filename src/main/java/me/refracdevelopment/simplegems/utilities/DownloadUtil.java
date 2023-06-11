@@ -11,7 +11,7 @@ public class DownloadUtil {
         Library lib = Library.builder()
                 .groupId("org{}mongodb") // "{}" is replaced with ".", useful to avoid unwanted changes made by maven-shade-plugin
                 .artifactId("mongo-java-driver")
-                .version("3.12.13")
+                .version("3.12.14")
                 .build();
 
         libraryManager.addMavenCentral();
