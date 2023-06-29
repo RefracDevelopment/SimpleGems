@@ -13,7 +13,54 @@ Suggestion can be posted in [Issues](https://github.com/RefracDevelopment/Simple
 
 ### Developer API
 
-The [SimpleGemsAPI](https://github.com/RefracDevelopment/SimpleGemsAPI) allows you to hook into SimpleGems to either modify and grab data or to add new features and events. Now deprecated with version 2.3+.
+Import the SimpleGemsAPI.jar into your project.
+
+#### Maven
+Replace LATEST with latest version in the [Releases](https://github,com/RefracDevelopment/SimpleGems/releases/latest) tab.
+```XML
+<repository>
+    <id>jitpack.io</id>
+    <url>https://jitpack.io</url>
+</repository>
+
+<dependency>
+    <groupId>com.github.RefracDevelopment</groupId>
+    <artifactId>SimpleGems</artifactId>
+    <version>LATEST</version>
+</dependency>
+```
+Make sure you add SimpleGems to your depends or softdepends
+```YML
+depend:
+  - SimpleGems
+
+softdepend:
+  - SimpleGems
+```
+
+```JAVA
+SimpleGemsAPI.INSTANCE.getGems(player);
+
+SimpleGemsAPI.INSTANCE.getOfflineGems(player);
+
+SimpleGemsAPI.INSTANCE.hasGems(player, amount);
+
+SimpleGemsAPI.INSTANCE.hasOfflineGems(player, amount);
+
+SimpleGemsAPI.INSTANCE.giveGemsItem(player, amount);
+
+SimpleGemsAPI.INSTANCE.giveGems(player, amount);
+
+SimpleGemsAPI.INSTANCE.giveOfflineGems(player, amount);
+
+SimpleGemsAPI.INSTANCE.takeGems(player, amount);
+
+SimpleGemsAPI.INSTANCE.takeOfflineGems(player, amount);
+
+SimpleGemsAPI.INSTANCE.setGems(player, amount);
+
+SimpleGemsAPI.INSTANCE.setOfflineGems(player, amount);
+```
 
 ### License
 Please view the [LICENSE](LICENSE) file for more information on the license of this source code.
