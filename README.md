@@ -16,7 +16,7 @@ Suggestion can be posted in [Issues](https://github.com/RefracDevelopment/Simple
 Import the SimpleGemsAPI.jar into your project.
 
 #### Maven
-Replace LATEST with latest version in the [Releases](https://github,com/RefracDevelopment/SimpleGems/releases/latest) tab.
+Replace LATEST with latest version in the [Releases](https://github.com/RefracDevelopment/SimpleGems/releases/latest) tab.
 ```XML
 <repository>
     <id>jitpack.io</id>
