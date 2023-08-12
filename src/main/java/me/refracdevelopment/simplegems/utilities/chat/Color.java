@@ -3,7 +3,7 @@ package me.refracdevelopment.simplegems.utilities.chat;
 import dev.rosewood.rosegarden.hook.PlaceholderAPIHook;
 import dev.rosewood.rosegarden.utils.HexUtils;
 import me.refracdevelopment.simplegems.SimpleGems;
-import me.refracdevelopment.simplegems.manager.LocaleManager;
+import me.refracdevelopment.simplegems.manager.configuration.LocaleManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

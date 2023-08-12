@@ -5,7 +5,7 @@ import me.refracdevelopment.simplegems.api.events.impl.GemsAddEvent;
 import me.refracdevelopment.simplegems.api.events.impl.GemsPayEvent;
 import me.refracdevelopment.simplegems.api.events.impl.GemsRemoveEvent;
 import me.refracdevelopment.simplegems.api.events.impl.GemsSetEvent;
-import me.refracdevelopment.simplegems.data.ProfileData;
+import me.refracdevelopment.simplegems.player.data.ProfileData;
 import me.refracdevelopment.simplegems.utilities.Methods;
 import me.refracdevelopment.simplegems.utilities.Tasks;
 import me.refracdevelopment.simplegems.utilities.chat.Color;
@@ -26,7 +26,7 @@ public class SimpleGemsAPI {
     public SimpleGemsAPI() {
         INSTANCE = this;
         Color.log("&eSimpleGemsAPI has been enabled!");
-        Color.log("&eWiki & Download: https://simplegems.refracdev.ml/");
+        Color.log("&eWiki: https://refracdevelopment.gitbook.io/");
     }
 
     /**

@@ -1,9 +1,8 @@
-package me.refracdevelopment.simplegems.config;
+package me.refracdevelopment.simplegems.manager.data;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import me.refracdevelopment.simplegems.SimpleGems;
-import me.refracdevelopment.simplegems.data.ProfileData;
 import me.refracdevelopment.simplegems.utilities.chat.Color;
 
 import java.io.File;
@@ -37,15 +36,7 @@ public class PlayerMapper {
         SimpleGems.getInstance().getProfileManager().getProfile(uuid).getData().getGems().setAmount(getGems(uuid));
     }
 
-    public void savePlayer(ProfileData player) {
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("uuid", player.getUuid().toString());
-        jsonObject.addProperty("name", player.getName());
-        jsonObject.addProperty("gems", player.getGems().getAmount());
-        this.saveFile(player.getUuid(), jsonObject);
-    }
-
-    public void saveOfflinePlayer(UUID uuid, String name, double amount) {
+    public void savePlayer(UUID uuid, String name, long amount) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("uuid", uuid.toString());
         jsonObject.addProperty("name", name);

@@ -1,4 +1,4 @@
-package me.refracdevelopment.simplegems.config;
+package me.refracdevelopment.simplegems.manager.configuration.cache;
 
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.utilities.Utilities;

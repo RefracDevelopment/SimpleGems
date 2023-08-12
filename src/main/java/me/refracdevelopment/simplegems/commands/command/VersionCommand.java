@@ -6,7 +6,7 @@ import dev.rosewood.rosegarden.command.framework.RoseCommand;
 import dev.rosewood.rosegarden.command.framework.RoseCommandWrapper;
 import dev.rosewood.rosegarden.command.framework.annotation.RoseExecutable;
 import dev.rosewood.rosegarden.utils.StringPlaceholders;
-import me.refracdevelopment.simplegems.manager.LocaleManager;
+import me.refracdevelopment.simplegems.manager.configuration.LocaleManager;
 import me.refracdevelopment.simplegems.utilities.Permissions;
 
 public class VersionCommand extends RoseCommand {

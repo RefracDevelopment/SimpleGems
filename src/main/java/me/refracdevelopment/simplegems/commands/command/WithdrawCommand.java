@@ -6,7 +6,7 @@ import dev.rosewood.rosegarden.command.framework.RoseCommand;
 import dev.rosewood.rosegarden.command.framework.RoseCommandWrapper;
 import dev.rosewood.rosegarden.command.framework.annotation.RoseExecutable;
 import me.refracdevelopment.simplegems.api.SimpleGemsAPI;
-import me.refracdevelopment.simplegems.manager.LocaleManager;
+import me.refracdevelopment.simplegems.manager.configuration.LocaleManager;
 import me.refracdevelopment.simplegems.utilities.Permissions;
 import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
 import org.bukkit.entity.Player;

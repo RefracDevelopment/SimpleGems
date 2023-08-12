@@ -1,10 +1,9 @@
-package me.refracdevelopment.simplegems.database.mysql;
+package me.refracdevelopment.simplegems.manager.data;
 
 import dev.rosewood.rosegarden.lib.hikaricp.HikariConfig;
 import dev.rosewood.rosegarden.lib.hikaricp.HikariDataSource;
 import me.refracdevelopment.simplegems.SimpleGems;
-import me.refracdevelopment.simplegems.database.SelectCall;
-import me.refracdevelopment.simplegems.manager.ConfigurationManager;
+import me.refracdevelopment.simplegems.manager.configuration.ConfigurationManager;
 import me.refracdevelopment.simplegems.utilities.chat.Color;
 import org.bukkit.Bukkit;
 
@@ -59,7 +58,7 @@ public class MySQLManager {
 
 
     public void createTables() {
-        createTable("SimpleGems", "uuid VARCHAR(36) NOT NULL PRIMARY KEY, name VARCHAR(16), gems BIGINT(255)");
+        createTable("SimpleGems", "uuid VARCHAR(36) NOT NULL PRIMARY KEY, name VARCHAR(16), gems BIGINT");
     }
 
     public boolean isInitiated() {

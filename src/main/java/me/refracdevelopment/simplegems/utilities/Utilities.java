@@ -2,7 +2,7 @@ package me.refracdevelopment.simplegems.utilities;
 
 import com.cryptomorin.xseries.XMaterial;
 import me.refracdevelopment.simplegems.SimpleGems;
-import me.refracdevelopment.simplegems.manager.LocaleManager;
+import me.refracdevelopment.simplegems.manager.configuration.LocaleManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 

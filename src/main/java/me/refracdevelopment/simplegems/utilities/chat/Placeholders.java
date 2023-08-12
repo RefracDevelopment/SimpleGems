@@ -3,7 +3,7 @@ package me.refracdevelopment.simplegems.utilities.chat;
 import dev.rosewood.rosegarden.utils.StringPlaceholders;
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.api.SimpleGemsAPI;
-import me.refracdevelopment.simplegems.manager.LocaleManager;
+import me.refracdevelopment.simplegems.manager.configuration.LocaleManager;
 import me.refracdevelopment.simplegems.utilities.Methods;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -14,11 +14,12 @@ public class Placeholders {
         placeholder = placeholder.replace("%prefix%", SimpleGems.getInstance().getManager(LocaleManager.class).getLocaleMessage("prefix"));
         if (sender instanceof Player) {
             Player player = (Player) sender;
+            long gems = SimpleGemsAPI.INSTANCE.getGems(player);
 
             placeholder = placeholder.replace("%player%", player.getName());
-            placeholder = placeholder.replace("%gems%", String.valueOf(SimpleGemsAPI.INSTANCE.getGems(player)));
-            placeholder = placeholder.replace("%gems_formatted%", Methods.format(SimpleGemsAPI.INSTANCE.getGems(player)));
-            placeholder = placeholder.replace("%gems_decimal%", Methods.formatDecimal(SimpleGemsAPI.INSTANCE.getGems(player)));
+            placeholder = placeholder.replace("%gems%", String.valueOf(gems));
+            placeholder = placeholder.replace("%gems_formatted%", Methods.format(gems));
+            placeholder = placeholder.replace("%gems_decimal%", Methods.formatDecimal(gems));
             placeholder = placeholder.replace("%displayname%", player.getDisplayName());
         }
         placeholder = placeholder.replace("%arrow%", "\u00BB");
@@ -37,11 +38,12 @@ public class Placeholders {
         placeholders.add("prefix", SimpleGems.getInstance().getManager(LocaleManager.class).getLocaleMessage("prefix"));
         if (sender instanceof Player) {
             Player player = (Player) sender;
+            long gems = SimpleGemsAPI.INSTANCE.getGems(player);
 
             placeholders.add("player", player.getName());
-            placeholders.add("gems", String.valueOf(SimpleGemsAPI.INSTANCE.getGems(player)));
-            placeholders.add("gems_formatted", Methods.format(SimpleGemsAPI.INSTANCE.getGems(player)));
-            placeholders.add("gems_decimal", Methods.formatDecimal(SimpleGemsAPI.INSTANCE.getGems(player)));
+            placeholders.add("gems", String.valueOf(gems));
+            placeholders.add("gems_formatted", Methods.format(gems));
+            placeholders.add("gems_decimal", Methods.formatDecimal(gems));
             placeholders.add("displayname", player.getDisplayName());
         }
         placeholders.add("arrow", "\u00BB");

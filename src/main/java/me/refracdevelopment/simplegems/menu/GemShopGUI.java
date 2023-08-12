@@ -1,7 +1,7 @@
 package me.refracdevelopment.simplegems.menu;
 
 import me.refracdevelopment.simplegems.SimpleGems;
-import me.refracdevelopment.simplegems.config.Menus;
+import me.refracdevelopment.simplegems.manager.configuration.cache.Menus;
 import me.refracdevelopment.simplegems.utilities.ItemBuilder;
 import me.refracdevelopment.simplegems.utilities.chat.Color;
 import org.bukkit.Bukkit;

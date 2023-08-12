@@ -8,6 +8,7 @@ no-console: '&cOnly players may execute this command.'
 unknown-command: Unknown command, use &d/%cmd%&f help for more info
 invalid-player: '&cYou provided an invalid player.'
 leaderboard-update: '&eThe leaderboard has been updated.'
+invalid-gems: '&cThat player doesn''t have enough gems to take.'
 
 # Base Command Message
 base-command-color: '&e'

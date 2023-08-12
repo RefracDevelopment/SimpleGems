@@ -1,8 +1,6 @@
-package me.refracdevelopment.simplegems.data;
+package me.refracdevelopment.simplegems.player.data;
 
-import me.refracdevelopment.simplegems.SimpleGems;
-import me.refracdevelopment.simplegems.utilities.Tasks;
-import org.bukkit.Bukkit;
+import me.refracdevelopment.simplegems.player.Profile;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;

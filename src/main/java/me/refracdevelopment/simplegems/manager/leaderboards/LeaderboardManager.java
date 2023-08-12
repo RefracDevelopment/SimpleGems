@@ -1,9 +1,10 @@
-package me.refracdevelopment.simplegems.manager;
+package me.refracdevelopment.simplegems.manager.leaderboards;
 
 import me.refracdevelopment.simplegems.SimpleGems;
-import me.refracdevelopment.simplegems.config.Config;
-import me.refracdevelopment.simplegems.data.ProfileData;
-import me.refracdevelopment.simplegems.database.DataType;
+import me.refracdevelopment.simplegems.manager.configuration.LocaleManager;
+import me.refracdevelopment.simplegems.manager.configuration.cache.Config;
+import me.refracdevelopment.simplegems.manager.data.DataType;
+import me.refracdevelopment.simplegems.player.data.ProfileData;
 import me.refracdevelopment.simplegems.utilities.Methods;
 import me.refracdevelopment.simplegems.utilities.Tasks;
 import me.refracdevelopment.simplegems.utilities.chat.Color;
@@ -29,6 +30,7 @@ public class LeaderboardManager {
         this.cachedMap = new HashMap<>();
         load();
         updateTask();
+        Color.log("&aLoaded Leaderboards!");
     }
 
     public void load() {
@@ -132,7 +134,7 @@ public class LeaderboardManager {
 
     private Map<String, Long> sortByValue(Map<String, Long> unsortMap) {
         List<Map.Entry<String, Long>> list = new LinkedList<>(unsortMap.entrySet());
-        list.sort(Map.Entry.comparingByValue());
+        list.sort(Map.Entry.comparingByValue(Collections.reverseOrder()));
 
         Map<String, Long> sortedMap = new LinkedHashMap<>();
         for (Map.Entry<String, Long> entry : list) {

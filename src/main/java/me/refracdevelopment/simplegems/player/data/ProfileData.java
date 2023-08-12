@@ -1,11 +1,12 @@
-package me.refracdevelopment.simplegems.data;
+package me.refracdevelopment.simplegems.player.data;
 
 import com.mongodb.client.model.Filters;
-import com.mongodb.client.model.UpdateOptions;
+import com.mongodb.client.model.ReplaceOptions;
 import lombok.Getter;
 import lombok.Setter;
 import me.refracdevelopment.simplegems.SimpleGems;
-import me.refracdevelopment.simplegems.database.DataType;
+import me.refracdevelopment.simplegems.manager.data.DataType;
+import me.refracdevelopment.simplegems.player.stats.Stat;
 import me.refracdevelopment.simplegems.utilities.chat.Color;
 import org.bson.Document;
 import org.bukkit.entity.Player;
@@ -33,7 +34,7 @@ public class ProfileData {
             Document document = plugin.getMongoManager().getStatsCollection().find(Filters.eq("uuid", uuid.toString())).first();
 
             if (document != null) {
-                this.gems.setAmount(document.getLong("gems"));
+                gems.setAmount(document.getLong("gems"));
             }
         } else if (plugin.getDataType() == DataType.MYSQL) {
             plugin.getMySQLManager().select("SELECT * FROM SimpleGems WHERE uuid=?", resultSet -> {
@@ -47,7 +48,7 @@ public class ProfileData {
                                 uuid.toString(), name, 0);
                     }
                 } catch (SQLException exception) {
-                    Color.log(exception.getMessage());
+                    Color.log("MySQL Error: " + exception.getMessage());
                 }
             }, uuid.toString());
         } else if (plugin.getDataType() == DataType.FLAT_FILE) {
@@ -58,16 +59,17 @@ public class ProfileData {
     public void save() {
         if (plugin.getDataType() == DataType.MONGO) {
             Document document = new Document();
+
             document.put("name", name);
             document.put("uuid", uuid.toString());
-            document.put("gems", this.gems.getAmount());
+            document.put("gems", gems.getAmount());
 
-            plugin.getMongoManager().getStatsCollection().replaceOne(Filters.eq("uuid", uuid.toString()), document, new UpdateOptions().upsert(true));
+            plugin.getMongoManager().getStatsCollection().replaceOne(Filters.eq("uuid", uuid.toString()), document, new ReplaceOptions().upsert(true));
         } else if (plugin.getDataType() == DataType.MYSQL) {
             plugin.getMySQLManager().execute("UPDATE SimpleGems SET gems=? WHERE uuid=?",
-                    this.gems.getAmount(), uuid.toString());
+                    gems.getAmount(), uuid.toString());
         } else if (plugin.getDataType() == DataType.FLAT_FILE) {
-            plugin.getPlayerMapper().savePlayer(this);
+            plugin.getPlayerMapper().savePlayer(uuid, name, gems.getAmount());
         }
     }
 

@@ -4,11 +4,12 @@ main: me.refracdevelopment.simplegems.SimpleGems
 author: RefracDevelopment
 api-version: "1.13"
 softdepend:
+  - NBTAPI
   - PlaceholderAPI
   - Skulls
   - HeadDatabase
 description: A simple gems economy plugin
-website: https://discord.refracdev.ml/
+website: https://discord.gg/EFeSKPg739
 
 permissions:
   simplegems.*:

@@ -8,20 +8,20 @@ import dev.rosewood.rosegarden.utils.NMSUtil;
 import lombok.Getter;
 import me.gabytm.util.actions.ActionManager;
 import me.refracdevelopment.simplegems.api.SimpleGemsAPI;
-import me.refracdevelopment.simplegems.config.Config;
-import me.refracdevelopment.simplegems.config.ConfigFile;
-import me.refracdevelopment.simplegems.config.Menus;
-import me.refracdevelopment.simplegems.config.PlayerMapper;
-import me.refracdevelopment.simplegems.data.ProfileManager;
-import me.refracdevelopment.simplegems.database.DataType;
-import me.refracdevelopment.simplegems.database.mongo.MongoManager;
-import me.refracdevelopment.simplegems.database.mysql.MySQLManager;
 import me.refracdevelopment.simplegems.listeners.PlayerListener;
 import me.refracdevelopment.simplegems.manager.CommandManager;
-import me.refracdevelopment.simplegems.manager.ConfigurationManager;
-import me.refracdevelopment.simplegems.manager.LeaderboardManager;
-import me.refracdevelopment.simplegems.manager.LocaleManager;
+import me.refracdevelopment.simplegems.manager.configuration.ConfigFile;
+import me.refracdevelopment.simplegems.manager.configuration.ConfigurationManager;
+import me.refracdevelopment.simplegems.manager.configuration.LocaleManager;
+import me.refracdevelopment.simplegems.manager.configuration.cache.Config;
+import me.refracdevelopment.simplegems.manager.configuration.cache.Menus;
+import me.refracdevelopment.simplegems.manager.data.DataType;
+import me.refracdevelopment.simplegems.manager.data.MongoManager;
+import me.refracdevelopment.simplegems.manager.data.MySQLManager;
+import me.refracdevelopment.simplegems.manager.data.PlayerMapper;
+import me.refracdevelopment.simplegems.manager.leaderboards.LeaderboardManager;
 import me.refracdevelopment.simplegems.menu.GemShop;
+import me.refracdevelopment.simplegems.player.data.ProfileManager;
 import me.refracdevelopment.simplegems.utilities.DownloadUtil;
 import me.refracdevelopment.simplegems.utilities.Tasks;
 import me.refracdevelopment.simplegems.utilities.chat.Color;
@@ -43,6 +43,9 @@ public final class SimpleGems extends RosePlugin {
     @Getter
     private static SimpleGems instance;
 
+    private MongoManager mongoManager;
+    private DataType dataType;
+    private MySQLManager mySQLManager;
     private ProfileManager profileManager;
     private SimpleGemsAPI gemsAPI;
     private ActionManager actionManager;
@@ -52,9 +55,6 @@ public final class SimpleGems extends RosePlugin {
 
     private ConfigFile menusFile;
     private PlayerMapper playerMapper;
-    private DataType dataType;
-    private MongoManager mongoManager;
-    private MySQLManager mySQLManager;
 
     public SimpleGems() {
         super(-1, 13117, ConfigurationManager.class, null, LocaleManager.class, CommandManager.class);
@@ -72,7 +72,14 @@ public final class SimpleGems extends RosePlugin {
         // Check if the server is on 1.7
         if (NMSUtil.getVersionNumber() <= 7) {
             Color.log("&cSimpleGems 1.7 is in legacy mode, please update to 1.8+");
-            this.getServer().getPluginManager().disablePlugin(this);
+            pluginManager.disablePlugin(this);
+            return;
+        }
+
+        // Make sure the server has NBTAPI
+        if (pluginManager.getPlugin("NBTAPI") == null) {
+            Color.log("&cPlease install NBTAPI onto your server to use this plugin.");
+            pluginManager.disablePlugin(this);
             return;
         }
 
@@ -84,13 +91,10 @@ public final class SimpleGems extends RosePlugin {
             Color.log("&eHeadDatabase Detected!");
         }
 
-        menusFile = new ConfigFile(this, "menus.yml");
-        menusFile.load();
-        Config.loadConfig();
-        Menus.loadMenus();
+        loadFiles();
 
         this.loadManagers();
-        Color.log("&eLoaded commands.");
+        Color.log("&aLoaded commands.");
         this.loadListeners();
 
         new PAPIExpansion().register();
@@ -110,8 +114,8 @@ public final class SimpleGems extends RosePlugin {
         // Plugin shutdown logic
         Tasks.runAsync(this, () -> {
             profileManager.getProfiles().values().forEach(profile -> profile.getData().save());
+            Tasks.run(this, () -> this.getServer().getScheduler().cancelTasks(this));
         });
-        this.getServer().getScheduler().cancelTasks(this);
     }
 
     @Override
@@ -119,55 +123,52 @@ public final class SimpleGems extends RosePlugin {
         return Collections.emptyList();
     }
 
+    public void loadFiles() {
+        menusFile = new ConfigFile(this, "menus.yml");
+        menusFile.load();
+        Config.loadConfig();
+        Menus.loadMenus();
+    }
+
     private void loadManagers() {
         switch (Config.DATA_TYPE.toUpperCase()) {
             case "MONGODB":
             case "MONGO":
                 dataType = DataType.MONGO;
+                mongoManager = new MongoManager(this);
+                getMongoManager().connect();
+                Color.log("&aEnabled MongoDB support.");
                 break;
             case "MYSQL":
                 dataType = DataType.MYSQL;
-                break;
-            case "YAML":
-            case "FLAT_FILE":
-                dataType = DataType.FLAT_FILE;
+                mySQLManager = new MySQLManager(this);
+                getMySQLManager().connect();
+                getMySQLManager().createT();
+                Color.log("&aEnabled MySQL support!");
                 break;
             default:
                 dataType = DataType.FLAT_FILE;
+                playerMapper = new PlayerMapper(getDataFolder().getAbsolutePath() + File.separator + "playerdata");
+                Color.log("&aEnabled Flat File support!");
                 break;
-        }
-
-        if (dataType == DataType.MONGO) {
-            mongoManager = new MongoManager(this);
-            getMongoManager().connect();
-            Color.log("&eEnabled MongoDB support.");
-        } else if (dataType == DataType.MYSQL) {
-            mySQLManager = new MySQLManager(this);
-            getMySQLManager().connect();
-            getMySQLManager().createT();
-            Color.log("&eEnabled MySQL support!");
-        } else if (dataType == DataType.FLAT_FILE) {
-            playerMapper = new PlayerMapper(getDataFolder().getAbsolutePath() + File.separator + "playerdata");
-            Color.log("&eEnabled Flat File support!");
         }
 
         profileManager = new ProfileManager();
         gemsAPI = new SimpleGemsAPI();
         actionManager = new ActionManager(this);
         leaderboardManager = new LeaderboardManager(this);
-        Color.log("&eLoaded Leaderboards!");
-        Color.log("&eLoaded managers.");
+        Color.log("&aLoaded managers.");
     }
 
     private void loadListeners() {
         this.getServer().getPluginManager().registerEvents(new PlayerListener(), this);
         gemShop = new GemShop();
-        Color.log("&eLoaded listeners.");
+        Color.log("&aLoaded listeners.");
     }
 
     public void updateCheck(CommandSender sender, boolean console) {
         try {
-            String urlString = "https://updatecheck.refracdev.ml/";
+            String urlString = "https://refracdev-updatecheck.refracdev.workers.dev/";
             URL url = new URL(urlString);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");

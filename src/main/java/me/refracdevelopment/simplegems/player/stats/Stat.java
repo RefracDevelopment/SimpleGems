@@ -1,4 +1,4 @@
-package me.refracdevelopment.simplegems.data;
+package me.refracdevelopment.simplegems.player.stats;
 
 public class Stat {
 

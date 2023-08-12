@@ -2,16 +2,16 @@ package me.refracdevelopment.simplegems.utilities;
 
 import com.cryptomorin.xseries.XMaterial;
 import com.mongodb.client.model.Filters;
-import com.mongodb.client.model.UpdateOptions;
+import com.mongodb.client.model.ReplaceOptions;
 import de.tr7zw.nbtapi.NBTItem;
 import dev.rosewood.rosegarden.utils.NMSUtil;
 import dev.rosewood.rosegarden.utils.StringPlaceholders;
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.api.SimpleGemsAPI;
-import me.refracdevelopment.simplegems.config.Config;
-import me.refracdevelopment.simplegems.data.ProfileData;
-import me.refracdevelopment.simplegems.database.DataType;
-import me.refracdevelopment.simplegems.manager.LocaleManager;
+import me.refracdevelopment.simplegems.manager.configuration.LocaleManager;
+import me.refracdevelopment.simplegems.manager.configuration.cache.Config;
+import me.refracdevelopment.simplegems.manager.data.DataType;
+import me.refracdevelopment.simplegems.player.data.ProfileData;
 import me.refracdevelopment.simplegems.utilities.chat.Color;
 import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
 import org.bson.Document;
@@ -44,12 +44,12 @@ public class Methods {
                 document.put("uuid", player.getUniqueId().toString());
                 document.put("gems", amount);
 
-                SimpleGems.getInstance().getMongoManager().getStatsCollection().replaceOne(Filters.eq("uuid", player.getUniqueId().toString()), document, new UpdateOptions().upsert(true));
+                SimpleGems.getInstance().getMongoManager().getStatsCollection().replaceOne(Filters.eq("uuid", player.getUniqueId().toString()), document, new ReplaceOptions().upsert(true));
             } else if (SimpleGems.getInstance().getDataType() == DataType.MYSQL) {
                 SimpleGems.getInstance().getMySQLManager().execute("UPDATE SimpleGems SET gems=? WHERE uuid=?",
                         amount, player.getUniqueId().toString());
             } else if (SimpleGems.getInstance().getDataType() == DataType.FLAT_FILE) {
-                SimpleGems.getInstance().getPlayerMapper().saveOfflinePlayer(player.getUniqueId(), player.getName(), amount);
+                SimpleGems.getInstance().getPlayerMapper().savePlayer(player.getUniqueId(), player.getName(), amount);
             }
         });
     }
@@ -215,18 +215,14 @@ public class Methods {
                     .replace("%value%", String.valueOf(foundValue))
                     .replace("%gems%", String.valueOf(foundValue))
             )));
-        } else {
-            lore.forEach(s -> item.addLoreLine(Color.translate(s
-                    .replace("%value%", String.valueOf(item.toItemStack().getAmount()))
-                    .replace("%gems%", String.valueOf(item.toItemStack().getAmount()))
-            )));
         }
+
         item.setDurability(data);
 
         return item.toItemStack();
     }
 
-    public static String formatDecimal(double amount) {
+    public static String formatDecimal(long amount) {
         DecimalFormat decimalFormat = new DecimalFormat("###,###");
         return decimalFormat.format(amount);
     }

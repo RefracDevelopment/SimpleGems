@@ -1,4 +1,4 @@
-package me.refracdevelopment.simplegems.manager;
+package me.refracdevelopment.simplegems.manager.configuration;
 
 import dev.rosewood.rosegarden.RosePlugin;
 import dev.rosewood.rosegarden.config.CommentedFileConfiguration;
@@ -24,7 +24,7 @@ public class ConfigurationManager extends AbstractConfigurationManager {
         MONGODB_USE_CLIENT_URI("mongodb.use-client-uri.uri", ""),
         MONGODB_SSL_ENABLED("mongodb.ssl-enabled", false, "If your host supports TLS/SSL enable this option"),
         MONGODB_ADDRESS("mongodb.address", "127.0.0.1"),
-        MONGODB_PORT("mongodb.port", "27017"),
+        MONGODB_PORT("mongodb.port", 27017),
         MONGODB_DATABASE("mongodb.database", "SimpleGems"),
         MONGODB_AUTHENTICATION_ENABLED("mongodb.authentication.enabled", false),
         MONGODB_AUTHENTICATION_DATABASE("mongodb.authentication.database", "admin"),

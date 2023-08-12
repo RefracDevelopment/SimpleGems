@@ -1,6 +1,7 @@
-package me.refracdevelopment.simplegems.config;
+package me.refracdevelopment.simplegems.manager.configuration.cache;
 
-import me.refracdevelopment.simplegems.manager.ConfigurationManager;
+import me.refracdevelopment.simplegems.manager.configuration.ConfigurationManager;
+import me.refracdevelopment.simplegems.utilities.chat.Color;
 
 import java.util.List;
 import java.util.Objects;
@@ -50,5 +51,9 @@ public class Config {
         GEMS_ITEM_NAME = ConfigurationManager.Setting.GEMS_ITEM_NAME.getString();
         GEMS_ITEM_GLOW = ConfigurationManager.Setting.GEMS_ITEM_GLOW.getBoolean();
         GEMS_ITEM_LORE = ConfigurationManager.Setting.GEMS_ITEM_LORE.getStringList();
+
+        Color.log("&c==========================================");
+        Color.log("&eAll files have been loaded correctly!");
+        Color.log("&c==========================================");
     }
 }

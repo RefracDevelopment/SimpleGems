@@ -1,10 +1,11 @@
-package me.refracdevelopment.simplegems.config;
+package me.refracdevelopment.simplegems.manager.configuration;
 
 import me.refracdevelopment.simplegems.utilities.chat.Color;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -59,17 +60,17 @@ public class ConfigFile extends YamlConfiguration {
     }
 
     @Override
-    public int getInt(String path) {
+    public int getInt(@NotNull String path) {
         return super.getInt(path, 0);
     }
 
     @Override
-    public double getDouble(String path) {
+    public double getDouble(@NotNull String path) {
         return super.getDouble(path, 0.0);
     }
 
     @Override
-    public boolean getBoolean(String path) {
+    public boolean getBoolean(@NotNull String path) {
         return super.getBoolean(path, false);
     }
 
@@ -87,7 +88,7 @@ public class ConfigFile extends YamlConfiguration {
     }
 
     @Override
-    public List<String> getStringList(String path) {
+    public @NotNull List<String> getStringList(@NotNull String path) {
         return super.getStringList(path).stream().map(Color::translate).collect(Collectors.toList());
     }
 
