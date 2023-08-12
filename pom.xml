@@ -128,6 +128,12 @@
             <artifactId>Skulls</artifactId>
             <version>3.10.0</version>
             <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>me.TechsCode</groupId>
+                    <artifactId>UltraEconomyAPI</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.github.Refrac</groupId>
