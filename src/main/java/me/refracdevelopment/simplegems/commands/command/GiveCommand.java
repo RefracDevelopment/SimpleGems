@@ -12,7 +12,9 @@ import me.refracdevelopment.simplegems.manager.configuration.LocaleManager;
 import me.refracdevelopment.simplegems.utilities.Methods;
 import me.refracdevelopment.simplegems.utilities.Permissions;
 import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 
 import java.util.Collections;
 import java.util.List;
@@ -24,17 +26,19 @@ public class GiveCommand extends RoseCommand {
     }
 
     @RoseExecutable
-    public void execute(CommandContext context, OfflinePlayer target, long amount, @Optional String silent) {
+    public void execute(CommandContext context, String target, long amount, @Optional String silent) {
         final LocaleManager locale = this.rosePlugin.getManager(LocaleManager.class);
 
+        // note: used to prevent adding/removing negative numbers.
         if (context.getArgs()[1].contains("-")) return;
 
-        if (target.isOnline()) {
-            SimpleGemsAPI.INSTANCE.giveGems(target.getPlayer(), amount);
+        if (Bukkit.getPlayer(target) != null) {
+            Player player = Bukkit.getPlayer(target);
+            SimpleGemsAPI.INSTANCE.giveGems(player, amount);
 
             StringPlaceholders placeholders = StringPlaceholders.builder()
-                    .addAll(Placeholders.setPlaceholders(target.getPlayer()))
-                    .add("player", target.getName())
+                    .addAll(Placeholders.setPlaceholders(player))
+                    .add("player", player.getName())
                     .add("gems", String.valueOf(amount))
                     .add("gems_formatted", Methods.format(amount))
                     .add("gems_decimal", Methods.formatDecimal(amount))
@@ -42,13 +46,14 @@ public class GiveCommand extends RoseCommand {
 
             locale.sendMessage(context.getSender(), "gems-given", placeholders);
             if (silent != null && silent.equalsIgnoreCase("-s")) return;
-            locale.sendMessage(target.getPlayer(), "gems-gained", placeholders);
-        } else if (!target.isOnline() && target.hasPlayedBefore()) {
-            SimpleGemsAPI.INSTANCE.giveOfflineGems(target, amount);
+            locale.sendMessage(player, "gems-gained", placeholders);
+        } else if (Bukkit.getOfflinePlayer(target).hasPlayedBefore()) {
+            OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(target);
+            SimpleGemsAPI.INSTANCE.giveOfflineGems(offlinePlayer, amount);
 
             StringPlaceholders placeholders = StringPlaceholders.builder()
                     .addAll(Placeholders.setPlaceholders(context.getSender()))
-                    .add("player", target.getName())
+                    .add("player", offlinePlayer.getName())
                     .add("gems", String.valueOf(amount))
                     .add("gems_formatted", Methods.format(amount))
                     .add("gems_decimal", Methods.formatDecimal(amount))

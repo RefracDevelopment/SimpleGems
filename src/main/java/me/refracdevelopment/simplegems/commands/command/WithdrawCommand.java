@@ -29,7 +29,9 @@ public class WithdrawCommand extends RoseCommand {
 
         Player player = (Player) context.getSender();
 
+        // note: used to prevent adding/removing negative numbers.
         if (context.getArgs()[0].contains("-")) return;
+
         SimpleGemsAPI.INSTANCE.withdrawGems(player, amount);
     }
 

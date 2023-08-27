@@ -16,15 +16,17 @@ permissions:
     default: op
     description: Gives all permissions
     children:
-      simplegems.command.shop: true
-      simplegems.command.balance: true
-      simplegems.command.withdraw: true
-      simplegems.command.pay: true
-      simplegems.command.give: true
-      simplegems.command.take: true
-      simplegems.command.set: true
-      simplegems.command.reload: true
-      simplegems.command.version: true
+      - simplegems.command.shop
+      - simplegems.command.withdraw
+      - simplegems.command.pay
+      - simplegems.command.top
+      - simplegems.command.balance
+      - simplegems.command.give
+      - simplegems.command.take
+      - simplegems.command.set
+      - simplegems.command.reload
+      - simplegems.command.version
+      - simplegems.command.update
   simplegems.command.shop:
     default: op
     description: Opens the gems shop

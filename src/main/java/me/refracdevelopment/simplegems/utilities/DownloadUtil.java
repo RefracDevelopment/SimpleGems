@@ -23,16 +23,10 @@ public class DownloadUtil {
                 .artifactId("mongodb-driver-core")
                 .version("4.10.2")
                 .build();
-        Library lib4 = Library.builder()
-                .groupId("org{}json") // "{}" is replaced with ".", useful to avoid unwanted changes made by maven-shade-plugin
-                .artifactId("json")
-                .version("20220320")
-                .build();
 
         libraryManager.addMavenCentral();
         libraryManager.loadLibrary(lib);
         libraryManager.loadLibrary(lib2);
         libraryManager.loadLibrary(lib3);
-        libraryManager.loadLibrary(lib4);
     }
 }

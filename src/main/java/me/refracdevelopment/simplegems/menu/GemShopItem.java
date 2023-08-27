@@ -21,7 +21,6 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
 
@@ -87,14 +86,18 @@ public class GemShopItem {
                 this.messages.forEach(message -> {
                     locale.sendCustomMessage(p, Color.translate(player, message
                             .replace("%item%", this.name)
-                            .replace("%cost%", Methods.formatDecimal(this.cost))));
+                            .replace("%cost%", Methods.formatDecimal(this.cost))
+                            .replace("%price%", String.valueOf(this.cost))
+                    ));
                 });
             });
         } else {
             this.messages.forEach(message -> {
                 locale.sendCustomMessage(player, Color.translate(player, message
                         .replace("%item%", this.name)
-                        .replace("%cost%", Methods.formatDecimal(this.cost))));
+                        .replace("%cost%", Methods.formatDecimal(this.cost))
+                        .replace("%price%", String.valueOf(this.cost))
+                ));
             });
         }
     }
@@ -104,6 +107,7 @@ public class GemShopItem {
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), Placeholders.setPlaceholders(player, command
                     .replace("%item%", this.name)
                     .replace("%cost%", String.valueOf(this.cost))
+                    .replace("%price%", String.valueOf(this.cost))
             ));
         });
     }
@@ -113,6 +117,7 @@ public class GemShopItem {
             SimpleGems.getInstance().getActionManager().execute(player, Placeholders.setPlaceholders(player, action
                     .replace("%item%", this.name)
                     .replace("%cost%", String.valueOf(this.cost))
+                    .replace("%price%", String.valueOf(this.cost))
             ));
         });
     }
@@ -124,14 +129,13 @@ public class GemShopItem {
 
             if (this.glow) {
                 item.addEnchant(Enchantment.ARROW_DAMAGE, 1);
-                ItemMeta itemMeta = item.toItemStack().getItemMeta();
-                itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-                item.toItemStack().setItemMeta(itemMeta);
+                item.setItemFlags(ItemFlag.HIDE_ENCHANTS);
             }
 
             item.setName(Color.translate(player, this.name));
             this.lore.forEach(s -> item.addLoreLine(Color.translate(player, s.replace("%item%", this.name)
-                    .replace("%cost%", String.valueOf(this.cost)).replace("%price%", String.valueOf(this.cost)))));
+                    .replace("%cost%", String.valueOf(this.cost))
+                    .replace("%price%", String.valueOf(this.cost)))));
 
             return item.toItemStack();
         } else if (skulls) {
@@ -140,9 +144,7 @@ public class GemShopItem {
 
             if (this.glow) {
                 item.addEnchant(Enchantment.ARROW_DAMAGE, 1);
-                ItemMeta itemMeta = item.toItemStack().getItemMeta();
-                itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-                item.toItemStack().setItemMeta(itemMeta);
+                item.setItemFlags(ItemFlag.HIDE_ENCHANTS);
             }
 
             item.setName(Color.translate(player, this.name));
@@ -156,9 +158,7 @@ public class GemShopItem {
 
             if (this.glow) {
                 item.addEnchant(Enchantment.ARROW_DAMAGE, 1);
-                ItemMeta itemMeta = item.toItemStack().getItemMeta();
-                itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-                item.toItemStack().setItemMeta(itemMeta);
+                item.setItemFlags(ItemFlag.HIDE_ENCHANTS);
             }
 
             if (NMSUtil.getVersionNumber() >= 14) {
@@ -179,9 +179,7 @@ public class GemShopItem {
 
             if (this.glow) {
                 item.addEnchant(Enchantment.ARROW_DAMAGE, 1);
-                ItemMeta itemMeta = item.toItemStack().getItemMeta();
-                itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-                item.toItemStack().setItemMeta(itemMeta);
+                item.setItemFlags(ItemFlag.HIDE_ENCHANTS);
             }
 
             item.setName(Color.translate(player, this.name));

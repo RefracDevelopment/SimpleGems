@@ -10,7 +10,7 @@ import me.refracdevelopment.simplegems.api.SimpleGemsAPI;
 import me.refracdevelopment.simplegems.manager.configuration.LocaleManager;
 import me.refracdevelopment.simplegems.utilities.Permissions;
 import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
-import org.bukkit.OfflinePlayer;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.Collections;
@@ -23,9 +23,10 @@ public class PayCommand extends RoseCommand {
     }
 
     @RoseExecutable
-    public void execute(CommandContext context, OfflinePlayer target, long amount, @Optional String silent) {
+    public void execute(CommandContext context, String target, long amount, @Optional String silent) {
         final LocaleManager locale = this.rosePlugin.getManager(LocaleManager.class);
 
+        // note: used to prevent adding/removing negative numbers.
         if (context.getArgs()[1].contains("-")) return;
 
         // Make sure the sender is a player.
@@ -36,10 +37,10 @@ public class PayCommand extends RoseCommand {
 
         Player player = (Player) context.getSender();
 
-        if (target.isOnline()) {
-            SimpleGemsAPI.INSTANCE.payGems(player, target.getPlayer(), amount, silent != null && silent.equals("-s"));
-        } else if (!target.isOnline() && target.hasPlayedBefore()) {
-            SimpleGemsAPI.INSTANCE.payOfflineGems(player, target, amount);
+        if (Bukkit.getPlayer(target) != null) {
+            SimpleGemsAPI.INSTANCE.payGems(player, Bukkit.getPlayer(target), amount, silent != null && silent.equals("-s"));
+        } else if (Bukkit.getOfflinePlayer(target).hasPlayedBefore()) {
+            SimpleGemsAPI.INSTANCE.payOfflineGems(player, Bukkit.getOfflinePlayer(target), amount);
         } else locale.sendMessage(player, "invalid-player", Placeholders.setPlaceholders(player));
     }
 
