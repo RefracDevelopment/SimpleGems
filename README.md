@@ -12,9 +12,6 @@ Please report all issues/support questions to the [Issues](https://github.com/Re
 Suggestion can be posted in [Issues](https://github.com/RefracDevelopment/SimpleGems/issues) or [Discord](https://discord.gg/EFeSKPg739) which is reviewed by project maintainers, but feel free to make a pull request to add cool features without posting there!
 
 ### Developer API
-
-Import the SimpleGemsAPI.jar into your project.
-
 #### Maven
 Replace LATEST with latest version in the [Releases](https://github.com/RefracDevelopment/SimpleGems/releases/latest) tab.
 ```XML
