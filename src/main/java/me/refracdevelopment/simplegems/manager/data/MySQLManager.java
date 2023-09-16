@@ -4,8 +4,8 @@ import dev.rosewood.rosegarden.lib.hikaricp.HikariConfig;
 import dev.rosewood.rosegarden.lib.hikaricp.HikariDataSource;
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.manager.configuration.ConfigurationManager;
+import me.refracdevelopment.simplegems.utilities.Tasks;
 import me.refracdevelopment.simplegems.utilities.chat.Color;
-import org.bukkit.Bukkit;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -26,16 +26,16 @@ public class MySQLManager {
     }
 
     public void createT() {
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> createTables());
+        Tasks.runAsync(plugin, this::createTables);
     }
 
     public boolean connect() {
         try {
             Color.log("&eConnecting to MySQL...");
             HikariConfig config = new HikariConfig();
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            config.setDriverClassName("com.mysql.cj.jdbc.Driver");
-            config.setJdbcUrl("jdbc:mysql://" + host + ':' + port + '/' + database);
+            Class.forName("org.mariadb.jdbc.Driver");
+            config.setDriverClassName("org.mariadb.jdbc.Driver");
+            config.setJdbcUrl("jdbc:mariadb://" + host + ':' + port + '/' + database);
             config.setUsername(username);
             config.setPassword(password);
             config.addDataSourceProperty("cachePrepStmts", "true");
@@ -55,10 +55,11 @@ public class MySQLManager {
         close();
     }
 
-
-
     public void createTables() {
-        createTable("SimpleGems", "uuid VARCHAR(36) NOT NULL PRIMARY KEY, name VARCHAR(16), gems BIGINT");
+        createTable("SimpleGems",
+                "uuid VARCHAR(36) NOT NULL PRIMARY KEY, " +
+                        "name VARCHAR(255), " +
+                        "gems BIGINT");
     }
 
     public boolean isInitiated() {

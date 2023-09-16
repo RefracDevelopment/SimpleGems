@@ -1,12 +1,15 @@
 package me.refracdevelopment.simplegems.manager.configuration.cache;
 
+import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.manager.configuration.ConfigurationManager;
+import me.refracdevelopment.simplegems.manager.configuration.LocaleManager;
 import me.refracdevelopment.simplegems.utilities.chat.Color;
 
 import java.util.List;
 import java.util.Objects;
 
 public class Config {
+
     // Settings
     public static long STARTING_GEMS;
     public static int LEADERBOARD_UPDATE_INTERVAL;
@@ -19,6 +22,7 @@ public class Config {
 
     // Messages
     public static List<String> GEMS_BALANCE;
+    public static String KICK_MESSAGES_ERROR;
 
     // Gems Item
     public static String GEMS_ITEM_MATERIAL;
@@ -30,6 +34,8 @@ public class Config {
     public static List<String> GEMS_ITEM_LORE;
 
     public static void loadConfig() {
+        final LocaleManager localeManager = SimpleGems.getInstance().getManager(LocaleManager.class);
+
         // Settings
         STARTING_GEMS = ConfigurationManager.Setting.STARTING_GEMS.getLong();
         LEADERBOARD_UPDATE_INTERVAL = ConfigurationManager.Setting.LEADERBOARD_UPDATE_INTERVAL.getInt();
@@ -42,6 +48,7 @@ public class Config {
 
         // Messages
         GEMS_BALANCE = ConfigurationManager.Setting.GEMS_BALANCE.getStringList();
+        KICK_MESSAGES_ERROR = localeManager.getLocaleMessage("kick-messages-error");
 
         // Gems Item
         GEMS_ITEM_MATERIAL = Objects.requireNonNull(ConfigurationManager.Setting.GEMS_ITEM_MATERIAL.getString());

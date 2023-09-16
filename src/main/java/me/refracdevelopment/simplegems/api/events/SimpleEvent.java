@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 public abstract class SimpleEvent extends Event {
 
     private final Player player;
-    private static final HandlerList handlers = new HandlerList();
+    private static final HandlerList HANDLERS = new HandlerList();
 
     public SimpleEvent(Player player) {
         this.player = player;
@@ -19,6 +19,6 @@ public abstract class SimpleEvent extends Event {
     @NotNull
     @Override
     public HandlerList getHandlers() {
-        return handlers;
+        return HANDLERS;
     }
 }

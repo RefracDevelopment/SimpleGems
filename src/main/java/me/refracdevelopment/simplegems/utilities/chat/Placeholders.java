@@ -11,7 +11,9 @@ import org.bukkit.entity.Player;
 public class Placeholders {
 
     public static String setPlaceholders(CommandSender sender, String placeholder) {
-        placeholder = placeholder.replace("%prefix%", SimpleGems.getInstance().getManager(LocaleManager.class).getLocaleMessage("prefix"));
+        final LocaleManager localeManager = SimpleGems.getInstance().getManager(LocaleManager.class);
+
+        placeholder = placeholder.replace("%prefix%", localeManager.getLocaleMessage("prefix"));
         if (sender instanceof Player) {
             Player player = (Player) sender;
             long gems = SimpleGemsAPI.INSTANCE.getGems(player);
@@ -33,9 +35,10 @@ public class Placeholders {
     }
 
     public static StringPlaceholders setPlaceholders(CommandSender sender) {
+        final LocaleManager localeManager = SimpleGems.getInstance().getManager(LocaleManager.class);
         StringPlaceholders.Builder placeholders = StringPlaceholders.builder();
 
-        placeholders.add("prefix", SimpleGems.getInstance().getManager(LocaleManager.class).getLocaleMessage("prefix"));
+        placeholders.add("prefix", localeManager.getLocaleMessage("prefix"));
         if (sender instanceof Player) {
             Player player = (Player) sender;
             long gems = SimpleGemsAPI.INSTANCE.getGems(player);

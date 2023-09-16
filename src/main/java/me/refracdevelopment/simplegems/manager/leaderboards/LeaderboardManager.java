@@ -92,6 +92,7 @@ public class LeaderboardManager {
             locale.sendCustomMessage(player, Color.translate(player, Config.GEMS_TOP_TITLE
                     .replace("%entries%", String.valueOf(Config.GEMS_TOP_ENTRIES))
             ));
+
             int number = 1;
             for (Map.Entry<String, Long> entry : sortedMap.entrySet()) {
                 String key = entry.getKey();
@@ -105,6 +106,7 @@ public class LeaderboardManager {
                         .replace("%gems_decimal%", Methods.formatDecimal(gems))
                         .replace("%player%", key)
                 ));
+
                 number++;
             }
         } else {
@@ -114,6 +116,7 @@ public class LeaderboardManager {
             locale.sendCustomMessage(player, Color.translate(player, Config.GEMS_TOP_TITLE
                     .replace("%entries%", String.valueOf(Config.GEMS_TOP_ENTRIES))
             ));
+
             int number = 1;
             for (Map.Entry<String, Long> entry : sortedMap.entrySet()) {
                 String key = entry.getKey();
@@ -127,6 +130,7 @@ public class LeaderboardManager {
                         .replace("%gems_decimal%", Methods.formatDecimal(gems))
                         .replace("%player%", key)
                 ));
+
                 number++;
             }
         }
@@ -145,18 +149,18 @@ public class LeaderboardManager {
     }
 
     public void update() {
-        Tasks.runAsync(plugin, new Update());
+        Tasks.runAsync(plugin, new LeaderboardUpdate());
     }
 
     public void updateTask() {
-        Tasks.runAsyncTimer(plugin, new Update(), Config.LEADERBOARD_UPDATE_INTERVAL*20L, Config.LEADERBOARD_UPDATE_INTERVAL*20L);
+        Tasks.runAsyncTimer(plugin, new LeaderboardUpdate(), Config.LEADERBOARD_UPDATE_INTERVAL*20L, Config.LEADERBOARD_UPDATE_INTERVAL*20L);
     }
 
-    private class Update implements Runnable {
+    private class LeaderboardUpdate implements Runnable {
 
         @Override
         public void run() {
-            if (Bukkit.getOnlinePlayers().size() == 0) return;
+            if (Bukkit.getOnlinePlayers().isEmpty()) return;
             final LocaleManager locale = plugin.getManager(LocaleManager.class);
             cachedMap.clear();
             unsortedMap.clear();

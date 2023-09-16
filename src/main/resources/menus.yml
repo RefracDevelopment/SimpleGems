@@ -34,7 +34,7 @@ gems-menu:
       skulls: false
       headDatabase: false
       skullOwner: ""
-      customData: true
+      customData: false
       customModelData: YOURIDHERE
       name: "&eWhat is the Gem Shop?"
       lore:
@@ -48,7 +48,7 @@ gems-menu:
       skulls: false
       headDatabase: false
       skullOwner: ""
-      customData: true
+      customData: false
       customModelData: YOURIDHERE
       data: 0
       glow: false

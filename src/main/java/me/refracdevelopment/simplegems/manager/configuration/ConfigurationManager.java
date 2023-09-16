@@ -14,7 +14,7 @@ public class ConfigurationManager extends AbstractConfigurationManager {
         // Config Settings
         STARTING_GEMS("starting-gems", 100, "This is used to allow players to start with", "a defined amount of gems on first join"),
         LEADERBOARD_UPDATE_INTERVAL("leaderboard-update-interval", 1800, "Allows changing how long data is cached for /gems top"),
-        DATA_TYPE("data-type", "FLAT_FILE", "Choose your data saving type:", "MONGO - Database saving", "MYSQL - Database saving", "FLAT_FILE - Local Json file saving in the playerdata/player.json file"),
+        DATA_TYPE("data-type", "FLAT_FILE", "Choose your data saving type:", "MONGODB - JSON Database saving", "MYSQL - SQL Database saving", "FLAT_FILE - Local JSON file saving in the playerdata/player-uuid.json file"),
         MYSQL_HOST("mysql.host", "127.0.0.1"),
         MYSQL_PORT("mysql.port", "3306"),
         MYSQL_DATABASE("mysql.database", "SimpleGems"),

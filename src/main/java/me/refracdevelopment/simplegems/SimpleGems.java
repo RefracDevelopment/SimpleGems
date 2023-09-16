@@ -23,7 +23,6 @@ import me.refracdevelopment.simplegems.manager.leaderboards.LeaderboardManager;
 import me.refracdevelopment.simplegems.menu.GemShop;
 import me.refracdevelopment.simplegems.player.data.ProfileManager;
 import me.refracdevelopment.simplegems.utilities.DownloadUtil;
-import me.refracdevelopment.simplegems.utilities.Tasks;
 import me.refracdevelopment.simplegems.utilities.chat.Color;
 import me.refracdevelopment.simplegems.utilities.chat.PAPIExpansion;
 import org.bukkit.command.CommandSender;
@@ -76,6 +75,13 @@ public final class SimpleGems extends RosePlugin {
             return;
         }
 
+        // Make sure the server has PlaceholderAPI
+        if (pluginManager.getPlugin("PlaceholderAPI") == null) {
+            Color.log("&cPlease install PlaceholderAPI onto your server to use this plugin.");
+            pluginManager.disablePlugin(this);
+            return;
+        }
+
         // Make sure the server has NBTAPI
         if (pluginManager.getPlugin("NBTAPI") == null) {
             Color.log("&cPlease install NBTAPI onto your server to use this plugin.");
@@ -112,10 +118,10 @@ public final class SimpleGems extends RosePlugin {
     @Override
     protected void disable() {
         // Plugin shutdown logic
-        Tasks.runAsync(this, () -> {
-            profileManager.getProfiles().values().forEach(profile -> profile.getData().save());
-            Tasks.run(this, () -> this.getServer().getScheduler().cancelTasks(this));
-        });
+        if (dataType == DataType.MYSQL) {
+            mySQLManager.shutdown();
+        }
+        this.getServer().getScheduler().cancelTasks(this);
     }
 
     @Override
@@ -125,7 +131,6 @@ public final class SimpleGems extends RosePlugin {
 
     public void loadFiles() {
         menusFile = new ConfigFile(this, "menus.yml");
-        menusFile.load();
         Config.loadConfig();
         Menus.loadMenus();
     }

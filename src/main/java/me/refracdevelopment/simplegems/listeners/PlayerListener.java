@@ -10,44 +10,34 @@ import me.refracdevelopment.simplegems.player.Profile;
 import me.refracdevelopment.simplegems.utilities.Methods;
 import me.refracdevelopment.simplegems.utilities.Tasks;
 import me.refracdevelopment.simplegems.utilities.Utilities;
+import me.refracdevelopment.simplegems.utilities.chat.Color;
 import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 public class PlayerListener implements Listener {
 
     @EventHandler
-    public void onLogin(AsyncPlayerPreLoginEvent event) {
-        try {
-            SimpleGems.getInstance().getProfileManager().handleProfileCreation(event.getUniqueId(), event.getName());
-        } catch (NullPointerException exception) {
-            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_FULL, "&cERROR: Could not create profile!");
-        }
+    public void onLogin(PlayerLoginEvent event) {
+        Player player = event.getPlayer();
+
+        SimpleGems.getInstance().getProfileManager().handleProfileCreation(player.getUniqueId(), player.getName());
+
+        Profile profile = SimpleGems.getInstance().getProfileManager().getProfile(player.getUniqueId());
+        Tasks.runAsync(SimpleGems.getInstance(), () -> profile.getData().load());
     }
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         Profile profile = SimpleGems.getInstance().getProfileManager().getProfile(player.getUniqueId());
-
-        try {
-            Tasks.runAsync(SimpleGems.getInstance(), () -> profile.getData().load());
-        } catch (NullPointerException exception) {
-            player.kickPlayer(ChatColor.RED + "ERROR: Profile returned null.");
-            return;
-        }
-
         if (profile == null || profile.getData() == null) {
-            player.kickPlayer(ChatColor.RED + "ERROR: Profile returned null.");
+            player.kickPlayer(Color.translate(Config.KICK_MESSAGES_ERROR));
             return;
         }
 
@@ -63,6 +53,16 @@ public class PlayerListener implements Listener {
     }
 
     @EventHandler
+    public void onReload(PlayerCommandPreprocessEvent event) {
+        Player player = event.getPlayer();
+
+        if (event.getMessage().equalsIgnoreCase("/reload") ||
+                event.getMessage().equalsIgnoreCase("/reload confirm")) {
+            Color.sendMessage(player, "%prefix% &cUse of /reload is not recommended as it can cause issues often cases. Please restart your server when possible.");
+        }
+    }
+
+    @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
         Profile profile = SimpleGems.getInstance().getProfileManager().getProfile(player.getUniqueId());
@@ -70,6 +70,7 @@ public class PlayerListener implements Listener {
         if (profile.getData() == null) return;
 
         Tasks.runAsync(SimpleGems.getInstance(), () -> profile.getData().save());
+        SimpleGems.getInstance().getProfileManager().getProfiles().remove(player.getUniqueId());
     }
 
     @EventHandler
