@@ -24,6 +24,7 @@ Replace LATEST with latest version in the [Releases](https://github.com/RefracDe
     <groupId>com.github.RefracDevelopment</groupId>
     <artifactId>SimpleGems</artifactId>
     <version>LATEST</version>
+    <scope>provided</scope>
 </dependency>
 ```
 Make sure you add SimpleGems to your depends or softdepends
