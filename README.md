@@ -1,7 +1,7 @@
 # SimpleGems
 A gems economy/currency plugin.
 
-[Spigot](https://www.spigotmc.org/resources/96827/) [Songoda](https://marketplace.songoda.com/product/755) [MC-Market](https://www.mc-market.org/resources/21583/)
+[Spigot](https://www.spigotmc.org/resources/96827/) [Craftaro](https://craftaro.com/marketplace/product/simplegems.755) [BuiltByBit](https://builtbybit.com/resources/simplegems.21583/) [Hangar](https://hangar.papermc.io/RefracDevelopment/SimpleGems/)
 
 ### Issue Reporting/Support
 
