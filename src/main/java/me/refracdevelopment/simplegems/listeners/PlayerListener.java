@@ -56,9 +56,8 @@ public class PlayerListener implements Listener {
     public void onReload(PlayerCommandPreprocessEvent event) {
         Player player = event.getPlayer();
 
-        if (event.getMessage().equalsIgnoreCase("/reload") ||
-                event.getMessage().equalsIgnoreCase("/reload confirm")) {
-            Color.sendMessage(player, "%prefix% &cUse of /reload is not recommended as it can cause issues often cases. Please restart your server when possible.");
+        if (event.getMessage().equalsIgnoreCase("/reload confirm")) {
+            Color.sendMessage(player, "%prefix%&cUse of /reload is not recommended as it can cause issues often cases. Please restart your server when possible.");
         }
     }
 
@@ -100,12 +99,13 @@ public class PlayerListener implements Listener {
 
             StringPlaceholders placeholders = StringPlaceholders.builder()
                     .addAll(Placeholders.setPlaceholders(player))
+                    .add("value", String.valueOf(foundValue))
                     .add("gems", String.valueOf(foundValue))
                     .add("gems_formatted", Methods.format(foundValue))
                     .add("gems_decimal", Methods.formatDecimal(foundValue))
                     .build();
 
-            player.getInventory().setItemInHand(null);
+            player.getInventory().removeItem(item);
             SimpleGemsAPI.INSTANCE.giveGems(player, foundValue);
             locale.sendMessage(player, "gems-deposited", placeholders);
         }

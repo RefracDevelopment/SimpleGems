@@ -8,7 +8,9 @@ import dev.rosewood.rosegarden.command.framework.annotation.RoseExecutable;
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.manager.configuration.LocaleManager;
 import me.refracdevelopment.simplegems.manager.configuration.cache.Menus;
+import me.refracdevelopment.simplegems.menu.GemShopGUI;
 import me.refracdevelopment.simplegems.utilities.Permissions;
+import me.refracdevelopment.simplegems.utilities.chat.Color;
 import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
 import org.bukkit.entity.Player;
 
@@ -30,9 +32,12 @@ public class ShopCommand extends RoseCommand {
 
         Player player = (Player) context.getSender();
 
-        if (Menus.GEM_SHOP_ENABLED) {
-            SimpleGems.getInstance().getGemShop().getGemShop().openInventory(player);
-        } else locale.sendMessage(player, "shop-disabled", Placeholders.setPlaceholders(player));
+        if (Menus.GEM_SHOP_CATEGORIES.isSet("default") && Menus.GEM_SHOP_CATEGORIES.getBoolean("default.enabled")) {
+            new GemShopGUI(SimpleGems.getInstance().getMenuManager().getPlayerMenuUtility(player)).open();
+        } else if (!Menus.GEM_SHOP_CATEGORIES.isSet("default")) {
+            Color.log("The 'categories.default' menu category in 'menus.yml' config file doesn't exist.");
+            locale.sendMessage(player, "shop-disabled");
+        } else locale.sendMessage(player, "shop-disabled");
     }
 
     @Override

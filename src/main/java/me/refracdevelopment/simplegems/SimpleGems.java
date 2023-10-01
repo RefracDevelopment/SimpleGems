@@ -8,8 +8,10 @@ import dev.rosewood.rosegarden.utils.NMSUtil;
 import lombok.Getter;
 import me.gabytm.util.actions.ActionManager;
 import me.refracdevelopment.simplegems.api.SimpleGemsAPI;
+import me.refracdevelopment.simplegems.listeners.MenuListener;
 import me.refracdevelopment.simplegems.listeners.PlayerListener;
 import me.refracdevelopment.simplegems.manager.CommandManager;
+import me.refracdevelopment.simplegems.manager.MenuManager;
 import me.refracdevelopment.simplegems.manager.configuration.ConfigFile;
 import me.refracdevelopment.simplegems.manager.configuration.ConfigurationManager;
 import me.refracdevelopment.simplegems.manager.configuration.LocaleManager;
@@ -49,6 +51,7 @@ public final class SimpleGems extends RosePlugin {
     private SimpleGemsAPI gemsAPI;
     private ActionManager actionManager;
     private LeaderboardManager leaderboardManager;
+    private MenuManager menuManager;
 
     private GemShop gemShop;
 
@@ -135,6 +138,12 @@ public final class SimpleGems extends RosePlugin {
         Menus.loadMenus();
     }
 
+    public void reloadFiles() {
+        menusFile.load();
+        Config.loadConfig();
+        Menus.loadMenus();
+    }
+
     private void loadManagers() {
         switch (Config.DATA_TYPE.toUpperCase()) {
             case "MONGODB":
@@ -162,11 +171,13 @@ public final class SimpleGems extends RosePlugin {
         gemsAPI = new SimpleGemsAPI();
         actionManager = new ActionManager(this);
         leaderboardManager = new LeaderboardManager(this);
+        menuManager = new MenuManager();
         Color.log("&aLoaded managers.");
     }
 
     private void loadListeners() {
         this.getServer().getPluginManager().registerEvents(new PlayerListener(), this);
+        this.getServer().getPluginManager().registerEvents(new MenuListener(), this);
         gemShop = new GemShop();
         Color.log("&aLoaded listeners.");
     }

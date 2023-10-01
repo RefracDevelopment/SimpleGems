@@ -29,51 +29,54 @@ import java.util.List;
 public class GemShopItem {
 
     private final XMaterial material;
-    private final String skullOwner, name;
+    private final String skullOwner, name, categoryName;
     private final boolean skulls, headDatabase, messageEnabled, broadcastMessage, customData, glow, action;
     private final int data, slot, customModelData;
     private final List<String> lore, actions, commands, messages;
     private final long cost;
+    private final GemShopCategory category;
 
-    public GemShopItem(String item) {
-        this.material = Utilities.getMaterial(Menus.GEM_SHOP_ITEMS.getString(item + ".material"));
-        if (Menus.GEM_SHOP_ITEMS.getBoolean(item + ".head-database")) {
-            this.headDatabase = Menus.GEM_SHOP_ITEMS.getBoolean(item + ".head-database", false);
+    public GemShopItem(GemShopCategory category, String item) {
+        this.category = category;
+        this.categoryName = category.getCategoryName();
+        this.material = Utilities.getMaterial(Menus.GEM_SHOP_CATEGORIES.getString(categoryName + ".items." + item + ".material"));
+        if (Menus.GEM_SHOP_CATEGORIES.getBoolean(categoryName + ".items." + item + ".head-database")) {
+            this.headDatabase = Menus.GEM_SHOP_CATEGORIES.getBoolean(categoryName + ".items." + item + ".head-database", false);
         } else {
             this.headDatabase = false;
         }
-        if (Menus.GEM_SHOP_ITEMS.getBoolean(item + ".skulls")) {
-            this.skulls = Menus.GEM_SHOP_ITEMS.getBoolean(item + ".skulls", false);
+        if (Menus.GEM_SHOP_CATEGORIES.getBoolean(categoryName + ".items." + item + ".skulls")) {
+            this.skulls = Menus.GEM_SHOP_CATEGORIES.getBoolean(categoryName  + ".items." + item + ".skulls", false);
         } else {
             this.skulls = false;
         }
-        if (Menus.GEM_SHOP_ITEMS.getBoolean(item + ".customData")) {
-            this.customData = Menus.GEM_SHOP_ITEMS.getBoolean(item + ".customData", false);
+        if (Menus.GEM_SHOP_CATEGORIES.getBoolean(categoryName + ".items." + item + ".customData")) {
+            this.customData = Menus.GEM_SHOP_CATEGORIES.getBoolean(categoryName + ".items." + item + ".customData", false);
         } else {
             this.customData = false;
         }
-        this.skullOwner = Menus.GEM_SHOP_ITEMS.getString(item + ".skullOwner");
-        if (Menus.GEM_SHOP_ITEMS.getBoolean(item + ".glow")) {
-            this.glow = Menus.GEM_SHOP_ITEMS.getBoolean(item + ".glow");
+        this.skullOwner = Menus.GEM_SHOP_CATEGORIES.getString(categoryName + ".items." + item + ".skullOwner");
+        if (Menus.GEM_SHOP_CATEGORIES.getBoolean(categoryName + ".items." + item + ".glow")) {
+            this.glow = Menus.GEM_SHOP_CATEGORIES.getBoolean(categoryName + ".items." + item + ".glow");
         } else {
             this.glow = false;
         }
-        this.data = Menus.GEM_SHOP_ITEMS.getInt(item + ".data");
-        this.customModelData = Menus.GEM_SHOP_ITEMS.getInt(item + ".customModelData");
-        this.name = Menus.GEM_SHOP_ITEMS.getString(item + ".name");
-        this.lore = Menus.GEM_SHOP_ITEMS.getStringList(item + ".lore");
-        if (Menus.GEM_SHOP_ITEMS.getBoolean(item + ".action.enabled")) {
-            this.action = Menus.GEM_SHOP_ITEMS.getBoolean(item + ".action.enabled", false);
+        this.data = Menus.GEM_SHOP_CATEGORIES.getInt(categoryName + ".items." + item + ".data");
+        this.customModelData = Menus.GEM_SHOP_CATEGORIES.getInt(categoryName + ".items." + item + ".customModelData");
+        this.name = Menus.GEM_SHOP_CATEGORIES.getString(categoryName + ".items." + item + ".name");
+        this.lore = Menus.GEM_SHOP_CATEGORIES.getStringList(categoryName + ".items." + item + ".lore");
+        if (Menus.GEM_SHOP_CATEGORIES.getBoolean(categoryName + ".items." + item + ".action.enabled")) {
+            this.action = Menus.GEM_SHOP_CATEGORIES.getBoolean(categoryName + ".items." + item + ".action.enabled", false);
         } else {
             this.action = false;
         }
-        this.actions = Menus.GEM_SHOP_ITEMS.getStringList(item + ".action.actions");
-        this.commands = Menus.GEM_SHOP_ITEMS.getStringList(item + ".commands");
-        this.messageEnabled = Menus.GEM_SHOP_ITEMS.getBoolean(item + ".message.enabled");
-        this.broadcastMessage = Menus.GEM_SHOP_ITEMS.getBoolean(item + ".message.broadcast");
-        this.messages = Menus.GEM_SHOP_ITEMS.getStringList(item + ".message.text");
-        this.cost = Menus.GEM_SHOP_ITEMS.getLong(item + ".cost");
-        this.slot = Menus.GEM_SHOP_ITEMS.getInt(item + ".slot");
+        this.actions = Menus.GEM_SHOP_CATEGORIES.getStringList(categoryName + ".items." + item + ".action.actions");
+        this.commands = Menus.GEM_SHOP_CATEGORIES.getStringList(categoryName + ".items." + item + ".commands");
+        this.messageEnabled = Menus.GEM_SHOP_CATEGORIES.getBoolean(categoryName + ".items." + item + ".message.enabled");
+        this.broadcastMessage = Menus.GEM_SHOP_CATEGORIES.getBoolean(categoryName + ".items." + item + ".message.broadcast");
+        this.messages = Menus.GEM_SHOP_CATEGORIES.getStringList(categoryName + ".items." + item + ".message.text");
+        this.cost = Menus.GEM_SHOP_CATEGORIES.getLong(categoryName + ".items." + item + ".cost");
+        this.slot = Menus.GEM_SHOP_CATEGORIES.getInt(categoryName + ".items." + item + ".slot");
     }
 
     public void sendMessage(Player player) {
@@ -85,7 +88,7 @@ public class GemShopItem {
             Bukkit.getOnlinePlayers().forEach(p -> {
                 this.messages.forEach(message -> {
                     locale.sendCustomMessage(p, Color.translate(player, message
-                            .replace("%item%", this.name)
+                            .replace("%item%", Color.translate(this.name))
                             .replace("%cost%", Methods.formatDecimal(this.cost))
                             .replace("%price%", String.valueOf(this.cost))
                     ));
@@ -94,7 +97,7 @@ public class GemShopItem {
         } else {
             this.messages.forEach(message -> {
                 locale.sendCustomMessage(player, Color.translate(player, message
-                        .replace("%item%", this.name)
+                        .replace("%item%", Color.translate(this.name))
                         .replace("%cost%", Methods.formatDecimal(this.cost))
                         .replace("%price%", String.valueOf(this.cost))
                 ));
@@ -105,7 +108,7 @@ public class GemShopItem {
     public void runCommands(Player player) {
         this.commands.forEach(command -> {
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), Placeholders.setPlaceholders(player, command
-                    .replace("%item%", this.name)
+                    .replace("%item%", Color.translate(this.name))
                     .replace("%cost%", String.valueOf(this.cost))
                     .replace("%price%", String.valueOf(this.cost))
             ));
@@ -115,7 +118,7 @@ public class GemShopItem {
     public void runActions(Player player) {
         this.actions.forEach(action -> {
             SimpleGems.getInstance().getActionManager().execute(player, Placeholders.setPlaceholders(player, action
-                    .replace("%item%", this.name)
+                    .replace("%item%", Color.translate(this.name))
                     .replace("%cost%", String.valueOf(this.cost))
                     .replace("%price%", String.valueOf(this.cost))
             ));

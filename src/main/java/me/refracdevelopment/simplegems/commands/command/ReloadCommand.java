@@ -7,8 +7,6 @@ import dev.rosewood.rosegarden.command.framework.RoseCommandWrapper;
 import dev.rosewood.rosegarden.command.framework.annotation.RoseExecutable;
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.manager.configuration.LocaleManager;
-import me.refracdevelopment.simplegems.manager.configuration.cache.Menus;
-import me.refracdevelopment.simplegems.menu.GemShopItem;
 import me.refracdevelopment.simplegems.utilities.Permissions;
 import org.bukkit.Bukkit;
 
@@ -22,10 +20,10 @@ public class ReloadCommand extends RoseCommand {
     public void execute(CommandContext context) {
         this.rosePlugin.reload();
         Bukkit.getScheduler().cancelTasks(SimpleGems.getInstance());
-        SimpleGems.getInstance().loadFiles();
+        SimpleGems.getInstance().reloadFiles();
         SimpleGems.getInstance().getLeaderboardManager().updateTask();
         SimpleGems.getInstance().getGemShop().getItems().clear();
-        Menus.GEM_SHOP_ITEMS.getKeys(false).forEach(item -> SimpleGems.getInstance().getGemShop().getItems().put(item, new GemShopItem(item)));
+        SimpleGems.getInstance().getGemShop().reload();
         this.rosePlugin.getManager(LocaleManager.class).sendMessage(context.getSender(), "command-reload-success");
     }
 

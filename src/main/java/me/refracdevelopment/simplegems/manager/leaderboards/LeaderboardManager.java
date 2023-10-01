@@ -34,7 +34,7 @@ public class LeaderboardManager {
     }
 
     public void load() {
-        if (Bukkit.getOnlinePlayers().size() == 0) return;
+        if (Bukkit.getOnlinePlayers().isEmpty()) return;
         if (cachedMap.isEmpty() || unsortedMap.isEmpty()) {
 
             if (plugin.getDataType() == DataType.MONGO) {

@@ -1,26 +1,32 @@
 package me.refracdevelopment.simplegems.menu;
 
+import lombok.Getter;
 import me.refracdevelopment.simplegems.manager.configuration.cache.Menus;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
+@Getter
 public class GemShop {
 
-    private final GemShopGUI shop;
-    private final Map<String, GemShopItem> items;
+    private final Set<GemShopItem> items;
 
     public GemShop() {
-        this.shop = new GemShopGUI();
-        this.items = new HashMap<>();
-        Menus.GEM_SHOP_ITEMS.getKeys(false).forEach(item -> this.items.put(item, new GemShopItem(item)));
+        this.items = new HashSet<>();
+        Menus.GEM_SHOP_CATEGORIES.getKeys(false).forEach(category -> {
+            Menus.GEM_SHOP_CATEGORIES.getConfigurationSection(category + ".items").getKeys(false).forEach(item -> {
+                this.items.add(new GemShopItem(new GemShopCategory(null, category), item));
+            });
+        });
     }
 
-    public GemShopGUI getGemShop() {
-        return this.shop;
-    }
-
-    public Map<String, GemShopItem> getItems() {
-        return this.items;
+    public void reload() {
+        this.items.clear();
+        Menus.GEM_SHOP_CATEGORIES.getKeys(false).forEach(category -> {
+            GemShopCategory gemShopCategory = new GemShopCategory(null, category);
+            Menus.GEM_SHOP_CATEGORIES.getConfigurationSection(category + ".items").getKeys(false).forEach(item -> {
+                this.items.add(new GemShopItem(gemShopCategory, item));
+            });
+        });
     }
 }

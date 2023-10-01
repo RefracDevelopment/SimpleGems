@@ -201,16 +201,17 @@ public class Methods {
             }
         }
 
-        item.setName(name);
-
         // Attempt to insert a NBT tag of the gems value instead of filling the inventory
 
         NBTItem nbtItem = new NBTItem(item.toItemStack());
         nbtItem.setLong("gems-item-value", amount);
         nbtItem.applyNBT(item.toItemStack());
 
-        if(nbtItem.hasTag("gems-item-value")) {
+        if (nbtItem.hasTag("gems-item-value")) {
             long foundValue = nbtItem.getLong("gems-item-value");
+
+            item.setName(name.replace("%value%", String.valueOf(foundValue))
+                    .replace("%gems%", String.valueOf(foundValue)));
             lore.forEach(s -> item.addLoreLine(Color.translate(s
                     .replace("%value%", String.valueOf(foundValue))
                     .replace("%gems%", String.valueOf(foundValue))
