@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - master
+      - dev
 
 jobs:
   build:
@@ -13,7 +13,7 @@ jobs:
       - name: Prepare Project
         uses: actions/checkout@v3
         with:
-          ref: 'master'
+          ref: 'dev'
 
       - name: Set up JDK 8
         uses: actions/setup-java@v3
@@ -36,7 +36,7 @@ jobs:
           tag_name: '${{ env.PROJECT_VERSION }}'
           release_name: SimpleGems
           draft: false
-          prerelease: false
+          prerelease: true
 
       - name: Upload Release Asset
         id: upload-release-asset
