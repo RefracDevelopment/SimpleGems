@@ -47,48 +47,36 @@ public class LeaderboardManager {
                     cachedMap.putIfAbsent(name, gems);
                 });
             } else if (plugin.getDataType() == DataType.MYSQL) {
-                this.plugin.getMySQLManager().select("SELECT * FROM SimpleGems ORDER BY gems DESC LIMIT " + Config.GEMS_TOP_ENTRIES, resultSet -> {
-                    try {
-                        // order from highest to lowest
-                        while (resultSet.next()) {
-                            String name = resultSet.getString("name");
-                            long gems = resultSet.getLong("gems");
-                            unsortedMap.putIfAbsent(name, gems);
-                            cachedMap.putIfAbsent(name, gems);
-                        }
-                    } catch (SQLException exception) {
-                        Color.log(exception.getMessage());
-                    }
-                });
+                try {
+                    this.plugin.getMySQLManager().getAllPlayers().forEach(playerGems -> {
+                        unsortedMap.putIfAbsent(playerGems.getName(), playerGems.getGems());
+                        cachedMap.putIfAbsent(playerGems.getName(), playerGems.getGems());
+                    });
+                } catch (SQLException exception) {
+                    Color.log("&cSQLite Error: " + exception.getMessage());
+                }
             } else if (plugin.getDataType() == DataType.SQLITE) {
-                this.plugin.getSqLiteManager().select("SELECT * FROM SimpleGems ORDER BY gems DESC LIMIT " + Config.GEMS_TOP_ENTRIES, resultSet -> {
-                    try {
-                        // order from highest to lowest
-                        while (resultSet.next()) {
-                            String name = resultSet.getString("name");
-                            long gems = resultSet.getLong("gems");
-                            unsortedMap.putIfAbsent(name, gems);
-                            cachedMap.putIfAbsent(name, gems);
-                        }
-                    } catch (SQLException exception) {
-                        Color.log(exception.getMessage());
-                    }
-                });
+                try {
+                    this.plugin.getSqLiteManager().getAllPlayers().forEach(playerGems -> {
+                        unsortedMap.putIfAbsent(playerGems.getName(), playerGems.getGems());
+                        cachedMap.putIfAbsent(playerGems.getName(), playerGems.getGems());
+                    });
+                } catch (SQLException exception) {
+                    Color.log("&cSQLite Error: " + exception.getMessage());
+                }
             } else if (plugin.getDataType() == DataType.FLAT_FILE) {
-                Bukkit.getOnlinePlayers().stream().limit(Config.GEMS_TOP_ENTRIES).forEach(onlinePlayer -> {
+                Bukkit.getOnlinePlayers().stream().limit(Config.GEMS_TOP_ENTRIES-1).forEach(onlinePlayer -> {
                     ProfileData profile = plugin.getProfileManager().getProfile(onlinePlayer.getUniqueId()).getData();
                     String name = onlinePlayer.getName();
                     long gems = profile.getGems().getAmount();
-                    if (this.unsortedMap.size() >= Config.GEMS_TOP_ENTRIES-1) return;
                     unsortedMap.putIfAbsent(name, gems);
                     cachedMap.putIfAbsent(name, gems);
                 });
 
                 Collection<OfflinePlayer> offlinePlayers = Arrays.asList(Bukkit.getOfflinePlayers());
-                offlinePlayers.stream().limit(Config.GEMS_TOP_ENTRIES).forEach(offlinePlayer -> {
+                offlinePlayers.stream().limit(Config.GEMS_TOP_ENTRIES-1).forEach(offlinePlayer -> {
                     String name = offlinePlayer.getName();
                     long gems = plugin.getPlayerMapper().getGems(offlinePlayer.getUniqueId());
-                    if (this.unsortedMap.size() >= Config.GEMS_TOP_ENTRIES-1) return;
                     unsortedMap.putIfAbsent(name, gems);
                     cachedMap.putIfAbsent(name, gems);
                 });

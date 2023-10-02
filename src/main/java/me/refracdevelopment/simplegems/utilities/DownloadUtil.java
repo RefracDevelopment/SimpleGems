@@ -38,6 +38,11 @@ public class DownloadUtil {
                 .artifactId("sqlite-jdbc")
                 .version("3.43.0.0")
                 .build();
+        Library lib7 = Library.builder()
+                .groupId("com{}j256{}ormlite") // "{}" is replaced with ".", useful to avoid unwanted changes made by maven-shade-plugin
+                .artifactId("ormlite-jdbc")
+                .version("6.1")
+                .build();
 
         libraryManager.addMavenCentral();
         libraryManager.loadLibrary(lib);
@@ -46,5 +51,6 @@ public class DownloadUtil {
         libraryManager.loadLibrary(lib4);
         libraryManager.loadLibrary(lib5);
         libraryManager.loadLibrary(lib6);
+        libraryManager.loadLibrary(lib7);
     }
 }

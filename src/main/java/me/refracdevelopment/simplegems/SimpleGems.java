@@ -18,9 +18,9 @@ import me.refracdevelopment.simplegems.manager.configuration.LocaleManager;
 import me.refracdevelopment.simplegems.manager.configuration.cache.Config;
 import me.refracdevelopment.simplegems.manager.configuration.cache.Menus;
 import me.refracdevelopment.simplegems.manager.data.DataType;
+import me.refracdevelopment.simplegems.manager.data.PlayerMapper;
 import me.refracdevelopment.simplegems.manager.data.mongo.MongoManager;
 import me.refracdevelopment.simplegems.manager.data.sql.MySQLManager;
-import me.refracdevelopment.simplegems.manager.data.PlayerMapper;
 import me.refracdevelopment.simplegems.manager.data.sql.SQLiteManager;
 import me.refracdevelopment.simplegems.manager.leaderboards.LeaderboardManager;
 import me.refracdevelopment.simplegems.menu.GemShop;
@@ -124,15 +124,6 @@ public final class SimpleGems extends RosePlugin {
     @Override
     protected void disable() {
         // Plugin shutdown logic
-        if (dataType == DataType.MYSQL) {
-            mySQLManager.shutdown();
-        } else if (dataType == DataType.SQLITE) {
-            try {
-                sqLiteManager.close();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        }
         this.getServer().getScheduler().cancelTasks(this);
     }
 
@@ -163,18 +154,22 @@ public final class SimpleGems extends RosePlugin {
                 Color.log("&aEnabled MongoDB support.");
                 break;
             case "MYSQL":
-                dataType = DataType.MYSQL;
-                mySQLManager = new MySQLManager(this);
-                getMySQLManager().connect();
-                getMySQLManager().createT();
-                Color.log("&aEnabled MySQL support!");
+                try {
+                    dataType = DataType.MYSQL;
+                    mySQLManager = new MySQLManager();
+                    Color.log("&aEnabled MySQL support!");
+                } catch (ClassNotFoundException | SQLException exception) {
+                    Color.log("&cMySQL Error: " + exception.getMessage());
+                }
                 break;
             case "SQLITE":
-                dataType = DataType.SQLITE;
-                sqLiteManager = new SQLiteManager(this);
-                getSqLiteManager().connect(getDataFolder().getAbsolutePath() + File.separator + "gems.db");
-                getSqLiteManager().createT();
-                Color.log("&aEnabled SQLite support!");
+                try {
+                    dataType = DataType.SQLITE;
+                    sqLiteManager = new SQLiteManager(getDataFolder().getAbsolutePath() + File.separator + "gems.db");
+                    Color.log("&aEnabled SQLite support!");
+                } catch (ClassNotFoundException | SQLException exception) {
+                    Color.log("&cSQLite Error: " + exception.getMessage());
+                }
                 break;
             default:
                 dataType = DataType.FLAT_FILE;

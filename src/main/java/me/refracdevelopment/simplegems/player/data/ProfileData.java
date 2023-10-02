@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.manager.data.DataType;
+import me.refracdevelopment.simplegems.manager.data.sql.entities.PlayerGems;
 import me.refracdevelopment.simplegems.player.stats.Stat;
 import me.refracdevelopment.simplegems.utilities.chat.Color;
 import org.bson.Document;
@@ -37,35 +38,21 @@ public class ProfileData {
                 gems.setAmount(document.getLong("gems"));
             }
         } else if (plugin.getDataType() == DataType.MYSQL) {
-            plugin.getMySQLManager().select("SELECT * FROM SimpleGems WHERE uuid=?", resultSet -> {
-                try {
-                    if (resultSet.next()) {
-                        this.gems.setAmount(resultSet.getLong("gems"));
-                        plugin.getMySQLManager().execute("UPDATE SimpleGems SET name=? WHERE uuid=?",
-                                name, uuid.toString());
-                    } else {
-                        plugin.getMySQLManager().execute("INSERT INTO SimpleGems (uuid, name, gems) VALUES (?,?,?)",
-                                uuid.toString(), name, 0);
-                    }
-                } catch (SQLException exception) {
-                    Color.log("MySQL Error: " + exception.getMessage());
-                }
-            }, uuid.toString());
+            try {
+                PlayerGems playerGems = plugin.getMySQLManager().playerExists(uuid) ? plugin.getMySQLManager().getPlayerGems(uuid) : plugin.getMySQLManager().addPlayer(getPlayer());
+                gems.setAmount(playerGems.getGems());
+                plugin.getMySQLManager().updatePlayerName(getPlayer(), name);
+            } catch (SQLException exception) {
+                Color.log("&cMySQL Error: " + exception.getMessage());
+            }
         } else if (plugin.getDataType() == DataType.SQLITE) {
-            plugin.getSqLiteManager().select("SELECT * FROM SimpleGems WHERE uuid=?", resultSet -> {
-                try {
-                    if (resultSet.next()) {
-                        this.gems.setAmount(resultSet.getLong("gems"));
-                        plugin.getSqLiteManager().execute("UPDATE SimpleGems SET name=? WHERE uuid=?",
-                                name, uuid.toString());
-                    } else {
-                        plugin.getSqLiteManager().execute("INSERT INTO SimpleGems (uuid, name, gems) VALUES (?,?,?)",
-                                uuid.toString(), name, 0);
-                    }
-                } catch (SQLException exception) {
-                    Color.log("SQLite Error: " + exception.getMessage());
-                }
-            }, uuid.toString());
+            try {
+                PlayerGems playerGems = plugin.getSqLiteManager().playerExists(uuid) ? plugin.getSqLiteManager().getPlayerGems(uuid) : plugin.getSqLiteManager().addPlayer(getPlayer());
+                gems.setAmount(playerGems.getGems());
+                plugin.getSqLiteManager().updatePlayerName(getPlayer(), name);
+            } catch (SQLException exception) {
+                Color.log("&cSQLite Error: " + exception.getMessage());
+            }
         } else if (plugin.getDataType() == DataType.FLAT_FILE) {
             plugin.getPlayerMapper().loadPlayerFile(uuid);
         }
@@ -81,11 +68,17 @@ public class ProfileData {
 
             plugin.getMongoManager().getStatsCollection().replaceOne(Filters.eq("uuid", uuid.toString()), document, new ReplaceOptions().upsert(true));
         } else if (plugin.getDataType() == DataType.MYSQL) {
-            plugin.getMySQLManager().execute("UPDATE SimpleGems SET gems=? WHERE uuid=?",
-                    gems.getAmount(), uuid.toString());
+            try {
+                plugin.getMySQLManager().updatePlayerGems(uuid, gems.getAmount());
+            } catch (SQLException exception) {
+                Color.log("&cMySQL Error: " + exception);
+            }
         } else if (plugin.getDataType() == DataType.SQLITE) {
-            plugin.getSqLiteManager().execute("UPDATE SimpleGems SET gems=? WHERE uuid=?",
-                    gems.getAmount(), uuid.toString());
+            try {
+                plugin.getSqLiteManager().updatePlayerGems(uuid, gems.getAmount());
+            } catch (SQLException exception) {
+                Color.log("&cSQLite Error: " + exception);
+            }
         } else if (plugin.getDataType() == DataType.FLAT_FILE) {
             plugin.getPlayerMapper().savePlayer(uuid, name, gems.getAmount());
         }
