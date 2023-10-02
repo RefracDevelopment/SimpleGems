@@ -36,7 +36,6 @@ public class LeaderboardManager {
     public void load() {
         if (Bukkit.getOnlinePlayers().isEmpty()) return;
         if (cachedMap.isEmpty() || unsortedMap.isEmpty()) {
-
             if (plugin.getDataType() == DataType.MONGO) {
                 List<Document> documents = plugin.getMongoManager().getStatsCollection().find().limit(Config.GEMS_TOP_ENTRIES).into(new ArrayList<>());
 
@@ -49,6 +48,20 @@ public class LeaderboardManager {
                 });
             } else if (plugin.getDataType() == DataType.MYSQL) {
                 this.plugin.getMySQLManager().select("SELECT * FROM SimpleGems ORDER BY gems DESC LIMIT " + Config.GEMS_TOP_ENTRIES, resultSet -> {
+                    try {
+                        // order from highest to lowest
+                        while (resultSet.next()) {
+                            String name = resultSet.getString("name");
+                            long gems = resultSet.getLong("gems");
+                            unsortedMap.putIfAbsent(name, gems);
+                            cachedMap.putIfAbsent(name, gems);
+                        }
+                    } catch (SQLException exception) {
+                        Color.log(exception.getMessage());
+                    }
+                });
+            } else if (plugin.getDataType() == DataType.SQLITE) {
+                this.plugin.getSqLiteManager().select("SELECT * FROM SimpleGems ORDER BY gems DESC LIMIT " + Config.GEMS_TOP_ENTRIES, resultSet -> {
                     try {
                         // order from highest to lowest
                         while (resultSet.next()) {
@@ -160,7 +173,6 @@ public class LeaderboardManager {
 
         @Override
         public void run() {
-            if (Bukkit.getOnlinePlayers().isEmpty()) return;
             final LocaleManager locale = plugin.getManager(LocaleManager.class);
             cachedMap.clear();
             unsortedMap.clear();

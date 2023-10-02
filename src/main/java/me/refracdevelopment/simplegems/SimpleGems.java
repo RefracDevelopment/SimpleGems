@@ -18,9 +18,10 @@ import me.refracdevelopment.simplegems.manager.configuration.LocaleManager;
 import me.refracdevelopment.simplegems.manager.configuration.cache.Config;
 import me.refracdevelopment.simplegems.manager.configuration.cache.Menus;
 import me.refracdevelopment.simplegems.manager.data.DataType;
-import me.refracdevelopment.simplegems.manager.data.MongoManager;
-import me.refracdevelopment.simplegems.manager.data.MySQLManager;
+import me.refracdevelopment.simplegems.manager.data.mongo.MongoManager;
+import me.refracdevelopment.simplegems.manager.data.sql.MySQLManager;
 import me.refracdevelopment.simplegems.manager.data.PlayerMapper;
+import me.refracdevelopment.simplegems.manager.data.sql.SQLiteManager;
 import me.refracdevelopment.simplegems.manager.leaderboards.LeaderboardManager;
 import me.refracdevelopment.simplegems.menu.GemShop;
 import me.refracdevelopment.simplegems.player.data.ProfileManager;
@@ -35,6 +36,7 @@ import java.io.File;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 
@@ -44,9 +46,10 @@ public final class SimpleGems extends RosePlugin {
     @Getter
     private static SimpleGems instance;
 
-    private MongoManager mongoManager;
     private DataType dataType;
+    private MongoManager mongoManager;
     private MySQLManager mySQLManager;
+    private SQLiteManager sqLiteManager;
     private ProfileManager profileManager;
     private SimpleGemsAPI gemsAPI;
     private ActionManager actionManager;
@@ -123,6 +126,12 @@ public final class SimpleGems extends RosePlugin {
         // Plugin shutdown logic
         if (dataType == DataType.MYSQL) {
             mySQLManager.shutdown();
+        } else if (dataType == DataType.SQLITE) {
+            try {
+                sqLiteManager.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
         this.getServer().getScheduler().cancelTasks(this);
     }
@@ -159,6 +168,13 @@ public final class SimpleGems extends RosePlugin {
                 getMySQLManager().connect();
                 getMySQLManager().createT();
                 Color.log("&aEnabled MySQL support!");
+                break;
+            case "SQLITE":
+                dataType = DataType.SQLITE;
+                sqLiteManager = new SQLiteManager(this);
+                getSqLiteManager().connect(getDataFolder().getAbsolutePath() + File.separator + "gems.db");
+                getSqLiteManager().createT();
+                Color.log("&aEnabled SQLite support!");
                 break;
             default:
                 dataType = DataType.FLAT_FILE;

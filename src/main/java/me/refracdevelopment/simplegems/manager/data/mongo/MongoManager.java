@@ -1,4 +1,4 @@
-package me.refracdevelopment.simplegems.manager.data;
+package me.refracdevelopment.simplegems.manager.data.mongo;
 
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;

@@ -77,7 +77,7 @@ public class SimpleGemsAPI {
      * @param player player profile
      * @param amount gems to remove and turn into an item
      */
-    public void giveGemsItem(Player player, int amount) {
+    public void giveGemsItem(Player player, long amount) {
         if (getProfileData(player) == null) return;
 
         Methods.giveGemsItem(player, amount);

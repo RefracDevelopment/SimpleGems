@@ -40,6 +40,7 @@ public class Methods {
         Bukkit.getScheduler().runTaskAsynchronously(SimpleGems.getInstance(), () -> {
             if (SimpleGems.getInstance().getDataType() == DataType.MONGO) {
                 Document document = new Document();
+
                 document.put("name", player.getName());
                 document.put("uuid", player.getUniqueId().toString());
                 document.put("gems", amount);
@@ -47,6 +48,9 @@ public class Methods {
                 SimpleGems.getInstance().getMongoManager().getStatsCollection().replaceOne(Filters.eq("uuid", player.getUniqueId().toString()), document, new ReplaceOptions().upsert(true));
             } else if (SimpleGems.getInstance().getDataType() == DataType.MYSQL) {
                 SimpleGems.getInstance().getMySQLManager().execute("UPDATE SimpleGems SET gems=? WHERE uuid=?",
+                        amount, player.getUniqueId().toString());
+            } else if (SimpleGems.getInstance().getDataType() == DataType.SQLITE) {
+                SimpleGems.getInstance().getSqLiteManager().execute("UPDATE SimpleGems SET gems=? WHERE uuid=?",
                         amount, player.getUniqueId().toString());
             } else if (SimpleGems.getInstance().getDataType() == DataType.FLAT_FILE) {
                 SimpleGems.getInstance().getPlayerMapper().savePlayer(player.getUniqueId(), player.getName(), amount);
@@ -85,6 +89,18 @@ public class Methods {
                 }
             }, player.getUniqueId().toString());
             return gems.get();
+        } else if (SimpleGems.getInstance().getDataType() == DataType.SQLITE) {
+            AtomicLong gems = new AtomicLong(0);
+            SimpleGems.getInstance().getSqLiteManager().select("SELECT * FROM SimpleGems WHERE uuid=?", resultSet -> {
+                try {
+                    if (resultSet.next()) {
+                        gems.set(resultSet.getLong("gems"));
+                    }
+                } catch (SQLException exception) {
+                    Color.log(exception.getMessage());
+                }
+            }, player.getUniqueId().toString());
+            return gems.get();
         } else if (SimpleGems.getInstance().getDataType() == DataType.FLAT_FILE) {
             return SimpleGems.getInstance().getPlayerMapper().getGems(player.getUniqueId());
         }
@@ -97,7 +113,6 @@ public class Methods {
 
     public static void payGems(Player player, Player target, long amount, boolean silent) {
         ProfileData profile = SimpleGems.getInstance().getProfileManager().getProfile(player.getUniqueId()).getData();
-        ProfileData targetProfile = SimpleGems.getInstance().getProfileManager().getProfile(target.getUniqueId()).getData();
         final LocaleManager locale = SimpleGems.getInstance().getManager(LocaleManager.class);
 
         StringPlaceholders placeholders = StringPlaceholders.builder()
@@ -112,11 +127,7 @@ public class Methods {
 
         if (profile.getGems().hasAmount(amount)) {
             profile.getGems().decrementAmount(amount);
-            targetProfile.getGems().incrementAmount(amount);
-            Bukkit.getScheduler().runTaskAsynchronously(SimpleGems.getInstance(), () -> {
-                profile.save();
-                targetProfile.save();
-            });
+            SimpleGemsAPI.INSTANCE.giveGems(target, amount);
 
             locale.sendMessage(player, "gems-paid", placeholders);
             if (silent) return;
@@ -159,8 +170,8 @@ public class Methods {
                 .build();
 
         if (SimpleGemsAPI.INSTANCE.hasGems(player, amount)) {
-            giveGemsItem(player, amount);
             SimpleGemsAPI.INSTANCE.takeGems(player, amount);
+            SimpleGemsAPI.INSTANCE.giveGemsItem(player, amount);
 
             locale.sendMessage(player, "gems-withdrawn", placeholders);
         } else {

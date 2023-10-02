@@ -33,6 +33,11 @@ public class DownloadUtil {
                 .artifactId("slf4j-reload4j")
                 .version("2.0.7")
                 .build();
+        Library lib6 = Library.builder()
+                .groupId("org{}xerial") // "{}" is replaced with ".", useful to avoid unwanted changes made by maven-shade-plugin
+                .artifactId("sqlite-jdbc")
+                .version("3.43.0.0")
+                .build();
 
         libraryManager.addMavenCentral();
         libraryManager.loadLibrary(lib);
@@ -40,5 +45,6 @@ public class DownloadUtil {
         libraryManager.loadLibrary(lib3);
         libraryManager.loadLibrary(lib4);
         libraryManager.loadLibrary(lib5);
+        libraryManager.loadLibrary(lib6);
     }
 }

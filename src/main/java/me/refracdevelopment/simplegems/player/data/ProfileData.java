@@ -51,6 +51,21 @@ public class ProfileData {
                     Color.log("MySQL Error: " + exception.getMessage());
                 }
             }, uuid.toString());
+        } else if (plugin.getDataType() == DataType.SQLITE) {
+            plugin.getSqLiteManager().select("SELECT * FROM SimpleGems WHERE uuid=?", resultSet -> {
+                try {
+                    if (resultSet.next()) {
+                        this.gems.setAmount(resultSet.getLong("gems"));
+                        plugin.getSqLiteManager().execute("UPDATE SimpleGems SET name=? WHERE uuid=?",
+                                name, uuid.toString());
+                    } else {
+                        plugin.getSqLiteManager().execute("INSERT INTO SimpleGems (uuid, name, gems) VALUES (?,?,?)",
+                                uuid.toString(), name, 0);
+                    }
+                } catch (SQLException exception) {
+                    Color.log("SQLite Error: " + exception.getMessage());
+                }
+            }, uuid.toString());
         } else if (plugin.getDataType() == DataType.FLAT_FILE) {
             plugin.getPlayerMapper().loadPlayerFile(uuid);
         }
@@ -67,6 +82,9 @@ public class ProfileData {
             plugin.getMongoManager().getStatsCollection().replaceOne(Filters.eq("uuid", uuid.toString()), document, new ReplaceOptions().upsert(true));
         } else if (plugin.getDataType() == DataType.MYSQL) {
             plugin.getMySQLManager().execute("UPDATE SimpleGems SET gems=? WHERE uuid=?",
+                    gems.getAmount(), uuid.toString());
+        } else if (plugin.getDataType() == DataType.SQLITE) {
+            plugin.getSqLiteManager().execute("UPDATE SimpleGems SET gems=? WHERE uuid=?",
                     gems.getAmount(), uuid.toString());
         } else if (plugin.getDataType() == DataType.FLAT_FILE) {
             plugin.getPlayerMapper().savePlayer(uuid, name, gems.getAmount());

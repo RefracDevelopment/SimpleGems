@@ -1,4 +1,4 @@
-package me.refracdevelopment.simplegems.manager.data;
+package me.refracdevelopment.simplegems.manager.data.sql;
 
 import dev.rosewood.rosegarden.lib.hikaricp.HikariConfig;
 import dev.rosewood.rosegarden.lib.hikaricp.HikariDataSource;
@@ -57,9 +57,9 @@ public class MySQLManager {
 
     public void createTables() {
         createTable("SimpleGems",
-                "uuid VARCHAR(36) NOT NULL PRIMARY KEY, " +
-                        "name VARCHAR(255), " +
-                        "gems BIGINT");
+                "uuid VARCHAR(36) PRIMARY KEY, " +
+                        "name VARCHAR(16) NOT NULL, " +
+                        "gems BIGINT NOT NULL DEFAULT 0");
     }
 
     public boolean isInitiated() {
