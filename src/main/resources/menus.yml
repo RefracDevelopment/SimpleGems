@@ -28,9 +28,9 @@
 config-version: 1
 
 categories:
-  # The default category name cannot be changed or removed
   gems-menu:
     enabled: true
+    default: true
     title: "&e&lGems Shop"
     size: 27
     fill:

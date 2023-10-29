@@ -16,10 +16,13 @@ import org.jetbrains.annotations.Nullable;
 public class GemShopCategory extends Menu {
 
     private final String categoryName;
+    private final boolean enabled, defaultCategory;
 
     public GemShopCategory(@Nullable PlayerMenuUtility playerMenuUtility, String categoryName) {
         super(playerMenuUtility);
         this.categoryName = categoryName;
+        this.enabled = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getBoolean(categoryName + ".enabled");
+        this.defaultCategory = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getBoolean(categoryName + ".default");
     }
 
     @Override
@@ -41,9 +44,8 @@ public class GemShopCategory extends Menu {
         if (event.getCurrentItem().getItemMeta() == null) return;
 
         SimpleGems.getInstance().getGemShop().getItems().forEach(item -> {
-            if (item.getCategoryName().equalsIgnoreCase(categoryName) && item.getSlot() == event.getRawSlot()) {
+            if (item.getCategoryName().equalsIgnoreCase(categoryName) && item.getSlot() == event.getRawSlot())
                 item.handleItem(player);
-            }
         });
     }
 

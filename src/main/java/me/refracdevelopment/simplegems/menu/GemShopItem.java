@@ -202,23 +202,25 @@ public class GemShopItem {
                 .add("item", this.name)
                 .build();
 
-        this.actions.forEach(action -> {
-            if (action.startsWith("{openmenu:")) {
-                new GemShopCategory(SimpleGems.getInstance().getMenuManager().getPlayerMenuUtility(player), action
-                        .replace("{openmenu:", "")
-                        .replace("}", "")).open();
-                return;
-            }
-        });
-
-        if (SimpleGems.getInstance().getGemsAPI().hasGems(player, this.cost)) {
-            SimpleGems.getInstance().getGemsAPI().takeGems(player, this.cost);
-            if (action) {
-                this.runActions(player);
-            } else {
+        if (action) {
+            this.actions.forEach(action -> {
+                if (action.startsWith("{openmenu:")) {
+                    new GemShopCategory(SimpleGems.getInstance().getMenuManager().getPlayerMenuUtility(player), action
+                            .replace("{openmenu:", "")
+                            .replace("}", "")).open();
+                } else {
+                    if (SimpleGems.getInstance().getGemsAPI().hasGems(player, this.cost)) {
+                        SimpleGems.getInstance().getGemsAPI().takeGems(player, this.cost);
+                        this.runActions(player);
+                    } else Color.sendMessage(player, "not-enough-gems", placeholders);
+                }
+            });
+        } else {
+            if (SimpleGems.getInstance().getGemsAPI().hasGems(player, this.cost)) {
+                SimpleGems.getInstance().getGemsAPI().takeGems(player, this.cost);
                 this.runCommands(player);
-            }
-            this.sendMessage(player);
-        } else Color.sendMessage(player, "not-enough-gems", placeholders);
+                this.sendMessage(player);
+            } else Color.sendMessage(player, "not-enough-gems", placeholders);
+        }
     }
 }

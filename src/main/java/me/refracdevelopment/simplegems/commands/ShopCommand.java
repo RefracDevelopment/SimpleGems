@@ -2,7 +2,7 @@ package me.refracdevelopment.simplegems.commands;
 
 import me.kodysimpson.simpapi.command.SubCommand;
 import me.refracdevelopment.simplegems.SimpleGems;
-import me.refracdevelopment.simplegems.menu.GemShopGUI;
+import me.refracdevelopment.simplegems.menu.GemShopCategory;
 import me.refracdevelopment.simplegems.utilities.Permissions;
 import me.refracdevelopment.simplegems.utilities.chat.Color;
 import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
@@ -49,29 +49,30 @@ public class ShopCommand extends SubCommand {
         }
 
         if (strings.length == 1) {
-            if (SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.contains("gems-menu") && SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getBoolean("gems-menu.enabled")) {
-                new GemShopGUI(SimpleGems.getInstance().getMenuManager().getPlayerMenuUtility(player)).open();
-            } else if (!SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.contains("gems-menu")) {
-                Color.log("");
-                Color.log("");
-                Color.log("The default 'categories.gems-menu' menu category in 'menus.yml' config file doesn't exist.");
-                Color.log("");
-                Color.log("");
-                Color.sendMessage(player, "shop-disabled");
-            } else Color.sendMessage(player, "shop-disabled");
+            SimpleGems.getInstance().getGemShop().getCategories().forEach((gemShopCategory, gemShopItems) -> {
+                if (gemShopCategory.isDefaultCategory()) {
+                    if (!gemShopCategory.isEnabled()) {
+                        Color.sendMessage(player, "shop-disabled");
+                        return;
+                    }
+
+                    new GemShopCategory(SimpleGems.getInstance().getMenuManager().getPlayerMenuUtility(player), gemShopCategory.getCategoryName()).open();
+                    return;
+                }
+            });
             return;
         }
 
         if (strings.length == 2) {
-            if (SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.contains(strings[1]) && SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getBoolean(strings[0] + ".enabled")) {
-                new GemShopGUI(SimpleGems.getInstance().getMenuManager().getPlayerMenuUtility(player)).open();
+            if (SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.contains(strings[1]) && SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getBoolean(strings[1] + ".enabled")) {
+                new GemShopCategory(SimpleGems.getInstance().getMenuManager().getPlayerMenuUtility(player), strings[1]).open();
             } else if (!SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.contains(strings[1])) {
                 Color.log("");
                 Color.log("");
                 Color.log("The 'categories." + strings[1] + "' menu category in 'menus.yml' config file doesn't exist.");
                 Color.log("");
                 Color.log("");
-                Color.sendMessage(player, "shop-disabled");
+                Color.sendMessage(player, "invalid-category");
             } else Color.sendMessage(player, "shop-disabled");
         }
     }

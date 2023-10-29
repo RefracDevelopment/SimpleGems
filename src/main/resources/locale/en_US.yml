@@ -14,6 +14,7 @@ invalid-player: '&cYou provided an invalid player.'
 leaderboard-update: '&eThe leaderboard has been updated.'
 invalid-gems: '&cThat player doesn''t have enough gems to take.'
 invalid-number: '&cYou provided an invalid or negative number.'
+invalid-category: '&cYou provided a shop category that doesn''t exist.'
 
 # Kick Messages
 kick-messages-error: '&cERROR: Profile returned null.'
