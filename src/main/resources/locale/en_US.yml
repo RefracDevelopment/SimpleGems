@@ -1,4 +1,8 @@
 # en_US translation by Refrac
+
+# This is used for automatic file updating purposes
+config-version: 2
+
 # Plugin Message Prefix
 prefix: <g:#8A2387:#E94057:#F27121>SimpleGems &8| &f
 
@@ -9,6 +13,7 @@ unknown-command: Unknown command, use &d/%cmd%&f help for more info
 invalid-player: '&cYou provided an invalid player.'
 leaderboard-update: '&eThe leaderboard has been updated.'
 invalid-gems: '&cThat player doesn''t have enough gems to take.'
+invalid-number: '&cYou provided an invalid or negative number.'
 
 # Kick Messages
 kick-messages-error: '&cERROR: Profile returned null.'
@@ -47,7 +52,7 @@ command-shop-description: Opens the gems shop.
 command-deposit-description: Allows you to deposit all gems in your inventory.
 
 # Balance Command
-command-balance-description: Display other players gems balance.
+command-balance-description: Display either your or other players gems balance.
 
 # Withdraw Command
 command-withdraw-description: Allows you to withdraw gems in item form.

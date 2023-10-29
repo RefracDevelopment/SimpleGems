@@ -18,7 +18,7 @@ import java.util.UUID;
 
 public class SQLiteManager {
 
-    private Dao<PlayerGems, String> playerGemsDao;
+    private final Dao<PlayerGems, String> playerGemsDao;
 
     public SQLiteManager(String path) throws SQLException, ClassNotFoundException {
         Color.log("&eConnecting to SQLite...");
@@ -53,8 +53,8 @@ public class SQLiteManager {
         }
     }
 
-    public void updatePlayerName(Player player, String name) throws SQLException {
-        PlayerGems playerGems = playerGemsDao.queryForId(player.getUniqueId().toString());
+    public void updatePlayerName(UUID uuid, String name) throws SQLException {
+        PlayerGems playerGems = playerGemsDao.queryForId(uuid.toString());
         if (playerGems != null) {
             playerGems.setName(name);
             playerGemsDao.update(playerGems);
@@ -68,11 +68,9 @@ public class SQLiteManager {
     public List<PlayerGems> getAllPlayers() throws SQLException {
         List<PlayerGems> playerGemsList = new ArrayList<>();
         for (Player player : Bukkit.getOnlinePlayers()) {
-            if (playerGemsList.size() >= 9) break;
             playerGemsList.add(getPlayerGems(player.getUniqueId()));
         }
         for (OfflinePlayer player : Bukkit.getOfflinePlayers()) {
-            if (playerGemsList.size() >= 9) break;
             playerGemsList.add(getPlayerGems(player.getUniqueId()));
         }
         return playerGemsList;

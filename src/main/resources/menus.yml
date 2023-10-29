@@ -18,9 +18,19 @@
 # %simplegems_balance% - Get the unformatted gems amount (100000)
 # %simplegems_balance_formatted% - Get the formatted gems amount (100k)
 # %simplegems_balance_decimal% - Get the decimal formatted gems amount (100000.0)
+# Actions:
+# [console] - Send a console command
+# [message] - Send a message to the player
+# {openmenu:menu-name} - Open a new category menu
+# [close] - Close the current menu
 #---------------------------------------------------------------------------
+# This is used for automatic file updating purposes
+config-version: 1
+
 categories:
-  default:
+  # The default category name cannot be changed or removed
+  gems-menu:
+    enabled: true
     title: "&e&lGems Shop"
     size: 27
     fill:

@@ -1,17 +1,19 @@
 package me.refracdevelopment.simplegems.utilities;
 
+import lombok.experimental.UtilityClass;
 import me.refracdevelopment.simplegems.SimpleGems;
 import net.byteflux.libby.BukkitLibraryManager;
 import net.byteflux.libby.Library;
 
+@UtilityClass
 public class DownloadUtil {
 
-    public static void downloadAndEnable() {
+    public void downloadAndEnable() {
         BukkitLibraryManager libraryManager = new BukkitLibraryManager(SimpleGems.getInstance());
         Library lib = Library.builder()
                 .groupId("org{}mariadb{}jdbc") // "{}" is replaced with ".", useful to avoid unwanted changes made by maven-shade-plugin
                 .artifactId("mariadb-java-client")
-                .version("3.1.4")
+                .version("3.2.0")
                 .build();
         Library lib2 = Library.builder()
                 .groupId("org{}mongodb") // "{}" is replaced with ".", useful to avoid unwanted changes made by maven-shade-plugin
@@ -31,7 +33,7 @@ public class DownloadUtil {
         Library lib5 = Library.builder()
                 .groupId("org{}slf4j") // "{}" is replaced with ".", useful to avoid unwanted changes made by maven-shade-plugin
                 .artifactId("slf4j-reload4j")
-                .version("2.0.7")
+                .version("2.0.9")
                 .build();
         Library lib6 = Library.builder()
                 .groupId("org{}xerial") // "{}" is replaced with ".", useful to avoid unwanted changes made by maven-shade-plugin

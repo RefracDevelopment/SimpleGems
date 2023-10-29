@@ -1,15 +1,19 @@
 package me.refracdevelopment.simplegems.manager.configuration.cache;
 
+import dev.dejvokep.boostedyaml.block.implementation.Section;
 import me.refracdevelopment.simplegems.SimpleGems;
-import org.bukkit.configuration.ConfigurationSection;
 
 public class Menus {
 
     // Gems Shop
-    public static ConfigurationSection GEM_SHOP_CATEGORIES;
+    public Section GEM_SHOP_CATEGORIES;
 
-    public static void loadMenus() {
+    public Menus() {
+        loadConfig();
+    }
+
+    public void loadConfig() {
         // Gems Shop
-        GEM_SHOP_CATEGORIES = SimpleGems.getInstance().getMenusFile().getConfigurationSection("categories");
+        GEM_SHOP_CATEGORIES = SimpleGems.getInstance().getMenusFile().getSection("categories");
     }
 }

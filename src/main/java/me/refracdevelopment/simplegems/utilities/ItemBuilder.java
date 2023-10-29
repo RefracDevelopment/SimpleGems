@@ -1,7 +1,7 @@
 package me.refracdevelopment.simplegems.utilities;
 
+import com.cryptomorin.xseries.ReflectionUtils;
 import com.cryptomorin.xseries.XMaterial;
-import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
@@ -27,7 +27,7 @@ public class ItemBuilder {
     }
 
     public ItemBuilder(Material m, int amount) {
-        if (Bukkit.getVersion().contains("1.7")) {
+        if (ReflectionUtils.MINOR_NUMBER == 7) {
             is = new ItemStack(m, amount);
         } else {
             is = new ItemStack(Objects.requireNonNull(XMaterial.matchXMaterial(m).parseMaterial()), amount);
@@ -35,7 +35,7 @@ public class ItemBuilder {
     }
 
     public ItemBuilder(Material m, int amount, byte durability) {
-        if (Bukkit.getVersion().contains("1.7")) {
+        if (ReflectionUtils.MINOR_NUMBER == 7) {
             is = new ItemStack(m, amount, durability);
         } else {
             is = new ItemStack(Objects.requireNonNull(XMaterial.matchXMaterial(m).parseMaterial()), amount, durability);
@@ -58,7 +58,7 @@ public class ItemBuilder {
 
     public ItemBuilder setName(String name) {
         ItemMeta im = is.getItemMeta();
-        im.setDisplayName(me.refracdevelopment.simplegems.utilities.chat.Color.translate(name));
+        im.setDisplayName(name);
         is.setItemMeta(im);
         return this;
     }
@@ -72,7 +72,7 @@ public class ItemBuilder {
 
     public ItemBuilder setUnTranslatedName(String name) {
         ItemMeta im = is.getItemMeta();
-        im.setDisplayName(me.refracdevelopment.simplegems.utilities.chat.Color.translate(name));
+        im.setDisplayName(name);
         is.setItemMeta(im);
         return this;
     }
@@ -161,7 +161,7 @@ public class ItemBuilder {
         List<String> lore = new ArrayList<>();
         if (im.hasLore())
             lore = new ArrayList<>(im.getLore());
-        lore.add(me.refracdevelopment.simplegems.utilities.chat.Color.translate(line));
+        lore.add(line);
         im.setLore(lore);
         is.setItemMeta(im);
         return this;
@@ -172,7 +172,7 @@ public class ItemBuilder {
         List<String> lore = new ArrayList<>();
         if (im.hasLore())
             lore = new ArrayList<>(im.getLore());
-        lore.add(me.refracdevelopment.simplegems.utilities.chat.Color.translate(line));
+        lore.add(line);
         im.setLore(lore);
         is.setItemMeta(im);
         return this;

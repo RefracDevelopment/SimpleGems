@@ -1,0 +1,101 @@
+#   ___________                __           ________
+#  /   _____/__| _____ ______ |  |   ____  /  _____/  ____   _____   ______
+#  \_____  \|  |/     \\____ \|  | _/ __ \/   \  ____/ __ \ /     \ /  ___/
+#  /        \  |  | |  \  |_\ \  |__  ___/_    \_\  \  ___/_  | |  \\___ \
+# /_______  /__|__|_|  /   ___/____/\___  /\______  /\___  /__|_|  /____  \
+#         \/         \/|__|             \/        \/     \/      \/     \/
+
+# This is used for automatic file updating purposes
+config-version: 1
+
+# The locale to use in the /locale folder
+locale: en_US
+
+# This is used to allow players to start with
+# a defined amount of gems on first join
+# setting this to 0 will effectively disable it
+# Default: 100
+starting-gems: 100
+
+# Allows changing how long data is cached for /gems top
+# Default: 1800
+leaderboard-update-interval: 1800
+
+# Choose your data saving type:
+# MONGODB - Database saving
+# MYSQL/MARIADB - Database saving
+# SQLITE - Local Database saving
+# FLAT_FILE - Local Json file saving in the playerdata/player-uuid.json file
+# Default: FLAT_FILE
+data-type: FLAT_FILE
+
+# Either MySQL or MariaDB will work here.
+mysql:
+  # Default: 127.0.0.1
+  host: 127.0.0.1
+  # Default: 3306
+  port: '3306'
+  # Default: SimpleGems
+  database: SimpleGems
+  # Default: root
+  username: root
+  # Default:
+  password: ''
+mongodb:
+  use-client-uri:
+    # If you wish to use mongo client URI instead, enable this option
+    # Default: false
+    enabled: false
+    # Default:
+    uri: ''
+  # If your host supports TLS/SSL enable this option
+  # Default: false
+  ssl-enabled: false
+  # Default: 127.0.0.1
+  address: 127.0.0.1
+  # Default: 27017
+  port: '27017'
+  # Default: SimpleGems
+  database: SimpleGems
+  authentication:
+    # Default: false
+    enabled: false
+    # Default: admin
+    database: admin
+    # Default:
+    username: ''
+    # Default:
+    password: ''
+
+gems-top:
+  # This is used for viewing top players
+  # Default: &e&lGems %arrow% &6&lTop %entries%
+  title: '&e&lGems %arrow% &6&lTop %entries%'
+  # Default: &6&l%number%. &e%player% &7- &e%gems_formatted%
+  format: '&6&l%number%. &e%player% &7- &e%gems_formatted%'
+  # Default: 10
+  top-entries: 10
+
+gems-balance:
+  - ''
+  - '&e&l&eYou currently have &f&n%gems_formatted%&e gems!'
+  - '&7&o(( &f&oTip&7&o: You can get gems by doing &e&oevents&7&o! ))'
+  - ''
+
+gems-item:
+  # This is used for withdrawing gems
+  # Default: DIAMOND
+  material: DIAMOND
+  # Default: 0
+  data: 0
+  # Default: false
+  customData: false
+  # Default: 0
+  customModelData: 0
+  # Default: &e&lGems &7(Right Click)
+  name: '&e&lGems &7(Right Click)'
+  # Default: false
+  glow: false
+  lore:
+    - '&7&oRight click to redeem these gems you'
+    - '&7&ohave obtained through your journey'

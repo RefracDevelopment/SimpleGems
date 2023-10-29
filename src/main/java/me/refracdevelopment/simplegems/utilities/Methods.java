@@ -1,21 +1,18 @@
 package me.refracdevelopment.simplegems.utilities;
 
+import com.cryptomorin.xseries.ReflectionUtils;
 import com.cryptomorin.xseries.XMaterial;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.ReplaceOptions;
 import de.tr7zw.nbtapi.NBTItem;
-import dev.rosewood.rosegarden.utils.NMSUtil;
-import dev.rosewood.rosegarden.utils.StringPlaceholders;
+import lombok.experimental.UtilityClass;
 import me.refracdevelopment.simplegems.SimpleGems;
-import me.refracdevelopment.simplegems.api.SimpleGemsAPI;
-import me.refracdevelopment.simplegems.manager.configuration.LocaleManager;
-import me.refracdevelopment.simplegems.manager.configuration.cache.Config;
 import me.refracdevelopment.simplegems.manager.data.DataType;
 import me.refracdevelopment.simplegems.player.data.ProfileData;
 import me.refracdevelopment.simplegems.utilities.chat.Color;
 import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
+import me.refracdevelopment.simplegems.utilities.chat.StringPlaceholders;
 import org.bson.Document;
-import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -29,14 +26,15 @@ import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
 
+@UtilityClass
 public class Methods {
 
     /**
      * The #saveOffline method allows you to
      * save a specified player's data
      */
-    public static void saveOffline(OfflinePlayer player, long amount) {
-        Bukkit.getScheduler().runTaskAsynchronously(SimpleGems.getInstance(), () -> {
+    public void saveOffline(OfflinePlayer player, long amount) {
+        Tasks.runAsync((wrappedTask) -> {
             if (SimpleGems.getInstance().getDataType() == DataType.MONGO) {
                 Document document = new Document();
 
@@ -63,19 +61,19 @@ public class Methods {
         });
     }
 
-    public static void setOfflineGems(OfflinePlayer player, long amount) {
+    public void setOfflineGems(OfflinePlayer player, long amount) {
         saveOffline(player, amount);
     }
 
-    public static void giveOfflineGems(OfflinePlayer player, long amount) {
+    public void giveOfflineGems(OfflinePlayer player, long amount) {
         setOfflineGems(player, getOfflineGems(player) + amount);
     }
     
-    public static void takeOfflineGems(OfflinePlayer player, long amount) {
+    public void takeOfflineGems(OfflinePlayer player, long amount) {
         setOfflineGems(player, getOfflineGems(player) - amount);
     }
 
-    public static long getOfflineGems(OfflinePlayer player) {
+    public long getOfflineGems(OfflinePlayer player) {
         if (SimpleGems.getInstance().getDataType() == DataType.MONGO) {
             Document document = SimpleGems.getInstance().getMongoManager().getStatsCollection().find(Filters.eq("uuid", player.getUniqueId().toString())).first();
 
@@ -100,39 +98,40 @@ public class Methods {
         return 0;
     }
     
-    public static boolean hasOfflineGems(OfflinePlayer player, long amount) {
+    public boolean hasOfflineGems(OfflinePlayer player, long amount) {
         return getOfflineGems(player) >= amount;
     }
 
-    public static void payGems(Player player, Player target, long amount, boolean silent) {
+    public void payGems(Player player, Player target, long amount, boolean silent) {
         ProfileData profile = SimpleGems.getInstance().getProfileManager().getProfile(player.getUniqueId()).getData();
-        final LocaleManager locale = SimpleGems.getInstance().getManager(LocaleManager.class);
-
-        StringPlaceholders placeholders = StringPlaceholders.builder()
-                .add("gems", String.valueOf(amount))
-                .addAll(Placeholders.setPlaceholders(target))
-                .build();
 
         if (player == target) {
-            locale.sendCustomMessage(player, "&cYou can't pay yourself.");
+            Color.sendCustomMessage(player, "&cYou can't pay yourself.");
             return;
         }
 
+        StringPlaceholders placeholders = StringPlaceholders.builder()
+                .addAll(Placeholders.setPlaceholders(player))
+                .add("player", target.getName())
+                .add("gems", String.valueOf(amount))
+                .add("gems_formatted", Methods.format(amount))
+                .add("gems_decimal", Methods.formatDecimal(amount))
+                .build();
+
         if (profile.getGems().hasAmount(amount)) {
             profile.getGems().decrementAmount(amount);
-            SimpleGemsAPI.INSTANCE.giveGems(target, amount);
+            SimpleGems.getInstance().getGemsAPI().giveGems(target, amount);
 
-            locale.sendMessage(player, "gems-paid", placeholders);
+            Color.sendMessage(player, "gems-paid", placeholders);
             if (silent) return;
-            locale.sendMessage(target, "gems-received", placeholders);
+            Color.sendMessage(target, "gems-received", placeholders);
         } else {
-            locale.sendMessage(player, "not-enough-pay", placeholders);
+            Color.sendMessage(player, "not-enough-pay", placeholders);
         }
     }
 
-    public static void payOfflineGems(Player player, OfflinePlayer target, long amount) {
+    public void payOfflineGems(Player player, OfflinePlayer target, long amount) {
         ProfileData profile = SimpleGems.getInstance().getProfileManager().getProfile(player.getUniqueId()).getData();
-        final LocaleManager locale = SimpleGems.getInstance().getManager(LocaleManager.class);
 
         StringPlaceholders placeholders = StringPlaceholders.builder()
                 .addAll(Placeholders.setPlaceholders(player))
@@ -146,15 +145,13 @@ public class Methods {
             profile.getGems().decrementAmount(amount);
             giveOfflineGems(target, amount);
 
-            locale.sendMessage(player, "gems-paid", placeholders);
+            Color.sendMessage(player, "gems-paid", placeholders);
         } else {
-            locale.sendMessage(player, "not-enough-pay", placeholders);
+            Color.sendMessage(player, "not-enough-pay", placeholders);
         }
     }
 
-    public static void withdrawGems(Player player, long amount) {
-        final LocaleManager locale = SimpleGems.getInstance().getManager(LocaleManager.class);
-
+    public void withdrawGems(Player player, long amount) {
         StringPlaceholders placeholders = StringPlaceholders.builder()
                 .addAll(Placeholders.setPlaceholders(player))
                 .add("gems", String.valueOf(amount))
@@ -162,17 +159,17 @@ public class Methods {
                 .add("gems_decimal", Methods.formatDecimal(amount))
                 .build();
 
-        if (SimpleGemsAPI.INSTANCE.hasGems(player, amount)) {
-            SimpleGemsAPI.INSTANCE.takeGems(player, amount);
-            SimpleGemsAPI.INSTANCE.giveGemsItem(player, amount);
+        if (SimpleGems.getInstance().getGemsAPI().hasGems(player, amount)) {
+            SimpleGems.getInstance().getGemsAPI().takeGems(player, amount);
+            SimpleGems.getInstance().getGemsAPI().giveGemsItem(player, amount);
 
-            locale.sendMessage(player, "gems-withdrawn", placeholders);
+            Color.sendMessage(player, "gems-withdrawn", placeholders);
         } else {
-            locale.sendMessage(player, "not-enough-withdraw", placeholders);
+            Color.sendMessage(player, "not-enough-withdraw", placeholders);
         }
     }
 
-    public static void giveGemsItem(Player player, long amount) {
+    public void giveGemsItem(Player player, long amount) {
         ItemStack gemsItem = getGemsItem(amount);
 
         if (player.getInventory().firstEmpty() != -1) {
@@ -183,23 +180,23 @@ public class Methods {
         }
     }
 
-    public static ItemStack getGemsItem(long amount) {
-        String name = Config.GEMS_ITEM_NAME;
-        XMaterial material = Utilities.getMaterial(Config.GEMS_ITEM_MATERIAL);
-        int data = Config.GEMS_ITEM_DATA;
-        List<String> lore = Config.GEMS_ITEM_LORE;
+    public ItemStack getGemsItem(long amount) {
+        String name = SimpleGems.getInstance().getSettings().GEMS_ITEM_NAME;
+        XMaterial material = Utilities.getMaterial(SimpleGems.getInstance().getSettings().GEMS_ITEM_MATERIAL);
+        int data = SimpleGems.getInstance().getSettings().GEMS_ITEM_DATA;
+        List<String> lore = SimpleGems.getInstance().getSettings().GEMS_ITEM_LORE;
         ItemBuilder item = new ItemBuilder(material.parseMaterial(), 1);
 
-        if (Config.GEMS_ITEM_GLOW) {
+        if (SimpleGems.getInstance().getSettings().GEMS_ITEM_GLOW) {
             item.addEnchant(Enchantment.ARROW_DAMAGE, 1);
             ItemMeta itemMeta = item.toItemStack().getItemMeta();
             itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             item.toItemStack().setItemMeta(itemMeta);
         }
 
-        if (Config.GEMS_ITEM_CUSTOM_DATA) {
-            if (NMSUtil.getVersionNumber() >= 14) {
-                item.setCustomModelData(Config.GEMS_ITEM_CUSTOM_MODEL_DATA);
+        if (SimpleGems.getInstance().getSettings().GEMS_ITEM_CUSTOM_DATA) {
+            if (ReflectionUtils.MINOR_NUMBER >= 14) {
+                item.setCustomModelData(SimpleGems.getInstance().getSettings().GEMS_ITEM_CUSTOM_MODEL_DATA);
             } else {
                 Color.log("&cAn error occurred when trying to set custom model data. Make sure your only using custom model data when on 1.14+.");
             }
@@ -227,12 +224,12 @@ public class Methods {
         return item.toItemStack();
     }
 
-    public static String formatDecimal(long amount) {
+    public String formatDecimal(long amount) {
         DecimalFormat decimalFormat = new DecimalFormat("###,###");
         return decimalFormat.format(amount);
     }
 
-    public static String format(long amount) {
+    public String format(long amount) {
         String fin = "none";
         if (amount <= 0.0) {
             fin = String.valueOf(0);

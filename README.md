@@ -37,27 +37,27 @@ softdepend:
 ```
 
 ```JAVA
-SimpleGemsAPI.INSTANCE.getGems(player);
+SimpleGems.getInstance().getGemsAPI().getGems(player);
 
-SimpleGemsAPI.INSTANCE.getOfflineGems(player);
+SimpleGems.getInstance().getGemsAPI().getOfflineGems(player);
 
-SimpleGemsAPI.INSTANCE.hasGems(player, amount);
+SimpleGems.getInstance().getGemsAPI().hasGems(player, amount);
 
-SimpleGemsAPI.INSTANCE.hasOfflineGems(player, amount);
+SimpleGems.getInstance().getGemsAPI().hasOfflineGems(player, amount);
 
-SimpleGemsAPI.INSTANCE.giveGemsItem(player, amount);
+SimpleGems.getInstance().getGemsAPI().giveGemsItem(player, amount);
 
-SimpleGemsAPI.INSTANCE.giveGems(player, amount);
+SimpleGems.getInstance().getGemsAPI().giveGems(player, amount);
 
-SimpleGemsAPI.INSTANCE.giveOfflineGems(player, amount);
+SimpleGems.getInstance().getGemsAPI().giveOfflineGems(player, amount);
 
-SimpleGemsAPI.INSTANCE.takeGems(player, amount);
+SimpleGems.getInstance().getGemsAPI().takeGems(player, amount);
 
-SimpleGemsAPI.INSTANCE.takeOfflineGems(player, amount);
+SimpleGems.getInstance().getGemsAPI().takeOfflineGems(player, amount);
 
-SimpleGemsAPI.INSTANCE.setGems(player, amount);
+SimpleGems.getInstance().getGemsAPI().setGems(player, amount);
 
-SimpleGemsAPI.INSTANCE.setOfflineGems(player, amount);
+SimpleGems.getInstance().getGemsAPI().setOfflineGems(player, amount);
 ```
 
 ### License

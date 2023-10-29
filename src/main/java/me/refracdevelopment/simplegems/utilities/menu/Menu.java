@@ -1,6 +1,5 @@
 package me.refracdevelopment.simplegems.utilities.menu;
 
-import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.utilities.Utilities;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -17,7 +16,6 @@ import java.util.Arrays;
  */
 public abstract class Menu implements InventoryHolder {
 
-    protected SimpleGems plugin = SimpleGems.getInstance();
     protected PlayerMenuUtility playerMenuUtility;
     protected Inventory inventory;
     protected ItemStack FILLER_GLASS = makeItem(Utilities.getMaterial("GRAY_STAINED_GLASS_PANE").parseMaterial(), "");

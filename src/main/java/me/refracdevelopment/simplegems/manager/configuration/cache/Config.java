@@ -1,66 +1,58 @@
 package me.refracdevelopment.simplegems.manager.configuration.cache;
 
 import me.refracdevelopment.simplegems.SimpleGems;
-import me.refracdevelopment.simplegems.manager.configuration.ConfigurationManager;
-import me.refracdevelopment.simplegems.manager.configuration.LocaleManager;
-import me.refracdevelopment.simplegems.utilities.chat.Color;
 
 import java.util.List;
-import java.util.Objects;
 
 public class Config {
 
     // Settings
-    public static long STARTING_GEMS;
-    public static int LEADERBOARD_UPDATE_INTERVAL;
-    public static String DATA_TYPE;
+    public long STARTING_GEMS;
+    public int LEADERBOARD_UPDATE_INTERVAL;
+    public String DATA_TYPE;
 
     // Top
-    public static String GEMS_TOP_TITLE;
-    public static String GEMS_TOP_FORMAT;
-    public static int GEMS_TOP_ENTRIES;
+    public String GEMS_TOP_TITLE;
+    public String GEMS_TOP_FORMAT;
+    public int GEMS_TOP_ENTRIES;
 
     // Messages
-    public static List<String> GEMS_BALANCE;
-    public static String KICK_MESSAGES_ERROR;
+    public List<String> GEMS_BALANCE;
 
     // Gems Item
-    public static String GEMS_ITEM_MATERIAL;
-    public static int GEMS_ITEM_DATA;
-    public static boolean GEMS_ITEM_CUSTOM_DATA;
-    public static int GEMS_ITEM_CUSTOM_MODEL_DATA;
-    public static String GEMS_ITEM_NAME;
-    public static boolean GEMS_ITEM_GLOW;
-    public static List<String> GEMS_ITEM_LORE;
+    public String GEMS_ITEM_MATERIAL;
+    public int GEMS_ITEM_DATA;
+    public boolean GEMS_ITEM_CUSTOM_DATA;
+    public int GEMS_ITEM_CUSTOM_MODEL_DATA;
+    public String GEMS_ITEM_NAME;
+    public boolean GEMS_ITEM_GLOW;
+    public List<String> GEMS_ITEM_LORE;
 
-    public static void loadConfig() {
-        final LocaleManager localeManager = SimpleGems.getInstance().getManager(LocaleManager.class);
+    public Config() {
+        loadConfig();
+    }
 
+    public void loadConfig() {
         // Settings
-        STARTING_GEMS = ConfigurationManager.Setting.STARTING_GEMS.getLong();
-        LEADERBOARD_UPDATE_INTERVAL = ConfigurationManager.Setting.LEADERBOARD_UPDATE_INTERVAL.getInt();
-        DATA_TYPE = ConfigurationManager.Setting.DATA_TYPE.getString();
+        STARTING_GEMS = SimpleGems.getInstance().getConfigFile().getInt("starting-gems");
+        LEADERBOARD_UPDATE_INTERVAL = SimpleGems.getInstance().getConfigFile().getInt("leaderboard-update-interval");
+        DATA_TYPE = SimpleGems.getInstance().getConfigFile().getString("data-type");
 
         // Top
-        GEMS_TOP_TITLE = ConfigurationManager.Setting.GEMS_TOP_TITLE.getString();
-        GEMS_TOP_FORMAT = ConfigurationManager.Setting.GEMS_TOP_FORMAT.getString();
-        GEMS_TOP_ENTRIES = ConfigurationManager.Setting.GEMS_TOP_ENTRIES.getInt();
+        GEMS_TOP_TITLE = SimpleGems.getInstance().getConfigFile().getString("gems-top.title");
+        GEMS_TOP_FORMAT = SimpleGems.getInstance().getConfigFile().getString("gems-top.format");
+        GEMS_TOP_ENTRIES = SimpleGems.getInstance().getConfigFile().getInt("gems-top.entries");
 
         // Messages
-        GEMS_BALANCE = ConfigurationManager.Setting.GEMS_BALANCE.getStringList();
-        KICK_MESSAGES_ERROR = localeManager.getLocaleMessage("kick-messages-error");
+        GEMS_BALANCE = SimpleGems.getInstance().getConfigFile().getStringList("gems-balance");
 
         // Gems Item
-        GEMS_ITEM_MATERIAL = Objects.requireNonNull(ConfigurationManager.Setting.GEMS_ITEM_MATERIAL.getString());
-        GEMS_ITEM_DATA = ConfigurationManager.Setting.GEMS_ITEM_DATA.getInt();
-        GEMS_ITEM_CUSTOM_DATA = ConfigurationManager.Setting.GEMS_ITEM_CUSTOM_DATA.getBoolean();
-        GEMS_ITEM_CUSTOM_MODEL_DATA = ConfigurationManager.Setting.GEMS_ITEM_CUSTOM_MODEL_DATA.getInt();
-        GEMS_ITEM_NAME = ConfigurationManager.Setting.GEMS_ITEM_NAME.getString();
-        GEMS_ITEM_GLOW = ConfigurationManager.Setting.GEMS_ITEM_GLOW.getBoolean();
-        GEMS_ITEM_LORE = ConfigurationManager.Setting.GEMS_ITEM_LORE.getStringList();
-
-        Color.log("&c==========================================");
-        Color.log("&eAll files have been loaded correctly!");
-        Color.log("&c==========================================");
+        GEMS_ITEM_MATERIAL = SimpleGems.getInstance().getConfigFile().getString("gems-item.material");
+        GEMS_ITEM_DATA = SimpleGems.getInstance().getConfigFile().getInt("gems-item.data");
+        GEMS_ITEM_CUSTOM_DATA = SimpleGems.getInstance().getConfigFile().getBoolean("gems-item.custom-data");
+        GEMS_ITEM_CUSTOM_MODEL_DATA = SimpleGems.getInstance().getConfigFile().getInt("gems-item.custom-model-data");
+        GEMS_ITEM_NAME = SimpleGems.getInstance().getConfigFile().getString("gems-item.name");
+        GEMS_ITEM_GLOW = SimpleGems.getInstance().getConfigFile().getBoolean("gems-item.glow");
+        GEMS_ITEM_LORE = SimpleGems.getInstance().getConfigFile().getStringList("gems-item.lore");
     }
 }

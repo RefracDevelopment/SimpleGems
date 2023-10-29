@@ -2,7 +2,6 @@ package me.refracdevelopment.simplegems.utilities.chat;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.refracdevelopment.simplegems.SimpleGems;
-import me.refracdevelopment.simplegems.api.SimpleGemsAPI;
 import me.refracdevelopment.simplegems.utilities.Methods;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -16,7 +15,7 @@ public class PAPIExpansion extends PlaceholderExpansion {
 
     @Override
     public @NotNull String getIdentifier() {
-        return "simplegems";
+        return SimpleGems.getInstance().getDescription().getName();
     }
 
     @Override
@@ -31,7 +30,7 @@ public class PAPIExpansion extends PlaceholderExpansion {
 
     @Override
     public String onPlaceholderRequest(Player player, @NotNull String params) {
-        long gems = SimpleGemsAPI.INSTANCE.getGems(player);
+        long gems = SimpleGems.getInstance().getGemsAPI().getGems(player);
 
         if (params.equalsIgnoreCase("balance")) {
             return String.valueOf(gems);

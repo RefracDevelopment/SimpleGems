@@ -19,21 +19,17 @@ import org.bukkit.inventory.ItemStack;
  * or to add new features and events.
  */
 public class SimpleGemsAPI {
-
-    public static SimpleGems plugin = SimpleGems.getInstance();
-    public static SimpleGemsAPI INSTANCE;
-
+    
     public SimpleGemsAPI() {
-        INSTANCE = this;
-        Color.log("&eSimpleGemsAPI has been enabled!");
-        Color.log("&eWiki: https://refracdevelopment.gitbook.io/");
+        Color.log("&aSimpleGemsAPI has been enabled!");
+        Color.log("&aWiki: https://refracdevelopment.gitbook.io/simplegems/");
     }
 
     /**
      * @return Is the SimpleGemsAPI enabled and registered?
      */
-    public static boolean isRegistered() {
-        return INSTANCE != null;
+    public boolean isRegistered() {
+        return SimpleGems.getInstance() != null;
     }
 
     /**
@@ -42,7 +38,7 @@ public class SimpleGemsAPI {
      * @return online player's cached profile data
      */
     public ProfileData getProfileData(Player player) {
-        return plugin.getProfileManager().getProfile(player.getUniqueId()).getData();
+        return SimpleGems.getInstance().getProfileManager().getProfile(player.getUniqueId()).getData();
     }
 
     /**
@@ -128,9 +124,9 @@ public class SimpleGemsAPI {
         if (getProfileData(player) == null) return;
 
         GemsAddEvent event = new GemsAddEvent(player, amount);
-        Bukkit.getServer().getPluginManager().callEvent(event);
+        Bukkit.getPluginManager().callEvent(event);
         getProfileData(player).getGems().incrementAmount(amount);
-        Tasks.runAsync(plugin, () -> getProfileData(player).save());
+        Tasks.runAsync((wrappedTask) -> getProfileData(player).save());
     }
 
     /**
@@ -153,9 +149,9 @@ public class SimpleGemsAPI {
         if (getProfileData(player) == null) return;
 
         GemsRemoveEvent event = new GemsRemoveEvent(player, amount);
-        Bukkit.getServer().getPluginManager().callEvent(event);
+        Bukkit.getPluginManager().callEvent(event);
         getProfileData(player).getGems().decrementAmount(amount);
-        Tasks.runAsync(plugin, () -> getProfileData(player).save());
+        Tasks.runAsync((wrappedTask) -> getProfileData(player).save());
     }
 
     /**
@@ -178,9 +174,9 @@ public class SimpleGemsAPI {
         if (getProfileData(player) == null) return;
 
         GemsSetEvent event = new GemsSetEvent(player, amount);
-        Bukkit.getServer().getPluginManager().callEvent(event);
+        Bukkit.getPluginManager().callEvent(event);
         getProfileData(player).getGems().setAmount(amount);
-        Tasks.runAsync(plugin, () -> getProfileData(player).save());
+        Tasks.runAsync((wrappedTask) -> getProfileData(player).save());
     }
 
     /**
@@ -202,7 +198,7 @@ public class SimpleGemsAPI {
      */
     public void payGems(Player player, Player target, long amount, boolean silent) {
         GemsPayEvent event = new GemsPayEvent(player, target, amount);
-        Bukkit.getServer().getPluginManager().callEvent(event);
+        Bukkit.getPluginManager().callEvent(event);
         Methods.payGems(player, target, amount, silent);
     }
 
@@ -225,7 +221,7 @@ public class SimpleGemsAPI {
      */
     public void withdrawGems(Player player, long amount) {
         GemsRemoveEvent event = new GemsRemoveEvent(player, amount);
-        Bukkit.getServer().getPluginManager().callEvent(event);
+        Bukkit.getPluginManager().callEvent(event);
         Methods.withdrawGems(player, amount);
     }
 }

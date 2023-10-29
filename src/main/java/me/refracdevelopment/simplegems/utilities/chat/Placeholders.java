@@ -1,22 +1,19 @@
 package me.refracdevelopment.simplegems.utilities.chat;
 
-import dev.rosewood.rosegarden.utils.StringPlaceholders;
+import lombok.experimental.UtilityClass;
 import me.refracdevelopment.simplegems.SimpleGems;
-import me.refracdevelopment.simplegems.api.SimpleGemsAPI;
-import me.refracdevelopment.simplegems.manager.configuration.LocaleManager;
 import me.refracdevelopment.simplegems.utilities.Methods;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+@UtilityClass
 public class Placeholders {
 
-    public static String setPlaceholders(CommandSender sender, String placeholder) {
-        final LocaleManager localeManager = SimpleGems.getInstance().getManager(LocaleManager.class);
-
-        placeholder = placeholder.replace("%prefix%", localeManager.getLocaleMessage("prefix"));
+    public  String setPlaceholders(CommandSender sender, String placeholder) {
+        placeholder = placeholder.replace("%prefix%", SimpleGems.getInstance().getLocaleFile().getString("prefix"));
         if (sender instanceof Player) {
             Player player = (Player) sender;
-            long gems = SimpleGemsAPI.INSTANCE.getGems(player);
+            long gems = SimpleGems.getInstance().getGemsAPI().getGems(player);
 
             placeholder = placeholder.replace("%player%", player.getName());
             placeholder = placeholder.replace("%gems%", String.valueOf(gems));
@@ -34,14 +31,13 @@ public class Placeholders {
         return placeholder;
     }
 
-    public static StringPlaceholders setPlaceholders(CommandSender sender) {
-        final LocaleManager localeManager = SimpleGems.getInstance().getManager(LocaleManager.class);
+    public  StringPlaceholders setPlaceholders(CommandSender sender) {
         StringPlaceholders.Builder placeholders = StringPlaceholders.builder();
 
-        placeholders.add("prefix", localeManager.getLocaleMessage("prefix"));
+        placeholders.add("prefix", SimpleGems.getInstance().getLocaleFile().getString("prefix"));
         if (sender instanceof Player) {
             Player player = (Player) sender;
-            long gems = SimpleGemsAPI.INSTANCE.getGems(player);
+            long gems = SimpleGems.getInstance().getGemsAPI().getGems(player);
 
             placeholders.add("player", player.getName());
             placeholders.add("gems", String.valueOf(gems));

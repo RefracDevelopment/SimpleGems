@@ -2,7 +2,6 @@ package me.refracdevelopment.simplegems.menu;
 
 import lombok.Getter;
 import me.refracdevelopment.simplegems.SimpleGems;
-import me.refracdevelopment.simplegems.manager.configuration.cache.Menus;
 import me.refracdevelopment.simplegems.utilities.ItemBuilder;
 import me.refracdevelopment.simplegems.utilities.Utilities;
 import me.refracdevelopment.simplegems.utilities.chat.Color;
@@ -25,12 +24,12 @@ public class GemShopCategory extends Menu {
 
     @Override
     public String getMenuName() {
-        return Color.translate(playerMenuUtility.getOwner(), Menus.GEM_SHOP_CATEGORIES.getString(categoryName + ".title"));
+        return Color.translate(playerMenuUtility.getOwner(), SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getString(categoryName + ".title"));
     }
 
     @Override
     public int getSlots() {
-        return Menus.GEM_SHOP_CATEGORIES.getInt(categoryName + ".size");
+        return SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getInt(categoryName + ".size");
     }
 
     @Override
@@ -43,17 +42,7 @@ public class GemShopCategory extends Menu {
 
         SimpleGems.getInstance().getGemShop().getItems().forEach(item -> {
             if (item.getCategoryName().equalsIgnoreCase(categoryName) && item.getSlot() == event.getRawSlot()) {
-                if (item.isAction()) {
-                    item.getActions().forEach(action -> {
-                        if (action.startsWith("{openmenu:")) {
-                            new GemShopCategory(playerMenuUtility, action
-                                    .replace("{openmenu:", "")
-                                    .replace("}", "")).open();
-                        }
-                    });
-                } else {
-                    item.handlePurchase(player);
-                }
+                item.handleItem(player);
             }
         });
     }
@@ -69,9 +58,9 @@ public class GemShopCategory extends Menu {
 
         for (int i = 0; i < getSlots(); i++) {
             if (getInventory().getItem(i) == null) {
-                String name = Menus.GEM_SHOP_CATEGORIES.getString(categoryName + ".fill.name");
-                Material material = Utilities.getMaterial(Menus.GEM_SHOP_CATEGORIES.getString(categoryName + ".fill.material")).parseMaterial();
-                int data = Menus.GEM_SHOP_CATEGORIES.getInt(categoryName + ".fill.data");;
+                String name = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getString(categoryName + ".fill.name");
+                Material material = Utilities.getMaterial(SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getString(categoryName + ".fill.material")).parseMaterial();
+                int data = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getInt(categoryName + ".fill.data");;
                 ItemBuilder item = new ItemBuilder(material);
 
                 item.setName(Color.translate(playerMenuUtility.getOwner(), name));

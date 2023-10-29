@@ -1,6 +1,5 @@
 package me.refracdevelopment.simplegems.player.data;
 
-import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.player.Profile;
 import me.refracdevelopment.simplegems.utilities.Tasks;
 import org.bukkit.Bukkit;
@@ -20,7 +19,7 @@ public class ProfileManager {
         Bukkit.getOnlinePlayers().forEach(onlinePlayer -> {
             getProfiles().clear();
             handleProfileCreation(onlinePlayer.getUniqueId(), onlinePlayer.getName());
-            Tasks.runAsync(SimpleGems.getInstance(), () -> getProfile(onlinePlayer.getUniqueId()).getData().load());
+            Tasks.runAsync((wrappedTask) -> getProfile(onlinePlayer.getUniqueId()).getData().load());
         });
     }
 

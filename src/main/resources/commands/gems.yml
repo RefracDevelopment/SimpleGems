@@ -1,0 +1,53 @@
+# This is used for automatic file updating purposes
+config-version: 1
+
+commands:
+  gems:
+    enabled: true
+    aliases:
+      - 'gems'
+      - 'simplegems'
+  balance:
+    enabled: true
+    aliases:
+      - 'balance'
+      - 'bal'
+  withdraw:
+    enabled: true
+    aliases:
+      - 'withdraw'
+  pay:
+    enabled: true
+    aliases:
+      - 'pay'
+      - 'send'
+  shop:
+    enabled: true
+    aliases:
+      - 'shop'
+  top:
+    enabled: true
+    aliases:
+      - 'top'
+  version:
+    enabled: true
+    aliases:
+      - 'version'
+  update:
+    enabled: true
+    aliases:
+      - 'update'
+  give:
+    enabled: true
+    aliases:
+      - 'give'
+      - 'add'
+  take:
+    enabled: true
+    aliases:
+      - 'take'
+      - 'remove'
+  set:
+    enabled: true
+    aliases:
+      - 'set'
