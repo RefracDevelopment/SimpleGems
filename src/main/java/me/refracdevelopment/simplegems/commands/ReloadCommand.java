@@ -42,7 +42,6 @@ public class ReloadCommand extends SubCommand {
 
         Bukkit.getScheduler().cancelTasks(SimpleGems.getInstance());
         SimpleGems.getInstance().reloadFiles();
-        SimpleGems.getInstance().getLeaderboardManager().updateTask();
         SimpleGems.getInstance().getGemShop().load();
         Color.sendMessage(commandSender, "command-reload-success");
     }
