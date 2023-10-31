@@ -21,12 +21,12 @@ public class SQLiteManager {
     private final Dao<PlayerGems, String> playerGemsDao;
 
     public SQLiteManager(String path) throws SQLException, ClassNotFoundException {
-        Color.log("&eConnecting to SQLite...");
+        Color.log("&aConnecting to SQLite...");
         Class.forName("org.sqlite.JDBC");
         ConnectionSource connectionSource = new JdbcConnectionSource("jdbc:sqlite:" + path);
         TableUtils.createTableIfNotExists(connectionSource, PlayerGems.class);
         playerGemsDao = DaoManager.createDao(connectionSource, PlayerGems.class);
-        Color.log("&eConnected to SQLite!");
+        Color.log("&aConnected to SQLite!");
     }
 
     public PlayerGems addPlayer(Player player) throws SQLException {

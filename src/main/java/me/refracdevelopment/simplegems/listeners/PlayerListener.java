@@ -34,7 +34,7 @@ public class PlayerListener implements Listener {
         Player player = event.getPlayer();
         Profile profile = SimpleGems.getInstance().getProfileManager().getProfile(player.getUniqueId());
 
-        Tasks.runAsync((wrappedTask) -> profile.getData().load());
+        Tasks.runAsync(wrappedTask -> profile.getData().load());
 
         if (profile == null || profile.getData() == null) {
             player.kickPlayer(Color.translate(SimpleGems.getInstance().getLocaleFile().getString("kick-messages-error")));
@@ -68,7 +68,7 @@ public class PlayerListener implements Listener {
         if (profile == null) return;
         if (profile.getData() == null) return;
 
-        Tasks.runAsync((wrappedTask) -> profile.getData().save());
+        Tasks.runAsync(wrappedTask -> profile.getData().save());
         SimpleGems.getInstance().getProfileManager().getProfiles().remove(player.getUniqueId());
     }
 
@@ -88,7 +88,7 @@ public class PlayerListener implements Listener {
 
         NBTItem nbtItem = new NBTItem(item);
 
-        if(nbtItem.hasTag("gems-item-value")) {
+        if (nbtItem.hasTag("gems-item-value")) {
             long foundValue = nbtItem.getLong("gems-item-value");
 
             gemsItem = SimpleGems.getInstance().getGemsAPI().getGemsItem(foundValue);

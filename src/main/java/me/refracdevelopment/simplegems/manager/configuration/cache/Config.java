@@ -41,7 +41,7 @@ public class Config {
         // Top
         GEMS_TOP_TITLE = SimpleGems.getInstance().getConfigFile().getString("gems-top.title");
         GEMS_TOP_FORMAT = SimpleGems.getInstance().getConfigFile().getString("gems-top.format");
-        GEMS_TOP_ENTRIES = SimpleGems.getInstance().getConfigFile().getInt("gems-top.entries");
+        GEMS_TOP_ENTRIES = SimpleGems.getInstance().getConfigFile().getInt("gems-top.top-entries");
 
         // Messages
         GEMS_BALANCE = SimpleGems.getInstance().getConfigFile().getStringList("gems-balance");

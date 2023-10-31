@@ -11,8 +11,8 @@ import java.util.Map;
 @Getter
 public class GemShop {
 
-    private Map<GemShopCategory, List<GemShopItem>> categories;
-    private List<GemShopItem> items;
+    private final Map<GemShopCategory, List<GemShopItem>> categories;
+    private final List<GemShopItem> items;
 
     public GemShop() {
         this.categories = new LinkedHashMap<>();

@@ -22,7 +22,7 @@ public class MySQLManager {
     private final Dao<PlayerGems, String> playerGemsDao;
 
     public MySQLManager() throws ClassNotFoundException, SQLException {
-        Color.log("&eConnecting to MySQL...");
+        Color.log("&aConnecting to MySQL...");
         Class.forName("org.mariadb.jdbc.Driver");
         String host = SimpleGems.getInstance().getConfigFile().getString("mysql.host");
         String username = SimpleGems.getInstance().getConfigFile().getString("mysql.username");
@@ -33,7 +33,7 @@ public class MySQLManager {
                 host + ':' + port + '/' + database, username, password);
         TableUtils.createTableIfNotExists(connectionSource, PlayerGems.class);
         playerGemsDao = DaoManager.createDao(connectionSource, PlayerGems.class);
-        Color.log("&eConnected to MySQL!");
+        Color.log("&aConnected to MySQL!");
     }
 
     public PlayerGems addPlayer(Player player) throws SQLException {

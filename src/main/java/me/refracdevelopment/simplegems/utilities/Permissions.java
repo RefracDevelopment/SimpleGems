@@ -19,7 +19,7 @@ public class Permissions {
 
     public final String GEMS_SET_COMMAND = "simplegems.command.set";
 
-    public final String GEMS_RELOAD_COMMAND = "simplgems.command.reload";
+    public final String GEMS_RELOAD_COMMAND = "simplegems.command.reload";
 
     public final String GEMS_VERSION_COMMAND = "simplegems.command.version";
 

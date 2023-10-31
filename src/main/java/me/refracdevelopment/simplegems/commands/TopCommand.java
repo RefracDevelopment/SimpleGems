@@ -14,7 +14,7 @@ public class TopCommand extends SubCommand {
 
     @Override
     public String getName() {
-        return SimpleGems.getInstance().getCommands().TOP_COMMAND_ALIASES.get(0);
+        return SimpleGems.getInstance().getCommands().TOP_COMMAND_NAME;
     }
 
     @Override

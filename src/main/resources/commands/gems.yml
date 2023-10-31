@@ -1,53 +1,42 @@
 # This is used for automatic file updating purposes
-config-version: 1
+config-version: 2
 
-commands:
-  gems:
-    enabled: true
-    aliases:
-      - 'gems'
-      - 'simplegems'
-  balance:
-    enabled: true
-    aliases:
-      - 'balance'
-      - 'bal'
+name: gems
+subcommands:
+  help:
+    name: help
+    aliases: [ ]
   withdraw:
-    enabled: true
-    aliases:
-      - 'withdraw'
-  pay:
-    enabled: true
-    aliases:
-      - 'pay'
-      - 'send'
+    name: withdraw
+    aliases: [ ]
   shop:
-    enabled: true
-    aliases:
-      - 'shop'
-  top:
-    enabled: true
-    aliases:
-      - 'top'
-  version:
-    enabled: true
-    aliases:
-      - 'version'
-  update:
-    enabled: true
-    aliases:
-      - 'update'
-  give:
-    enabled: true
-    aliases:
-      - 'give'
-      - 'add'
+    name: shop
+    aliases: [ ]
+  reload:
+    name: reload
+    aliases: [ ]
   take:
-    enabled: true
+    name: take
     aliases:
-      - 'take'
-      - 'remove'
+      - remove
+  give:
+    name: give
+    aliases:
+      - add
+  pay:
+    name: pay
+    aliases:
+      - send
   set:
-    enabled: true
+    name: set
+    aliases: [ ]
+  top:
+    name: top
+    aliases: [ ]
+  balance:
+    name: balance
     aliases:
-      - 'set'
+      - bal
+  version:
+    name: version
+    aliases: [ ]

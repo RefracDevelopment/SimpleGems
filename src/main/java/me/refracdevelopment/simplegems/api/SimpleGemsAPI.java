@@ -19,7 +19,7 @@ import org.bukkit.inventory.ItemStack;
  * or to add new features and events.
  */
 public class SimpleGemsAPI {
-    
+
     public SimpleGemsAPI() {
         Color.log("&aSimpleGemsAPI has been enabled!");
         Color.log("&aWiki: https://refracdevelopment.gitbook.io/simplegems/");
@@ -126,7 +126,7 @@ public class SimpleGemsAPI {
         GemsAddEvent event = new GemsAddEvent(player, amount);
         Bukkit.getPluginManager().callEvent(event);
         getProfileData(player).getGems().incrementAmount(amount);
-        Tasks.runAsync((wrappedTask) -> getProfileData(player).save());
+        Tasks.runAsync(wrappedTask -> getProfileData(player).save());
     }
 
     /**
@@ -151,7 +151,7 @@ public class SimpleGemsAPI {
         GemsRemoveEvent event = new GemsRemoveEvent(player, amount);
         Bukkit.getPluginManager().callEvent(event);
         getProfileData(player).getGems().decrementAmount(amount);
-        Tasks.runAsync((wrappedTask) -> getProfileData(player).save());
+        Tasks.runAsync(wrappedTask -> getProfileData(player).save());
     }
 
     /**
@@ -176,7 +176,7 @@ public class SimpleGemsAPI {
         GemsSetEvent event = new GemsSetEvent(player, amount);
         Bukkit.getPluginManager().callEvent(event);
         getProfileData(player).getGems().setAmount(amount);
-        Tasks.runAsync((wrappedTask) -> getProfileData(player).save());
+        Tasks.runAsync(wrappedTask -> getProfileData(player).save());
     }
 
     /**

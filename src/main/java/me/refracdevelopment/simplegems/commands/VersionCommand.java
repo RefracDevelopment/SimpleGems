@@ -8,18 +8,19 @@ import me.refracdevelopment.simplegems.utilities.chat.StringPlaceholders;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Collections;
 import java.util.List;
 
 public class VersionCommand extends SubCommand {
 
     @Override
     public String getName() {
-        return SimpleGems.getInstance().getCommands().VERSION_COMMAND_ALIASES.get(0);
+        return "version";
     }
 
     @Override
     public List<String> getAliases() {
-        return SimpleGems.getInstance().getCommands().VERSION_COMMAND_ALIASES;
+        return Collections.emptyList();
     }
 
     @Override
@@ -42,7 +43,7 @@ public class VersionCommand extends SubCommand {
         String baseColor = SimpleGems.getInstance().getLocaleFile().getString("base-command-color");
         Color.sendCustomMessage(commandSender, baseColor + "Running <g:#8A2387:#E94057:#F27121>" + SimpleGems.getInstance().getDescription().getName() + baseColor + " v" + SimpleGems.getInstance().getDescription().getVersion());
         Color.sendCustomMessage(commandSender, baseColor + "Plugin created by: <g:#41E0F0:#FF8DCE>" + SimpleGems.getInstance().getDescription().getAuthors().get(0));
-        Color.sendMessage(commandSender, "base-command-help", StringPlaceholders.of("cmd", SimpleGems.getInstance().getCommands().GEMS_COMMAND_ALIASES.get(0)));
+        Color.sendMessage(commandSender, "base-command-help", StringPlaceholders.of("cmd", SimpleGems.getInstance().getCommands().GEMS_COMMAND_NAME));
     }
 
     @Override

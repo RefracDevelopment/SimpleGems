@@ -15,12 +15,12 @@ public class ShopCommand extends SubCommand {
 
     @Override
     public String getName() {
-        return "shop";
+        return SimpleGems.getInstance().getCommands().SHOP_COMMAND_NAME;
     }
 
     @Override
     public List<String> getAliases() {
-        return null;
+        return SimpleGems.getInstance().getCommands().SHOP_COMMAND_ALIASES;
     }
 
     @Override
@@ -57,7 +57,6 @@ public class ShopCommand extends SubCommand {
                     }
 
                     new GemShopCategory(SimpleGems.getInstance().getMenuManager().getPlayerMenuUtility(player), gemShopCategory.getCategoryName()).open();
-                    return;
                 }
             });
             return;

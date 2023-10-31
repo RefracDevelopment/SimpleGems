@@ -80,6 +80,3 @@ command-version-description: Display the version info for SimpleGems
 
 # Top Command
 command-top-description: Display the top leaderboard info for SimpleGems
-
-# Update Command
-command-update-description: Update the top leaderboard info for SimpleGems

@@ -62,10 +62,10 @@ public class GemShopCategory extends Menu {
             if (getInventory().getItem(i) == null) {
                 String name = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getString(categoryName + ".fill.name");
                 Material material = Utilities.getMaterial(SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getString(categoryName + ".fill.material")).parseMaterial();
-                int data = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getInt(categoryName + ".fill.data");;
+                int data = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getInt(categoryName + ".fill.data");
                 ItemBuilder item = new ItemBuilder(material);
 
-                item.setName(Color.translate(playerMenuUtility.getOwner(), name));
+                item.setName(name);
                 item.setDurability(data);
 
                 getInventory().setItem(i, item.toItemStack());

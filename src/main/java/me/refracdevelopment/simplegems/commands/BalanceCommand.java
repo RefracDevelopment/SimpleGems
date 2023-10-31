@@ -18,7 +18,7 @@ public class BalanceCommand extends SubCommand {
 
     @Override
     public String getName() {
-        return SimpleGems.getInstance().getCommands().BALANCE_COMMAND_ALIASES.get(0);
+        return SimpleGems.getInstance().getCommands().BALANCE_COMMAND_NAME;
     }
 
     @Override

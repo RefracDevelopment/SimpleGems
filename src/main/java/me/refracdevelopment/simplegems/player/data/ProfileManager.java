@@ -19,7 +19,7 @@ public class ProfileManager {
         Bukkit.getOnlinePlayers().forEach(onlinePlayer -> {
             getProfiles().clear();
             handleProfileCreation(onlinePlayer.getUniqueId(), onlinePlayer.getName());
-            Tasks.runAsync((wrappedTask) -> getProfile(onlinePlayer.getUniqueId()).getData().load());
+            Tasks.runAsync(wrappedTask -> getProfile(onlinePlayer.getUniqueId()).getData().load());
         });
     }
 

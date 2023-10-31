@@ -39,5 +39,4 @@ public class PlayerGems {
     public void setGems(long gems) {
         this.gems = gems;
     }
-
 }

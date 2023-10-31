@@ -44,7 +44,7 @@ public class GemShopItem {
             this.headDatabase = false;
         }
         if (SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getBoolean(categoryName + ".items." + item + ".skulls")) {
-            this.skulls = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getBoolean(categoryName  + ".items." + item + ".skulls", false);
+            this.skulls = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getBoolean(categoryName + ".items." + item + ".skulls", false);
         } else {
             this.skulls = false;
         }
@@ -111,14 +111,12 @@ public class GemShopItem {
         });
     }
 
-    public void runActions(Player player) {
-        this.actions.forEach(action -> {
-            SimpleGems.getInstance().getActionManager().execute(player, Color.translate(player, action
-                    .replace("%item%", Color.translate(this.name))
-                    .replace("%cost%", String.valueOf(this.cost))
-                    .replace("%price%", String.valueOf(this.cost))
-            ));
-        });
+    public void runActions(Player player, String action) {
+        SimpleGems.getInstance().getActionManager().execute(player, Color.translate(player, action
+                .replace("%item%", Color.translate(this.name))
+                .replace("%cost%", String.valueOf(this.cost))
+                .replace("%price%", String.valueOf(this.cost))
+        ));
     }
 
     public ItemStack getItem(Player player) {
@@ -211,7 +209,7 @@ public class GemShopItem {
                 } else {
                     if (SimpleGems.getInstance().getGemsAPI().hasGems(player, this.cost)) {
                         SimpleGems.getInstance().getGemsAPI().takeGems(player, this.cost);
-                        this.runActions(player);
+                        this.runActions(player, action);
                     } else Color.sendMessage(player, "not-enough-gems", placeholders);
                 }
             });

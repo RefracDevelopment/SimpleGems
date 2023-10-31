@@ -40,10 +40,10 @@ public class Color {
     public void sendCustomMessage(CommandSender sender, String message) {
         if (message.equalsIgnoreCase("%empty%") || message.contains("%empty%") || message.isEmpty()) return;
 
-        sender.sendMessage(translate(sender, message));
+        sender.sendMessage(translate(sender, "%prefix%" + message));
     }
 
     public void log(String message) {
-        sendCustomMessage(Bukkit.getConsoleSender(), SimpleGems.getInstance().getLocaleFile().getString("prefix") + " " + message);
+        sendCustomMessage(Bukkit.getConsoleSender(), message);
     }
 }

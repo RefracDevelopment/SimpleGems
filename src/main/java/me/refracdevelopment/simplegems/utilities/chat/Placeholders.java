@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 @UtilityClass
 public class Placeholders {
 
-    public  String setPlaceholders(CommandSender sender, String placeholder) {
+    public String setPlaceholders(CommandSender sender, String placeholder) {
         placeholder = placeholder.replace("%prefix%", SimpleGems.getInstance().getLocaleFile().getString("prefix"));
         if (sender instanceof Player) {
             Player player = (Player) sender;
@@ -31,7 +31,7 @@ public class Placeholders {
         return placeholder;
     }
 
-    public  StringPlaceholders setPlaceholders(CommandSender sender) {
+    public StringPlaceholders setPlaceholders(CommandSender sender) {
         StringPlaceholders.Builder placeholders = StringPlaceholders.builder();
 
         placeholders.add("prefix", SimpleGems.getInstance().getLocaleFile().getString("prefix"));

@@ -19,7 +19,7 @@ public class TakeCommand extends SubCommand {
 
     @Override
     public String getName() {
-        return SimpleGems.getInstance().getCommands().TAKE_COMMAND_ALIASES.get(0);
+        return SimpleGems.getInstance().getCommands().TAKE_COMMAND_NAME;
     }
 
     @Override
@@ -106,7 +106,7 @@ public class TakeCommand extends SubCommand {
             SimpleGems.getInstance().getGemsAPI().takeOfflineGems(target, amount);
 
             Color.sendMessage(commandSender, "gems-taken", placeholders);
-        } else Color.sendMessage(commandSender,"invalid-player");
+        } else Color.sendMessage(commandSender, "invalid-player");
     }
 
     @Override

@@ -34,7 +34,7 @@ public class Methods {
      * save a specified player's data
      */
     public void saveOffline(OfflinePlayer player, long amount) {
-        Tasks.runAsync((wrappedTask) -> {
+        Tasks.runAsync(wrappedTask -> {
             if (SimpleGems.getInstance().getDataType() == DataType.MONGO) {
                 Document document = new Document();
 
@@ -68,7 +68,7 @@ public class Methods {
     public void giveOfflineGems(OfflinePlayer player, long amount) {
         setOfflineGems(player, getOfflineGems(player) + amount);
     }
-    
+
     public void takeOfflineGems(OfflinePlayer player, long amount) {
         setOfflineGems(player, getOfflineGems(player) - amount);
     }
@@ -97,7 +97,7 @@ public class Methods {
         }
         return 0;
     }
-    
+
     public boolean hasOfflineGems(OfflinePlayer player, long amount) {
         return getOfflineGems(player) >= amount;
     }

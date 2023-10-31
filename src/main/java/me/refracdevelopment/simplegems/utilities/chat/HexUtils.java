@@ -45,7 +45,7 @@ public final class HexUtils {
      * Gets a capture group from a regex Matcher if it exists
      *
      * @param matcher The Matcher
-     * @param group The group name
+     * @param group   The group name
      * @return the capture group value, or null if not found
      */
     private static String getCaptureGroup(Matcher matcher, String group) {
@@ -98,21 +98,24 @@ public final class HexUtils {
             if (speedGroup != null) {
                 try {
                     speed = Integer.parseInt(speedGroup);
-                } catch (NumberFormatException ignored) { }
+                } catch (NumberFormatException ignored) {
+                }
             }
 
             String saturationGroup = getCaptureGroup(matcher, "saturation");
             if (saturationGroup != null) {
                 try {
                     saturation = Float.parseFloat(saturationGroup);
-                } catch (NumberFormatException ignored) { }
+                } catch (NumberFormatException ignored) {
+                }
             }
 
             String brightnessGroup = getCaptureGroup(matcher, "brightness");
             if (brightnessGroup != null) {
                 try {
                     brightness = Float.parseFloat(brightnessGroup);
-                } catch (NumberFormatException ignored) { }
+                } catch (NumberFormatException ignored) {
+                }
             }
 
             int stop = findStop(parsed, matcher.end());
@@ -175,7 +178,8 @@ public final class HexUtils {
             if (speedGroup != null) {
                 try {
                     speed = Integer.parseInt(speedGroup);
-                } catch (NumberFormatException ignored) { }
+                } catch (NumberFormatException ignored) {
+                }
             }
 
             int stop = findStop(parsed, matcher.end());

@@ -6,40 +6,36 @@ import java.util.List;
 
 public class Commands {
 
-    public boolean GEMS_COMMAND_ENABLED;
-    public List<String> GEMS_COMMAND_ALIASES;
+    public String GEMS_COMMAND_NAME;
 
-    public boolean BALANCE_COMMAND_ENABLED;
+    public String HELP_COMMAND_NAME;
+    public List<String> HELP_COMMAND_ALIASES;
+
+    public String BALANCE_COMMAND_NAME;
     public List<String> BALANCE_COMMAND_ALIASES;
 
-    public boolean SHOP_COMMAND_ENABLED;
+    public String SHOP_COMMAND_NAME;
     public List<String> SHOP_COMMAND_ALIASES;
 
-    public boolean TOP_COMMAND_ENABLED;
+    public String TOP_COMMAND_NAME;
     public List<String> TOP_COMMAND_ALIASES;
 
-    public boolean PAY_COMMAND_ENABLED;
+    public String PAY_COMMAND_NAME;
     public List<String> PAY_COMMAND_ALIASES;
 
-    public boolean WITHDRAW_COMMAND_ENABLED;
+    public String WITHDRAW_COMMAND_NAME;
     public List<String> WITHDRAW_COMMAND_ALIASES;
 
-    public boolean RELOAD_COMMAND_ENABLED;
-    public List<String> RELOAD_COMMAND_ALIASES;
-
-    public boolean VERSION_COMMAND_ENABLED;
-    public List<String> VERSION_COMMAND_ALIASES;
-
-    public boolean UPDATE_COMMAND_ENABLED;
+    public String UPDATE_COMMAND_NAME;
     public List<String> UPDATE_COMMAND_ALIASES;
 
-    public boolean GIVE_COMMAND_ENABLED;
+    public String GIVE_COMMAND_NAME;
     public List<String> GIVE_COMMAND_ALIASES;
 
-    public boolean TAKE_COMMAND_ENABLED;
+    public String TAKE_COMMAND_NAME;
     public List<String> TAKE_COMMAND_ALIASES;
 
-    public boolean SET_COMMAND_ENABLED;
+    public String SET_COMMAND_NAME;
     public List<String> SET_COMMAND_ALIASES;
 
     public Commands() {
@@ -47,40 +43,36 @@ public class Commands {
     }
 
     public void loadConfig() {
-        GEMS_COMMAND_ENABLED = SimpleGems.getInstance().getCommandsFile().getBoolean("commands.gems.enabled");
-        GEMS_COMMAND_ALIASES = SimpleGems.getInstance().getCommandsFile().getStringList("commands.gems.aliases");
-        
-        BALANCE_COMMAND_ENABLED = SimpleGems.getInstance().getCommandsFile().getBoolean("commands.balance.enabled");
-        BALANCE_COMMAND_ALIASES = SimpleGems.getInstance().getCommandsFile().getStringList("commands.balance.aliases");
+        GEMS_COMMAND_NAME = SimpleGems.getInstance().getCommandsFile().getString("name");
 
-        SHOP_COMMAND_ENABLED = SimpleGems.getInstance().getCommandsFile().getBoolean("commands.shop.enabled");
-        SHOP_COMMAND_ALIASES = SimpleGems.getInstance().getCommandsFile().getStringList("commands.shop.aliases");
+        HELP_COMMAND_NAME = SimpleGems.getInstance().getCommandsFile().getString("subcommands.help.name");
+        HELP_COMMAND_ALIASES = SimpleGems.getInstance().getCommandsFile().getStringList("subcommands.help.aliases");
 
-        TOP_COMMAND_ENABLED = SimpleGems.getInstance().getCommandsFile().getBoolean("commands.top.enabled");
-        TOP_COMMAND_ALIASES = SimpleGems.getInstance().getCommandsFile().getStringList("commands.top.aliases");
+        BALANCE_COMMAND_NAME = SimpleGems.getInstance().getCommandsFile().getString("subcommands.balance.name");
+        BALANCE_COMMAND_ALIASES = SimpleGems.getInstance().getCommandsFile().getStringList("subcommands.balance.aliases");
 
-        PAY_COMMAND_ENABLED = SimpleGems.getInstance().getCommandsFile().getBoolean("commands.pay.enabled");
-        PAY_COMMAND_ALIASES = SimpleGems.getInstance().getCommandsFile().getStringList("commands.pay.aliases");
+        SHOP_COMMAND_NAME = SimpleGems.getInstance().getCommandsFile().getString("subcommands.shop.name");
+        SHOP_COMMAND_ALIASES = SimpleGems.getInstance().getCommandsFile().getStringList("subcommands.shop.aliases");
 
-        WITHDRAW_COMMAND_ENABLED = SimpleGems.getInstance().getCommandsFile().getBoolean("commands.withdraw.enabled");
-        WITHDRAW_COMMAND_ALIASES = SimpleGems.getInstance().getCommandsFile().getStringList("commands.withdraw.aliases");
+        TOP_COMMAND_NAME = SimpleGems.getInstance().getCommandsFile().getString("subcommands.top.name");
+        TOP_COMMAND_ALIASES = SimpleGems.getInstance().getCommandsFile().getStringList("subcommands.top.aliases");
 
-        RELOAD_COMMAND_ENABLED = SimpleGems.getInstance().getCommandsFile().getBoolean("commands.reload.enabled");
-        RELOAD_COMMAND_ALIASES = SimpleGems.getInstance().getCommandsFile().getStringList("commands.reload.aliases");
+        PAY_COMMAND_NAME = SimpleGems.getInstance().getCommandsFile().getString("subcommands.pay.name");
+        PAY_COMMAND_ALIASES = SimpleGems.getInstance().getCommandsFile().getStringList("subcommands.pay.aliases");
 
-        VERSION_COMMAND_ENABLED = SimpleGems.getInstance().getCommandsFile().getBoolean("commands.version.enabled");
-        VERSION_COMMAND_ALIASES = SimpleGems.getInstance().getCommandsFile().getStringList("commands.version.aliases");
+        WITHDRAW_COMMAND_NAME = SimpleGems.getInstance().getCommandsFile().getString("subcommands.withdraw.name");
+        WITHDRAW_COMMAND_ALIASES = SimpleGems.getInstance().getCommandsFile().getStringList("subcommands.withdraw.aliases");
 
-        UPDATE_COMMAND_ENABLED = SimpleGems.getInstance().getCommandsFile().getBoolean("commands.update.enabled");
-        UPDATE_COMMAND_ALIASES = SimpleGems.getInstance().getCommandsFile().getStringList("commands.update.aliases");
+        UPDATE_COMMAND_NAME = SimpleGems.getInstance().getCommandsFile().getString("subcommands.update.name");
+        UPDATE_COMMAND_ALIASES = SimpleGems.getInstance().getCommandsFile().getStringList("subcommands.update.aliases");
 
-        GIVE_COMMAND_ENABLED = SimpleGems.getInstance().getCommandsFile().getBoolean("commands.give.enabled");
-        GIVE_COMMAND_ALIASES = SimpleGems.getInstance().getCommandsFile().getStringList("commands.give.aliases");
+        GIVE_COMMAND_NAME = SimpleGems.getInstance().getCommandsFile().getString("subcommands.give.name");
+        GIVE_COMMAND_ALIASES = SimpleGems.getInstance().getCommandsFile().getStringList("subcommands.give.aliases");
 
-        TAKE_COMMAND_ENABLED = SimpleGems.getInstance().getCommandsFile().getBoolean("commands.take.enabled");
-        TAKE_COMMAND_ALIASES = SimpleGems.getInstance().getCommandsFile().getStringList("commands.take.aliases");
+        TAKE_COMMAND_NAME = SimpleGems.getInstance().getCommandsFile().getString("subcommands.take.name");
+        TAKE_COMMAND_ALIASES = SimpleGems.getInstance().getCommandsFile().getStringList("subcommands.take.aliases");
 
-        SET_COMMAND_ENABLED = SimpleGems.getInstance().getCommandsFile().getBoolean("commands.set.enabled");
-        SET_COMMAND_ALIASES = SimpleGems.getInstance().getCommandsFile().getStringList("commands.set.aliases");
+        SET_COMMAND_NAME = SimpleGems.getInstance().getCommandsFile().getString("subcommands.set.name");
+        SET_COMMAND_ALIASES = SimpleGems.getInstance().getCommandsFile().getStringList("subcommands.set.aliases");
     }
 }

@@ -17,7 +17,7 @@ public class PayCommand extends SubCommand {
 
     @Override
     public String getName() {
-        return SimpleGems.getInstance().getCommands().PAY_COMMAND_ALIASES.get(0);
+        return SimpleGems.getInstance().getCommands().PAY_COMMAND_NAME;
     }
 
     @Override

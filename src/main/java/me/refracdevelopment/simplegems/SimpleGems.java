@@ -29,7 +29,6 @@ import me.refracdevelopment.simplegems.player.data.ProfileManager;
 import me.refracdevelopment.simplegems.utilities.DownloadUtil;
 import me.refracdevelopment.simplegems.utilities.chat.Color;
 import me.refracdevelopment.simplegems.utilities.chat.PAPIExpansion;
-import me.refracdevelopment.simplegems.utilities.chat.StringPlaceholders;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -40,12 +39,15 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Getter
 public final class SimpleGems extends JavaPlugin {
 
-    @Getter private static SimpleGems instance;
+    @Getter
+    private static SimpleGems instance;
 
     // Managers
     private DataType dataType;
@@ -75,6 +77,7 @@ public final class SimpleGems extends JavaPlugin {
     // Utilities
     private SimpleGemsAPI gemsAPI;
     private FoliaLib foliaLib;
+    private final List<SubCommand> subCommands = new ArrayList<>();
 
     @Override
     public void onEnable() {
@@ -210,34 +213,17 @@ public final class SimpleGems extends JavaPlugin {
 
     private void loadCommands() {
         try {
-            CommandManager.createCoreCommand(this, commands.GEMS_COMMAND_ALIASES.get(0),
-                    localeFile.getString("command-help-description"),
-                    "/" + commands.GEMS_COMMAND_ALIASES.get(0), new CommandList() {
+            CommandManager.createCoreCommand(this, getCommands().GEMS_COMMAND_NAME,
+                    getLocaleFile().getString("command-help-description"),
+                    "/" + getCommands().GEMS_COMMAND_NAME, new CommandList() {
                         @Override
                         public void displayCommandList(CommandSender commandSender, List<SubCommand> list) {
-                            Color.sendMessage(commandSender, "command-help-title");
-                            list.forEach(command -> {
-                                StringPlaceholders placeholders;
-
-                                if (!command.getSyntax().isEmpty()) {
-                                    placeholders = StringPlaceholders.builder()
-                                            .add("cmd", commands.GEMS_COMMAND_ALIASES.get(0))
-                                            .add("subcmd", command.getName())
-                                            .add("args", command.getSyntax())
-                                            .add("desc", command.getDescription())
-                                            .build();
-                                    Color.sendMessage(commandSender, "command-help-list-description", placeholders);
-                                } else {
-                                    placeholders = StringPlaceholders.builder()
-                                            .add("cmd", commands.GEMS_COMMAND_ALIASES.get(0))
-                                            .add("subcmd", command.getName())
-                                            .add("desc", command.getDescription())
-                                            .build();
-                                    Color.sendMessage(commandSender, "command-help-list-description-no-args", placeholders);
-                                }
+                            getSettings().GEMS_BALANCE.forEach(message -> {
+                                Color.sendCustomMessage(commandSender, message);
                             });
                         }
                     },
+                    HelpCommand.class,
                     BalanceCommand.class,
                     TopCommand.class,
                     ShopCommand.class,
@@ -247,9 +233,22 @@ public final class SimpleGems extends JavaPlugin {
                     TakeCommand.class,
                     SetCommand.class,
                     ReloadCommand.class,
-                    UpdateCommand.class,
                     VersionCommand.class
             );
+
+            subCommands.addAll(Arrays.asList(
+                    new HelpCommand(),
+                    new BalanceCommand(),
+                    new TopCommand(),
+                    new ShopCommand(),
+                    new WithdrawCommand(),
+                    new PayCommand(),
+                    new GiveCommand(),
+                    new TakeCommand(),
+                    new SetCommand(),
+                    new ReloadCommand(),
+                    new VersionCommand()
+            ));
         } catch (NoSuchFieldException | IllegalAccessException e) {
             Color.log("&aFailed to load commands.");
             e.printStackTrace();
@@ -301,15 +300,12 @@ public final class SimpleGems extends JavaPlugin {
                     sender.sendMessage(Color.translate(""));
                     return;
                 }
-                return;
             } else {
                 sender.sendMessage(Color.translate("&cWrong response from update API, contact plugin developer!"));
-                return;
             }
         } catch (
                 Exception ex) {
             sender.sendMessage(Color.translate("&cFailed to get updater check. (" + ex.getMessage() + ")"));
-            return;
         }
     }
 }

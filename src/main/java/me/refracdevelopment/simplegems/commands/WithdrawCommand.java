@@ -14,7 +14,7 @@ public class WithdrawCommand extends SubCommand {
 
     @Override
     public String getName() {
-        return SimpleGems.getInstance().getCommands().WITHDRAW_COMMAND_ALIASES.get(0);
+        return SimpleGems.getInstance().getCommands().WITHDRAW_COMMAND_NAME;
     }
 
     @Override
@@ -42,8 +42,8 @@ public class WithdrawCommand extends SubCommand {
 
         Player player = (Player) commandSender;
 
-        if (strings.length == 0) {
-            Color.sendCustomMessage(commandSender, getSyntax());
+        if (strings.length == 1) {
+            player.chat("/" + SimpleGems.getInstance().getCommands().GEMS_COMMAND_NAME + " help");
             return;
         }
 

@@ -19,7 +19,7 @@ public class GiveCommand extends SubCommand {
 
     @Override
     public String getName() {
-        return SimpleGems.getInstance().getCommands().GIVE_COMMAND_ALIASES.get(0);
+        return SimpleGems.getInstance().getCommands().GIVE_COMMAND_NAME;
     }
 
     @Override
