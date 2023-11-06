@@ -1,10 +1,7 @@
 package me.refracdevelopment.simplegems.api;
 
 import me.refracdevelopment.simplegems.SimpleGems;
-import me.refracdevelopment.simplegems.api.events.impl.GemsAddEvent;
-import me.refracdevelopment.simplegems.api.events.impl.GemsPayEvent;
-import me.refracdevelopment.simplegems.api.events.impl.GemsRemoveEvent;
-import me.refracdevelopment.simplegems.api.events.impl.GemsSetEvent;
+import me.refracdevelopment.simplegems.api.events.impl.*;
 import me.refracdevelopment.simplegems.player.data.ProfileData;
 import me.refracdevelopment.simplegems.utilities.Methods;
 import me.refracdevelopment.simplegems.utilities.Tasks;
@@ -125,6 +122,9 @@ public class SimpleGemsAPI {
 
         GemsAddEvent event = new GemsAddEvent(player, amount);
         Bukkit.getPluginManager().callEvent(event);
+
+        if (event.isCancelled()) return;
+
         getProfileData(player).getGems().incrementAmount(amount);
         Tasks.runAsync(wrappedTask -> getProfileData(player).save());
     }
@@ -150,6 +150,9 @@ public class SimpleGemsAPI {
 
         GemsRemoveEvent event = new GemsRemoveEvent(player, amount);
         Bukkit.getPluginManager().callEvent(event);
+
+        if (event.isCancelled()) return;
+
         getProfileData(player).getGems().decrementAmount(amount);
         Tasks.runAsync(wrappedTask -> getProfileData(player).save());
     }
@@ -175,6 +178,9 @@ public class SimpleGemsAPI {
 
         GemsSetEvent event = new GemsSetEvent(player, amount);
         Bukkit.getPluginManager().callEvent(event);
+
+        if (event.isCancelled()) return;
+
         getProfileData(player).getGems().setAmount(amount);
         Tasks.runAsync(wrappedTask -> getProfileData(player).save());
     }
@@ -199,6 +205,9 @@ public class SimpleGemsAPI {
     public void payGems(Player player, Player target, long amount, boolean silent) {
         GemsPayEvent event = new GemsPayEvent(player, target, amount);
         Bukkit.getPluginManager().callEvent(event);
+
+        if (event.isCancelled()) return;
+
         Methods.payGems(player, target, amount, silent);
     }
 
@@ -220,8 +229,11 @@ public class SimpleGemsAPI {
      * @param amount amount of gems to withdraw
      */
     public void withdrawGems(Player player, long amount) {
-        GemsRemoveEvent event = new GemsRemoveEvent(player, amount);
+        GemsWithdrawEvent event = new GemsWithdrawEvent(player, amount);
         Bukkit.getPluginManager().callEvent(event);
+
+        if (event.isCancelled()) return;
+
         Methods.withdrawGems(player, amount);
     }
 }

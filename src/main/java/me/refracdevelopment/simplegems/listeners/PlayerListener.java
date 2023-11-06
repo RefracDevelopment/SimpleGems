@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -107,6 +108,26 @@ public class PlayerListener implements Listener {
             player.getInventory().removeItem(item);
             SimpleGems.getInstance().getGemsAPI().giveGems(player, foundValue);
             Color.sendMessage(player, "gems-deposited", placeholders);
+        }
+    }
+
+    @EventHandler
+    public void onPlace(BlockPlaceEvent event) {
+        Player player = event.getPlayer();
+        Profile profile = SimpleGems.getInstance().getProfileManager().getProfile(player.getUniqueId());
+
+        if (profile == null) return;
+        if (profile.getData() == null) return;
+
+        ItemStack item = player.getItemInHand();
+        ItemMeta itemMeta = item.getItemMeta();
+
+        if (itemMeta == null) return;
+
+        NBTItem nbtItem = new NBTItem(item);
+
+        if (nbtItem.hasTag("gems-item-value")) {
+            event.setCancelled(true);
         }
     }
 

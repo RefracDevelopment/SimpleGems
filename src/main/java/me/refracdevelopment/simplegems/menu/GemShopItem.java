@@ -203,9 +203,22 @@ public class GemShopItem {
         if (action) {
             this.actions.forEach(action -> {
                 if (action.startsWith("{openmenu:")) {
-                    new GemShopCategory(SimpleGems.getInstance().getMenuManager().getPlayerMenuUtility(player), action
-                            .replace("{openmenu:", "")
-                            .replace("}", "")).open();
+                    String category = action.replace("{openmenu:", "").replace("}", "");
+                    SimpleGems.getInstance().getGemShop().getCategories().forEach((gemShopCategory, gemShopItems) -> {
+                        if (!gemShopCategory.getCategoryName().equalsIgnoreCase(category)) {
+                            Color.log("The 'categories." + category + "' menu category in 'menus.yml' config file doesn't exist.");
+                            return;
+                        }
+
+                        if (!gemShopCategory.isEnabled()) {
+                            player.closeInventory();
+                            Color.sendMessage(player, "shop-disabled");
+                            return;
+                        }
+
+                        gemShopCategory.setPlayerMenuUtility(SimpleGems.getInstance().getMenuManager().getPlayerMenuUtility(player));
+                        gemShopCategory.open();
+                    });
                 } else {
                     if (SimpleGems.getInstance().getGemsAPI().hasGems(player, this.cost)) {
                         SimpleGems.getInstance().getGemsAPI().takeGems(player, this.cost);

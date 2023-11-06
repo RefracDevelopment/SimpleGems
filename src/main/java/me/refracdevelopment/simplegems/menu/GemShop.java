@@ -4,7 +4,7 @@ import lombok.Getter;
 import me.refracdevelopment.simplegems.SimpleGems;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,7 +15,7 @@ public class GemShop {
     private final List<GemShopItem> items;
 
     public GemShop() {
-        this.categories = new LinkedHashMap<>();
+        this.categories = new HashMap<>();
         this.items = new ArrayList<>();
         load();
     }

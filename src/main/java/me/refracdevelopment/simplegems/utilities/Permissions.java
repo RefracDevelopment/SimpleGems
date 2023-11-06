@@ -24,5 +24,8 @@ public class Permissions {
     public final String GEMS_VERSION_COMMAND = "simplegems.command.version";
 
     public final String GEMS_TOP_COMMAND = "simplegems.command.top";
+
     public final String GEMS_UPDATE_COMMAND = "simplegems.command.update";
+
+    public final String GEMS_RESET_COMMAND = "simplegems.command.reset";
 }

@@ -1,10 +1,10 @@
 package me.refracdevelopment.simplegems.commands;
 
-import me.kodysimpson.simpapi.command.SubCommand;
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.utilities.Permissions;
 import me.refracdevelopment.simplegems.utilities.chat.Color;
 import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
+import me.refracdevelopment.simplegems.utilities.command.SubCommand;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -43,7 +43,8 @@ public class WithdrawCommand extends SubCommand {
         Player player = (Player) commandSender;
 
         if (strings.length == 1) {
-            player.chat("/" + SimpleGems.getInstance().getCommands().GEMS_COMMAND_NAME + " help");
+            String baseColor = SimpleGems.getInstance().getLocaleFile().getString("base-command-color");
+            Color.sendCustomMessage(commandSender, baseColor + "/" + SimpleGems.getInstance().getCommands().GEMS_COMMAND_NAME + " " + getSyntax());
             return;
         }
 

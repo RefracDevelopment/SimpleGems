@@ -119,7 +119,7 @@ public class Methods {
                 .build();
 
         if (profile.getGems().hasAmount(amount)) {
-            profile.getGems().decrementAmount(amount);
+            SimpleGems.getInstance().getGemsAPI().takeGems(player, amount);
             SimpleGems.getInstance().getGemsAPI().giveGems(target, amount);
 
             Color.sendMessage(player, "gems-paid", placeholders);
@@ -142,8 +142,8 @@ public class Methods {
                 .build();
 
         if (profile.getGems().hasAmount(amount)) {
-            profile.getGems().decrementAmount(amount);
-            giveOfflineGems(target, amount);
+            SimpleGems.getInstance().getGemsAPI().takeGems(player, amount);
+            SimpleGems.getInstance().getGemsAPI().giveOfflineGems(target, amount);
 
             Color.sendMessage(player, "gems-paid", placeholders);
         } else {
@@ -173,7 +173,7 @@ public class Methods {
         ItemStack gemsItem = getGemsItem(amount);
 
         if (player.getInventory().firstEmpty() != -1) {
-            player.getInventory().setItem(player.getInventory().firstEmpty(), gemsItem);
+            player.getInventory().addItem(gemsItem);
             player.updateInventory();
         } else {
             player.getWorld().dropItem(player.getLocation(), gemsItem);

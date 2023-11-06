@@ -4,28 +4,26 @@ import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.utilities.Permissions;
 import me.refracdevelopment.simplegems.utilities.chat.Color;
 import me.refracdevelopment.simplegems.utilities.command.SubCommand;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.Collections;
 import java.util.List;
 
-public class ReloadCommand extends SubCommand {
+public class UpdateCommand extends SubCommand {
 
     @Override
     public String getName() {
-        return "reload";
+        return SimpleGems.getInstance().getCommands().UPDATE_COMMAND_NAME;
     }
 
     @Override
     public List<String> getAliases() {
-        return Collections.emptyList();
+        return SimpleGems.getInstance().getCommands().UPDATE_COMMAND_ALIASES;
     }
 
     @Override
     public String getDescription() {
-        return SimpleGems.getInstance().getLocaleFile().getString("command-reload-description");
+        return SimpleGems.getInstance().getLocaleFile().getString("command-update-description");
     }
 
     @Override
@@ -34,21 +32,17 @@ public class ReloadCommand extends SubCommand {
     }
 
     @Override
-    public void perform(CommandSender commandSender, String[] args) {
-        if (!commandSender.hasPermission(Permissions.GEMS_RELOAD_COMMAND)) {
+    public void perform(CommandSender commandSender, String[] strings) {
+        if (!commandSender.hasPermission(Permissions.GEMS_UPDATE_COMMAND)) {
             Color.sendMessage(commandSender, "no-permission");
             return;
         }
 
-        Bukkit.getScheduler().cancelTasks(SimpleGems.getInstance());
-        SimpleGems.getInstance().reloadFiles();
-        SimpleGems.getInstance().getGemShop().load();
-        Color.sendMessage(commandSender, "command-reload-success");
+        SimpleGems.getInstance().getLeaderboardManager().update();
     }
 
     @Override
     public List<String> getSubcommandArguments(Player player, String[] strings) {
         return null;
     }
-
 }

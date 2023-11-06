@@ -7,6 +7,7 @@ import java.util.List;
 public class Commands {
 
     public String GEMS_COMMAND_NAME;
+    public List<String> GEMS_COMMAND_ALIASES;
 
     public String HELP_COMMAND_NAME;
     public List<String> HELP_COMMAND_ALIASES;
@@ -38,12 +39,16 @@ public class Commands {
     public String SET_COMMAND_NAME;
     public List<String> SET_COMMAND_ALIASES;
 
+    public String RESET_COMMAND_NAME;
+    public List<String> RESET_COMMAND_ALIASES;
+
     public Commands() {
         loadConfig();
     }
 
     public void loadConfig() {
         GEMS_COMMAND_NAME = SimpleGems.getInstance().getCommandsFile().getString("name");
+        GEMS_COMMAND_ALIASES = SimpleGems.getInstance().getCommandsFile().getStringList("aliases");
 
         HELP_COMMAND_NAME = SimpleGems.getInstance().getCommandsFile().getString("subcommands.help.name");
         HELP_COMMAND_ALIASES = SimpleGems.getInstance().getCommandsFile().getStringList("subcommands.help.aliases");
@@ -74,5 +79,8 @@ public class Commands {
 
         SET_COMMAND_NAME = SimpleGems.getInstance().getCommandsFile().getString("subcommands.set.name");
         SET_COMMAND_ALIASES = SimpleGems.getInstance().getCommandsFile().getStringList("subcommands.set.aliases");
+
+        RESET_COMMAND_NAME = SimpleGems.getInstance().getCommandsFile().getString("subcommands.reset.name");
+        RESET_COMMAND_ALIASES = SimpleGems.getInstance().getCommandsFile().getStringList("subcommands.reset.aliases");
     }
 }

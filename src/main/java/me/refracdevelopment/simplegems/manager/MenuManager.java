@@ -21,4 +21,8 @@ public class MenuManager {
         }
         return playerMenuUtilityMap.get(p.getUniqueId());
     }
+
+    public void remove(Player p) {
+        playerMenuUtilityMap.remove(p.getUniqueId());
+    }
 }

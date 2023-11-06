@@ -1,7 +1,7 @@
 # en_US translation by Refrac
 
 # This is used for automatic file updating purposes
-config-version: 2
+config-version: '3'
 
 # Plugin Message Prefix
 prefix: <g:#8A2387:#E94057:#F27121>SimpleGems &8| &f
@@ -39,6 +39,8 @@ gems-taken: '&eYou''ve taken &c%gems_formatted% &egems from &d%player%&b.'
 gems-lost: '&eYou''ve lost &c%gems_formatted% &egems.'
 gems-set: '&eYou''ve set &d%player%''s &egems to &c%gems_formatted%&e.'
 gems-setted: '&eYour gems have been set to &c%gems_formatted%&e.'
+gems-reset: '&eReset player data.'
+gems-reset-player: '&eReset %player%''s player data.'
 
 # Help Command
 command-help-title: '&fAvailable Commands:'
@@ -80,3 +82,9 @@ command-version-description: Display the version info for SimpleGems
 
 # Top Command
 command-top-description: Display the top leaderboard info for SimpleGems
+
+# Update Command
+command-update-description: Allows you to manually update the leaderboard
+
+# Reset Command
+command-reset-description: Allows you to reset a player's data or the entire database

@@ -6,13 +6,11 @@ import com.google.gson.JsonParser;
 import com.tcoded.folialib.FoliaLib;
 import lombok.Getter;
 import me.gabytm.util.actions.ActionManager;
-import me.kodysimpson.simpapi.command.CommandList;
-import me.kodysimpson.simpapi.command.CommandManager;
-import me.kodysimpson.simpapi.command.SubCommand;
 import me.refracdevelopment.simplegems.api.SimpleGemsAPI;
 import me.refracdevelopment.simplegems.commands.*;
 import me.refracdevelopment.simplegems.listeners.MenuListener;
 import me.refracdevelopment.simplegems.listeners.PlayerListener;
+import me.refracdevelopment.simplegems.manager.CommandManager;
 import me.refracdevelopment.simplegems.manager.MenuManager;
 import me.refracdevelopment.simplegems.manager.configuration.ConfigFile;
 import me.refracdevelopment.simplegems.manager.configuration.cache.Commands;
@@ -29,6 +27,8 @@ import me.refracdevelopment.simplegems.player.data.ProfileManager;
 import me.refracdevelopment.simplegems.utilities.DownloadUtil;
 import me.refracdevelopment.simplegems.utilities.chat.Color;
 import me.refracdevelopment.simplegems.utilities.chat.PAPIExpansion;
+import me.refracdevelopment.simplegems.utilities.command.CommandList;
+import me.refracdevelopment.simplegems.utilities.command.SubCommand;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -59,7 +59,8 @@ public final class SimpleGems extends JavaPlugin {
     private ActionManager actionManager;
     private LeaderboardManager leaderboardManager;
     private MenuManager menuManager;
-
+    private CommandManager commandManager;
+    
     // Menus
     private GemShop gemShop;
 
@@ -213,7 +214,8 @@ public final class SimpleGems extends JavaPlugin {
 
     private void loadCommands() {
         try {
-            CommandManager.createCoreCommand(this, getCommands().GEMS_COMMAND_NAME,
+            commandManager = new CommandManager();
+            commandManager.createCoreCommand(this, getCommands().GEMS_COMMAND_NAME,
                     getLocaleFile().getString("command-help-description"),
                     "/" + getCommands().GEMS_COMMAND_NAME, new CommandList() {
                         @Override
@@ -222,7 +224,7 @@ public final class SimpleGems extends JavaPlugin {
                                 Color.sendCustomMessage(commandSender, message);
                             });
                         }
-                    },
+                    }, getCommands().GEMS_COMMAND_ALIASES,
                     HelpCommand.class,
                     BalanceCommand.class,
                     TopCommand.class,
@@ -233,7 +235,9 @@ public final class SimpleGems extends JavaPlugin {
                     TakeCommand.class,
                     SetCommand.class,
                     ReloadCommand.class,
-                    VersionCommand.class
+                    VersionCommand.class,
+                    UpdateCommand.class,
+                    ResetCommand.class
             );
 
             subCommands.addAll(Arrays.asList(
@@ -247,7 +251,9 @@ public final class SimpleGems extends JavaPlugin {
                     new TakeCommand(),
                     new SetCommand(),
                     new ReloadCommand(),
-                    new VersionCommand()
+                    new VersionCommand(),
+                    new UpdateCommand(),
+                    new ResetCommand()
             ));
         } catch (NoSuchFieldException | IllegalAccessException e) {
             Color.log("&aFailed to load commands.");

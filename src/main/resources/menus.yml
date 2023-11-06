@@ -25,7 +25,7 @@
 # [close] - Close the current menu
 #---------------------------------------------------------------------------
 # This is used for automatic file updating purposes
-config-version: 2
+config-version: '3'
 
 categories:
   gems-menu:

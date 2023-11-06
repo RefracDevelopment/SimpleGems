@@ -6,7 +6,7 @@
 #         \/         \/|__|             \/        \/     \/      \/     \/
 
 # This is used for automatic file updating purposes
-config-version: 2
+config-version: '3'
 
 # The locale to use in the /locale folder
 locale: en_US
@@ -17,8 +17,7 @@ locale: en_US
 # Default: 100
 starting-gems: 100
 
-# Allows changing how long data is cached for /gems top
-# Default: 1800
+# Leaderboard update interval in seconds
 leaderboard-update-interval: 1800
 
 # Choose your data saving type:
@@ -84,6 +83,10 @@ gems-balance:
   - ''
 
 gems-item:
+  # Should this be placeable?
+  placeable: false
+  # Should this be stackable?
+  stackable: false
   # This is used for withdrawing gems
   # Default: DIAMOND
   material: DIAMOND

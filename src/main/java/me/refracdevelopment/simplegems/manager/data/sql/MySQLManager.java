@@ -48,6 +48,17 @@ public class MySQLManager {
         playerGemsDao.deleteById(uuid.toString());
     }
 
+    public void delete() throws SQLException {
+        List<PlayerGems> playerGemsList = new ArrayList<>();
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            playerGemsList.add(getPlayerGems(player.getUniqueId()));
+        }
+        for (OfflinePlayer player : Bukkit.getOfflinePlayers()) {
+            playerGemsList.add(getPlayerGems(player.getUniqueId()));
+        }
+        playerGemsDao.delete(playerGemsList);
+    }
+
     public boolean playerExists(UUID uuid) throws SQLException {
         return playerGemsDao.idExists(uuid.toString());
     }

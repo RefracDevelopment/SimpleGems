@@ -1,18 +1,19 @@
 package me.refracdevelopment.simplegems.commands;
 
 import com.google.common.base.Joiner;
-import me.kodysimpson.simpapi.command.SubCommand;
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.utilities.Methods;
 import me.refracdevelopment.simplegems.utilities.Permissions;
 import me.refracdevelopment.simplegems.utilities.chat.Color;
 import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
 import me.refracdevelopment.simplegems.utilities.chat.StringPlaceholders;
+import me.refracdevelopment.simplegems.utilities.command.SubCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SetCommand extends SubCommand {
@@ -39,8 +40,9 @@ public class SetCommand extends SubCommand {
 
     @Override
     public void perform(CommandSender commandSender, String[] strings) {
-        if (strings.length == 0) {
-            Color.sendCustomMessage(commandSender, getSyntax());
+        if (strings.length == 1) {
+            String baseColor = SimpleGems.getInstance().getLocaleFile().getString("base-command-color");
+            Color.sendCustomMessage(commandSender, baseColor + "/" + SimpleGems.getInstance().getCommands().GEMS_COMMAND_NAME + " " + getSyntax());
             return;
         }
 
@@ -63,8 +65,8 @@ public class SetCommand extends SubCommand {
             try {
                 amount = Long.parseLong(strings[2]);
             } catch (NumberFormatException exception) {
-                amount = 0;
                 Color.sendMessage(commandSender, "invalid-number", Placeholders.setPlaceholders(commandSender));
+                return;
             }
 
             SimpleGems.getInstance().getGemsAPI().setGems(player, amount);
@@ -86,8 +88,8 @@ public class SetCommand extends SubCommand {
             try {
                 amount = Long.parseLong(strings[2]);
             } catch (NumberFormatException exception) {
-                amount = 0;
                 Color.sendMessage(commandSender, "invalid-number", Placeholders.setPlaceholders(commandSender));
+                return;
             }
 
             SimpleGems.getInstance().getGemsAPI().setOfflineGems(target, amount);
@@ -106,6 +108,15 @@ public class SetCommand extends SubCommand {
 
     @Override
     public List<String> getSubcommandArguments(Player player, String[] strings) {
+        List<String> names = new ArrayList<>();
+
+        Bukkit.getOnlinePlayers().forEach(p -> {
+            names.add(p.getName());
+        });
+
+        if (strings.length == 2) {
+            return names;
+        }
         return null;
     }
 

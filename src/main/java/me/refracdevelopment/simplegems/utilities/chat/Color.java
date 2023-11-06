@@ -40,7 +40,7 @@ public class Color {
     public void sendCustomMessage(CommandSender sender, String message) {
         if (message.equalsIgnoreCase("%empty%") || message.contains("%empty%") || message.isEmpty()) return;
 
-        sender.sendMessage(translate(sender, "%prefix%" + message));
+        HexUtils.sendMessage(sender, Placeholders.setPlaceholders(sender, "%prefix%" + message));
     }
 
     public void log(String message) {

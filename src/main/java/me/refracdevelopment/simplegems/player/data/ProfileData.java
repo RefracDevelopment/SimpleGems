@@ -32,7 +32,8 @@ public class ProfileData {
     public void load() {
         switch (SimpleGems.getInstance().getDataType()) {
             case MONGO:
-                Document document = SimpleGems.getInstance().getMongoManager().getStatsCollection().find(Filters.eq("uuid", uuid.toString())).first();
+                Document document = SimpleGems.getInstance().getMongoManager().getStatsCollection().find(
+                        Filters.eq("uuid", uuid.toString())).first();
 
                 if (document != null) {
                     gems.setAmount(document.getLong("gems"));
@@ -41,7 +42,8 @@ public class ProfileData {
             case MYSQL:
                 try {
                     PlayerGems playerGems = SimpleGems.getInstance().getMySQLManager().playerExists(uuid) ?
-                            SimpleGems.getInstance().getMySQLManager().getPlayerGems(uuid) : SimpleGems.getInstance().getMySQLManager().addPlayer(getPlayer());
+                            SimpleGems.getInstance().getMySQLManager().getPlayerGems(uuid) :
+                            SimpleGems.getInstance().getMySQLManager().addPlayer(getPlayer());
                     gems.setAmount(playerGems.getGems());
                     SimpleGems.getInstance().getMySQLManager().updatePlayerName(uuid, name);
                 } catch (SQLException exception) {
@@ -51,7 +53,8 @@ public class ProfileData {
             case SQLITE:
                 try {
                     PlayerGems playerGems = SimpleGems.getInstance().getSqLiteManager().playerExists(uuid) ?
-                            SimpleGems.getInstance().getSqLiteManager().getPlayerGems(uuid) : SimpleGems.getInstance().getSqLiteManager().addPlayer(getPlayer());
+                            SimpleGems.getInstance().getSqLiteManager().getPlayerGems(uuid) :
+                            SimpleGems.getInstance().getSqLiteManager().addPlayer(getPlayer());
                     gems.setAmount(playerGems.getGems());
                     SimpleGems.getInstance().getSqLiteManager().updatePlayerName(uuid, name);
                 } catch (SQLException exception) {
@@ -73,7 +76,8 @@ public class ProfileData {
                 document.put("uuid", uuid.toString());
                 document.put("gems", gems.getAmount());
 
-                SimpleGems.getInstance().getMongoManager().getStatsCollection().replaceOne(Filters.eq("uuid", uuid.toString()), document, new ReplaceOptions().upsert(true));
+                SimpleGems.getInstance().getMongoManager().getStatsCollection().replaceOne(
+                        Filters.eq("uuid", uuid.toString()), document, new ReplaceOptions().upsert(true));
                 break;
             case MYSQL:
                 try {

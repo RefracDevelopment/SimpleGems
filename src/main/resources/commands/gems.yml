@@ -1,7 +1,10 @@
 # This is used for automatic file updating purposes
-config-version: 2
+config-version: '3'
 
 name: gems
+aliases:
+  - consolegems
+  - simplegems
 subcommands:
   help:
     name: help
@@ -39,4 +42,10 @@ subcommands:
       - bal
   version:
     name: version
+    aliases: [ ]
+  update:
+    name: update
+    aliases: [ ]
+  reset:
+    name: reset
     aliases: [ ]

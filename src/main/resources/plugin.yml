@@ -1,7 +1,8 @@
 name: SimpleGems
 version: '${project.version}'
 main: me.refracdevelopment.simplegems.SimpleGems
-author: RefracDevelopment
+authors:
+  - Refrac
 api-version: "1.13"
 softdepend:
   - NBTAPI

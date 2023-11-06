@@ -1,11 +1,10 @@
 package me.refracdevelopment.simplegems.commands;
 
-import me.kodysimpson.simpapi.command.SubCommand;
 import me.refracdevelopment.simplegems.SimpleGems;
-import me.refracdevelopment.simplegems.menu.GemShopCategory;
 import me.refracdevelopment.simplegems.utilities.Permissions;
 import me.refracdevelopment.simplegems.utilities.chat.Color;
 import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
+import me.refracdevelopment.simplegems.utilities.command.SubCommand;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -50,29 +49,30 @@ public class ShopCommand extends SubCommand {
 
         if (strings.length == 1) {
             SimpleGems.getInstance().getGemShop().getCategories().forEach((gemShopCategory, gemShopItems) -> {
-                if (gemShopCategory.isDefaultCategory()) {
-                    if (!gemShopCategory.isEnabled()) {
-                        Color.sendMessage(player, "shop-disabled");
-                        return;
-                    }
-
-                    new GemShopCategory(SimpleGems.getInstance().getMenuManager().getPlayerMenuUtility(player), gemShopCategory.getCategoryName()).open();
+                if (!gemShopCategory.isDefaultCategory()) return;
+                if (!gemShopCategory.isEnabled()) {
+                    Color.sendMessage(player, "shop-disabled");
+                    return;
                 }
-            });
-            return;
-        }
 
-        if (strings.length == 2) {
-            if (SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.contains(strings[1]) && SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getBoolean(strings[1] + ".enabled")) {
-                new GemShopCategory(SimpleGems.getInstance().getMenuManager().getPlayerMenuUtility(player), strings[1]).open();
-            } else if (!SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.contains(strings[1])) {
-                Color.log("");
-                Color.log("");
-                Color.log("The 'categories." + strings[1] + "' menu category in 'menus.yml' config file doesn't exist.");
-                Color.log("");
-                Color.log("");
-                Color.sendMessage(player, "invalid-category");
-            } else Color.sendMessage(player, "shop-disabled");
+                gemShopCategory.setPlayerMenuUtility(SimpleGems.getInstance().getMenuManager().getPlayerMenuUtility(player));
+                gemShopCategory.open();
+            });
+        } else if (strings.length == 2) {
+            SimpleGems.getInstance().getGemShop().getCategories().forEach((gemShopCategory, gemShopItems) -> {
+                if (!gemShopCategory.getCategoryName().equalsIgnoreCase(strings[1])) {
+                    Color.log("The 'categories." + strings[1] + "' menu category in 'menus.yml' config file doesn't exist.");
+                    return;
+                }
+
+                if (!gemShopCategory.isEnabled()) {
+                    Color.sendMessage(player, "shop-disabled");
+                    return;
+                }
+
+                gemShopCategory.setPlayerMenuUtility(SimpleGems.getInstance().getMenuManager().getPlayerMenuUtility(player));
+                gemShopCategory.open();
+            });
         }
     }
 

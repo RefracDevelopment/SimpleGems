@@ -6,14 +6,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 
 @Getter
-public class GemsRemoveEvent extends SimpleEvent implements Cancellable {
+public class GemsWithdrawEvent extends SimpleEvent implements Cancellable {
 
-    private final long lossGems;
+    private final long withdrawedGems;
     private boolean isCancelled;
 
-    public GemsRemoveEvent(Player player, long amount) {
+    public GemsWithdrawEvent(Player player, long amount) {
         super(player);
-        this.lossGems = amount;
+        this.withdrawedGems = amount;
         this.isCancelled = false;
     }
 
