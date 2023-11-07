@@ -104,10 +104,10 @@ public class LeaderboardManager {
     }
 
     private Map<String, Long> sortByValue(Map<String, Long> unsortMap) {
-        List<Map.Entry<String, Long>> list = new ArrayList<>(unsortMap.entrySet());
+        List<Map.Entry<String, Long>> list = new LinkedList<>(unsortMap.entrySet());
         list.sort(Map.Entry.comparingByValue(Collections.reverseOrder()));
 
-        Map<String, Long> sortedMap = new HashMap<>();
+        Map<String, Long> sortedMap = new LinkedHashMap<>();
         for (Map.Entry<String, Long> entry : list) {
             sortedMap.put(entry.getKey(), entry.getValue());
         }
