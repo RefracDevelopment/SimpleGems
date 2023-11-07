@@ -1,8 +1,10 @@
 package me.refracdevelopment.simplegems.utilities.menu;
 
+import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.utilities.Utilities;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -51,6 +53,10 @@ public abstract class Menu implements InventoryHolder {
                 inventory.setItem(i, FILLER_GLASS);
             }
         }
+    }
+
+    public void setPlayerMenuUtility(Player player) {
+        this.playerMenuUtility = SimpleGems.getInstance().getMenuManager().getPlayerMenuUtility(player);
     }
 
     public ItemStack makeItem(Material material, String displayName, String... lore) {

@@ -44,7 +44,7 @@ public class GemShopCategory extends Menu {
         if (event.getCurrentItem().getItemMeta() == null) return;
 
         SimpleGems.getInstance().getGemShop().getItems().forEach(item -> {
-            if (!item.getCategoryName().equalsIgnoreCase(categoryName) && item.getSlot() != event.getRawSlot()) {
+            if (item.getCategoryName().equalsIgnoreCase(categoryName) && item.getSlot() != event.getRawSlot()) {
                 item.handleItem(player);
             }
         });
@@ -55,7 +55,7 @@ public class GemShopCategory extends Menu {
         if (playerMenuUtility == null) return;
 
         SimpleGems.getInstance().getGemShop().getItems().forEach(item -> {
-            if (!item.getCategoryName().equalsIgnoreCase(categoryName)) {
+            if (item.getCategoryName().equalsIgnoreCase(categoryName)) {
                 getInventory().setItem(item.getSlot(), item.getItem(playerMenuUtility.getOwner()));
             }
         });
@@ -73,9 +73,5 @@ public class GemShopCategory extends Menu {
 
             getInventory().setItem(i, item.toItemStack());
         }
-    }
-
-    public void setPlayerMenuUtility(PlayerMenuUtility playerMenuUtility) {
-        this.playerMenuUtility = playerMenuUtility;
     }
 }

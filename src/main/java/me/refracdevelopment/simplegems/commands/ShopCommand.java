@@ -55,7 +55,7 @@ public class ShopCommand extends SubCommand {
                     return;
                 }
 
-                gemShopCategory.setPlayerMenuUtility(SimpleGems.getInstance().getMenuManager().getPlayerMenuUtility(player));
+                gemShopCategory.setPlayerMenuUtility(player);
                 gemShopCategory.open();
             });
         } else if (strings.length == 2) {
@@ -70,7 +70,7 @@ public class ShopCommand extends SubCommand {
                     return;
                 }
 
-                gemShopCategory.setPlayerMenuUtility(SimpleGems.getInstance().getMenuManager().getPlayerMenuUtility(player));
+                gemShopCategory.setPlayerMenuUtility(player);
                 gemShopCategory.open();
             });
         }
