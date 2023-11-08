@@ -1,19 +1,25 @@
 package me.refracdevelopment.simplegems.listeners;
 
 import de.tr7zw.nbtapi.NBTItem;
+import lombok.var;
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.player.Profile;
 import me.refracdevelopment.simplegems.utilities.Methods;
 import me.refracdevelopment.simplegems.utilities.Tasks;
+import me.refracdevelopment.simplegems.utilities.Utilities;
 import me.refracdevelopment.simplegems.utilities.chat.Color;
 import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
 import me.refracdevelopment.simplegems.utilities.chat.StringPlaceholders;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -58,7 +64,7 @@ public class PlayerListener implements Listener {
         Player player = event.getPlayer();
 
         if (event.getMessage().equalsIgnoreCase("/reload confirm")) {
-            Color.sendCustomMessage(player, "%prefix% &cUse of /reload is not recommended as it can cause issues often cases. Please restart your server when possible.");
+            Color.sendCustomMessage(player, "&cUse of /reload is not recommended as it can cause issues often cases. Please restart your server when possible.");
         }
     }
 
@@ -89,13 +95,18 @@ public class PlayerListener implements Listener {
 
         NBTItem nbtItem = new NBTItem(item);
 
-        if (nbtItem.hasTag("gems-item-value")) {
+        if (nbtItem.hasTag("uuid") && nbtItem.hasTag("gems-item-value")) {
+            UUID uuid = nbtItem.getUUID("uuid");
             long foundValue = nbtItem.getLong("gems-item-value");
 
-            gemsItem = SimpleGems.getInstance().getGemsAPI().getGemsItem(foundValue);
+            gemsItem = SimpleGems.getInstance().getGemsAPI().getGemsItem(uuid, foundValue);
 
             if (!item.isSimilar(gemsItem)) return;
-            if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) return;
+            if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                event.setCancelled(true);
+                player.updateInventory();
+                return;
+            }
 
             StringPlaceholders placeholders = StringPlaceholders.builder()
                     .addAll(Placeholders.setPlaceholders(player))
@@ -107,17 +118,16 @@ public class PlayerListener implements Listener {
 
             player.getInventory().removeItem(item);
             SimpleGems.getInstance().getGemsAPI().giveGems(player, foundValue);
+            player.updateInventory();
             Color.sendMessage(player, "gems-deposited", placeholders);
         }
     }
 
     @EventHandler
-    public void onPlace(BlockPlaceEvent event) {
-        Player player = event.getPlayer();
-        Profile profile = SimpleGems.getInstance().getProfileManager().getProfile(player.getUniqueId());
+    public void onItemFrame(PlayerInteractEntityEvent event) {
+        if (!(event.getRightClicked() instanceof ItemFrame)) return;
 
-        if (profile == null) return;
-        if (profile.getData() == null) return;
+        Player player = event.getPlayer();
 
         ItemStack item = player.getItemInHand();
         ItemMeta itemMeta = item.getItemMeta();

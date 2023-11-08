@@ -19,12 +19,16 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.Nullable;
 
+import java.lang.reflect.Field;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 @UtilityClass
 public class Methods {
@@ -170,7 +174,7 @@ public class Methods {
     }
 
     public void giveGemsItem(Player player, long amount) {
-        ItemStack gemsItem = getGemsItem(amount);
+        ItemStack gemsItem = getGemsItem(UUID.randomUUID(), amount);
 
         if (player.getInventory().firstEmpty() != -1) {
             player.getInventory().addItem(gemsItem);
@@ -180,7 +184,7 @@ public class Methods {
         }
     }
 
-    public ItemStack getGemsItem(long amount) {
+    public ItemStack getGemsItem(UUID uuid, long amount) {
         String name = SimpleGems.getInstance().getSettings().GEMS_ITEM_NAME;
         XMaterial material = Utilities.getMaterial(SimpleGems.getInstance().getSettings().GEMS_ITEM_MATERIAL);
         int data = SimpleGems.getInstance().getSettings().GEMS_ITEM_DATA;
@@ -205,6 +209,7 @@ public class Methods {
         // Attempt to insert a NBT tag of the gems value instead of filling the inventory
 
         NBTItem nbtItem = new NBTItem(item.toItemStack());
+        nbtItem.setUUID("uuid", uuid);
         nbtItem.setLong("gems-item-value", amount);
         nbtItem.applyNBT(item.toItemStack());
 

@@ -11,6 +11,8 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.UUID;
+
 /**
  * The SimpleGemsAPI allows you to hook into SimpleGems to either modify and grab data
  * or to add new features and events.
@@ -83,8 +85,8 @@ public class SimpleGemsAPI {
      * @param amount The amount of the item.
      * @return an item stack to redeem gems
      */
-    public ItemStack getGemsItem(long amount) {
-        return Methods.getGemsItem(amount);
+    public ItemStack getGemsItem(UUID uuid, long amount) {
+        return Methods.getGemsItem(uuid, amount);
     }
 
     /**

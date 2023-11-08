@@ -83,10 +83,6 @@ gems-balance:
   - ''
 
 gems-item:
-  # Should this be placeable?
-  placeable: false
-  # Should this be stackable?
-  stackable: false
   # This is used for withdrawing gems
   # Default: DIAMOND
   material: DIAMOND

@@ -20,8 +20,6 @@ public class Config {
     public List<String> GEMS_BALANCE;
 
     // Gems Item
-    public boolean GEMS_ITEM_PLACEABLE;
-    public boolean GEMS_ITEM_STACKABLE;
     public String GEMS_ITEM_MATERIAL;
     public int GEMS_ITEM_DATA;
     public boolean GEMS_ITEM_CUSTOM_DATA;
@@ -49,8 +47,6 @@ public class Config {
         GEMS_BALANCE = SimpleGems.getInstance().getConfigFile().getStringList("gems-balance");
 
         // Gems Item
-        GEMS_ITEM_PLACEABLE = SimpleGems.getInstance().getConfigFile().getBoolean("gems-item.placeable");
-        GEMS_ITEM_STACKABLE = SimpleGems.getInstance().getConfigFile().getBoolean("gems-item.stackable");
         GEMS_ITEM_MATERIAL = SimpleGems.getInstance().getConfigFile().getString("gems-item.material");
         GEMS_ITEM_DATA = SimpleGems.getInstance().getConfigFile().getInt("gems-item.data");
         GEMS_ITEM_CUSTOM_DATA = SimpleGems.getInstance().getConfigFile().getBoolean("gems-item.customData");
