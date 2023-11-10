@@ -4,9 +4,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>me.refracdevelopment.simplegems</groupId>
+    <groupId>me.refracdevelopment</groupId>
     <artifactId>SimpleGems</artifactId>
-    <version>3.3-rc.3</version>
+    <version>3.3-rc.4</version>
     <packaging>jar</packaging>
 
     <name>SimpleGems</name>

@@ -54,15 +54,18 @@ public class WithdrawCommand extends SubCommand {
         }
 
         // note: used to prevent adding/removing negative numbers.
-        if (strings[1].contains("-")) return;
+        if (strings[1].contains("-")) {
+            Color.sendMessage(commandSender, "invalid-number", Placeholders.setPlaceholders(commandSender));
+            return;
+        }
 
         long amount;
 
         try {
             amount = Long.parseLong(strings[1]);
         } catch (NumberFormatException exception) {
-            amount = 0;
             Color.sendMessage(commandSender, "invalid-number", Placeholders.setPlaceholders(commandSender));
+            return;
         }
 
         SimpleGems.getInstance().getGemsAPI().withdrawGems(player, amount);

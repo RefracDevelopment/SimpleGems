@@ -51,7 +51,7 @@ public class BalanceCommand extends SubCommand {
         if (strings.length == 2) {
             if (Bukkit.getPlayer(strings[1]) != null) {
                 Player target = Bukkit.getPlayer(strings[1]);
-                Color.sendMessage(commandSender, "gems-balance", Placeholders.setPlaceholders(target.getPlayer()));
+                Color.sendMessage(commandSender, "gems-balance", Placeholders.setPlaceholders(target));
             } else if (Bukkit.getOfflinePlayer(strings[1]) != null && Bukkit.getOfflinePlayer(strings[0]).hasPlayedBefore()) {
                 OfflinePlayer target = Bukkit.getOfflinePlayer(strings[1]);
                 long amount = SimpleGems.getInstance().getGemsAPI().getOfflineGems(target);
@@ -64,7 +64,7 @@ public class BalanceCommand extends SubCommand {
                         .add("gems_decimal", Methods.formatDecimal(amount))
                         .build();
 
-                Color.sendMessage(commandSender, "gems-balance", placeholders);
+                Color.sendMessage(commandSender, "gems-balance", Placeholders.setOfflinePlaceholders(target));
             } else Color.sendMessage(commandSender, "invalid-player", Placeholders.setPlaceholders(commandSender));
         }
     }

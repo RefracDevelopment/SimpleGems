@@ -47,7 +47,10 @@ public class TakeCommand extends SubCommand {
         }
 
         // note: used to prevent adding/removing negative numbers.
-        if (strings[2].contains("-")) return;
+        if (strings[2].contains("-")) {
+            Color.sendMessage(commandSender, "invalid-number", Placeholders.setPlaceholders(commandSender));
+            return;
+        }
 
         String message = Joiner.on(" ").join(strings);
 
@@ -71,7 +74,6 @@ public class TakeCommand extends SubCommand {
 
             StringPlaceholders placeholders = StringPlaceholders.builder()
                     .addAll(Placeholders.setPlaceholders(player))
-                    .add("player", player.getName())
                     .add("gems", String.valueOf(amount))
                     .add("gems_formatted", Methods.format(amount))
                     .add("gems_decimal", Methods.formatDecimal(amount))
@@ -98,8 +100,7 @@ public class TakeCommand extends SubCommand {
             }
 
             StringPlaceholders placeholders = StringPlaceholders.builder()
-                    .addAll(Placeholders.setPlaceholders(commandSender))
-                    .add("player", target.getName())
+                    .addAll(Placeholders.setOfflinePlaceholders(target))
                     .add("gems", String.valueOf(amount))
                     .add("gems_formatted", Methods.format(amount))
                     .add("gems_decimal", Methods.formatDecimal(amount))

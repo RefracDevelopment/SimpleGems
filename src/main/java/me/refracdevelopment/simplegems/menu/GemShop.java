@@ -1,5 +1,6 @@
 package me.refracdevelopment.simplegems.menu;
 
+import dev.dejvokep.boostedyaml.block.implementation.Section;
 import lombok.Getter;
 import me.refracdevelopment.simplegems.SimpleGems;
 
@@ -24,10 +25,12 @@ public class GemShop {
         this.categories.clear();
         this.items.clear();
 
-        SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getKeys().forEach(category -> {
+        Section section = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES;
+
+        section.getKeys().forEach(category -> {
             GemShopCategory gemShopCategory = new GemShopCategory(null, category.toString());
 
-            SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getSection(category + ".items").getKeys().forEach(item -> {
+            section.getSection(category + ".items").getKeys().forEach(item -> {
                 this.items.add(new GemShopItem(gemShopCategory, item.toString()));
             });
 

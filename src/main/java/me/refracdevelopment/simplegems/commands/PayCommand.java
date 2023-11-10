@@ -51,7 +51,10 @@ public class PayCommand extends SubCommand {
         }
 
         // note: used to prevent adding/removing negative numbers.
-        if (strings[2].contains("-")) return;
+        if (strings[2].contains("-")) {
+            Color.sendMessage(commandSender, "invalid-number", Placeholders.setPlaceholders(commandSender));
+            return;
+        }
 
         String message = Joiner.on(" ").join(strings);
 

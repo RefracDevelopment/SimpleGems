@@ -52,7 +52,10 @@ public class GiveCommand extends SubCommand {
         }
 
         // note: used to prevent adding/removing negative numbers.
-        if (strings[2].contains("-")) return;
+        if (strings[2].contains("-")) {
+            Color.sendMessage(commandSender, "invalid-number", Placeholders.setPlaceholders(commandSender));
+            return;
+        }
 
         String message = Joiner.on(" ").join(strings);
 
@@ -66,15 +69,14 @@ public class GiveCommand extends SubCommand {
             try {
                 amount = Long.parseLong(strings[2]);
             } catch (NumberFormatException exception) {
-                amount = 0;
                 Color.sendMessage(commandSender, "invalid-number", Placeholders.setPlaceholders(commandSender));
+                return;
             }
 
             SimpleGems.getInstance().getGemsAPI().giveGems(player, amount);
 
             StringPlaceholders placeholders = StringPlaceholders.builder()
                     .addAll(Placeholders.setPlaceholders(player))
-                    .add("player", player.getName())
                     .add("gems", String.valueOf(amount))
                     .add("gems_formatted", Methods.format(amount))
                     .add("gems_decimal", Methods.formatDecimal(amount))
@@ -96,8 +98,7 @@ public class GiveCommand extends SubCommand {
             SimpleGems.getInstance().getGemsAPI().giveOfflineGems(target, amount);
 
             StringPlaceholders placeholders = StringPlaceholders.builder()
-                    .addAll(Placeholders.setPlaceholders(commandSender))
-                    .add("player", target.getName())
+                    .addAll(Placeholders.setOfflinePlaceholders(target))
                     .add("gems", String.valueOf(amount))
                     .add("gems_formatted", Methods.format(amount))
                     .add("gems_decimal", Methods.formatDecimal(amount))

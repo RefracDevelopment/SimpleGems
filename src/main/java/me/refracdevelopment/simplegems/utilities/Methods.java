@@ -112,44 +112,45 @@ public class Methods {
         }
 
         StringPlaceholders placeholders = StringPlaceholders.builder()
-                .addAll(Placeholders.setPlaceholders(player))
-                .add("player", target.getName())
+                .addAll(Placeholders.setPlaceholders(target))
                 .add("gems", String.valueOf(amount))
                 .add("gems_formatted", Methods.format(amount))
                 .add("gems_decimal", Methods.formatDecimal(amount))
                 .build();
 
-        if (profile.getGems().hasAmount(amount)) {
-            SimpleGems.getInstance().getGemsAPI().takeGems(player, amount);
-            SimpleGems.getInstance().getGemsAPI().giveGems(target, amount);
-
-            Color.sendMessage(player, "gems-paid", placeholders);
-            if (silent) return;
-            Color.sendMessage(target, "gems-received", placeholders);
-        } else {
+        if (!profile.getGems().hasAmount(amount)) {
             Color.sendMessage(player, "not-enough-pay", placeholders);
+            return;
         }
+
+        SimpleGems.getInstance().getGemsAPI().takeGems(player, amount);
+        SimpleGems.getInstance().getGemsAPI().giveGems(target, amount);
+
+        Color.sendMessage(player, "gems-paid", placeholders);
+        if (silent) return;
+        Color.sendMessage(target, "gems-received", placeholders);
     }
 
     public void payOfflineGems(Player player, OfflinePlayer target, long amount) {
         ProfileData profile = SimpleGems.getInstance().getProfileManager().getProfile(player.getUniqueId()).getData();
 
         StringPlaceholders placeholders = StringPlaceholders.builder()
-                .addAll(Placeholders.setPlaceholders(player))
+                .addAll(Placeholders.setOfflinePlaceholders(target))
                 .add("player", target.getName())
                 .add("gems", String.valueOf(amount))
                 .add("gems_formatted", Methods.format(amount))
                 .add("gems_decimal", Methods.formatDecimal(amount))
                 .build();
 
-        if (profile.getGems().hasAmount(amount)) {
-            SimpleGems.getInstance().getGemsAPI().takeGems(player, amount);
-            SimpleGems.getInstance().getGemsAPI().giveOfflineGems(target, amount);
-
-            Color.sendMessage(player, "gems-paid", placeholders);
-        } else {
+        if (!profile.getGems().hasAmount(amount)) {
             Color.sendMessage(player, "not-enough-pay", placeholders);
+            return;
         }
+
+        SimpleGems.getInstance().getGemsAPI().takeGems(player, amount);
+        SimpleGems.getInstance().getGemsAPI().giveOfflineGems(target, amount);
+
+        Color.sendMessage(player, "gems-paid", placeholders);
     }
 
     public void withdrawGems(Player player, long amount) {
@@ -160,25 +161,27 @@ public class Methods {
                 .add("gems_decimal", Methods.formatDecimal(amount))
                 .build();
 
-        if (SimpleGems.getInstance().getGemsAPI().hasGems(player, amount)) {
-            SimpleGems.getInstance().getGemsAPI().takeGems(player, amount);
-            SimpleGems.getInstance().getGemsAPI().giveGemsItem(player, amount);
-
-            Color.sendMessage(player, "gems-withdrawn", placeholders);
-        } else {
+        if (!SimpleGems.getInstance().getGemsAPI().hasGems(player, amount)) {
             Color.sendMessage(player, "not-enough-withdraw", placeholders);
+            return;
         }
+
+        SimpleGems.getInstance().getGemsAPI().takeGems(player, amount);
+        SimpleGems.getInstance().getGemsAPI().giveGemsItem(player, amount);
+
+        Color.sendMessage(player, "gems-withdrawn", placeholders);
     }
 
     public void giveGemsItem(Player player, long amount) {
         ItemStack gemsItem = getGemsItem(UUID.randomUUID(), amount);
 
-        if (player.getInventory().firstEmpty() != -1) {
-            player.getInventory().addItem(gemsItem);
-            player.updateInventory();
-        } else {
+        if (player.getInventory().firstEmpty() == -1) {
             player.getWorld().dropItem(player.getLocation(), gemsItem);
+            return;
         }
+
+        player.getInventory().addItem(gemsItem);
+        player.updateInventory();
     }
 
     public ItemStack getGemsItem(UUID uuid, long amount) {

@@ -1,5 +1,5 @@
 # This is used for automatic file updating purposes
-config-version: '3'
+config-version: '4'
 
 name: gems
 aliases:

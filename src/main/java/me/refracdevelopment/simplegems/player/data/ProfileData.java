@@ -29,6 +29,7 @@ public class ProfileData {
         this.name = name;
     }
 
+    // Check if the player exists already if not add them to the database then load and cache their data
     public void load() {
         switch (SimpleGems.getInstance().getDataType()) {
             case MONGO:
@@ -67,6 +68,7 @@ public class ProfileData {
         }
     }
 
+    // Save the player to the database
     public void save() {
         switch (SimpleGems.getInstance().getDataType()) {
             case MONGO:

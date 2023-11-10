@@ -26,16 +26,29 @@ public class PlayerListener implements Listener {
     private final UUID getDevUUID2 = UUID.fromString("ab898e40-9088-45eb-9d69-e0b78e872627");
 
     @EventHandler
-    public void onLogin(AsyncPlayerPreLoginEvent event) {
+    public void onPreLogin(AsyncPlayerPreLoginEvent event) {
         SimpleGems.getInstance().getProfileManager().handleProfileCreation(event.getUniqueId(), event.getName());
+    }
+
+    @EventHandler
+    public void onLogin(PlayerLoginEvent event) {
+        Profile profile = SimpleGems.getInstance().getProfileManager().getProfile(event.getPlayer().getUniqueId());
+
+        Tasks.runAsync(wrappedTask -> {
+            profile.getData().load();
+
+            Tasks.run(wrappedTask1 -> {
+                if (profile.getData() == null) {
+                    event.disallow(PlayerLoginEvent.Result.KICK_OTHER, Color.translate(SimpleGems.getInstance().getLocaleFile().getString("kick-messages-error")));
+                }
+            });
+        });
     }
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         Profile profile = SimpleGems.getInstance().getProfileManager().getProfile(player.getUniqueId());
-
-        Tasks.runAsync(wrappedTask -> profile.getData().load());
 
         if (profile == null || profile.getData() == null) {
             player.kickPlayer(Color.translate(SimpleGems.getInstance().getLocaleFile().getString("kick-messages-error")));
@@ -57,9 +70,9 @@ public class PlayerListener implements Listener {
     public void onReload(PlayerCommandPreprocessEvent event) {
         Player player = event.getPlayer();
 
-        if (event.getMessage().equalsIgnoreCase("/reload confirm")) {
-            Color.sendCustomMessage(player, "&cUse of /reload is not recommended as it can cause issues often cases. Please restart your server when possible.");
-        }
+        if (!event.getMessage().equalsIgnoreCase("/reload confirm")) return;
+
+        Color.sendCustomMessage(player, "&cUse of /reload is not recommended as it can cause issues often cases. Please restart your server when possible.");
     }
 
     @EventHandler

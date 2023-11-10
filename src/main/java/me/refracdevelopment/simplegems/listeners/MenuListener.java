@@ -26,8 +26,6 @@ public class MenuListener implements Listener {
 
     @EventHandler
     public void onMenuClose(InventoryCloseEvent event) {
-        if (!(event.getPlayer() instanceof Player)) return;
-
         InventoryHolder holder = event.getInventory().getHolder();
         Player player = (Player) event.getPlayer();
 
