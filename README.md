@@ -1,4 +1,5 @@
-# SimpleGems
+![](https://i.imgur.com/60pxSr4.png)
+
 A gems economy/currency plugin.
 
 [Spigot](https://www.spigotmc.org/resources/96827/) [Craftaro](https://craftaro.com/marketplace/product/simplegems.755) [BuiltByBit](https://builtbybit.com/resources/simplegems.21583/) [Hangar](https://hangar.papermc.io/RefracDevelopment/SimpleGems/)
