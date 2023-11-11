@@ -63,3 +63,5 @@ SimpleGemsAPI.INSTANCE.setOfflineGems(player, amount);
 
 ### License
 Please view the [LICENSE](LICENSE) file for more information on the license of this source code.
+
+[icon from flaticon](https://www.flaticon.com/)
