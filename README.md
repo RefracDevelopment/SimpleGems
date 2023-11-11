@@ -1,4 +1,4 @@
-![](https://i.imgur.com/60pxSr4.png)
+![](https://i.imgur.com/pMKvWrk.png)
 
 SimpleGems is a plugin that adds a custom gems economy into minecraft.
 
