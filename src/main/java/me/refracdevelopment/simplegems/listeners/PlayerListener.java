@@ -31,24 +31,11 @@ public class PlayerListener implements Listener {
     }
 
     @EventHandler
-    public void onLogin(PlayerLoginEvent event) {
-        Profile profile = SimpleGems.getInstance().getProfileManager().getProfile(event.getPlayer().getUniqueId());
-
-        Tasks.runAsync(wrappedTask -> {
-            profile.getData().load();
-
-            Tasks.run(wrappedTask1 -> {
-                if (profile.getData() == null) {
-                    event.disallow(PlayerLoginEvent.Result.KICK_OTHER, Color.translate(SimpleGems.getInstance().getLocaleFile().getString("kick-messages-error")));
-                }
-            });
-        });
-    }
-
-    @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         Profile profile = SimpleGems.getInstance().getProfileManager().getProfile(player.getUniqueId());
+
+        Tasks.runAsync(wrappedTask -> profile.getData().load());
 
         if (profile == null || profile.getData() == null) {
             player.kickPlayer(Color.translate(SimpleGems.getInstance().getLocaleFile().getString("kick-messages-error")));

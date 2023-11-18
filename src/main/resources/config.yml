@@ -6,7 +6,7 @@
 #         \/         \/|__|             \/        \/     \/      \/     \/
 
 # This is used for automatic file updating purposes
-config-version: '4'
+config-version: '5'
 
 # The locale to use in the /locale folder
 locale: en_US

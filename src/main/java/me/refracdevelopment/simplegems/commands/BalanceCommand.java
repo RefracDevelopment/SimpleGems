@@ -12,6 +12,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BalanceCommand extends SubCommand {
@@ -71,6 +72,15 @@ public class BalanceCommand extends SubCommand {
 
     @Override
     public List<String> getSubcommandArguments(Player player, String[] strings) {
+        List<String> names = new ArrayList<>();
+
+        Bukkit.getOnlinePlayers().forEach(p -> {
+            names.add(p.getName());
+        });
+
+        if (strings.length == 2) {
+            return names;
+        }
         return null;
     }
 }

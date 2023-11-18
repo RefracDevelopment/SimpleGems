@@ -26,6 +26,7 @@ import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicLong;
 
 @UtilityClass
 public class Methods {
@@ -45,17 +46,9 @@ public class Methods {
 
                 SimpleGems.getInstance().getMongoManager().getStatsCollection().replaceOne(Filters.eq("uuid", player.getUniqueId().toString()), document, new ReplaceOptions().upsert(true));
             } else if (SimpleGems.getInstance().getDataType() == DataType.MYSQL) {
-                try {
-                    SimpleGems.getInstance().getMySQLManager().updatePlayerGems(player.getUniqueId(), amount);
-                } catch (SQLException exception) {
-                    Color.log("&cMySQL Error: " + exception.getMessage());
-                }
+                SimpleGems.getInstance().getMySQLManager().updatePlayerGems(player.getUniqueId(), amount);
             } else if (SimpleGems.getInstance().getDataType() == DataType.SQLITE) {
-                try {
-                    SimpleGems.getInstance().getSqLiteManager().updatePlayerGems(player.getUniqueId(), amount);
-                } catch (SQLException exception) {
-                    Color.log("&cSQLite Error: " + exception.getMessage());
-                }
+                SimpleGems.getInstance().getSqLiteManager().updatePlayerGems(player.getUniqueId(), amount);
             } else if (SimpleGems.getInstance().getDataType() == DataType.FLAT_FILE) {
                 SimpleGems.getInstance().getPlayerMapper().savePlayer(player.getUniqueId(), player.getName(), amount);
             }
@@ -82,17 +75,29 @@ public class Methods {
                 return document.getLong("gems");
             }
         } else if (SimpleGems.getInstance().getDataType() == DataType.MYSQL) {
-            try {
-                return SimpleGems.getInstance().getMySQLManager().getPlayerGems(player.getUniqueId()).getGems();
-            } catch (SQLException exception) {
-                Color.log("&cMySQL Error: " + exception.getMessage());
-            }
+            AtomicLong gems = new AtomicLong(0);
+            SimpleGems.getInstance().getMySQLManager().select("SELECT * FROM SimpleGems WHERE uuid=?", resultSet -> {
+                try {
+                    if (resultSet.next()) {
+                        gems.set(resultSet.getLong("gems"));
+                    }
+                } catch (SQLException exception) {
+                    Color.log(exception.getMessage());
+                }
+            }, player.getUniqueId().toString());
+            return gems.get();
         } else if (SimpleGems.getInstance().getDataType() == DataType.SQLITE) {
-            try {
-                return SimpleGems.getInstance().getSqLiteManager().getPlayerGems(player.getUniqueId()).getGems();
-            } catch (SQLException exception) {
-                Color.log("&cSQLite Error: " + exception.getMessage());
-            }
+            AtomicLong gems = new AtomicLong(0);
+            SimpleGems.getInstance().getSqLiteManager().select("SELECT * FROM SimpleGems WHERE uuid=?", resultSet -> {
+                try {
+                    if (resultSet.next()) {
+                        gems.set(resultSet.getLong("gems"));
+                    }
+                } catch (SQLException exception) {
+                    Color.log(exception.getMessage());
+                }
+            }, player.getUniqueId().toString());
+            return gems.get();
         } else if (SimpleGems.getInstance().getDataType() == DataType.FLAT_FILE) {
             return SimpleGems.getInstance().getPlayerMapper().getGems(player.getUniqueId());
         }

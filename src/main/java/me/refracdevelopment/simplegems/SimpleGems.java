@@ -12,6 +12,7 @@ import me.refracdevelopment.simplegems.listeners.MenuListener;
 import me.refracdevelopment.simplegems.listeners.PlayerListener;
 import me.refracdevelopment.simplegems.manager.CommandManager;
 import me.refracdevelopment.simplegems.manager.MenuManager;
+import me.refracdevelopment.simplegems.manager.ProfileManager;
 import me.refracdevelopment.simplegems.manager.configuration.ConfigFile;
 import me.refracdevelopment.simplegems.manager.configuration.cache.Commands;
 import me.refracdevelopment.simplegems.manager.configuration.cache.Config;
@@ -23,12 +24,12 @@ import me.refracdevelopment.simplegems.manager.data.sql.MySQLManager;
 import me.refracdevelopment.simplegems.manager.data.sql.SQLiteManager;
 import me.refracdevelopment.simplegems.manager.leaderboards.LeaderboardManager;
 import me.refracdevelopment.simplegems.menu.GemShop;
-import me.refracdevelopment.simplegems.player.data.ProfileManager;
 import me.refracdevelopment.simplegems.utilities.DownloadUtil;
 import me.refracdevelopment.simplegems.utilities.chat.Color;
 import me.refracdevelopment.simplegems.utilities.chat.PAPIExpansion;
 import me.refracdevelopment.simplegems.utilities.command.CommandList;
 import me.refracdevelopment.simplegems.utilities.command.SubCommand;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -38,7 +39,6 @@ import java.io.File;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -88,9 +88,13 @@ public final class SimpleGems extends JavaPlugin {
         PluginManager pluginManager = getServer().getPluginManager();
 
         foliaLib = new FoliaLib(this);
+
         DownloadUtil.downloadAndEnable();
 
         loadFiles();
+
+        // Replace with your metrics plugin id
+        new Metrics(this, 13117);
 
         // Check if the server is on 1.7
         if (ReflectionUtils.MINOR_NUMBER <= 7) {
@@ -140,37 +144,44 @@ public final class SimpleGems extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
-        getServer().getScheduler().cancelTasks(this);
+        switch (dataType) {
+            case MYSQL:
+                getMySQLManager().shutdown();
+                break;
+            case SQLITE:
+                getSqLiteManager().shutdown();
+                break;
+        }
     }
 
     public void loadFiles() {
         // Files
         configFile = new ConfigFile("config.yml");
-        commandsFile = new ConfigFile("commands/gems.yml");
         menusFile = new ConfigFile("menus.yml");
+        commandsFile = new ConfigFile("commands/gems.yml");
         localeFile = new ConfigFile("locale/" + configFile.getString("locale") + ".yml");
 
         // Cache
         settings = new Config();
-        commands = new Commands();
         menus = new Menus();
+        commands = new Commands();
     }
 
     public void reloadFiles() {
         // Files
-        configFile.reload();
-        commandsFile.reload();
-        menusFile.reload();
-        localeFile.reload();
+        getConfigFile().reload();
+        getMenusFile().reload();
+        getCommandsFile().reload();
+        getLocaleFile().reload();
 
         // Cache
-        settings.loadConfig();
-        commands.loadConfig();
-        menus.loadConfig();
+        getSettings().loadConfig();
+        getMenus().loadConfig();
+        getCommands().loadConfig();
     }
 
     private void loadManagers() {
-        switch (settings.DATA_TYPE.toUpperCase()) {
+        switch (getSettings().DATA_TYPE.toUpperCase()) {
             case "MONGODB":
             case "MONGO":
                 dataType = DataType.MONGO;
@@ -180,22 +191,18 @@ public final class SimpleGems extends JavaPlugin {
                 break;
             case "MARIADB":
             case "MYSQL":
-                try {
-                    dataType = DataType.MYSQL;
-                    mySQLManager = new MySQLManager();
-                    Color.log("&aEnabled MySQL support!");
-                } catch (ClassNotFoundException | SQLException exception) {
-                    Color.log("&cMySQL Error: " + exception.getMessage());
-                }
+                dataType = DataType.MYSQL;
+                mySQLManager = new MySQLManager();
+                mySQLManager.connect();
+                mySQLManager.createT();
+                Color.log("&aEnabled MySQL support!");
                 break;
             case "SQLITE":
-                try {
-                    dataType = DataType.SQLITE;
-                    sqLiteManager = new SQLiteManager(getDataFolder().getAbsolutePath() + File.separator + "gems.db");
-                    Color.log("&aEnabled SQLite support!");
-                } catch (ClassNotFoundException | SQLException exception) {
-                    Color.log("&cSQLite Error: " + exception.getMessage());
-                }
+                dataType = DataType.SQLITE;
+                sqLiteManager = new SQLiteManager();
+                sqLiteManager.connect(getDataFolder().getAbsolutePath() + File.separator + "gems.db");
+                sqLiteManager.createT();
+                Color.log("&aEnabled SQLite support!");
                 break;
             default:
                 dataType = DataType.FLAT_FILE;

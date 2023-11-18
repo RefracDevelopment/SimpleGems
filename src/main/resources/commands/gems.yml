@@ -1,22 +1,16 @@
 # This is used for automatic file updating purposes
-config-version: '4'
+config-version: '5'
 
 name: gems
 aliases:
   - consolegems
   - simplegems
 subcommands:
-  help:
-    name: help
-    aliases: [ ]
   withdraw:
     name: withdraw
     aliases: [ ]
   shop:
     name: shop
-    aliases: [ ]
-  reload:
-    name: reload
     aliases: [ ]
   take:
     name: take
@@ -40,9 +34,6 @@ subcommands:
     name: balance
     aliases:
       - bal
-  version:
-    name: version
-    aliases: [ ]
   update:
     name: update
     aliases: [ ]

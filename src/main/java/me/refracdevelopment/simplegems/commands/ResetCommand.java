@@ -12,7 +12,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,48 +55,32 @@ public class ResetCommand extends SubCommand {
                         });
 
                         Tasks.run(wrappedTask1 -> {
-                            Color.sendMessage(commandSender, "gems-reset");
-
                             Bukkit.getOnlinePlayers().forEach(player -> {
                                 player.kickPlayer(Color.translate(player, SimpleGems.getInstance().getLocaleFile().getString("kick-messages-error")));
                             });
                         });
                         break;
                     case MYSQL:
-                        try {
-                            SimpleGems.getInstance().getMySQLManager().delete();
-
-                            Tasks.run(wrappedTask1 -> {
-                                Color.sendMessage(commandSender, "gems-reset");
-
-                                Bukkit.getOnlinePlayers().forEach(player -> {
-                                    player.kickPlayer(Color.translate(player, SimpleGems.getInstance().getLocaleFile().getString("kick-messages-error")));
-                                });
-                            });
-                        } catch (SQLException exception) {
-                            Color.log("&cMySQL Error: " + exception.getMessage());
-                        }
-                        break;
-                    case SQLITE:
-                        try {
-                            SimpleGems.getInstance().getSqLiteManager().delete();
-
-                            Tasks.run(wrappedTask1 -> {
-                                Color.sendMessage(commandSender, "gems-reset");
-
-                                Bukkit.getOnlinePlayers().forEach(player -> {
-                                    player.kickPlayer(Color.translate(player, SimpleGems.getInstance().getLocaleFile().getString("kick-messages-error")));
-                                });
-                            });
-                        } catch (SQLException exception) {
-                            Color.log("&cMySQL Error: " + exception.getMessage());
-                        }
-                        break;
-                    default:
-                        SimpleGems.getInstance().getPlayerMapper().deleteDirectory();
+                        SimpleGems.getInstance().getMySQLManager().delete();
 
                         Tasks.run(wrappedTask1 -> {
-                            Color.sendMessage(commandSender, "gems-reset");
+                            Bukkit.getOnlinePlayers().forEach(player -> {
+                                player.kickPlayer(Color.translate(player, SimpleGems.getInstance().getLocaleFile().getString("kick-messages-error")));
+                            });
+                        });
+                        break;
+                    case SQLITE:
+                        SimpleGems.getInstance().getSqLiteManager().delete();
+
+                        Tasks.run(wrappedTask1 -> {
+                            Bukkit.getOnlinePlayers().forEach(player -> {
+                                player.kickPlayer(Color.translate(player, SimpleGems.getInstance().getLocaleFile().getString("kick-messages-error")));
+                            });
+                        });
+                        break;
+                    default:
+                        Tasks.run(wrappedTask1 -> {
+                            Color.sendCustomMessage(commandSender, "This command is only available for MySQL, MariaDB, SQLite and MongoDB.");
                         });
                         break;
                 }
@@ -122,36 +105,26 @@ public class ResetCommand extends SubCommand {
                             }
                             break;
                         case MYSQL:
-                            try {
-                                SimpleGems.getInstance().getMySQLManager().deletePlayer(target.getPlayer().getUniqueId());
-
-                                Tasks.run(wrappedTask1 -> {
-                                    Color.sendMessage(commandSender, "gems-reset-player");
-
-                                    target.getPlayer().kickPlayer(Color.translate(target.getPlayer(), SimpleGems.getInstance().getLocaleFile().getString("kick-messages-error")));
-                                });
-                            } catch (SQLException exception) {
-                                Color.log("&cMySQL Error: " + exception.getMessage());
-                            }
-                            break;
-                        case SQLITE:
-                            try {
-                                SimpleGems.getInstance().getSqLiteManager().deletePlayer(target.getPlayer().getUniqueId());
-
-                                Tasks.run(wrappedTask1 -> {
-                                    Color.sendMessage(commandSender, "gems-reset-player");
-
-                                    target.getPlayer().kickPlayer(Color.translate(target.getPlayer(), SimpleGems.getInstance().getLocaleFile().getString("kick-messages-error")));
-                                });
-                            } catch (SQLException exception) {
-                                Color.log("&cMySQL Error: " + exception.getMessage());
-                            }
-                            break;
-                        default:
-                            SimpleGems.getInstance().getPlayerMapper().deletePlayerFile(target.getUniqueId());
+                            SimpleGems.getInstance().getMySQLManager().deletePlayer(target.getPlayer().getUniqueId());
 
                             Tasks.run(wrappedTask1 -> {
                                 Color.sendMessage(commandSender, "gems-reset-player");
+
+                                target.getPlayer().kickPlayer(Color.translate(target.getPlayer(), SimpleGems.getInstance().getLocaleFile().getString("kick-messages-error")));
+                            });
+                            break;
+                        case SQLITE:
+                            SimpleGems.getInstance().getSqLiteManager().deletePlayer(target.getPlayer().getUniqueId());
+
+                            Tasks.run(wrappedTask1 -> {
+                                Color.sendMessage(commandSender, "gems-reset-player");
+
+                                target.getPlayer().kickPlayer(Color.translate(target.getPlayer(), SimpleGems.getInstance().getLocaleFile().getString("kick-messages-error")));
+                            });
+                            break;
+                        default:
+                            Tasks.run(wrappedTask1 -> {
+                                Color.sendCustomMessage(commandSender, "This command is only available for MySQL, MariaDB, SQLite and MongoDB.");
                             });
                             break;
                     }
@@ -170,32 +143,22 @@ public class ResetCommand extends SubCommand {
                         }
                         break;
                     case MYSQL:
-                        try {
-                            SimpleGems.getInstance().getMySQLManager().deletePlayer(target.getUniqueId());
-
-                            Tasks.run(wrappedTask1 -> {
-                                Color.sendMessage(commandSender, "gems-reset-player");
-                            });
-                        } catch (SQLException exception) {
-                            Color.log("&cMySQL Error: " + exception.getMessage());
-                        }
-                        break;
-                    case SQLITE:
-                        try {
-                            SimpleGems.getInstance().getSqLiteManager().deletePlayer(target.getUniqueId());
-
-                            Tasks.run(wrappedTask1 -> {
-                                Color.sendMessage(commandSender, "gems-reset-player");
-                            });
-                        } catch (SQLException exception) {
-                            Color.log("&cMySQL Error: " + exception.getMessage());
-                        }
-                        break;
-                    default:
-                        SimpleGems.getInstance().getPlayerMapper().deletePlayerFile(target.getUniqueId());
+                        SimpleGems.getInstance().getMySQLManager().deletePlayer(target.getUniqueId());
 
                         Tasks.run(wrappedTask1 -> {
                             Color.sendMessage(commandSender, "gems-reset-player");
+                        });
+                        break;
+                    case SQLITE:
+                        SimpleGems.getInstance().getSqLiteManager().deletePlayer(target.getUniqueId());
+
+                        Tasks.run(wrappedTask1 -> {
+                            Color.sendMessage(commandSender, "gems-reset-player");
+                        });
+                        break;
+                    default:
+                        Tasks.run(wrappedTask1 -> {
+                            Color.sendCustomMessage(commandSender, "This command is only available for MySQL, MariaDB, SQLite and MongoDB.");
                         });
                         break;
                 }
@@ -205,6 +168,15 @@ public class ResetCommand extends SubCommand {
 
     @Override
     public List<String> getSubcommandArguments(Player player, String[] strings) {
+        List<String> names = new ArrayList<>();
+
+        Bukkit.getOnlinePlayers().forEach(p -> {
+            names.add(p.getName());
+        });
+
+        if (strings.length == 2) {
+            return names;
+        }
         return null;
     }
 }

@@ -26,6 +26,7 @@ public class LeaderboardManager {
 
     private void load() {
         if (Bukkit.getOnlinePlayers().isEmpty()) return;
+        cachedMap.clear();
         if (SimpleGems.getInstance().getDataType() == DataType.MONGO) {
             List<Document> documents = SimpleGems.getInstance().getMongoManager().getStatsCollection().find().into(new ArrayList<>());
 
@@ -36,21 +37,29 @@ public class LeaderboardManager {
                 cachedMap.put(name, gems);
             });
         } else if (SimpleGems.getInstance().getDataType() == DataType.MYSQL) {
-            try {
-                SimpleGems.getInstance().getMySQLManager().getAllPlayers().forEach(playerGems -> {
-                    cachedMap.put(playerGems.getName(), playerGems.getGems());
-                });
-            } catch (SQLException exception) {
-                Color.log("&cMySQL Error: " + exception.getMessage());
-            }
+            SimpleGems.getInstance().getMySQLManager().select("SELECT * FROM SimpleGems", resultSet -> {
+                try {
+                    while (resultSet.next()) {
+                        String name = resultSet.getString("name");
+                        long gems = resultSet.getLong("gems");
+                        cachedMap.put(name, gems);
+                    }
+                } catch (SQLException exception) {
+                    Color.log(exception.getMessage());
+                }
+            });
         } else if (SimpleGems.getInstance().getDataType() == DataType.SQLITE) {
-            try {
-                SimpleGems.getInstance().getSqLiteManager().getAllPlayers().forEach(playerGems -> {
-                    cachedMap.put(playerGems.getName(), playerGems.getGems());
-                });
-            } catch (SQLException exception) {
-                Color.log("&cSQLite Error: " + exception.getMessage());
-            }
+            SimpleGems.getInstance().getSqLiteManager().select("SELECT * FROM SimpleGems", resultSet -> {
+                try {
+                    while (resultSet.next()) {
+                        String name = resultSet.getString("name");
+                        long gems = resultSet.getLong("gems");
+                        cachedMap.put(name, gems);
+                    }
+                } catch (SQLException exception) {
+                    Color.log(exception.getMessage());
+                }
+            });
         } else if (SimpleGems.getInstance().getDataType() == DataType.FLAT_FILE) {
             Bukkit.getOnlinePlayers().forEach(onlinePlayer -> {
                 ProfileData profile = SimpleGems.getInstance().getProfileManager().getProfile(onlinePlayer.getUniqueId()).getData();

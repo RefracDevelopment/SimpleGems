@@ -7,18 +7,19 @@ import me.refracdevelopment.simplegems.utilities.command.SubCommand;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Collections;
 import java.util.List;
 
 public class HelpCommand extends SubCommand {
 
     @Override
     public String getName() {
-        return SimpleGems.getInstance().getCommands().HELP_COMMAND_NAME;
+        return "help";
     }
 
     @Override
     public List<String> getAliases() {
-        return SimpleGems.getInstance().getCommands().HELP_COMMAND_ALIASES;
+        return Collections.emptyList();
     }
 
     @Override
