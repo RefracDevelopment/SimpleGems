@@ -36,29 +36,9 @@ depend:
 softdepend:
   - SimpleGems
 ```
-
+You can use this to access all methods.
 ```JAVA
-SimpleGemsAPI.INSTANCE.getGems(player);
-
-SimpleGemsAPI.INSTANCE.getOfflineGems(player);
-
-SimpleGemsAPI.INSTANCE.hasGems(player, amount);
-
-SimpleGemsAPI.INSTANCE.hasOfflineGems(player, amount);
-
-SimpleGemsAPI.INSTANCE.giveGemsItem(player, amount);
-
-SimpleGemsAPI.INSTANCE.giveGems(player, amount);
-
-SimpleGemsAPI.INSTANCE.giveOfflineGems(player, amount);
-
-SimpleGemsAPI.INSTANCE.takeGems(player, amount);
-
-SimpleGemsAPI.INSTANCE.takeOfflineGems(player, amount);
-
-SimpleGemsAPI.INSTANCE.setGems(player, amount);
-
-SimpleGemsAPI.INSTANCE.setOfflineGems(player, amount);
+SimpleGemsAPI gemsAPI = SimpleGems.getInstance().getGemsAPI();
 ```
 
 ### License
