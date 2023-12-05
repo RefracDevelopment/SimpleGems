@@ -27,14 +27,14 @@ public class GemShop {
 
         Section section = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES;
 
-        section.getKeys().forEach(category -> {
-            GemShopCategory gemShopCategory = new GemShopCategory(null, category.toString());
+        section.getRoutesAsStrings(false).forEach(category -> {
+            GemShopCategory gemShopCategory = new GemShopCategory(null, category);
 
-            section.getSection(category + ".items").getKeys().forEach(item -> {
-                this.items.add(new GemShopItem(gemShopCategory, item.toString()));
+            section.getSection(category + ".items").getRoutesAsStrings(false).forEach(item -> {
+                this.items.add(new GemShopItem(gemShopCategory, item));
             });
 
-            this.categories.put(gemShopCategory, this.items);
+            this.categories.put(gemShopCategory, items);
         });
     }
 }

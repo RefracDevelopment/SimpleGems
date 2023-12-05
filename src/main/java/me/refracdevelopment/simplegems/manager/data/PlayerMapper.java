@@ -4,13 +4,11 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.utilities.chat.Color;
-import org.bukkit.Bukkit;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.UUID;
 
 public class PlayerMapper {
@@ -52,44 +50,6 @@ public class PlayerMapper {
         jsonObject.addProperty("name", name);
         jsonObject.addProperty("gems", 0L);
         this.saveFile(uuid, jsonObject);
-    }
-
-    public void deletePlayerFile(UUID uuid) {
-        final File playerFile = new File(this.directory + File.separator + uuid.toString() + ".json");
-        try {
-            if (playerFile.exists()) {
-                playerFile.delete();
-            }
-        } catch (Exception e) {
-            Color.log("&cError while trying to delete config file for user: " + uuid);
-            e.printStackTrace();
-        }
-    }
-
-    public void deleteDirectory() {
-        Bukkit.getOnlinePlayers().forEach(player -> {
-            final File playerFile = new File(this.directory + File.separator + player.getUniqueId().toString() + ".json");
-            try {
-                if (playerFile.exists()) {
-                    playerFile.delete();
-                }
-            } catch (Exception e) {
-                Color.log("&cError while trying to delete config file for user: " + player.getUniqueId());
-                e.printStackTrace();
-            }
-        });
-
-        Arrays.stream(Bukkit.getOfflinePlayers()).forEach(player -> {
-            final File playerFile = new File(this.directory + File.separator + player.getUniqueId().toString() + ".json");
-            try {
-                if (playerFile.exists()) {
-                    playerFile.delete();
-                }
-            } catch (Exception e) {
-                Color.log("&cError while trying to delete config file for user: " + player.getUniqueId());
-                e.printStackTrace();
-            }
-        });
     }
 
     private void saveFile(final UUID uuid, final JsonObject jsonObject) {

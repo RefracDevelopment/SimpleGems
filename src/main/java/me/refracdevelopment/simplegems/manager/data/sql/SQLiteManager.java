@@ -16,7 +16,7 @@ public class SQLiteManager {
     private HikariDataSource dataSource;
 
     public void createT() {
-        Tasks.runAsync(wrappedTask -> createTables());
+        Tasks.runAsync(() -> createTables());
     }
 
     public boolean connect(String path) {

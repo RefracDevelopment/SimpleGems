@@ -34,6 +34,7 @@ categories:
     title: "&e&lGems Shop"
     size: 27
     fill:
+      enabled: true
       material: BLACK_STAINED_GLASS_PANE
       data: 0
       name: "&7"

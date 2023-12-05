@@ -20,7 +20,6 @@ public class MongoManager {
     private MongoCollection<Document> statsCollection;
 
     public boolean connect() {
-
         ConnectionString connectionString = this.getConnectionString();
 
         MongoClientSettings.Builder mongoBuilder = MongoClientSettings.builder()
@@ -87,7 +86,6 @@ public class MongoManager {
         }
         return null;
     }
-
 
     private void initializeCollections(MongoDatabase database) {
         statsCollection = database.getCollection("Player_Data");

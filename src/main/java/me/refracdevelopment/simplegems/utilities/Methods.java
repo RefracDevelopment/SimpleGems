@@ -36,7 +36,7 @@ public class Methods {
      * save a specified player's data
      */
     public void saveOffline(OfflinePlayer player, long amount) {
-        Tasks.runAsync(wrappedTask -> {
+        Tasks.runAsync(() -> {
             if (SimpleGems.getInstance().getDataType() == DataType.MONGO) {
                 Document document = new Document();
 
@@ -68,6 +68,7 @@ public class Methods {
     }
 
     public long getOfflineGems(OfflinePlayer player) {
+        AtomicLong gems = new AtomicLong(0);
         if (SimpleGems.getInstance().getDataType() == DataType.MONGO) {
             Document document = SimpleGems.getInstance().getMongoManager().getStatsCollection().find(Filters.eq("uuid", player.getUniqueId().toString())).first();
 
@@ -75,7 +76,6 @@ public class Methods {
                 return document.getLong("gems");
             }
         } else if (SimpleGems.getInstance().getDataType() == DataType.MYSQL) {
-            AtomicLong gems = new AtomicLong(0);
             SimpleGems.getInstance().getMySQLManager().select("SELECT * FROM SimpleGems WHERE uuid=?", resultSet -> {
                 try {
                     if (resultSet.next()) {
@@ -87,7 +87,6 @@ public class Methods {
             }, player.getUniqueId().toString());
             return gems.get();
         } else if (SimpleGems.getInstance().getDataType() == DataType.SQLITE) {
-            AtomicLong gems = new AtomicLong(0);
             SimpleGems.getInstance().getSqLiteManager().select("SELECT * FROM SimpleGems WHERE uuid=?", resultSet -> {
                 try {
                     if (resultSet.next()) {

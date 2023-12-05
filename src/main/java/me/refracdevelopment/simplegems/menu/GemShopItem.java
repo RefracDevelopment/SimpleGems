@@ -5,7 +5,6 @@ import ca.tweetzy.skulls.api.interfaces.Skull;
 import com.cryptomorin.xseries.ReflectionUtils;
 import com.cryptomorin.xseries.XMaterial;
 import lombok.Getter;
-import lombok.Setter;
 import me.arcaniax.hdb.api.HeadDatabaseAPI;
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.utilities.ItemBuilder;
@@ -23,7 +22,6 @@ import org.bukkit.inventory.ItemStack;
 import java.util.List;
 
 @Getter
-@Setter
 public class GemShopItem {
 
     private final XMaterial material;
@@ -32,10 +30,8 @@ public class GemShopItem {
     private final int data, slot, customModelData;
     private final List<String> lore, actions, commands, messages;
     private final long cost;
-    private final GemShopCategory category;
 
     public GemShopItem(GemShopCategory category, String item) {
-        this.category = category;
         this.categoryName = category.getCategoryName();
         this.material = Utilities.getMaterial(SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getString(categoryName + ".items." + item + ".material"));
         if (SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getBoolean(categoryName + ".items." + item + ".head-database")) {
@@ -90,15 +86,16 @@ public class GemShopItem {
                     ));
                 });
             });
-        } else {
-            this.messages.forEach(message -> {
-                Color.sendCustomMessage(player, Color.translate(player, message
-                        .replace("%item%", Color.translate(this.name))
-                        .replace("%cost%", Methods.formatDecimal(this.cost))
-                        .replace("%price%", String.valueOf(this.cost))
-                ));
-            });
+            return;
         }
+
+        this.messages.forEach(message -> {
+            Color.sendCustomMessage(player, Color.translate(player, message
+                    .replace("%item%", Color.translate(this.name))
+                    .replace("%cost%", Methods.formatDecimal(this.cost))
+                    .replace("%price%", String.valueOf(this.cost))
+            ));
+        });
     }
 
     public void runCommands(Player player) {
@@ -112,6 +109,37 @@ public class GemShopItem {
     }
 
     public void runActions(Player player, String action) {
+        StringPlaceholders placeholders = StringPlaceholders.builder()
+                .addAll(Placeholders.setPlaceholders(player))
+                .add("item", this.name)
+                .build();
+
+        if (action.startsWith("{openmenu:")) {
+            SimpleGems.getInstance().getGemShop().getCategories().forEach((gemShopCategory, gemShopItems) -> {
+                if (!gemShopCategory.getCategoryName().equalsIgnoreCase(action.replace("{openmenu:", "")
+                        .replace("}", ""))) return;
+
+                if (!gemShopCategory.isEnabled()) {
+                    player.closeInventory();
+                    Color.sendMessage(player, "shop-disabled");
+                    return;
+                }
+
+                gemShopCategory.setPlayerMenuUtility(player);
+                gemShopCategory.open();
+            });
+            return;
+        }
+
+        if (this.cost == 0) return;
+
+        if (!SimpleGems.getInstance().getGemsAPI().hasGems(player, this.cost)) {
+            Color.sendMessage(player, "not-enough-gems", placeholders);
+            return;
+        }
+
+        SimpleGems.getInstance().getGemsAPI().takeGems(player, this.cost);
+
         SimpleGems.getInstance().getActionManager().execute(player, Color.translate(player, action
                 .replace("%item%", Color.translate(this.name))
                 .replace("%cost%", String.valueOf(this.cost))
@@ -139,16 +167,17 @@ public class GemShopItem {
         ItemBuilder finalItem = item;
 
         if (this.glow) {
-            item.addEnchant(Enchantment.ARROW_DAMAGE, 1);
-            item.setItemFlags(ItemFlag.HIDE_ENCHANTS);
+            finalItem.addEnchant(Enchantment.ARROW_DAMAGE, 1);
+            finalItem.setItemFlags(ItemFlag.HIDE_ENCHANTS);
         }
 
-        item.setName(Color.translate(player, this.name));
-        this.lore.forEach(s -> finalItem.addLoreLine(Color.translate(player, s.replace("%item%", this.name)
+        finalItem.setName(this.name);
+        this.lore.forEach(s -> finalItem.addLoreLine(Color.translate(player, s
+                .replace("%item%", this.name)
                 .replace("%cost%", String.valueOf(this.cost))
                 .replace("%price%", String.valueOf(this.cost)))));
 
-        return item.toItemStack();
+        return finalItem.toItemStack();
     }
 
     /**
@@ -161,42 +190,20 @@ public class GemShopItem {
                 .add("item", this.name)
                 .build();
 
-        if (action) {
-            this.actions.forEach(action -> {
-                if (!action.startsWith("{openmenu:")) {
-                    if (!SimpleGems.getInstance().getGemsAPI().hasGems(player, this.cost)) {
-                        Color.sendMessage(player, "not-enough-gems", placeholders);
-                        return;
-                    }
-
-                    SimpleGems.getInstance().getGemsAPI().takeGems(player, this.cost);
-                    this.runActions(player, action);
-                    return;
-                }
-
-                SimpleGems.getInstance().getGemShop().getCategories().forEach((gemShopCategory, gemShopItems) -> {
-                    if (!gemShopCategory.getCategoryName().equalsIgnoreCase(action.replace("{openmenu:", "")
-                            .replace("}", ""))) return;
-
-                    if (!gemShopCategory.isEnabled()) {
-                        player.closeInventory();
-                        Color.sendMessage(player, "shop-disabled");
-                        return;
-                    }
-
-                    gemShopCategory.setPlayerMenuUtility(player);
-                    gemShopCategory.open();
-                });
-            });
-        } else {
-            if (!SimpleGems.getInstance().getGemsAPI().hasGems(player, this.cost)) {
-                Color.sendMessage(player, "not-enough-gems", placeholders);
-                return;
-            }
-
-            SimpleGems.getInstance().getGemsAPI().takeGems(player, this.cost);
-            this.runCommands(player);
-            this.sendMessage(player);
+        if (this.action) {
+            this.actions.forEach(action -> runActions(player, action));
+            return;
         }
+
+        if (this.cost == 0) return;
+
+        if (!SimpleGems.getInstance().getGemsAPI().hasGems(player, this.cost)) {
+            Color.sendMessage(player, "not-enough-gems", placeholders);
+            return;
+        }
+
+        SimpleGems.getInstance().getGemsAPI().takeGems(player, this.cost);
+        runCommands(player);
+        sendMessage(player);
     }
 }

@@ -2,7 +2,7 @@ package me.refracdevelopment.simplegems.manager.leaderboards;
 
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.manager.data.DataType;
-import me.refracdevelopment.simplegems.player.data.ProfileData;
+import me.refracdevelopment.simplegems.player.Profile;
 import me.refracdevelopment.simplegems.utilities.Methods;
 import me.refracdevelopment.simplegems.utilities.Tasks;
 import me.refracdevelopment.simplegems.utilities.chat.Color;
@@ -42,6 +42,7 @@ public class LeaderboardManager {
                     while (resultSet.next()) {
                         String name = resultSet.getString("name");
                         long gems = resultSet.getLong("gems");
+
                         cachedMap.put(name, gems);
                     }
                 } catch (SQLException exception) {
@@ -54,6 +55,7 @@ public class LeaderboardManager {
                     while (resultSet.next()) {
                         String name = resultSet.getString("name");
                         long gems = resultSet.getLong("gems");
+
                         cachedMap.put(name, gems);
                     }
                 } catch (SQLException exception) {
@@ -62,9 +64,11 @@ public class LeaderboardManager {
             });
         } else if (SimpleGems.getInstance().getDataType() == DataType.FLAT_FILE) {
             Bukkit.getOnlinePlayers().forEach(onlinePlayer -> {
-                ProfileData profile = SimpleGems.getInstance().getProfileManager().getProfile(onlinePlayer.getUniqueId()).getData();
+                Profile profile = SimpleGems.getInstance().getProfileManager().getProfile(onlinePlayer.getUniqueId());
+
                 String name = onlinePlayer.getName();
-                long gems = profile.getGems().getAmount();
+                long gems = profile.getData().getGems().getAmount();
+
                 cachedMap.put(name, gems);
             });
 
@@ -72,18 +76,19 @@ public class LeaderboardManager {
             offlinePlayers.forEach(offlinePlayer -> {
                 String name = offlinePlayer.getName();
                 long gems = SimpleGems.getInstance().getPlayerMapper().getGems(offlinePlayer.getUniqueId());
+
                 cachedMap.put(name, gems);
             });
         }
     }
 
     public void sendLeaderboard(Player player) {
-        Tasks.runAsync(wrappedTask -> {
+        Tasks.runAsync(() -> {
             if (cachedMap.isEmpty()) {
                 load();
             }
 
-            Tasks.run(wrappedTask1 -> {
+            Tasks.run(() -> {
                 Map<String, Long> sortedMap = sortByValue(cachedMap);
 
                 Color.sendCustomMessage(player, Color.translate(player, SimpleGems.getInstance().getSettings().GEMS_TOP_TITLE
@@ -125,18 +130,20 @@ public class LeaderboardManager {
     }
 
     public void update() {
-        Tasks.runAsync(wrappedTask -> new LeaderBoardUpdate().update());
+        Tasks.runAsync(() -> new LeaderBoardUpdate().update());
     }
 
-    private void updateTask() {
-        Tasks.runAsyncTimer(wrappedTask -> new LeaderBoardUpdate().update(), SimpleGems.getInstance().getSettings().LEADERBOARD_UPDATE_INTERVAL * 20L, SimpleGems.getInstance().getSettings().LEADERBOARD_UPDATE_INTERVAL * 20L);
+    public void updateTask() {
+        Tasks.runAsyncTimer(() -> new LeaderBoardUpdate().update(),
+                SimpleGems.getInstance().getSettings().LEADERBOARD_UPDATE_INTERVAL * 20L,
+                SimpleGems.getInstance().getSettings().LEADERBOARD_UPDATE_INTERVAL * 20L);
     }
 
     private class LeaderBoardUpdate {
         private void update() {
             load();
 
-            Tasks.run(wrappedTask -> {
+            Tasks.run(() -> {
                 Bukkit.getOnlinePlayers().forEach(onlinePlayer -> {
                     Color.sendMessage(onlinePlayer, "leaderboard-update");
                 });

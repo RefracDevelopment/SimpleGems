@@ -48,7 +48,7 @@ public class SetCommand extends SubCommand {
 
         // note: used to prevent adding/removing negative numbers.
         if (strings[2].contains("-")) {
-            Color.sendMessage(commandSender, "invalid-number", Placeholders.setPlaceholders(commandSender));
+            Color.sendMessage(commandSender, "invalid-number");
             return;
         }
 
@@ -68,7 +68,7 @@ public class SetCommand extends SubCommand {
             try {
                 amount = Long.parseLong(strings[2]);
             } catch (NumberFormatException exception) {
-                Color.sendMessage(commandSender, "invalid-number", Placeholders.setPlaceholders(commandSender));
+                Color.sendMessage(commandSender, "invalid-number");
                 return;
             }
 
@@ -90,7 +90,7 @@ public class SetCommand extends SubCommand {
             try {
                 amount = Long.parseLong(strings[2]);
             } catch (NumberFormatException exception) {
-                Color.sendMessage(commandSender, "invalid-number", Placeholders.setPlaceholders(commandSender));
+                Color.sendMessage(commandSender, "invalid-number");
                 return;
             }
 
@@ -104,7 +104,7 @@ public class SetCommand extends SubCommand {
                     .build();
 
             Color.sendMessage(commandSender, "gems-set", placeholders);
-        } else Color.sendMessage(commandSender, "invalid-player", Placeholders.setPlaceholders(commandSender));
+        } else Color.sendMessage(commandSender, "invalid-player");
     }
 
     @Override

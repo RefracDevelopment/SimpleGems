@@ -22,7 +22,7 @@ public class MySQLManager {
     private final String port = SimpleGems.getInstance().getConfigFile().getString("mysql.port");
 
     public void createT() {
-        Tasks.runAsync(wrappedTask -> createTables());
+        Tasks.runAsync(() -> createTables());
     }
 
     public boolean connect() {

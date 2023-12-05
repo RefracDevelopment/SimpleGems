@@ -60,18 +60,20 @@ public class GemShopCategory extends Menu {
             }
         });
 
-        for (int i = 0; i < getSlots(); i++) {
-            if (getInventory().getItem(i) != null) continue;
+        if (SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getBoolean(categoryName + ".fill.enabled")) {
+            for (int i = 0; i < getSlots(); i++) {
+                if (getInventory().getItem(i) != null) continue;
 
-            String name = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getString(categoryName + ".fill.name");
-            Material material = Utilities.getMaterial(SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getString(categoryName + ".fill.material")).parseMaterial();
-            int data = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getInt(categoryName + ".fill.data");
-            ItemBuilder item = new ItemBuilder(material);
+                String name = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getString(categoryName + ".fill.name");
+                Material material = Utilities.getMaterial(SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getString(categoryName + ".fill.material")).parseMaterial();
+                int data = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getInt(categoryName + ".fill.data");
+                ItemBuilder item = new ItemBuilder(material);
 
-            item.setName(name);
-            item.setDurability(data);
+                item.setName(name);
+                item.setDurability(data);
 
-            getInventory().setItem(i, item.toItemStack());
+                getInventory().setItem(i, item.toItemStack());
+            }
         }
     }
 }

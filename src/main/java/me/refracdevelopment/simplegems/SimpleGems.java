@@ -93,7 +93,6 @@ public final class SimpleGems extends JavaPlugin {
 
         loadFiles();
 
-        // Replace with your metrics plugin id
         new Metrics(this, 13117);
 
         // Check if the server is on 1.7
@@ -104,24 +103,24 @@ public final class SimpleGems extends JavaPlugin {
         }
 
         // Make sure the server has PlaceholderAPI
-        if (pluginManager.getPlugin("PlaceholderAPI") == null && !foliaLib.isFolia()) {
+        if (!pluginManager.isPluginEnabled("PlaceholderAPI") && !foliaLib.isFolia()) {
             Color.log("&cPlease install PlaceholderAPI onto your server to use this plugin.");
             pluginManager.disablePlugin(this);
             return;
         }
 
         // Make sure the server has NBTAPI
-        if (pluginManager.getPlugin("NBTAPI") == null) {
+        if (!pluginManager.isPluginEnabled("NBTAPI")) {
             Color.log("&cPlease install NBTAPI onto your server to use this plugin.");
             pluginManager.disablePlugin(this);
             return;
         }
 
-        if (pluginManager.getPlugin("Skulls") != null) {
+        if (pluginManager.isPluginEnabled("Skulls")) {
             Color.log("&aSkulls Detected!");
         }
 
-        if (pluginManager.getPlugin("HeadDatabase") != null) {
+        if (pluginManager.isPluginEnabled("HeadDatabase")) {
             Color.log("&aHeadDatabase Detected!");
         }
 
@@ -144,7 +143,7 @@ public final class SimpleGems extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
-        switch (dataType) {
+        switch (getDataType()) {
             case MYSQL:
                 getMySQLManager().shutdown();
                 break;
@@ -193,15 +192,15 @@ public final class SimpleGems extends JavaPlugin {
             case "MYSQL":
                 dataType = DataType.MYSQL;
                 mySQLManager = new MySQLManager();
-                mySQLManager.connect();
-                mySQLManager.createT();
+                getMySQLManager().connect();
+                getMySQLManager().createT();
                 Color.log("&aEnabled MySQL support!");
                 break;
             case "SQLITE":
                 dataType = DataType.SQLITE;
                 sqLiteManager = new SQLiteManager();
-                sqLiteManager.connect(getDataFolder().getAbsolutePath() + File.separator + "gems.db");
-                sqLiteManager.createT();
+                getSqLiteManager().connect(getDataFolder().getAbsolutePath() + File.separator + "gems.db");
+                getSqLiteManager().createT();
                 Color.log("&aEnabled SQLite support!");
                 break;
             default:
@@ -316,8 +315,7 @@ public final class SimpleGems extends JavaPlugin {
             } else {
                 sender.sendMessage(Color.translate("&cWrong response from update API, contact plugin developer!"));
             }
-        } catch (
-                Exception ex) {
+        } catch (Exception ex) {
             sender.sendMessage(Color.translate("&cFailed to get updater check. (" + ex.getMessage() + ")"));
         }
     }
