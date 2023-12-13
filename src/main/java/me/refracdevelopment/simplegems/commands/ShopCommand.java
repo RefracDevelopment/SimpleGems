@@ -1,6 +1,7 @@
 package me.refracdevelopment.simplegems.commands;
 
 import me.refracdevelopment.simplegems.SimpleGems;
+import me.refracdevelopment.simplegems.menu.GemShopCategory;
 import me.refracdevelopment.simplegems.utilities.Permissions;
 import me.refracdevelopment.simplegems.utilities.chat.Color;
 import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
@@ -49,29 +50,32 @@ public class ShopCommand extends SubCommand {
 
         if (strings.length == 1) {
             SimpleGems.getInstance().getGemShop().getCategories().forEach((gemShopCategory, gemShopItems) -> {
-                if (!gemShopCategory.isDefaultCategory()) return;
-                if (!gemShopCategory.isEnabled()) {
+                GemShopCategory category = new GemShopCategory(SimpleGems.getInstance().getMenuManager().getPlayerMenuUtility(player), gemShopCategory);
+
+                if (!category.isDefaultCategory()) return;
+                if (!category.isEnabled()) {
                     Color.sendMessage(player, "shop-disabled");
                     return;
                 }
 
-                gemShopCategory.setPlayerMenuUtility(player);
-                gemShopCategory.open();
+                category.open();
             });
         } else if (strings.length == 2) {
             SimpleGems.getInstance().getGemShop().getCategories().forEach((gemShopCategory, gemShopItems) -> {
-                if (!gemShopCategory.getCategoryName().equalsIgnoreCase(strings[1])) {
+                if (!gemShopCategory.equalsIgnoreCase(strings[1])) {
                     Color.log("The 'categories." + strings[1] + "' menu category in 'menus.yml' config file doesn't exist.");
+                    Color.sendMessage(player, "invalid-category");
                     return;
                 }
 
-                if (!gemShopCategory.isEnabled()) {
+                GemShopCategory category = new GemShopCategory(SimpleGems.getInstance().getMenuManager().getPlayerMenuUtility(player), gemShopCategory);
+
+                if (!category.isEnabled()) {
                     Color.sendMessage(player, "shop-disabled");
                     return;
                 }
 
-                gemShopCategory.setPlayerMenuUtility(player);
-                gemShopCategory.open();
+                category.open();
             });
         }
     }

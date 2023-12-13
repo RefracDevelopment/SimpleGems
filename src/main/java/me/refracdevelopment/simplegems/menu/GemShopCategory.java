@@ -43,8 +43,8 @@ public class GemShopCategory extends Menu {
         if (event.getCurrentItem() == null) return;
         if (event.getCurrentItem().getItemMeta() == null) return;
 
-        SimpleGems.getInstance().getGemShop().getItems().forEach(item -> {
-            if (item.getCategoryName().equalsIgnoreCase(categoryName) && item.getSlot() == event.getRawSlot()) {
+        SimpleGems.getInstance().getGemShop().getItems(categoryName).forEach(item -> {
+            if (item.getCategory().equalsIgnoreCase(categoryName) && item.getSlot() == event.getRawSlot()) {
                 item.handleItem(player);
             }
         });
@@ -54,8 +54,8 @@ public class GemShopCategory extends Menu {
     public void setMenuItems() {
         if (playerMenuUtility == null) return;
 
-        SimpleGems.getInstance().getGemShop().getItems().forEach(item -> {
-            if (item.getCategoryName().equalsIgnoreCase(categoryName)) {
+        SimpleGems.getInstance().getGemShop().getItems(categoryName).forEach(item -> {
+            if (item.getCategory().equalsIgnoreCase(categoryName)) {
                 getInventory().setItem(item.getSlot(), item.getItem(playerMenuUtility.getOwner()));
             }
         });

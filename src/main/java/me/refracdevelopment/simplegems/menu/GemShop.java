@@ -12,29 +12,32 @@ import java.util.Map;
 @Getter
 public class GemShop {
 
-    private final Map<GemShopCategory, List<GemShopItem>> categories;
-    private final List<GemShopItem> items;
+    private final Map<String, List<GemShopItem>> categories;
 
     public GemShop() {
         this.categories = new HashMap<>();
-        this.items = new ArrayList<>();
         load();
     }
 
     public void load() {
         this.categories.clear();
-        this.items.clear();
+
+        List<GemShopItem> items = new ArrayList<>();
 
         Section section = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES;
 
-        section.getRoutesAsStrings(false).forEach(category -> {
-            GemShopCategory gemShopCategory = new GemShopCategory(null, category);
+        section.getRoutesAsStrings(false).forEach(gemShopCategory -> {
+            Section category = section.getSection(gemShopCategory + ".items");
 
-            section.getSection(category + ".items").getRoutesAsStrings(false).forEach(item -> {
-                this.items.add(new GemShopItem(gemShopCategory, item));
+            category.getRoutesAsStrings(false).forEach(item -> {
+                items.add(new GemShopItem(gemShopCategory, item));
             });
 
             this.categories.put(gemShopCategory, items);
         });
+    }
+
+    public List<GemShopItem> getItems(String categoryName) {
+        return categories.get(categoryName);
     }
 }

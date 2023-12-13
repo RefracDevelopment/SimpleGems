@@ -25,7 +25,7 @@
 # [close] - Close the current menu
 #---------------------------------------------------------------------------
 # This is used for automatic file updating purposes
-config-version: '5'
+config-version: '6'
 
 categories:
   gems-menu:
@@ -53,6 +53,8 @@ categories:
           - "&7you can not get in /shop."
           - ""
           - "&eYour Gem Balance: &b&l%star% &f%gems_formatted%"
+        # Set to false so the menu knows this is not a buyable item
+        buyable: false
         slot: 4
       '1':
         material: STICK

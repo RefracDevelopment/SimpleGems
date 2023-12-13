@@ -13,22 +13,22 @@ public class DownloadUtil {
         Library lib = Library.builder()
                 .groupId("org{}mariadb{}jdbc") // "{}" is replaced with ".", useful to avoid unwanted changes made by maven-shade-plugin
                 .artifactId("mariadb-java-client")
-                .version("3.3.0")
+                .version("3.3.1")
                 .build();
         Library lib2 = Library.builder()
                 .groupId("org{}mongodb") // "{}" is replaced with ".", useful to avoid unwanted changes made by maven-shade-plugin
                 .artifactId("mongodb-driver-sync")
-                .version("4.11.0")
+                .version("4.11.1")
                 .build();
         Library lib3 = Library.builder()
                 .groupId("org{}mongodb") // "{}" is replaced with ".", useful to avoid unwanted changes made by maven-shade-plugin
                 .artifactId("bson")
-                .version("4.11.0")
+                .version("4.11.1")
                 .build();
         Library lib4 = Library.builder()
                 .groupId("org{}mongodb") // "{}" is replaced with ".", useful to avoid unwanted changes made by maven-shade-plugin
                 .artifactId("mongodb-driver-core")
-                .version("4.11.0")
+                .version("4.11.1")
                 .build();
         Library lib5 = Library.builder()
                 .groupId("org{}slf4j") // "{}" is replaced with ".", useful to avoid unwanted changes made by maven-shade-plugin
@@ -38,7 +38,7 @@ public class DownloadUtil {
         Library lib6 = Library.builder()
                 .groupId("org{}xerial") // "{}" is replaced with ".", useful to avoid unwanted changes made by maven-shade-plugin
                 .artifactId("sqlite-jdbc")
-                .version("3.44.0.0")
+                .version("3.44.1.0")
                 .build();
         Library lib7 = Library.builder()
                 .groupId("com{}zaxxer") // "{}" is replaced with ".", useful to avoid unwanted changes made by maven-shade-plugin
