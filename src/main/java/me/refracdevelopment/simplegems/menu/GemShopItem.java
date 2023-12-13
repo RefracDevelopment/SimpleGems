@@ -132,13 +132,13 @@ public class GemShopItem {
 
                     category.open();
                 });
+            } else {
+                SimpleGems.getInstance().getActionManager().execute(player, Color.translate(player, action
+                        .replace("%item%", Color.translate(getName()))
+                        .replace("%cost%", String.valueOf(getCost()))
+                        .replace("%price%", String.valueOf(getCost()))
+                ));
             }
-
-            SimpleGems.getInstance().getActionManager().execute(player, Color.translate(player, action
-                    .replace("%item%", Color.translate(getName()))
-                    .replace("%cost%", String.valueOf(getCost()))
-                    .replace("%price%", String.valueOf(getCost()))
-            ));
         }
     }
 
