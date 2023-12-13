@@ -171,6 +171,10 @@ public class GemShopItem {
                 .replace("%item%", getName())
                 .replace("%cost%", String.valueOf(getCost()))
                 .replace("%price%", String.valueOf(getCost())))));
+        finalItem.setDurability(getData());
+        if (!isSkulls()) {
+            finalItem.setSkullOwner(getSkullOwner());
+        }
 
         return finalItem.toItemStack();
     }
