@@ -77,7 +77,7 @@ public class GemShopItem {
         } else {
             this.buyable = true;
         }
-        this.permission = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getString(getCategory() + ".items." + getItem() + ".permission");
+        this.permission = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getString(getCategory() + ".items." + getItem() + ".permission", "");
     }
 
     public void sendMessage(Player player) {
@@ -131,7 +131,7 @@ public class GemShopItem {
                         return;
                     }
 
-                    if (!player.hasPermission(category.getPermission())) {
+                    if (!player.hasPermission(category.getPermission()) && !category.getPermission().isEmpty()) {
                         player.closeInventory();
                         Color.sendMessage(player, "no-permission");
                         return;
@@ -204,32 +204,20 @@ public class GemShopItem {
             return;
         }
 
-        if (isAction()) {
-            if (isBuyable()) {
-                if (!SimpleGems.getInstance().getGemsAPI().hasGems(player, getCost())) {
-                    Color.sendMessage(player, "not-enough-gems", placeholders);
-                    return;
-                }
-
-                SimpleGems.getInstance().getGemsAPI().takeGems(player, getCost());
+        if (isBuyable()) {
+            if (!SimpleGems.getInstance().getGemsAPI().hasGems(player, getCost())) {
+                Color.sendMessage(player, "not-enough-gems", placeholders);
+                return;
             }
 
+            SimpleGems.getInstance().getGemsAPI().takeGems(player, getCost());
+        }
+
+        if (isAction()) {
             runActions(player);
             return;
         }
 
-        if (!isBuyable()) {
-            runCommands(player);
-            sendMessage(player);
-            return;
-        }
-
-        if (!SimpleGems.getInstance().getGemsAPI().hasGems(player, getCost())) {
-            Color.sendMessage(player, "not-enough-gems", placeholders);
-            return;
-        }
-
-        SimpleGems.getInstance().getGemsAPI().takeGems(player, getCost());
         runCommands(player);
         sendMessage(player);
     }

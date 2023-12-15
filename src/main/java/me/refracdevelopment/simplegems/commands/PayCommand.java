@@ -33,7 +33,7 @@ public class PayCommand extends SubCommand {
 
     @Override
     public String getSyntax() {
-        return "<player> <amount>";
+        return "<player> <amount> [-s]";
     }
 
     @Override

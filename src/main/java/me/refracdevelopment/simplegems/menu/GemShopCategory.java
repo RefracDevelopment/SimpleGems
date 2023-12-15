@@ -21,7 +21,7 @@ public class GemShopCategory extends Menu {
     public GemShopCategory(@Nullable PlayerMenuUtility playerMenuUtility, String categoryName) {
         super(playerMenuUtility);
         this.categoryName = categoryName;
-        this.permission = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getString(categoryName + ".permission");
+        this.permission = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getString(categoryName + ".permission", "");
         this.enabled = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getBoolean(categoryName + ".enabled");
         this.defaultCategory = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getBoolean(categoryName + ".default");
     }
