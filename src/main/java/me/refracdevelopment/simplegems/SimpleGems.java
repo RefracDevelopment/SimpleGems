@@ -102,8 +102,13 @@ public final class SimpleGems extends JavaPlugin {
             return;
         }
 
+        // Check if the server is on Folia
+        if (getFoliaLib().isFolia()) {
+            Color.log("&cSupport for Folia has not been tested and is only for experimental purposes.");
+        }
+
         // Make sure the server has PlaceholderAPI
-        if (!pluginManager.isPluginEnabled("PlaceholderAPI") && !foliaLib.isFolia()) {
+        if (!pluginManager.isPluginEnabled("PlaceholderAPI")) {
             Color.log("&cPlease install PlaceholderAPI onto your server to use this plugin.");
             pluginManager.disablePlugin(this);
             return;
@@ -158,7 +163,7 @@ public final class SimpleGems extends JavaPlugin {
         configFile = new ConfigFile("config.yml");
         menusFile = new ConfigFile("menus.yml");
         commandsFile = new ConfigFile("commands/gems.yml");
-        localeFile = new ConfigFile("locale/" + configFile.getString("locale") + ".yml");
+        localeFile = new ConfigFile("locale/" + getConfigFile().getString("locale") + ".yml");
 
         // Cache
         settings = new Config();
@@ -215,13 +220,13 @@ public final class SimpleGems extends JavaPlugin {
         actionManager = new ActionManager(this);
         leaderboardManager = new LeaderboardManager();
         menuManager = new MenuManager();
+        commandManager = new CommandManager();
         Color.log("&aLoaded managers.");
     }
 
     private void loadCommands() {
         try {
-            commandManager = new CommandManager();
-            commandManager.createCoreCommand(this, getCommands().GEMS_COMMAND_NAME,
+            getCommandManager().createCoreCommand(this, getCommands().GEMS_COMMAND_NAME,
                     getLocaleFile().getString("command-help-description"),
                     "/" + getCommands().GEMS_COMMAND_NAME, new CommandList() {
                         @Override
@@ -246,7 +251,7 @@ public final class SimpleGems extends JavaPlugin {
                     ResetCommand.class
             );
 
-            subCommands.addAll(Arrays.asList(
+            getSubCommands().addAll(Arrays.asList(
                     new HelpCommand(),
                     new BalanceCommand(),
                     new TopCommand(),
@@ -298,15 +303,15 @@ public final class SimpleGems extends JavaPlugin {
                 String version = info.get("version").getAsString();
                 if (version.equals(getDescription().getVersion())) {
                     if (console) {
-                        sender.sendMessage(Color.translate("&a" + this.getDescription().getName() + " is on the latest version."));
+                        sender.sendMessage(Color.translate("&a" + getDescription().getName() + " is on the latest version."));
                     }
                 } else {
                     sender.sendMessage(Color.translate(""));
                     sender.sendMessage(Color.translate(""));
-                    sender.sendMessage(Color.translate("&cYour " + this.getDescription().getName() + " version is out of date!"));
+                    sender.sendMessage(Color.translate("&cYour " + getDescription().getName() + " version is out of date!"));
                     sender.sendMessage(Color.translate("&cWe recommend updating ASAP!"));
                     sender.sendMessage(Color.translate(""));
-                    sender.sendMessage(Color.translate("&cYour Version: &e" + this.getDescription().getVersion()));
+                    sender.sendMessage(Color.translate("&cYour Version: &e" + getDescription().getVersion()));
                     sender.sendMessage(Color.translate("&aNewest Version: &e" + version));
                     sender.sendMessage(Color.translate(""));
                     sender.sendMessage(Color.translate(""));

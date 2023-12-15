@@ -46,7 +46,7 @@ public class PayCommand extends SubCommand {
 
         if (strings.length == 1) {
             String baseColor = SimpleGems.getInstance().getLocaleFile().getString("base-command-color");
-            Color.sendCustomMessage(commandSender, baseColor + "/" + SimpleGems.getInstance().getCommands().GEMS_COMMAND_NAME + " " + getSyntax());
+            Color.sendCustomMessage(commandSender, baseColor + "/" + SimpleGems.getInstance().getCommands().GEMS_COMMAND_NAME + " " + getName() + " " +  getSyntax());
             return;
         }
 

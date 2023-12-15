@@ -15,12 +15,13 @@ import org.jetbrains.annotations.Nullable;
 @Getter
 public class GemShopCategory extends Menu {
 
-    private final String categoryName;
+    private final String categoryName, permission;
     private final boolean enabled, defaultCategory;
 
     public GemShopCategory(@Nullable PlayerMenuUtility playerMenuUtility, String categoryName) {
         super(playerMenuUtility);
         this.categoryName = categoryName;
+        this.permission = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getString(categoryName + ".permission");
         this.enabled = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getBoolean(categoryName + ".enabled");
         this.defaultCategory = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getBoolean(categoryName + ".default");
     }

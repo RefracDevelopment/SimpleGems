@@ -74,7 +74,6 @@ command-set-description: Allows you to set someones' gems.
 
 # Reload Command
 command-reload-description: Reloads the plugin
-command-reload-usage: '&cUsage: &e/%cmd% reload'
 command-reload-success: '&aConfiguration and locale files were reloaded.'
 
 # Version Command

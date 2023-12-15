@@ -34,6 +34,7 @@ public class ConfigFile {
             configFile.save();
         } catch (IOException e) {
             Color.log("&cFailed to load config file! The plugin will now shutdown.");
+            e.printStackTrace();
             Bukkit.getPluginManager().disablePlugin(SimpleGems.getInstance());
         }
     }

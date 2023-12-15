@@ -25,7 +25,7 @@
 # [close] - Close the current menu
 #---------------------------------------------------------------------------
 # This is used for automatic file updating purposes
-config-version: '6'
+config-version: '7'
 
 categories:
   gems-menu:
@@ -33,6 +33,10 @@ categories:
     default: true
     title: "&e&lGems Shop"
     size: 27
+    # Set a permission here
+    # if you want only certain people
+    # to be able to access this menu
+    permission: ""
     fill:
       enabled: true
       material: BLACK_STAINED_GLASS_PANE
@@ -57,6 +61,10 @@ categories:
         buyable: false
         slot: 4
       '1':
+        # Set a permission here
+        # if you want only certain people
+        # to be able to access this item
+        permission: ""
         material: STICK
         skulls: false
         headDatabase: false
@@ -75,7 +83,7 @@ categories:
             - "&e%player% bought %item% &efrom &f/gemshop&e."
         action:
           # If enabled will use this instead of commands
-          enabled: false
+          enabled: true
           actions:
             - "[console] give %player% stick 1" # gives the player an item from console
             - "[message] %prefix% &e%player% bought %item% &efrom &f/gemshop&e." # sends a message to the player

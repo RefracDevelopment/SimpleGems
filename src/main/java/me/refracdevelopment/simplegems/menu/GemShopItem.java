@@ -25,7 +25,7 @@ import java.util.List;
 public class GemShopItem {
 
     private final XMaterial material;
-    private final String skullOwner, name, category, item;
+    private final String skullOwner, name, category, item, permission;
     private final boolean skulls, headDatabase, messageEnabled, broadcastMessage, customData, glow, action, buyable;
     private final int data, slot, customModelData;
     private final List<String> lore, actions, commands, messages;
@@ -77,6 +77,7 @@ public class GemShopItem {
         } else {
             this.buyable = true;
         }
+        this.permission = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getString(getCategory() + ".items." + getItem() + ".permission");
     }
 
     public void sendMessage(Player player) {
@@ -127,6 +128,12 @@ public class GemShopItem {
                     if (!category.isEnabled()) {
                         player.closeInventory();
                         Color.sendMessage(player, "shop-disabled");
+                        return;
+                    }
+
+                    if (!player.hasPermission(category.getPermission())) {
+                        player.closeInventory();
+                        Color.sendMessage(player, "no-permission");
                         return;
                     }
 
@@ -190,6 +197,12 @@ public class GemShopItem {
                 .add("cost", String.valueOf(getCost()))
                 .add("price", String.valueOf(getCost()))
                 .build();
+
+        if (!player.hasPermission(getPermission()) && !getPermission().isEmpty()) {
+            player.closeInventory();
+            Color.sendMessage(player, "no-permission", placeholders);
+            return;
+        }
 
         if (isAction()) {
             if (isBuyable()) {

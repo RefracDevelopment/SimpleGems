@@ -33,41 +33,41 @@ public class ProfileData {
         switch (SimpleGems.getInstance().getDataType()) {
             case MONGO:
                 Document document = SimpleGems.getInstance().getMongoManager().getStatsCollection().find(
-                        Filters.eq("uuid", uuid.toString())).first();
+                        Filters.eq("uuid", getUuid().toString())).first();
 
                 if (document != null) {
-                    gems.setAmount(document.getLong("gems"));
+                    getGems().setAmount(document.getLong("gems"));
                 }
                 break;
             case MYSQL:
                 SimpleGems.getInstance().getMySQLManager().select("SELECT * FROM SimpleGems WHERE uuid=?", resultSet -> {
                     try {
                         if (resultSet.next()) {
-                            this.gems.setAmount(resultSet.getLong("gems"));
-                            SimpleGems.getInstance().getMySQLManager().updatePlayerName(uuid, name);
+                            getGems().setAmount(resultSet.getLong("gems"));
+                            SimpleGems.getInstance().getMySQLManager().updatePlayerName(getUuid(), getName());
                         } else {
                             SimpleGems.getInstance().getMySQLManager().execute("INSERT INTO SimpleGems (uuid, name, gems) VALUES (?,?,?)",
-                                    uuid.toString(), name, 0);
+                                    getUuid().toString(), getName(), 0);
                         }
                     } catch (SQLException exception) {
                         Color.log("MySQL Error: " + exception.getMessage());
                     }
-                }, uuid.toString());
+                }, getUuid().toString());
                 break;
             case SQLITE:
                 SimpleGems.getInstance().getSqLiteManager().select("SELECT * FROM SimpleGems WHERE uuid=?", resultSet -> {
                     try {
                         if (resultSet.next()) {
-                            this.gems.setAmount(resultSet.getLong("gems"));
-                            SimpleGems.getInstance().getSqLiteManager().updatePlayerName(uuid, name);
+                            getGems().setAmount(resultSet.getLong("gems"));
+                            SimpleGems.getInstance().getSqLiteManager().updatePlayerName(getUuid(), getName());
                         } else {
                             SimpleGems.getInstance().getSqLiteManager().execute("INSERT INTO SimpleGems (uuid, name, gems) VALUES (?,?,?)",
-                                    uuid.toString(), name, 0);
+                                    getUuid().toString(), getName(), 0);
                         }
                     } catch (SQLException exception) {
                         Color.log("SQLite Error: " + exception.getMessage());
                     }
-                }, uuid.toString());
+                }, getUuid().toString());
                 break;
             default:
                 SimpleGems.getInstance().getPlayerMapper().loadPlayerFile(uuid);
@@ -81,21 +81,21 @@ public class ProfileData {
             case MONGO:
                 Document document = new Document();
 
-                document.put("name", name);
-                document.put("uuid", uuid.toString());
-                document.put("gems", gems.getAmount());
+                document.put("name", getName());
+                document.put("uuid", getUuid().toString());
+                document.put("gems", getGems().getAmount());
 
                 SimpleGems.getInstance().getMongoManager().getStatsCollection().replaceOne(
                         Filters.eq("uuid", uuid.toString()), document, new ReplaceOptions().upsert(true));
                 break;
             case MYSQL:
-                SimpleGems.getInstance().getMySQLManager().updatePlayerGems(uuid, gems.getAmount());
+                SimpleGems.getInstance().getMySQLManager().updatePlayerGems(getUuid(), getGems().getAmount());
                 break;
             case SQLITE:
-                SimpleGems.getInstance().getSqLiteManager().updatePlayerGems(uuid, gems.getAmount());
+                SimpleGems.getInstance().getSqLiteManager().updatePlayerGems(getUuid(), getGems().getAmount());
                 break;
             default:
-                SimpleGems.getInstance().getPlayerMapper().savePlayer(uuid, name, gems.getAmount());
+                SimpleGems.getInstance().getPlayerMapper().savePlayer(getUuid(), getName(), getGems().getAmount());
                 break;
         }
     }

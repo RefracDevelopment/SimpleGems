@@ -20,7 +20,7 @@ public class GemShop {
     }
 
     public void load() {
-        this.categories.clear();
+        getCategories().clear();
 
         List<GemShopItem> items = new ArrayList<>();
 
@@ -33,11 +33,11 @@ public class GemShop {
                 items.add(new GemShopItem(gemShopCategory, item));
             });
 
-            this.categories.put(gemShopCategory, items);
+            getCategories().put(gemShopCategory, items);
         });
     }
 
     public List<GemShopItem> getItems(String categoryName) {
-        return categories.get(categoryName);
+        return getCategories().get(categoryName);
     }
 }

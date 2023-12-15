@@ -58,6 +58,12 @@ public class ShopCommand extends SubCommand {
                     return;
                 }
 
+                if (!player.hasPermission(category.getPermission()) && !category.getPermission().isEmpty()) {
+                    player.closeInventory();
+                    Color.sendMessage(player, "no-permission");
+                    return;
+                }
+
                 category.open();
             });
         } else if (strings.length == 2) {
@@ -72,6 +78,12 @@ public class ShopCommand extends SubCommand {
 
                 if (!category.isEnabled()) {
                     Color.sendMessage(player, "shop-disabled");
+                    return;
+                }
+
+                if (!player.hasPermission(category.getPermission()) && !category.getPermission().isEmpty()) {
+                    player.closeInventory();
+                    Color.sendMessage(player, "no-permission");
                     return;
                 }
 
