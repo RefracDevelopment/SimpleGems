@@ -1,14 +1,11 @@
 package me.refracdevelopment.simplegems.manager.leaderboards;
 
 import me.refracdevelopment.simplegems.SimpleGems;
-import me.refracdevelopment.simplegems.manager.data.DataType;
-import me.refracdevelopment.simplegems.player.Profile;
 import me.refracdevelopment.simplegems.utilities.Methods;
 import me.refracdevelopment.simplegems.utilities.Tasks;
 import me.refracdevelopment.simplegems.utilities.chat.Color;
 import org.bson.Document;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
@@ -20,65 +17,55 @@ public class LeaderboardManager {
 
     public LeaderboardManager() {
         cachedMap = new HashMap<>();
+        update();
         updateTask();
         Color.log("&aLoaded Leaderboards!");
     }
 
     private void load() {
         if (Bukkit.getOnlinePlayers().isEmpty()) return;
+
         cachedMap.clear();
-        if (SimpleGems.getInstance().getDataType() == DataType.MONGO) {
-            List<Document> documents = SimpleGems.getInstance().getMongoManager().getStatsCollection().find().into(new ArrayList<>());
 
-            documents.forEach(document -> {
-                String name = document.getString("name");
-                long gems = document.getLong("gems");
+        switch (SimpleGems.getInstance().getDataType()) {
+            case MONGO:
+                List<Document> documents = SimpleGems.getInstance().getMongoManager().getStatsCollection().find().into(new ArrayList<>());
 
-                cachedMap.put(name, gems);
-            });
-        } else if (SimpleGems.getInstance().getDataType() == DataType.MYSQL) {
-            SimpleGems.getInstance().getMySQLManager().select("SELECT * FROM SimpleGems", resultSet -> {
-                try {
-                    while (resultSet.next()) {
-                        String name = resultSet.getString("name");
-                        long gems = resultSet.getLong("gems");
+                documents.forEach(document -> {
+                    String name = document.getString("name");
+                    long gems = document.getLong("gems");
 
-                        cachedMap.put(name, gems);
+                    cachedMap.put(name, gems);
+                });
+                break;
+            case MYSQL:
+                SimpleGems.getInstance().getMySQLManager().select("SELECT * FROM SimpleGems", resultSet -> {
+                    try {
+                        while (resultSet.next()) {
+                            String name = resultSet.getString("name");
+                            long gems = resultSet.getLong("gems");
+
+                            cachedMap.put(name, gems);
+                        }
+                    } catch (SQLException exception) {
+                        Color.log(exception.getMessage());
                     }
-                } catch (SQLException exception) {
-                    Color.log(exception.getMessage());
-                }
-            });
-        } else if (SimpleGems.getInstance().getDataType() == DataType.SQLITE) {
-            SimpleGems.getInstance().getSqLiteManager().select("SELECT * FROM SimpleGems", resultSet -> {
-                try {
-                    while (resultSet.next()) {
-                        String name = resultSet.getString("name");
-                        long gems = resultSet.getLong("gems");
+                });
+                break;
+            default:
+                SimpleGems.getInstance().getSqLiteManager().select("SELECT * FROM SimpleGems", resultSet -> {
+                    try {
+                        while (resultSet.next()) {
+                            String name = resultSet.getString("name");
+                            long gems = resultSet.getLong("gems");
 
-                        cachedMap.put(name, gems);
+                            cachedMap.put(name, gems);
+                        }
+                    } catch (SQLException exception) {
+                        Color.log(exception.getMessage());
                     }
-                } catch (SQLException exception) {
-                    Color.log(exception.getMessage());
-                }
-            });
-        } else if (SimpleGems.getInstance().getDataType() == DataType.FLAT_FILE) {
-            Bukkit.getOnlinePlayers().forEach(onlinePlayer -> {
-                Profile profile = SimpleGems.getInstance().getProfileManager().getProfile(onlinePlayer.getUniqueId());
-
-                String name = onlinePlayer.getName();
-                long gems = profile.getData().getGems().getAmount();
-
-                cachedMap.put(name, gems);
-            });
-
-            Collection<OfflinePlayer> offlinePlayers = Arrays.asList(Bukkit.getOfflinePlayers());
-            offlinePlayers.forEach(offlinePlayer -> {
-                String name = offlinePlayer.getName();
-                long gems = SimpleGems.getInstance().getPlayerMapper().getGems(offlinePlayer.getUniqueId());
-
-                cachedMap.put(name, gems);
-            });
+                });
+                break;
         }
     }
 

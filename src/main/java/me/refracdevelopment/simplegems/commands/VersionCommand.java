@@ -34,7 +34,7 @@ public class VersionCommand extends SubCommand {
     }
 
     @Override
-    public void perform(CommandSender commandSender, String[] strings) {
+    public void perform(CommandSender commandSender, String[] args) {
         if (!commandSender.hasPermission(Permissions.GEMS_VERSION_COMMAND)) {
             Color.sendMessage(commandSender, "no-permission");
             return;
@@ -47,7 +47,7 @@ public class VersionCommand extends SubCommand {
     }
 
     @Override
-    public List<String> getSubcommandArguments(Player player, String[] strings) {
+    public List<String> getSubcommandArguments(Player player, String[] args) {
         return null;
     }
 }

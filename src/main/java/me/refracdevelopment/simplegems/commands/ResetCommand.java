@@ -38,13 +38,13 @@ public class ResetCommand extends SubCommand {
     }
 
     @Override
-    public void perform(CommandSender commandSender, String[] strings) {
+    public void perform(CommandSender commandSender, String[] args) {
         if (!commandSender.hasPermission(Permissions.GEMS_RESET_COMMAND)) {
             Color.sendMessage(commandSender, "no-permission");
             return;
         }
 
-        if (strings.length == 1) {
+        if (args.length == 1) {
             Tasks.runAsync(() -> {
                 switch (SimpleGems.getInstance().getDataType()) {
                     case MONGO:
@@ -85,8 +85,8 @@ public class ResetCommand extends SubCommand {
                         break;
                 }
             });
-        } else if (strings.length == 2) {
-            OfflinePlayer target = Bukkit.getOfflinePlayer(strings[1]);
+        } else if (args.length == 2) {
+            OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
 
             if (target.getPlayer() != null && target.getPlayer().isOnline()) {
                 Tasks.runAsync(() -> {
@@ -167,14 +167,14 @@ public class ResetCommand extends SubCommand {
     }
 
     @Override
-    public List<String> getSubcommandArguments(Player player, String[] strings) {
+    public List<String> getSubcommandArguments(Player player, String[] args) {
         List<String> names = new ArrayList<>();
 
         Bukkit.getOnlinePlayers().forEach(p -> {
             names.add(p.getName());
         });
 
-        if (strings.length == 2) {
+        if (args.length == 2) {
             return names;
         }
         return null;

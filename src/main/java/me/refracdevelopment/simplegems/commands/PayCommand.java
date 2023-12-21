@@ -37,29 +37,29 @@ public class PayCommand extends SubCommand {
     }
 
     @Override
-    public void perform(CommandSender commandSender, String[] strings) {
+    public void perform(CommandSender commandSender, String[] args) {
         // Make sure the sender is a player.
         if (!(commandSender instanceof Player)) {
             Color.sendMessage(commandSender, "no-console", Placeholders.setPlaceholders(commandSender));
             return;
         }
 
-        if (strings.length == 1) {
+        if (args.length == 1) {
             String baseColor = SimpleGems.getInstance().getLocaleFile().getString("base-command-color");
             Color.sendCustomMessage(commandSender, baseColor + "/" + SimpleGems.getInstance().getCommands().GEMS_COMMAND_NAME + " " + getName() + " " +  getSyntax());
             return;
         }
 
         // note: used to prevent adding/removing negative numbers.
-        if (strings[2].contains("-")) {
+        if (args[2].contains("-")) {
             Color.sendMessage(commandSender, "invalid-number", Placeholders.setPlaceholders(commandSender));
             return;
         }
 
-        String message = Joiner.on(" ").join(strings);
+        String message = Joiner.on(" ").join(args);
 
         Player player = (Player) commandSender;
-        OfflinePlayer target = Bukkit.getOfflinePlayer(strings[1]);
+        OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
 
         if (!player.hasPermission(Permissions.GEMS_PAY_COMMAND)) {
             Color.sendMessage(commandSender, "no-permission");
@@ -70,7 +70,7 @@ public class PayCommand extends SubCommand {
             long amount;
 
             try {
-                amount = Long.parseLong(strings[2]);
+                amount = Long.parseLong(args[2]);
             } catch (NumberFormatException exception) {
                 Color.sendMessage(commandSender, "invalid-number", Placeholders.setPlaceholders(commandSender));
                 return;
@@ -81,7 +81,7 @@ public class PayCommand extends SubCommand {
             long amount;
 
             try {
-                amount = Long.parseLong(strings[2]);
+                amount = Long.parseLong(args[2]);
             } catch (NumberFormatException exception) {
                 Color.sendMessage(commandSender, "invalid-number", Placeholders.setPlaceholders(commandSender));
                 return;
@@ -92,14 +92,14 @@ public class PayCommand extends SubCommand {
     }
 
     @Override
-    public List<String> getSubcommandArguments(Player player, String[] strings) {
+    public List<String> getSubcommandArguments(Player player, String[] args) {
         List<String> names = new ArrayList<>();
 
         Bukkit.getOnlinePlayers().forEach(p -> {
             names.add(p.getName());
         });
 
-        if (strings.length == 2) {
+        if (args.length == 2) {
             return names;
         }
         return null;

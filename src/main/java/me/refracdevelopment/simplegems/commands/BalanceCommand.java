@@ -38,23 +38,23 @@ public class BalanceCommand extends SubCommand {
     }
 
     @Override
-    public void perform(CommandSender commandSender, String[] strings) {
+    public void perform(CommandSender commandSender, String[] args) {
         if (!commandSender.hasPermission(Permissions.GEMS_BALANCE_COMMAND)) {
             Color.sendMessage(commandSender, "no-permission");
             return;
         }
 
-        if (strings.length == 1) {
+        if (args.length == 1) {
             Color.sendMessage(commandSender, "gems-balance");
             return;
         }
 
-        if (strings.length == 2) {
-            if (Bukkit.getPlayer(strings[1]) != null) {
-                Player target = Bukkit.getPlayer(strings[1]);
+        if (args.length == 2) {
+            if (Bukkit.getPlayer(args[1]) != null) {
+                Player target = Bukkit.getPlayer(args[1]);
                 Color.sendMessage(commandSender, "gems-balance", Placeholders.setPlaceholders(target));
-            } else if (Bukkit.getOfflinePlayer(strings[1]) != null && Bukkit.getOfflinePlayer(strings[0]).hasPlayedBefore()) {
-                OfflinePlayer target = Bukkit.getOfflinePlayer(strings[1]);
+            } else if (Bukkit.getOfflinePlayer(args[1]) != null && Bukkit.getOfflinePlayer(args[0]).hasPlayedBefore()) {
+                OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
                 long amount = SimpleGems.getInstance().getGemsAPI().getOfflineGems(target);
 
                 StringPlaceholders placeholders = StringPlaceholders.builder()
@@ -71,14 +71,14 @@ public class BalanceCommand extends SubCommand {
     }
 
     @Override
-    public List<String> getSubcommandArguments(Player player, String[] strings) {
+    public List<String> getSubcommandArguments(Player player, String[] args) {
         List<String> names = new ArrayList<>();
 
         Bukkit.getOnlinePlayers().forEach(p -> {
             names.add(p.getName());
         });
 
-        if (strings.length == 2) {
+        if (args.length == 2) {
             return names;
         }
         return null;

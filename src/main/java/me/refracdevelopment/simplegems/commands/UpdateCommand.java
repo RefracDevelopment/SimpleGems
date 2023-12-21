@@ -32,7 +32,7 @@ public class UpdateCommand extends SubCommand {
     }
 
     @Override
-    public void perform(CommandSender commandSender, String[] strings) {
+    public void perform(CommandSender commandSender, String[] args) {
         if (!commandSender.hasPermission(Permissions.GEMS_UPDATE_COMMAND)) {
             Color.sendMessage(commandSender, "no-permission");
             return;
@@ -42,7 +42,7 @@ public class UpdateCommand extends SubCommand {
     }
 
     @Override
-    public List<String> getSubcommandArguments(Player player, String[] strings) {
+    public List<String> getSubcommandArguments(Player player, String[] args) {
         return null;
     }
 }

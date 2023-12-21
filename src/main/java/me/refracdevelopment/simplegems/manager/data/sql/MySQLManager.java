@@ -22,7 +22,7 @@ public class MySQLManager {
     private final String port = SimpleGems.getInstance().getConfigFile().getString("mysql.port");
 
     public void createT() {
-        Tasks.runAsync(() -> createTables());
+        Tasks.runAsync(this::createTables);
     }
 
     public boolean connect() {
@@ -31,7 +31,7 @@ public class MySQLManager {
             HikariConfig config = new HikariConfig();
             Class.forName("org.mariadb.jdbc.Driver");
             config.setDriverClassName("org.mariadb.jdbc.Driver");
-            config.setJdbcUrl("jdbc:mariadb://" + host + ':' + port + '/' + database);
+            config.setJdbcUrl("jdbc:mariadb://" + host + ':' + port + '/' + database + "?allowPublicKeyRetrieval=true&useSSL=false");
             config.setUsername(username);
             config.setPassword(password);
             config.addDataSourceProperty("cachePrepStmts", "true");

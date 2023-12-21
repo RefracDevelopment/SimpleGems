@@ -33,7 +33,7 @@ public class TopCommand extends SubCommand {
     }
 
     @Override
-    public void perform(CommandSender commandSender, String[] strings) {
+    public void perform(CommandSender commandSender, String[] args) {
         // Make sure the sender is a player.
         if (!(commandSender instanceof Player)) {
             Color.sendMessage(commandSender, "no-console", Placeholders.setPlaceholders(commandSender));
@@ -51,7 +51,7 @@ public class TopCommand extends SubCommand {
     }
 
     @Override
-    public List<String> getSubcommandArguments(Player player, String[] strings) {
+    public List<String> getSubcommandArguments(Player player, String[] args) {
         return null;
     }
 

@@ -29,23 +29,23 @@ public class CoreCommand extends Command {
     }
 
     @Override
-    public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, String[] args) {
+    public boolean execute(@NotNull CommandSender commandSender, @NotNull String commandLabel, String[] args) {
 
         if (args.length > 0) {
             for (int i = 0; i < getSubCommands().size(); i++) {
                 if (args[0].equalsIgnoreCase(getSubCommands().get(i).getName()) || (getSubCommands().get(i).getAliases() != null && getSubCommands().get(i).getAliases().contains(args[0]))) {
-                    getSubCommands().get(i).perform(sender, args);
+                    getSubCommands().get(i).perform(commandSender, args);
                 }
             }
         } else {
             if (commandList == null) {
-                sender.sendMessage("--------------------------------");
+                commandSender.sendMessage("--------------------------------");
                 for (SubCommand subcommand : subcommands) {
-                    sender.sendMessage(subcommand.getSyntax() + " - " + subcommand.getDescription());
+                    commandSender.sendMessage(subcommand.getSyntax() + " - " + subcommand.getDescription());
                 }
-                sender.sendMessage("--------------------------------");
+                commandSender.sendMessage("--------------------------------");
             } else {
-                commandList.displayCommandList(sender, subcommands);
+                commandList.displayCommandList(commandSender, subcommands);
             }
         }
 

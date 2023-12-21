@@ -33,7 +33,7 @@ public class HelpCommand extends SubCommand {
     }
 
     @Override
-    public void perform(CommandSender commandSender, String[] strings) {
+    public void perform(CommandSender commandSender, String[] args) {
         Color.sendMessage(commandSender, "command-help-title");
         SimpleGems.getInstance().getSubCommands().forEach(command -> {
             StringPlaceholders placeholders;
@@ -58,7 +58,7 @@ public class HelpCommand extends SubCommand {
     }
 
     @Override
-    public List<String> getSubcommandArguments(Player player, String[] strings) {
+    public List<String> getSubcommandArguments(Player player, String[] args) {
         return null;
     }
 }

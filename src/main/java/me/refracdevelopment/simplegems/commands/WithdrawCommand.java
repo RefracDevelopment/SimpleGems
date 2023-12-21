@@ -33,7 +33,7 @@ public class WithdrawCommand extends SubCommand {
     }
 
     @Override
-    public void perform(CommandSender commandSender, String[] strings) {
+    public void perform(CommandSender commandSender, String[] args) {
         // Make sure the sender is a player.
         if (!(commandSender instanceof Player)) {
             Color.sendMessage(commandSender, "no-console", Placeholders.setPlaceholders(commandSender));
@@ -42,7 +42,7 @@ public class WithdrawCommand extends SubCommand {
 
         Player player = (Player) commandSender;
 
-        if (strings.length == 1) {
+        if (args.length == 1) {
             String baseColor = SimpleGems.getInstance().getLocaleFile().getString("base-command-color");
             Color.sendCustomMessage(commandSender, baseColor + "/" + SimpleGems.getInstance().getCommands().GEMS_COMMAND_NAME + " " + getName() + " " + getSyntax());
             return;
@@ -54,7 +54,7 @@ public class WithdrawCommand extends SubCommand {
         }
 
         // note: used to prevent adding/removing negative numbers.
-        if (strings[1].contains("-")) {
+        if (args[1].contains("-")) {
             Color.sendMessage(commandSender, "invalid-number", Placeholders.setPlaceholders(commandSender));
             return;
         }
@@ -62,7 +62,7 @@ public class WithdrawCommand extends SubCommand {
         long amount;
 
         try {
-            amount = Long.parseLong(strings[1]);
+            amount = Long.parseLong(args[1]);
         } catch (NumberFormatException exception) {
             Color.sendMessage(commandSender, "invalid-number", Placeholders.setPlaceholders(commandSender));
             return;
@@ -72,7 +72,7 @@ public class WithdrawCommand extends SubCommand {
     }
 
     @Override
-    public List<String> getSubcommandArguments(Player player, String[] strings) {
+    public List<String> getSubcommandArguments(Player player, String[] args) {
         return null;
     }
 }

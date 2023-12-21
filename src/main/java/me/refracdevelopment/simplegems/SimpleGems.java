@@ -18,7 +18,6 @@ import me.refracdevelopment.simplegems.manager.configuration.cache.Commands;
 import me.refracdevelopment.simplegems.manager.configuration.cache.Config;
 import me.refracdevelopment.simplegems.manager.configuration.cache.Menus;
 import me.refracdevelopment.simplegems.manager.data.DataType;
-import me.refracdevelopment.simplegems.manager.data.PlayerMapper;
 import me.refracdevelopment.simplegems.manager.data.mongo.MongoManager;
 import me.refracdevelopment.simplegems.manager.data.sql.MySQLManager;
 import me.refracdevelopment.simplegems.manager.data.sql.SQLiteManager;
@@ -54,7 +53,6 @@ public final class SimpleGems extends JavaPlugin {
     private MongoManager mongoManager;
     private MySQLManager mySQLManager;
     private SQLiteManager sqLiteManager;
-    private PlayerMapper playerMapper;
     private ProfileManager profileManager;
     private ActionManager actionManager;
     private LeaderboardManager leaderboardManager;
@@ -199,19 +197,12 @@ public final class SimpleGems extends JavaPlugin {
                 mySQLManager = new MySQLManager();
                 getMySQLManager().connect();
                 getMySQLManager().createT();
-                Color.log("&aEnabled MySQL support!");
                 break;
-            case "SQLITE":
+            default:
                 dataType = DataType.SQLITE;
                 sqLiteManager = new SQLiteManager();
                 getSqLiteManager().connect(getDataFolder().getAbsolutePath() + File.separator + "gems.db");
                 getSqLiteManager().createT();
-                Color.log("&aEnabled SQLite support!");
-                break;
-            default:
-                dataType = DataType.FLAT_FILE;
-                playerMapper = new PlayerMapper(getDataFolder().getAbsolutePath() + File.separator + "playerdata");
-                Color.log("&aEnabled Flat File support!");
                 break;
         }
 

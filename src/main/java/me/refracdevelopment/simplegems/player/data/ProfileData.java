@@ -54,7 +54,7 @@ public class ProfileData {
                     }
                 }, getUuid().toString());
                 break;
-            case SQLITE:
+            default:
                 SimpleGems.getInstance().getSqLiteManager().select("SELECT * FROM SimpleGems WHERE uuid=?", resultSet -> {
                     try {
                         if (resultSet.next()) {
@@ -68,9 +68,6 @@ public class ProfileData {
                         Color.log("SQLite Error: " + exception.getMessage());
                     }
                 }, getUuid().toString());
-                break;
-            default:
-                SimpleGems.getInstance().getPlayerMapper().loadPlayerFile(uuid);
                 break;
         }
     }
@@ -91,11 +88,8 @@ public class ProfileData {
             case MYSQL:
                 SimpleGems.getInstance().getMySQLManager().updatePlayerGems(getUuid(), getGems().getAmount());
                 break;
-            case SQLITE:
-                SimpleGems.getInstance().getSqLiteManager().updatePlayerGems(getUuid(), getGems().getAmount());
-                break;
             default:
-                SimpleGems.getInstance().getPlayerMapper().savePlayer(getUuid(), getName(), getGems().getAmount());
+                SimpleGems.getInstance().getSqLiteManager().updatePlayerGems(getUuid(), getGems().getAmount());
                 break;
         }
     }

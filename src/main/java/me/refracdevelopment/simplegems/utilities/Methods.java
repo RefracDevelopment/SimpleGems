@@ -37,20 +37,22 @@ public class Methods {
      */
     public void saveOffline(OfflinePlayer player, long amount) {
         Tasks.runAsync(() -> {
-            if (SimpleGems.getInstance().getDataType() == DataType.MONGO) {
-                Document document = new Document();
+            switch (SimpleGems.getInstance().getDataType()) {
+                case MONGO:
+                    Document document = new Document();
 
-                document.put("name", player.getName());
-                document.put("uuid", player.getUniqueId().toString());
-                document.put("gems", amount);
+                    document.put("name", player.getName());
+                    document.put("uuid", player.getUniqueId().toString());
+                    document.put("gems", amount);
 
-                SimpleGems.getInstance().getMongoManager().getStatsCollection().replaceOne(Filters.eq("uuid", player.getUniqueId().toString()), document, new ReplaceOptions().upsert(true));
-            } else if (SimpleGems.getInstance().getDataType() == DataType.MYSQL) {
-                SimpleGems.getInstance().getMySQLManager().updatePlayerGems(player.getUniqueId(), amount);
-            } else if (SimpleGems.getInstance().getDataType() == DataType.SQLITE) {
-                SimpleGems.getInstance().getSqLiteManager().updatePlayerGems(player.getUniqueId(), amount);
-            } else if (SimpleGems.getInstance().getDataType() == DataType.FLAT_FILE) {
-                SimpleGems.getInstance().getPlayerMapper().savePlayer(player.getUniqueId(), player.getName(), amount);
+                    SimpleGems.getInstance().getMongoManager().getStatsCollection().replaceOne(Filters.eq("uuid", player.getUniqueId().toString()), document, new ReplaceOptions().upsert(true));
+                    break;
+                case MYSQL:
+                    SimpleGems.getInstance().getMySQLManager().updatePlayerGems(player.getUniqueId(), amount);
+                    break;
+                default:
+                    SimpleGems.getInstance().getSqLiteManager().updatePlayerGems(player.getUniqueId(), amount);
+                    break;
             }
         });
     }
@@ -69,36 +71,36 @@ public class Methods {
 
     public long getOfflineGems(OfflinePlayer player) {
         AtomicLong gems = new AtomicLong(0);
-        if (SimpleGems.getInstance().getDataType() == DataType.MONGO) {
-            Document document = SimpleGems.getInstance().getMongoManager().getStatsCollection().find(Filters.eq("uuid", player.getUniqueId().toString())).first();
+        switch (SimpleGems.getInstance().getDataType()) {
+            case MONGO:
+                Document document = SimpleGems.getInstance().getMongoManager().getStatsCollection().find(Filters.eq("uuid", player.getUniqueId().toString())).first();
 
-            if (document != null) {
-                return document.getLong("gems");
-            }
-        } else if (SimpleGems.getInstance().getDataType() == DataType.MYSQL) {
-            SimpleGems.getInstance().getMySQLManager().select("SELECT * FROM SimpleGems WHERE uuid=?", resultSet -> {
-                try {
-                    if (resultSet.next()) {
-                        gems.set(resultSet.getLong("gems"));
-                    }
-                } catch (SQLException exception) {
-                    Color.log(exception.getMessage());
+                if (document != null) {
+                    return document.getLong("gems");
                 }
-            }, player.getUniqueId().toString());
-            return gems.get();
-        } else if (SimpleGems.getInstance().getDataType() == DataType.SQLITE) {
-            SimpleGems.getInstance().getSqLiteManager().select("SELECT * FROM SimpleGems WHERE uuid=?", resultSet -> {
-                try {
-                    if (resultSet.next()) {
-                        gems.set(resultSet.getLong("gems"));
+                break;
+            case MYSQL:
+                SimpleGems.getInstance().getMySQLManager().select("SELECT * FROM SimpleGems WHERE uuid=?", resultSet -> {
+                    try {
+                        if (resultSet.next()) {
+                            gems.set(resultSet.getLong("gems"));
+                        }
+                    } catch (SQLException exception) {
+                        Color.log(exception.getMessage());
                     }
-                } catch (SQLException exception) {
-                    Color.log(exception.getMessage());
-                }
-            }, player.getUniqueId().toString());
-            return gems.get();
-        } else if (SimpleGems.getInstance().getDataType() == DataType.FLAT_FILE) {
-            return SimpleGems.getInstance().getPlayerMapper().getGems(player.getUniqueId());
+                }, player.getUniqueId().toString());
+                return gems.get();
+            default:
+                SimpleGems.getInstance().getSqLiteManager().select("SELECT * FROM SimpleGems WHERE uuid=?", resultSet -> {
+                    try {
+                        if (resultSet.next()) {
+                            gems.set(resultSet.getLong("gems"));
+                        }
+                    } catch (SQLException exception) {
+                        Color.log(exception.getMessage());
+                    }
+                }, player.getUniqueId().toString());
+                return gems.get();
         }
         return 0;
     }
@@ -234,7 +236,7 @@ public class Methods {
     }
 
     public String formatDecimal(long amount) {
-        DecimalFormat decimalFormat = new DecimalFormat("###,###");
+        DecimalFormat decimalFormat = new DecimalFormat("###.###");
         return decimalFormat.format(amount);
     }
 

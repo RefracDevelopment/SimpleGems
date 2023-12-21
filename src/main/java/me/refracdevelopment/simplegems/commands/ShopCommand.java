@@ -34,7 +34,7 @@ public class ShopCommand extends SubCommand {
     }
 
     @Override
-    public void perform(CommandSender commandSender, String[] strings) {
+    public void perform(CommandSender commandSender, String[] args) {
         // Make sure the sender is a player.
         if (!(commandSender instanceof Player)) {
             Color.sendMessage(commandSender, "no-console", Placeholders.setPlaceholders(commandSender));
@@ -48,7 +48,7 @@ public class ShopCommand extends SubCommand {
             return;
         }
 
-        if (strings.length == 1) {
+        if (args.length == 1) {
             SimpleGems.getInstance().getGemShop().getCategories().forEach((gemShopCategory, gemShopItems) -> {
                 GemShopCategory category = new GemShopCategory(SimpleGems.getInstance().getMenuManager().getPlayerMenuUtility(player), gemShopCategory);
 
@@ -66,10 +66,10 @@ public class ShopCommand extends SubCommand {
 
                 category.open();
             });
-        } else if (strings.length == 2) {
+        } else if (args.length == 2) {
             SimpleGems.getInstance().getGemShop().getCategories().forEach((gemShopCategory, gemShopItems) -> {
-                if (!gemShopCategory.equalsIgnoreCase(strings[1])) {
-                    Color.log("The 'categories." + strings[1] + "' menu category in 'menus.yml' config file doesn't exist.");
+                if (!gemShopCategory.equalsIgnoreCase(args[1])) {
+                    Color.log("The 'categories." + args[1] + "' menu category in 'menus.yml' config file doesn't exist.");
                     Color.sendMessage(player, "invalid-category");
                     return;
                 }
@@ -93,7 +93,7 @@ public class ShopCommand extends SubCommand {
     }
 
     @Override
-    public List<String> getSubcommandArguments(Player player, String[] strings) {
+    public List<String> getSubcommandArguments(Player player, String[] args) {
         return null;
     }
 

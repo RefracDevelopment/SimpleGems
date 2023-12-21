@@ -105,8 +105,8 @@ public class ItemBuilder {
         if (level < 1) {
             return this;
         }
-        EnchantmentStorageMeta im = (EnchantmentStorageMeta) is.getItemMeta();
-        im.addStoredEnchant(ench, level, true);
+        ItemMeta im = is.getItemMeta();
+        im.addEnchant(ench, level, true);
         is.setItemMeta(im);
         return this;
     }

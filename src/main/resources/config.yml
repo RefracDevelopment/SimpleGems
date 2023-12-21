@@ -24,9 +24,8 @@ leaderboard-update-interval: 1800
 # MONGODB - Database saving
 # MYSQL/MARIADB - Database saving
 # SQLITE - Local Database saving
-# FLAT_FILE - Local Json file saving in the playerdata/player-uuid.json file
-# Default: FLAT_FILE
-data-type: FLAT_FILE
+# Default: SQLITE
+data-type: SQLITE
 
 # Either MySQL or MariaDB will work here.
 mysql:

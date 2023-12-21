@@ -32,10 +32,10 @@ public abstract class SubCommand {
     public abstract String getSyntax();
 
     /**
-     * @param sender The thing that ran the command
+     * @param commandSender The thing that ran the command
      * @param args   The args passed into the command when run
      */
-    public abstract void perform(CommandSender sender, String[] args);
+    public abstract void perform(CommandSender commandSender, String[] args);
 
     /**
      * @param player The player who ran the command
