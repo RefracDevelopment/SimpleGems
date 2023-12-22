@@ -1,17 +1,11 @@
 package me.refracdevelopment.simplegems.manager.leaderboards;
 
 import me.refracdevelopment.simplegems.SimpleGems;
-import me.refracdevelopment.simplegems.manager.configuration.LocaleManager;
-import me.refracdevelopment.simplegems.manager.configuration.cache.Config;
-import me.refracdevelopment.simplegems.manager.data.DataType;
-import me.refracdevelopment.simplegems.player.data.ProfileData;
 import me.refracdevelopment.simplegems.utilities.Methods;
 import me.refracdevelopment.simplegems.utilities.Tasks;
 import me.refracdevelopment.simplegems.utilities.chat.Color;
-import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
 import org.bson.Document;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
@@ -19,121 +13,95 @@ import java.util.*;
 
 public class LeaderboardManager {
 
-    private SimpleGems plugin;
+    private final Map<String, Long> cachedMap;
 
-    private Map<String, Long> unsortedMap;
-    private Map<String, Long> cachedMap;
-
-    public LeaderboardManager(SimpleGems plugin) {
-        this.plugin = plugin;
-        this.unsortedMap = new HashMap<>();
-        this.cachedMap = new HashMap<>();
-        load();
+    public LeaderboardManager() {
+        cachedMap = new HashMap<>();
+        update();
         updateTask();
         Color.log("&aLoaded Leaderboards!");
     }
 
-    public void load() {
-        if (Bukkit.getOnlinePlayers().size() == 0) return;
-        if (cachedMap.isEmpty() || unsortedMap.isEmpty()) {
+    private void load() {
+        if (Bukkit.getOnlinePlayers().isEmpty()) return;
 
-            if (plugin.getDataType() == DataType.MONGO) {
-                List<Document> documents = plugin.getMongoManager().getStatsCollection().find().limit(Config.GEMS_TOP_ENTRIES).into(new ArrayList<>());
+        cachedMap.clear();
+
+        switch (SimpleGems.getInstance().getDataType()) {
+            case MONGO:
+                List<Document> documents = SimpleGems.getInstance().getMongoManager().getStatsCollection().find().into(new ArrayList<>());
 
                 documents.forEach(document -> {
                     String name = document.getString("name");
                     long gems = document.getLong("gems");
 
-                    unsortedMap.putIfAbsent(name, gems);
-                    cachedMap.putIfAbsent(name, gems);
+                    cachedMap.put(name, gems);
                 });
-            } else if (plugin.getDataType() == DataType.MYSQL) {
-                this.plugin.getMySQLManager().select("SELECT * FROM SimpleGems ORDER BY gems DESC LIMIT " + Config.GEMS_TOP_ENTRIES, resultSet -> {
+                break;
+            case MYSQL:
+                SimpleGems.getInstance().getMySQLManager().select("SELECT * FROM SimpleGems", resultSet -> {
                     try {
-                        // order from highest to lowest
                         while (resultSet.next()) {
                             String name = resultSet.getString("name");
                             long gems = resultSet.getLong("gems");
-                            unsortedMap.putIfAbsent(name, gems);
-                            cachedMap.putIfAbsent(name, gems);
+
+                            cachedMap.put(name, gems);
                         }
                     } catch (SQLException exception) {
                         Color.log(exception.getMessage());
                     }
                 });
-            } else if (plugin.getDataType() == DataType.FLAT_FILE) {
-                Bukkit.getOnlinePlayers().stream().limit(Config.GEMS_TOP_ENTRIES).forEach(onlinePlayer -> {
-                    ProfileData profile = plugin.getProfileManager().getProfile(onlinePlayer.getUniqueId()).getData();
-                    String name = onlinePlayer.getName();
-                    long gems = profile.getGems().getAmount();
-                    if (this.unsortedMap.size() >= Config.GEMS_TOP_ENTRIES-1) return;
-                    unsortedMap.putIfAbsent(name, gems);
-                    cachedMap.putIfAbsent(name, gems);
-                });
+                break;
+            default:
+                SimpleGems.getInstance().getSqLiteManager().select("SELECT * FROM SimpleGems", resultSet -> {
+                    try {
+                        while (resultSet.next()) {
+                            String name = resultSet.getString("name");
+                            long gems = resultSet.getLong("gems");
 
-                Collection<OfflinePlayer> offlinePlayers = Arrays.asList(Bukkit.getOfflinePlayers());
-                offlinePlayers.stream().limit(Config.GEMS_TOP_ENTRIES).forEach(offlinePlayer -> {
-                    String name = offlinePlayer.getName();
-                    long gems = plugin.getPlayerMapper().getGems(offlinePlayer.getUniqueId());
-                    if (this.unsortedMap.size() >= Config.GEMS_TOP_ENTRIES-1) return;
-                    unsortedMap.putIfAbsent(name, gems);
-                    cachedMap.putIfAbsent(name, gems);
+                            cachedMap.put(name, gems);
+                        }
+                    } catch (SQLException exception) {
+                        Color.log(exception.getMessage());
+                    }
                 });
-            }
+                break;
         }
     }
 
     public void sendLeaderboard(Player player) {
-        final LocaleManager locale = plugin.getManager(LocaleManager.class);
+        Tasks.runAsync(() -> {
+            if (cachedMap.isEmpty()) {
+                load();
+            }
 
-        if (!cachedMap.isEmpty()) {
-            Map<String, Long> sortedMap = sortByValue(cachedMap);
+            Tasks.run(() -> {
+                Map<String, Long> sortedMap = sortByValue(cachedMap);
 
-            locale.sendCustomMessage(player, Color.translate(player, Config.GEMS_TOP_TITLE
-                    .replace("%entries%", String.valueOf(Config.GEMS_TOP_ENTRIES))
-            ));
-
-            int number = 1;
-            for (Map.Entry<String, Long> entry : sortedMap.entrySet()) {
-                String key = entry.getKey();
-                long gems = entry.getValue();
-
-                locale.sendCustomMessage(player, Color.translate(player, Config.GEMS_TOP_FORMAT
-                        .replace("%number%", String.valueOf(number))
-                        .replace("%value%", String.valueOf(gems))
-                        .replace("%gems%", String.valueOf(gems))
-                        .replace("%gems_formatted%", Methods.format(gems))
-                        .replace("%gems_decimal%", Methods.formatDecimal(gems))
-                        .replace("%player%", key)
+                Color.sendCustomMessage(player, Color.translate(player, SimpleGems.getInstance().getSettings().GEMS_TOP_TITLE
+                        .replace("%entries%", String.valueOf(SimpleGems.getInstance().getSettings().GEMS_TOP_ENTRIES))
                 ));
 
-                number++;
-            }
-        } else {
-            load();
-            Map<String, Long> sortedMap = sortByValue(unsortedMap);
+                int number = 1;
+                for (Map.Entry<String, Long> entry : sortedMap.entrySet()) {
+                    String key = entry.getKey();
+                    long gems = entry.getValue();
 
-            locale.sendCustomMessage(player, Color.translate(player, Config.GEMS_TOP_TITLE
-                    .replace("%entries%", String.valueOf(Config.GEMS_TOP_ENTRIES))
-            ));
+                    if (number == 11) break;
 
-            int number = 1;
-            for (Map.Entry<String, Long> entry : sortedMap.entrySet()) {
-                String key = entry.getKey();
-                long gems = entry.getValue();
+                    Color.sendCustomMessage(player, Color.translate(player, SimpleGems.getInstance().getSettings().GEMS_TOP_FORMAT
+                            .replace("%number%", String.valueOf(number))
+                            .replace("%value%", String.valueOf(gems))
+                            .replace("%gems%", String.valueOf(gems))
+                            .replace("%gems_formatted%", Methods.format(gems))
+                            .replace("%gems_decimal%", Methods.formatDecimal(gems))
+                            .replace("%player%", key)
+                    ));
 
-                locale.sendCustomMessage(player, Color.translate(player, Config.GEMS_TOP_FORMAT
-                        .replace("%number%", String.valueOf(number))
-                        .replace("%value%", String.valueOf(gems))
-                        .replace("%gems%", String.valueOf(gems))
-                        .replace("%gems_formatted%", Methods.format(gems))
-                        .replace("%gems_decimal%", Methods.formatDecimal(gems))
-                        .replace("%player%", key)
-                ));
-
-                number++;
-            }
-        }
+                    number++;
+                }
+            });
+        });
     }
 
     private Map<String, Long> sortByValue(Map<String, Long> unsortMap) {
@@ -149,24 +117,23 @@ public class LeaderboardManager {
     }
 
     public void update() {
-        Tasks.runAsync(plugin, new LeaderboardUpdate());
+        Tasks.runAsync(() -> new LeaderBoardUpdate().update());
     }
 
     public void updateTask() {
-        Tasks.runAsyncTimer(plugin, new LeaderboardUpdate(), Config.LEADERBOARD_UPDATE_INTERVAL*20L, Config.LEADERBOARD_UPDATE_INTERVAL*20L);
+        Tasks.runAsyncTimer(() -> new LeaderBoardUpdate().update(),
+                SimpleGems.getInstance().getSettings().LEADERBOARD_UPDATE_INTERVAL * 20L,
+                SimpleGems.getInstance().getSettings().LEADERBOARD_UPDATE_INTERVAL * 20L);
     }
 
-    private class LeaderboardUpdate implements Runnable {
-
-        @Override
-        public void run() {
-            if (Bukkit.getOnlinePlayers().isEmpty()) return;
-            final LocaleManager locale = plugin.getManager(LocaleManager.class);
-            cachedMap.clear();
-            unsortedMap.clear();
+    private class LeaderBoardUpdate {
+        private void update() {
             load();
-            Bukkit.getOnlinePlayers().forEach(onlinePlayer -> {
-                locale.sendMessage(onlinePlayer, "leaderboard-update", Placeholders.setPlaceholders(onlinePlayer));
+
+            Tasks.run(() -> {
+                Bukkit.getOnlinePlayers().forEach(onlinePlayer -> {
+                    Color.sendMessage(onlinePlayer, "leaderboard-update");
+                });
             });
         }
     }

@@ -1,56 +1,14 @@
 name: SimpleGems
-version: '@version@'
+version: '${project.version}'
 main: me.refracdevelopment.simplegems.SimpleGems
-author: RefracDevelopment
+authors:
+  - Refrac
 api-version: "1.13"
 softdepend:
   - NBTAPI
   - PlaceholderAPI
   - Skulls
   - HeadDatabase
-description: A simple gems economy plugin
+description: SimpleGems is a plugin that adds a custom gems economy into minecraft.
 website: https://discord.gg/EFeSKPg739
-
-permissions:
-  simplegems.*:
-    default: op
-    description: Gives all permissions
-    children:
-      - simplegems.command.shop
-      - simplegems.command.withdraw
-      - simplegems.command.pay
-      - simplegems.command.top
-      - simplegems.command.balance
-      - simplegems.command.give
-      - simplegems.command.take
-      - simplegems.command.set
-      - simplegems.command.reload
-      - simplegems.command.version
-      - simplegems.command.update
-  simplegems.command.shop:
-    default: op
-    description: Opens the gems shop
-  simplegems.command.balance:
-    default: op
-    description: Shows player balances
-  simplegems.command.withdraw:
-    default: op
-    description: Allows you to withdraw gems from your balance
-  simplegems.command.pay:
-    default: op
-    description: Allows you to pay players gems from your balance
-  simplegems.command.give:
-    default: op
-    description: Allows you to add players gems to their balance
-  simplegems.command.take:
-    default: op
-    description: Allows you remove players gems from their balance
-  simplegems.command.set:
-    default: op
-    description: Allows you to set a players gems balance
-  simplegems.command.reload:
-    default: op
-    description: Allows you to reload the plugin and config files
-  simplegems.command.version:
-    default: op
-    description: Allows you to check your installed version of SimpleGems
+folia-supported: true

@@ -7,10 +7,10 @@ import org.bukkit.entity.Player;
 @Getter
 public class GemsAddEvent extends SimpleEvent {
 
-    private final long newGems;
+    private final long gems;
 
     public GemsAddEvent(Player player, long amount) {
         super(player);
-        this.newGems = amount;
+        this.gems = amount;
     }
 }

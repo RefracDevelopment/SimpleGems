@@ -2,7 +2,6 @@ package me.refracdevelopment.simplegems.player;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.player.data.ProfileData;
 
 import java.util.UUID;
@@ -10,8 +9,6 @@ import java.util.UUID;
 @Getter
 @Setter
 public class Profile {
-
-    private SimpleGems plugin = SimpleGems.getInstance();
 
     private ProfileData data;
     private UUID UUID;

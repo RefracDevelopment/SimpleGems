@@ -1,30 +1,32 @@
 package me.refracdevelopment.simplegems.utilities;
 
-import org.bukkit.plugin.java.JavaPlugin;
+import lombok.experimental.UtilityClass;
+import me.refracdevelopment.simplegems.SimpleGems;
 
+@UtilityClass
 public class Tasks {
 
-    public static void run(JavaPlugin plugin, Runnable callable) {
-        plugin.getServer().getScheduler().runTask(plugin, callable);
+    public void run(Runnable callable) {
+        runLater(callable, 1L);
     }
 
-    public static void runAsync(JavaPlugin plugin, Runnable callable) {
-        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, callable);
+    public void runAsync(Runnable callable) {
+        runAsyncLater(callable, 1L);
     }
 
-    public static void runLater(JavaPlugin plugin, Runnable callable, long delay) {
-        plugin.getServer().getScheduler().runTaskLater(plugin, callable, delay);
+    public void runLater(Runnable callable, long delay) {
+        SimpleGems.getInstance().getFoliaLib().getImpl().runLater(callable, delay);
     }
 
-    public static void runAsyncLater(JavaPlugin plugin, Runnable callable, long delay) {
-        plugin.getServer().getScheduler().runTaskLaterAsynchronously(plugin, callable, delay);
+    public void runAsyncLater(Runnable callable, long delay) {
+        SimpleGems.getInstance().getFoliaLib().getImpl().runLaterAsync(callable, delay);
     }
 
-    public static void runTimer(JavaPlugin plugin, Runnable callable, long delay, long interval) {
-        plugin.getServer().getScheduler().runTaskTimer(plugin, callable, delay, interval);
+    public void runTimer(Runnable callable, long delay, long interval) {
+        SimpleGems.getInstance().getFoliaLib().getImpl().runTimer(callable, delay, interval);
     }
 
-    public static void runAsyncTimer(JavaPlugin plugin, Runnable callable, long delay, long interval) {
-        plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, callable, delay, interval);
+    public void runAsyncTimer(Runnable callable, long delay, long interval) {
+        SimpleGems.getInstance().getFoliaLib().getImpl().runTimerAsync(callable, delay, interval);
     }
 }

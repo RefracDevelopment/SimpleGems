@@ -1,6 +1,5 @@
-package me.refracdevelopment.simplegems.player.data;
+package me.refracdevelopment.simplegems.manager;
 
-import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.player.Profile;
 import me.refracdevelopment.simplegems.utilities.Tasks;
 import org.bukkit.Bukkit;
@@ -17,10 +16,11 @@ public class ProfileManager {
     public ProfileManager() {
         // Refresh to remove profiles from a previous instance of plugin
         // This is basically /reload support (not recommended)
+        if (Bukkit.getOnlinePlayers().isEmpty()) return;
         Bukkit.getOnlinePlayers().forEach(onlinePlayer -> {
             getProfiles().clear();
             handleProfileCreation(onlinePlayer.getUniqueId(), onlinePlayer.getName());
-            Tasks.runAsync(SimpleGems.getInstance(), () -> getProfile(onlinePlayer.getUniqueId()).getData().load());
+            Tasks.runAsync(() -> getProfile(onlinePlayer.getUniqueId()).getData().load());
         });
     }
 

@@ -1,0 +1,45 @@
+# This file lets you change the name and aliases for the simplegems command.
+# If you edit the name/aliases at the top of this file, you will need to restart the server to see all the changes applied properly.
+
+# This is used for automatic file updating purposes
+config-version: '5'
+
+name: gems
+aliases:
+  - consolegems
+  - simplegems
+subcommands:
+  withdraw:
+    name: withdraw
+    aliases: [ ]
+  shop:
+    name: shop
+    aliases: [ ]
+  take:
+    name: take
+    aliases:
+      - remove
+  give:
+    name: give
+    aliases:
+      - add
+  pay:
+    name: pay
+    aliases:
+      - send
+  set:
+    name: set
+    aliases: [ ]
+  top:
+    name: top
+    aliases: [ ]
+  balance:
+    name: balance
+    aliases:
+      - bal
+  update:
+    name: update
+    aliases: [ ]
+  reset:
+    name: reset
+    aliases: [ ]

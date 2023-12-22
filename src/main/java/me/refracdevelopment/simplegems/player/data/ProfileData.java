@@ -5,10 +5,10 @@ import com.mongodb.client.model.ReplaceOptions;
 import lombok.Getter;
 import lombok.Setter;
 import me.refracdevelopment.simplegems.SimpleGems;
-import me.refracdevelopment.simplegems.manager.data.DataType;
 import me.refracdevelopment.simplegems.player.stats.Stat;
 import me.refracdevelopment.simplegems.utilities.chat.Color;
 import org.bson.Document;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
@@ -18,7 +18,6 @@ import java.util.UUID;
 @Setter
 public class ProfileData {
 
-    private final SimpleGems plugin = SimpleGems.getInstance();
     private final String name;
     private final UUID uuid;
 
@@ -29,52 +28,74 @@ public class ProfileData {
         this.name = name;
     }
 
+    // Check if the player exists already if not add them to the database then load and cache their data
     public void load() {
-        if (plugin.getDataType() == DataType.MONGO) {
-            Document document = plugin.getMongoManager().getStatsCollection().find(Filters.eq("uuid", uuid.toString())).first();
+        switch (SimpleGems.getInstance().getDataType()) {
+            case MONGO:
+                Document document = SimpleGems.getInstance().getMongoManager().getStatsCollection().find(
+                        Filters.eq("uuid", getUuid().toString())).first();
 
-            if (document != null) {
-                gems.setAmount(document.getLong("gems"));
-            }
-        } else if (plugin.getDataType() == DataType.MYSQL) {
-            plugin.getMySQLManager().select("SELECT * FROM SimpleGems WHERE uuid=?", resultSet -> {
-                try {
-                    if (resultSet.next()) {
-                        this.gems.setAmount(resultSet.getLong("gems"));
-                        plugin.getMySQLManager().execute("UPDATE SimpleGems SET name=? WHERE uuid=?",
-                                name, uuid.toString());
-                    } else {
-                        plugin.getMySQLManager().execute("INSERT INTO SimpleGems (uuid, name, gems) VALUES (?,?,?)",
-                                uuid.toString(), name, 0);
-                    }
-                } catch (SQLException exception) {
-                    Color.log("MySQL Error: " + exception.getMessage());
+                if (document != null) {
+                    getGems().setAmount(document.getLong("gems"));
                 }
-            }, uuid.toString());
-        } else if (plugin.getDataType() == DataType.FLAT_FILE) {
-            plugin.getPlayerMapper().loadPlayerFile(uuid);
+                break;
+            case MYSQL:
+                SimpleGems.getInstance().getMySQLManager().select("SELECT * FROM SimpleGems WHERE uuid=?", resultSet -> {
+                    try {
+                        if (resultSet.next()) {
+                            getGems().setAmount(resultSet.getLong("gems"));
+                            SimpleGems.getInstance().getMySQLManager().updatePlayerName(getUuid(), getName());
+                        } else {
+                            SimpleGems.getInstance().getMySQLManager().execute("INSERT INTO SimpleGems (uuid, name, gems) VALUES (?,?,?)",
+                                    getUuid().toString(), getName(), 0);
+                        }
+                    } catch (SQLException exception) {
+                        Color.log("MySQL Error: " + exception.getMessage());
+                    }
+                }, getUuid().toString());
+                break;
+            default:
+                SimpleGems.getInstance().getSqLiteManager().select("SELECT * FROM SimpleGems WHERE uuid=?", resultSet -> {
+                    try {
+                        if (resultSet.next()) {
+                            getGems().setAmount(resultSet.getLong("gems"));
+                            SimpleGems.getInstance().getSqLiteManager().updatePlayerName(getUuid(), getName());
+                        } else {
+                            SimpleGems.getInstance().getSqLiteManager().execute("INSERT INTO SimpleGems (uuid, name, gems) VALUES (?,?,?)",
+                                    getUuid().toString(), getName(), 0);
+                        }
+                    } catch (SQLException exception) {
+                        Color.log("SQLite Error: " + exception.getMessage());
+                    }
+                }, getUuid().toString());
+                break;
         }
     }
 
+    // Save the player to the database
     public void save() {
-        if (plugin.getDataType() == DataType.MONGO) {
-            Document document = new Document();
+        switch (SimpleGems.getInstance().getDataType()) {
+            case MONGO:
+                Document document = new Document();
 
-            document.put("name", name);
-            document.put("uuid", uuid.toString());
-            document.put("gems", gems.getAmount());
+                document.put("name", getName());
+                document.put("uuid", getUuid().toString());
+                document.put("gems", getGems().getAmount());
 
-            plugin.getMongoManager().getStatsCollection().replaceOne(Filters.eq("uuid", uuid.toString()), document, new ReplaceOptions().upsert(true));
-        } else if (plugin.getDataType() == DataType.MYSQL) {
-            plugin.getMySQLManager().execute("UPDATE SimpleGems SET gems=? WHERE uuid=?",
-                    gems.getAmount(), uuid.toString());
-        } else if (plugin.getDataType() == DataType.FLAT_FILE) {
-            plugin.getPlayerMapper().savePlayer(uuid, name, gems.getAmount());
+                SimpleGems.getInstance().getMongoManager().getStatsCollection().replaceOne(
+                        Filters.eq("uuid", uuid.toString()), document, new ReplaceOptions().upsert(true));
+                break;
+            case MYSQL:
+                SimpleGems.getInstance().getMySQLManager().updatePlayerGems(getUuid(), getGems().getAmount());
+                break;
+            default:
+                SimpleGems.getInstance().getSqLiteManager().updatePlayerGems(getUuid(), getGems().getAmount());
+                break;
         }
     }
 
     public Player getPlayer() {
-        return plugin.getServer().getPlayer(uuid);
+        return Bukkit.getPlayer(uuid);
     }
 
 }

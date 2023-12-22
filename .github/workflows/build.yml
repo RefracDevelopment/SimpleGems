@@ -36,7 +36,7 @@ jobs:
           tag_name: '${{ env.PROJECT_VERSION }}'
           release_name: SimpleGems
           draft: false
-          prerelease: false
+          prerelease: true
 
       - name: Upload Release Asset
         id: upload-release-asset

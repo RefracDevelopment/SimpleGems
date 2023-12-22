@@ -18,56 +18,77 @@
 # %simplegems_balance% - Get the unformatted gems amount (100000)
 # %simplegems_balance_formatted% - Get the formatted gems amount (100k)
 # %simplegems_balance_decimal% - Get the decimal formatted gems amount (100000.0)
+# Actions:
+# [console] - Send a console command
+# [message] - Send a message to the player
+# {openmenu:menu-name} - Open a new category menu
+# [close] - Close the current menu
 #---------------------------------------------------------------------------
-gems-menu:
-  enabled: true
-  title: "&e&lGems Shop"
-  size: 27
-  fill:
-    material: BLACK_STAINED_GLASS_PANE
-    data: 0
-    name: "&7"
-  items:
-    infoandbalanceItem:
-      material: SUNFLOWER
+# This is used for automatic file updating purposes
+config-version: '7'
+
+categories:
+  gems-menu:
+    enabled: true
+    default: true
+    title: "&e&lGems Shop"
+    size: 27
+    # Set a permission here
+    # if you want only certain people
+    # to be able to access this menu
+    permission: ""
+    fill:
+      enabled: true
+      material: BLACK_STAINED_GLASS_PANE
       data: 0
-      skulls: false
-      headDatabase: false
-      skullOwner: ""
-      customData: false
-      customModelData: YOURIDHERE
-      name: "&eWhat is the Gem Shop?"
-      lore:
-        - "&7The Gem Shop sells you items"
-        - "&7you can not get in /shop."
-        - ""
-        - "&eYour Gem Balance: &b&l%star% &f%gems_formatted%"
-      slot: 4
-    '1':
-      material: STICK
-      skulls: false
-      headDatabase: false
-      skullOwner: ""
-      customData: false
-      customModelData: YOURIDHERE
-      data: 0
-      glow: false
-      name: "&dMagic Stick"
-      lore:
-        - "&7Be special and buy a stick for %cost% gem"
-      message:
-        enabled: true
-        broadcast: true
-        text:
-          - "%prefix% &e%player% bought %item% &efrom &f/gemshop&e."
-      action:
-        # If enabled will use this instead of commands
-        enabled: false
-        actions:
-          - "[console] give %player% stick 1" # gives the player an item from console
-          - "[message] %prefix% &e%player% bought %item% &efrom &f/gemshop&e." # sends a message to the player
-          - "[close]" # Closes the inventory
-      commands:
-        - "give %player% stick 1"
-      cost: 1
-      slot: 10
+      name: "&7"
+    items:
+      infoandbalanceItem:
+        material: SUNFLOWER
+        data: 0
+        skulls: false
+        headDatabase: false
+        skullOwner: ""
+        customData: false
+        customModelData: YOURIDHERE
+        name: "&eWhat is the Gem Shop?"
+        lore:
+          - "&7The Gem Shop sells you items"
+          - "&7you can not get in /shop."
+          - ""
+          - "&eYour Gem Balance: &b&l%star% &f%gems_formatted%"
+        # Set to false so the menu knows this is not a buyable item
+        buyable: false
+        slot: 4
+      '1':
+        # Set a permission here
+        # if you want only certain people
+        # to be able to access this item
+        permission: ""
+        material: STICK
+        skulls: false
+        headDatabase: false
+        skullOwner: ""
+        customData: false
+        customModelData: YOURIDHERE
+        data: 0
+        glow: false
+        name: "&dMagic Stick"
+        lore:
+          - "&7Be special and buy a stick for %cost% gem"
+        message:
+          enabled: true
+          broadcast: true
+          text:
+            - "&e%player% bought %item% &efrom &f/gemshop&e."
+        action:
+          # If enabled will use this instead of commands
+          enabled: true
+          actions:
+            - "[console] give %player% stick 1" # gives the player an item from console
+            - "[message] %prefix% &e%player% bought %item% &efrom &f/gemshop&e." # sends a message to the player
+            - "[close]" # Closes the inventory
+        commands:
+          - "give %player% stick 1"
+        cost: 1
+        slot: 10

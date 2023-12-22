@@ -1,52 +1,41 @@
-package me.refracdevelopment.simplegems.manager.data;
+package me.refracdevelopment.simplegems.manager.data.sql;
 
-import dev.rosewood.rosegarden.lib.hikaricp.HikariConfig;
-import dev.rosewood.rosegarden.lib.hikaricp.HikariDataSource;
-import me.refracdevelopment.simplegems.SimpleGems;
-import me.refracdevelopment.simplegems.manager.configuration.ConfigurationManager;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+import me.refracdevelopment.simplegems.manager.data.SelectCall;
 import me.refracdevelopment.simplegems.utilities.Tasks;
 import me.refracdevelopment.simplegems.utilities.chat.Color;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.UUID;
 
-public class MySQLManager {
+public class SQLiteManager {
 
-    private final SimpleGems plugin;
     private HikariDataSource dataSource;
-    private final String host = ConfigurationManager.Setting.MYSQL_HOST.getString();
-    private final String username = ConfigurationManager.Setting.MYSQL_USERNAME.getString();
-    private final String password = ConfigurationManager.Setting.MYSQL_PASSWORD.getString();
-    private final String database = ConfigurationManager.Setting.MYSQL_DATABASE.getString();
-    private final String port = ConfigurationManager.Setting.MYSQL_PORT.getString();
-
-    public MySQLManager(SimpleGems plugin) {
-        this.plugin = plugin;
-    }
 
     public void createT() {
-        Tasks.runAsync(plugin, this::createTables);
+        Tasks.runAsync(this::createTables);
     }
 
-    public boolean connect() {
+    public boolean connect(String path) {
         try {
-            Color.log("&eConnecting to MySQL...");
+            Color.log("&aConnecting to SQLite...");
             HikariConfig config = new HikariConfig();
-            Class.forName("org.mariadb.jdbc.Driver");
-            config.setDriverClassName("org.mariadb.jdbc.Driver");
-            config.setJdbcUrl("jdbc:mariadb://" + host + ':' + port + '/' + database);
-            config.setUsername(username);
-            config.setPassword(password);
+            Class.forName("org.sqlite.JDBC");
+            config.setDriverClassName("org.sqlite.JDBC");
+            config.setJdbcUrl("jdbc:sqlite:" + path);
             config.addDataSourceProperty("cachePrepStmts", "true");
             config.addDataSourceProperty("prepStmtCacheSize", "250");
             config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
 
             dataSource = new HikariDataSource(config);
-            Color.log("&eConnected to MySQL!");
+            Color.log("&aConnected to SQLite!");
             return true;
         } catch (Exception exception) {
-            Color.log("&cCould not connect to MySQL! Error: " + exception.getMessage());
+            Color.log("&cCould not connect to SQLite! Error: " + exception.getMessage());
+            exception.printStackTrace();
             return false;
         }
     }
@@ -57,9 +46,10 @@ public class MySQLManager {
 
     public void createTables() {
         createTable("SimpleGems",
-                "uuid VARCHAR(36) NOT NULL PRIMARY KEY, " +
-                        "name VARCHAR(255), " +
-                        "gems BIGINT");
+                "uuid VARCHAR(255) NOT NULL PRIMARY KEY, " +
+                        "name VARCHAR(255) NOT NULL, " +
+                        "gems BIGINT DEFAULT 0 NOT NULL"
+        );
     }
 
     public boolean isInitiated() {
@@ -111,7 +101,7 @@ public class MySQLManager {
                 statement.execute();
             } catch (SQLException exception) {
                 Color.log("An error occurred while executing an update on the database.");
-                Color.log("MySQL#execute : " + query);
+                Color.log("SQLite#execute : " + query);
                 exception.printStackTrace();
             }
         }).start();
@@ -133,10 +123,25 @@ public class MySQLManager {
                 callback.call(statement.executeQuery());
             } catch (SQLException exception) {
                 Color.log("An error occurred while executing a query on the database.");
-                Color.log("MySQL#select : " + query);
+                Color.log("SQLite#select : " + query);
                 exception.printStackTrace();
             }
         }).start();
     }
 
+    public void updatePlayerGems(UUID uuid, long gems) {
+        execute("UPDATE SimpleGems SET gems=? WHERE uuid=?", gems, uuid.toString());
+    }
+
+    public void updatePlayerName(UUID uuid, String name) {
+        execute("UPDATE SimpleGems SET name=? WHERE uuid=?", name, uuid.toString());
+    }
+
+    public void delete() {
+        execute("DELETE * FROM SimpleGems");
+    }
+
+    public void deletePlayer(UUID uuid) {
+        execute("DELETE * FROM SimpleGems WHERE uuid=?", uuid.toString());
+    }
 }

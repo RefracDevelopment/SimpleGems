@@ -7,10 +7,10 @@ import org.bukkit.entity.Player;
 @Getter
 public class GemsRemoveEvent extends SimpleEvent {
 
-    private final long lossGems;
+    private final long gems;
 
     public GemsRemoveEvent(Player player, long amount) {
         super(player);
-        this.lossGems = amount;
+        this.gems = amount;
     }
 }

@@ -1,12 +1,11 @@
 package me.refracdevelopment.simplegems.player.stats;
 
+import lombok.Getter;
+
+@Getter
 public class Stat {
 
     private long amount;
-
-    public long getAmount() {
-        return this.amount;
-    }
 
     public void setAmount(long amount) {
         this.amount = amount;

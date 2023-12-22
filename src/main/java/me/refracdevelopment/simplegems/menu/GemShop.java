@@ -1,26 +1,43 @@
 package me.refracdevelopment.simplegems.menu;
 
-import me.refracdevelopment.simplegems.manager.configuration.cache.Menus;
+import dev.dejvokep.boostedyaml.block.implementation.Section;
+import lombok.Getter;
+import me.refracdevelopment.simplegems.SimpleGems;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+@Getter
 public class GemShop {
 
-    private final GemShopGUI shop;
-    private final Map<String, GemShopItem> items;
+    private final Map<String, List<GemShopItem>> categories;
 
     public GemShop() {
-        this.shop = new GemShopGUI();
-        this.items = new HashMap<>();
-        Menus.GEM_SHOP_ITEMS.getKeys(false).forEach(item -> this.items.put(item, new GemShopItem(item)));
+        this.categories = new HashMap<>();
+        load();
     }
 
-    public GemShopGUI getGemShop() {
-        return this.shop;
+    public void load() {
+        getCategories().clear();
+
+        List<GemShopItem> items = new ArrayList<>();
+
+        Section section = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES;
+
+        section.getRoutesAsStrings(false).forEach(gemShopCategory -> {
+            Section category = section.getSection(gemShopCategory + ".items");
+
+            category.getRoutesAsStrings(false).forEach(item -> {
+                items.add(new GemShopItem(gemShopCategory, item));
+            });
+
+            getCategories().put(gemShopCategory, items);
+        });
     }
 
-    public Map<String, GemShopItem> getItems() {
-        return this.items;
+    public List<GemShopItem> getItems(String categoryName) {
+        return getCategories().get(categoryName);
     }
 }
