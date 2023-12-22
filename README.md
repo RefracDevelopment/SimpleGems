@@ -1,5 +1,6 @@
-# SimpleGems
-A gems economy/currency plugin.
+![](https://i.imgur.com/pMKvWrk.png)
+
+SimpleGems is a plugin that adds a custom gems economy into minecraft.
 
 [Spigot](https://www.spigotmc.org/resources/96827/) [Craftaro](https://craftaro.com/marketplace/product/simplegems.755) [BuiltByBit](https://builtbybit.com/resources/simplegems.21583/) [Hangar](https://hangar.papermc.io/RefracDevelopment/SimpleGems/)
 
@@ -35,7 +36,7 @@ depend:
 softdepend:
   - SimpleGems
 ```
-
+You can use this to access all methods.
 ```JAVA
 SimpleGems.getInstance().getGemsAPI().getGems(player);
 
@@ -60,5 +61,11 @@ SimpleGems.getInstance().getGemsAPI().setGems(player, amount);
 SimpleGems.getInstance().getGemsAPI().setOfflineGems(player, amount);
 ```
 
+```
+SimpleGemsAPI gemsAPI = SimpleGems.getInstance().getGemsAPI();
+```
+
 ### License
 Please view the [LICENSE](LICENSE) file for more information on the license of this source code.
+
+[icon from flaticon](https://www.flaticon.com/)
