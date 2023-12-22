@@ -58,14 +58,14 @@ public class BalanceCommand extends SubCommand {
                 long amount = SimpleGems.getInstance().getGemsAPI().getOfflineGems(target);
 
                 StringPlaceholders placeholders = StringPlaceholders.builder()
-                        .addAll(Placeholders.setPlaceholders(commandSender))
+                        .addAll(Placeholders.setOfflinePlaceholders(target))
                         .add("player", target.getName())
                         .add("gems", String.valueOf(amount))
                         .add("gems_formatted", Methods.format(amount))
                         .add("gems_decimal", Methods.formatDecimal(amount))
                         .build();
 
-                Color.sendMessage(commandSender, "gems-balance", Placeholders.setOfflinePlaceholders(target));
+                Color.sendMessage(commandSender, "gems-balance", placeholders);
             } else Color.sendMessage(commandSender, "invalid-player", Placeholders.setPlaceholders(commandSender));
         }
     }
