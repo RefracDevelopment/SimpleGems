@@ -146,10 +146,10 @@ public class MySQLManager {
     }
 
     public void delete() {
-        execute("DELETE * FROM SimpleGems");
+        execute("DELETE FROM SimpleGems");
     }
 
     public void deletePlayer(UUID uuid) {
-        execute("DELETE * FROM SimpleGems WHERE uuid=?", uuid.toString());
+        execute("DELETE FROM SimpleGems WHERE uuid=?", uuid.toString());
     }
 }

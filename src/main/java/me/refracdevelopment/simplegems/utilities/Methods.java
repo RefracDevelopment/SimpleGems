@@ -7,7 +7,6 @@ import com.mongodb.client.model.ReplaceOptions;
 import de.tr7zw.nbtapi.NBTItem;
 import lombok.experimental.UtilityClass;
 import me.refracdevelopment.simplegems.SimpleGems;
-import me.refracdevelopment.simplegems.manager.data.DataType;
 import me.refracdevelopment.simplegems.player.data.ProfileData;
 import me.refracdevelopment.simplegems.utilities.chat.Color;
 import me.refracdevelopment.simplegems.utilities.chat.Placeholders;

@@ -1,19 +1,20 @@
 package me.refracdevelopment.simplegems.manager.data.sql;
 
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
+import lombok.Getter;
 import me.refracdevelopment.simplegems.manager.data.SelectCall;
 import me.refracdevelopment.simplegems.utilities.Tasks;
 import me.refracdevelopment.simplegems.utilities.chat.Color;
+import org.sqlite.SQLiteDataSource;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.UUID;
 
+@Getter
 public class SQLiteManager {
 
-    private HikariDataSource dataSource;
+    private SQLiteDataSource dataSource;
 
     public void createT() {
         Tasks.runAsync(this::createTables);
@@ -22,15 +23,9 @@ public class SQLiteManager {
     public boolean connect(String path) {
         try {
             Color.log("&aConnecting to SQLite...");
-            HikariConfig config = new HikariConfig();
             Class.forName("org.sqlite.JDBC");
-            config.setDriverClassName("org.sqlite.JDBC");
-            config.setJdbcUrl("jdbc:sqlite:" + path);
-            config.addDataSourceProperty("cachePrepStmts", "true");
-            config.addDataSourceProperty("prepStmtCacheSize", "250");
-            config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
-
-            dataSource = new HikariDataSource(config);
+            dataSource = new SQLiteDataSource();
+            dataSource.setUrl("jdbc:sqlite:" + path);
             Color.log("&aConnected to SQLite!");
             return true;
         } catch (Exception exception) {
@@ -57,16 +52,11 @@ public class SQLiteManager {
     }
 
     public void close() {
-        this.dataSource.close();
-    }
-
-
-    /**
-     * @return A new database connecting, provided by the Hikari pool.
-     * @throws SQLException
-     */
-    public Connection getConnection() throws SQLException {
-        return dataSource.getConnection();
+        try {
+            this.dataSource.getConnection().close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -77,7 +67,7 @@ public class SQLiteManager {
      */
     public void createTable(String name, String info) {
         new Thread(() -> {
-            try (Connection resource = getConnection(); PreparedStatement statement = resource.prepareStatement("CREATE TABLE IF NOT EXISTS " + name + "(" + info + ");")) {
+            try (Connection resource = dataSource.getConnection(); PreparedStatement statement = resource.prepareStatement("CREATE TABLE IF NOT EXISTS " + name + "(" + info + ");")) {
                 statement.execute();
             } catch (SQLException exception) {
                 Color.log("An error occurred while creating database table " + name + ".");
@@ -94,7 +84,7 @@ public class SQLiteManager {
      */
     public void execute(String query, Object... values) {
         new Thread(() -> {
-            try (Connection resource = getConnection(); PreparedStatement statement = resource.prepareStatement(query)) {
+            try (Connection resource = dataSource.getConnection(); PreparedStatement statement = resource.prepareStatement(query)) {
                 for (int i = 0; i < values.length; i++) {
                     statement.setObject((i + 1), values[i]);
                 }
@@ -116,7 +106,7 @@ public class SQLiteManager {
      */
     public void select(String query, SelectCall callback, Object... values) {
         new Thread(() -> {
-            try (Connection resource = getConnection(); PreparedStatement statement = resource.prepareStatement(query)) {
+            try (Connection resource = dataSource.getConnection(); PreparedStatement statement = resource.prepareStatement(query)) {
                 for (int i = 0; i < values.length; i++) {
                     statement.setObject((i + 1), values[i]);
                 }
@@ -138,10 +128,10 @@ public class SQLiteManager {
     }
 
     public void delete() {
-        execute("DELETE * FROM SimpleGems");
+        execute("DELETE FROM SimpleGems");
     }
 
     public void deletePlayer(UUID uuid) {
-        execute("DELETE * FROM SimpleGems WHERE uuid=?", uuid.toString());
+        execute("DELETE FROM SimpleGems WHERE uuid=?", uuid.toString());
     }
 }
