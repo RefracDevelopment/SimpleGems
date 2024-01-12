@@ -33,7 +33,7 @@ public class DownloadUtil {
         Library lib5 = Library.builder()
                 .groupId("org{}slf4j") // "{}" is replaced with ".", useful to avoid unwanted changes made by maven-shade-plugin
                 .artifactId("slf4j-reload4j")
-                .version("2.0.9")
+                .version("2.0.11")
                 .build();
         Library lib6 = Library.builder()
                 .groupId("org{}xerial") // "{}" is replaced with ".", useful to avoid unwanted changes made by maven-shade-plugin
