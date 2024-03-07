@@ -2,8 +2,6 @@ package me.refracdevelopment.simplegems.utilities;
 
 import com.cryptomorin.xseries.ReflectionUtils;
 import com.cryptomorin.xseries.XMaterial;
-import com.mongodb.client.model.Filters;
-import com.mongodb.client.model.ReplaceOptions;
 import de.tr7zw.nbtapi.NBTItem;
 import lombok.experimental.UtilityClass;
 import me.refracdevelopment.simplegems.SimpleGems;
@@ -11,7 +9,6 @@ import me.refracdevelopment.simplegems.player.data.ProfileData;
 import me.refracdevelopment.simplegems.utilities.chat.Color;
 import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
 import me.refracdevelopment.simplegems.utilities.chat.StringPlaceholders;
-import org.bson.Document;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -37,15 +34,6 @@ public class Methods {
     public void saveOffline(OfflinePlayer player, long amount) {
         Tasks.runAsync(() -> {
             switch (SimpleGems.getInstance().getDataType()) {
-                case MONGO:
-                    Document document = new Document();
-
-                    document.put("name", player.getName());
-                    document.put("uuid", player.getUniqueId().toString());
-                    document.put("gems", amount);
-
-                    SimpleGems.getInstance().getMongoManager().getStatsCollection().replaceOne(Filters.eq("uuid", player.getUniqueId().toString()), document, new ReplaceOptions().upsert(true));
-                    break;
                 case MYSQL:
                     SimpleGems.getInstance().getMySQLManager().updatePlayerGems(player.getUniqueId(), amount);
                     break;
@@ -71,15 +59,8 @@ public class Methods {
     public long getOfflineGems(OfflinePlayer player) {
         AtomicLong gems = new AtomicLong(0);
         switch (SimpleGems.getInstance().getDataType()) {
-            case MONGO:
-                Document document = SimpleGems.getInstance().getMongoManager().getStatsCollection().find(Filters.eq("uuid", player.getUniqueId().toString())).first();
-
-                if (document != null) {
-                    return document.getLong("gems");
-                }
-                break;
             case MYSQL:
-                SimpleGems.getInstance().getMySQLManager().select("SELECT * FROM SimpleGems WHERE uuid=?", resultSet -> {
+                SimpleGems.getInstance().getMySQLManager().select("SELECT gems FROM SimpleGems WHERE uuid=?", resultSet -> {
                     try {
                         if (resultSet.next()) {
                             gems.set(resultSet.getLong("gems"));
@@ -90,7 +71,7 @@ public class Methods {
                 }, player.getUniqueId().toString());
                 return gems.get();
             default:
-                SimpleGems.getInstance().getSqLiteManager().select("SELECT * FROM SimpleGems WHERE uuid=?", resultSet -> {
+                SimpleGems.getInstance().getSqLiteManager().select("SELECT gems FROM SimpleGems WHERE uuid=?", resultSet -> {
                     try {
                         if (resultSet.next()) {
                             gems.set(resultSet.getLong("gems"));
@@ -101,7 +82,6 @@ public class Methods {
                 }, player.getUniqueId().toString());
                 return gems.get();
         }
-        return 0;
     }
 
     public boolean hasOfflineGems(OfflinePlayer player, long amount) {
@@ -112,7 +92,7 @@ public class Methods {
         ProfileData profile = SimpleGems.getInstance().getProfileManager().getProfile(player.getUniqueId()).getData();
 
         if (player == target) {
-            Color.sendCustomMessage(player, "&cYou can't pay yourself.");
+            Color.sendMessage(player, "cant-pay-yourself");
             return;
         }
 

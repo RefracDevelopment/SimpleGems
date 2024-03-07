@@ -48,7 +48,7 @@ public class ShopCommand extends SubCommand {
             return;
         }
 
-        if (args.length == 1) {
+        if (args.length != 2) {
             SimpleGems.getInstance().getGemShop().getCategories().forEach((gemShopCategory, gemShopItems) -> {
                 GemShopCategory category = new GemShopCategory(SimpleGems.getInstance().getMenuManager().getPlayerMenuUtility(player), gemShopCategory);
 
@@ -66,30 +66,31 @@ public class ShopCommand extends SubCommand {
 
                 category.open();
             });
-        } else if (args.length == 2) {
-            SimpleGems.getInstance().getGemShop().getCategories().forEach((gemShopCategory, gemShopItems) -> {
-                if (!gemShopCategory.equalsIgnoreCase(args[1])) {
-                    Color.log("The 'categories." + args[1] + "' menu category in 'menus.yml' config file doesn't exist.");
-                    Color.sendMessage(player, "invalid-category");
-                    return;
-                }
-
-                GemShopCategory category = new GemShopCategory(SimpleGems.getInstance().getMenuManager().getPlayerMenuUtility(player), gemShopCategory);
-
-                if (!category.isEnabled()) {
-                    Color.sendMessage(player, "shop-disabled");
-                    return;
-                }
-
-                if (!player.hasPermission(category.getPermission()) && !category.getPermission().isEmpty()) {
-                    player.closeInventory();
-                    Color.sendMessage(player, "no-permission");
-                    return;
-                }
-
-                category.open();
-            });
+            return;
         }
+
+        SimpleGems.getInstance().getGemShop().getCategories().forEach((gemShopCategory, gemShopItems) -> {
+            if (!gemShopCategory.equalsIgnoreCase(args[1])) {
+                Color.log("The 'categories." + args[1] + "' menu category in 'menus.yml' config file doesn't exist.");
+                Color.sendMessage(player, "invalid-category");
+                return;
+            }
+
+            GemShopCategory category = new GemShopCategory(SimpleGems.getInstance().getMenuManager().getPlayerMenuUtility(player), gemShopCategory);
+
+            if (!category.isEnabled()) {
+                Color.sendMessage(player, "shop-disabled");
+                return;
+            }
+
+            if (!player.hasPermission(category.getPermission()) && !category.getPermission().isEmpty()) {
+                player.closeInventory();
+                Color.sendMessage(player, "no-permission");
+                return;
+            }
+
+            category.open();
+        });
     }
 
     @Override

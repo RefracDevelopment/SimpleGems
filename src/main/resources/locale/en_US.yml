@@ -24,6 +24,7 @@ base-command-color: '&e'
 base-command-help: '&eUse &b/%cmd% help &efor command information.'
 
 # Gems Command Messages
+cant-pay-yourself: '&cYou can''t pay yourself.'
 not-enough-gems: '&cYou don''t have enough gems to buy %item%&c.'
 not-enough-pay: '&cYou don''t have enough gems to pay %player%.'
 not-enough-withdraw: '&cYou don''t have enough gems to withdraw.'

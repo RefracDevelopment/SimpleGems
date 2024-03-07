@@ -6,7 +6,7 @@
 #         \/         \/|__|             \/        \/     \/      \/     \/
 
 # This is used for automatic file updating purposes
-config-version: '5'
+config-version: '6'
 
 # The locale to use in the /locale folder
 locale: en_US
@@ -21,7 +21,6 @@ starting-gems: 100
 leaderboard-update-interval: 1800
 
 # Choose your data saving type:
-# MONGODB - Database saving
 # MYSQL/MARIADB - Database saving
 # SQLITE - Local Database saving
 # Default: SQLITE
@@ -39,32 +38,6 @@ mysql:
   username: root
   # Default:
   password: ''
-
-mongodb:
-  use-client-uri:
-    # If you wish to use mongo client URI instead, enable this option
-    # Default: false
-    enabled: false
-    # Default:
-    uri: ''
-  # If your host supports TLS/SSL enable this option
-  # Default: false
-  ssl-enabled: false
-  # Default: 127.0.0.1
-  address: 127.0.0.1
-  # Default: 27017
-  port: '27017'
-  # Default: SimpleGems
-  database: SimpleGems
-  authentication:
-    # Default: false
-    enabled: false
-    # Default: admin
-    database: admin
-    # Default:
-    username: ''
-    # Default:
-    password: ''
 
 gems-top:
   # This is used for viewing top players

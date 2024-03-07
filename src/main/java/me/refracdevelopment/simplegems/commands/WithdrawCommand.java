@@ -42,7 +42,7 @@ public class WithdrawCommand extends SubCommand {
 
         Player player = (Player) commandSender;
 
-        if (args.length == 1) {
+        if (args.length != 2) {
             String baseColor = SimpleGems.getInstance().getLocaleFile().getString("base-command-color");
             Color.sendCustomMessage(commandSender, baseColor + "/" + SimpleGems.getInstance().getCommands().GEMS_COMMAND_NAME + " " + getName() + " " + getSyntax());
             return;

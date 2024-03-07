@@ -1,15 +1,13 @@
 package me.refracdevelopment.simplegems.player.stats;
 
 import lombok.Getter;
+import lombok.Setter;
 
+@Setter
 @Getter
 public class Stat {
 
     private long amount;
-
-    public void setAmount(long amount) {
-        this.amount = amount;
-    }
 
     public void incrementAmount(long amount) {
         this.amount += amount;

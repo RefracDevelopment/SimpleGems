@@ -13,34 +13,19 @@ public class DownloadUtil {
         Library lib = Library.builder()
                 .groupId("org{}mariadb{}jdbc") // "{}" is replaced with ".", useful to avoid unwanted changes made by maven-shade-plugin
                 .artifactId("mariadb-java-client")
-                .version("3.3.1")
+                .version("3.3.3")
                 .build();
         Library lib2 = Library.builder()
-                .groupId("org{}mongodb") // "{}" is replaced with ".", useful to avoid unwanted changes made by maven-shade-plugin
-                .artifactId("mongodb-driver-sync")
-                .version("4.11.1")
-                .build();
-        Library lib3 = Library.builder()
-                .groupId("org{}mongodb") // "{}" is replaced with ".", useful to avoid unwanted changes made by maven-shade-plugin
-                .artifactId("bson")
-                .version("4.11.1")
-                .build();
-        Library lib4 = Library.builder()
-                .groupId("org{}mongodb") // "{}" is replaced with ".", useful to avoid unwanted changes made by maven-shade-plugin
-                .artifactId("mongodb-driver-core")
-                .version("4.11.1")
-                .build();
-        Library lib5 = Library.builder()
                 .groupId("org{}slf4j") // "{}" is replaced with ".", useful to avoid unwanted changes made by maven-shade-plugin
                 .artifactId("slf4j-reload4j")
-                .version("2.0.11")
+                .version("2.0.12")
                 .build();
-        Library lib6 = Library.builder()
+        Library lib3 = Library.builder()
                 .groupId("org{}xerial") // "{}" is replaced with ".", useful to avoid unwanted changes made by maven-shade-plugin
                 .artifactId("sqlite-jdbc")
-                .version("3.44.1.0")
+                .version("3.45.1.0")
                 .build();
-        Library lib7 = Library.builder()
+        Library lib4 = Library.builder()
                 .groupId("com{}zaxxer") // "{}" is replaced with ".", useful to avoid unwanted changes made by maven-shade-plugin
                 .artifactId("HikariCP")
                 .version("4.0.3")
@@ -51,8 +36,5 @@ public class DownloadUtil {
         libraryManager.loadLibrary(lib2);
         libraryManager.loadLibrary(lib3);
         libraryManager.loadLibrary(lib4);
-        libraryManager.loadLibrary(lib5);
-        libraryManager.loadLibrary(lib6);
-        libraryManager.loadLibrary(lib7);
     }
 }

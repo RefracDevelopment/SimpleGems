@@ -1,7 +1,6 @@
-package me.refracdevelopment.simplegems.manager.data.sql;
+package me.refracdevelopment.simplegems.manager.data;
 
 import lombok.Getter;
-import me.refracdevelopment.simplegems.manager.data.SelectCall;
 import me.refracdevelopment.simplegems.utilities.Tasks;
 import me.refracdevelopment.simplegems.utilities.chat.Color;
 import org.sqlite.SQLiteDataSource;
@@ -41,9 +40,9 @@ public class SQLiteManager {
 
     public void createTables() {
         createTable("SimpleGems",
-                "uuid VARCHAR(255) NOT NULL PRIMARY KEY, " +
-                        "name VARCHAR(255) NOT NULL, " +
-                        "gems BIGINT DEFAULT 0 NOT NULL"
+                "uuid VARCHAR(36) NOT NULL PRIMARY KEY, " +
+                        "name VARCHAR(16) NOT NULL, " +
+                        "gems BIGINT(50) NOT NULL DEFAULT 0"
         );
     }
 

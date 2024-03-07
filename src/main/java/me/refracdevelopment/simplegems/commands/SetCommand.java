@@ -40,7 +40,7 @@ public class SetCommand extends SubCommand {
 
     @Override
     public void perform(CommandSender commandSender, String[] args) {
-        if (args.length == 1) {
+        if (!(args.length >= 3)) {
             String baseColor = SimpleGems.getInstance().getLocaleFile().getString("base-command-color");
             Color.sendCustomMessage(commandSender, baseColor + "/" + SimpleGems.getInstance().getCommands().GEMS_COMMAND_NAME + " " + getName() + " " + getSyntax());
             return;
@@ -111,9 +111,7 @@ public class SetCommand extends SubCommand {
     public List<String> getSubcommandArguments(Player player, String[] args) {
         List<String> names = new ArrayList<>();
 
-        Bukkit.getOnlinePlayers().forEach(p -> {
-            names.add(p.getName());
-        });
+        Bukkit.getOnlinePlayers().forEach(p -> names.add(p.getName()));
 
         if (args.length == 2) {
             return names;

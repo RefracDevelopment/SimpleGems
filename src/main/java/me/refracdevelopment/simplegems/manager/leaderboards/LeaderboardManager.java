@@ -4,7 +4,6 @@ import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.utilities.Methods;
 import me.refracdevelopment.simplegems.utilities.Tasks;
 import me.refracdevelopment.simplegems.utilities.chat.Color;
-import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -28,16 +27,6 @@ public class LeaderboardManager {
         cachedMap.clear();
 
         switch (SimpleGems.getInstance().getDataType()) {
-            case MONGO:
-                List<Document> documents = SimpleGems.getInstance().getMongoManager().getStatsCollection().find().into(new ArrayList<>());
-
-                documents.forEach(document -> {
-                    String name = document.getString("name");
-                    long gems = document.getLong("gems");
-
-                    cachedMap.put(name, gems);
-                });
-                break;
             case MYSQL:
                 SimpleGems.getInstance().getMySQLManager().select("SELECT * FROM SimpleGems", resultSet -> {
                     try {
@@ -130,11 +119,9 @@ public class LeaderboardManager {
         private void update() {
             load();
 
-            Tasks.run(() -> {
-                Bukkit.getOnlinePlayers().forEach(onlinePlayer -> {
-                    Color.sendMessage(onlinePlayer, "leaderboard-update");
-                });
-            });
+            Tasks.run(() -> Bukkit.getOnlinePlayers().forEach(onlinePlayer -> {
+                Color.sendMessage(onlinePlayer, "leaderboard-update");
+            }));
         }
     }
 }

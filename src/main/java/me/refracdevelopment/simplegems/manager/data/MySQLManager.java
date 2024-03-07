@@ -1,9 +1,8 @@
-package me.refracdevelopment.simplegems.manager.data.sql;
+package me.refracdevelopment.simplegems.manager.data;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import me.refracdevelopment.simplegems.SimpleGems;
-import me.refracdevelopment.simplegems.manager.data.SelectCall;
 import me.refracdevelopment.simplegems.utilities.Tasks;
 import me.refracdevelopment.simplegems.utilities.chat.Color;
 
@@ -31,7 +30,7 @@ public class MySQLManager {
             HikariConfig config = new HikariConfig();
             Class.forName("org.mariadb.jdbc.Driver");
             config.setDriverClassName("org.mariadb.jdbc.Driver");
-            config.setJdbcUrl("jdbc:mariadb://" + host + ':' + port + '/' + database + "?allowPublicKeyRetrieval=true&useSSL=false");
+            config.setJdbcUrl("jdbc:mariadb://" + host + ':' + port + '/' + database);
             config.setUsername(username);
             config.setPassword(password);
             config.addDataSourceProperty("cachePrepStmts", "true");
@@ -54,9 +53,9 @@ public class MySQLManager {
 
     public void createTables() {
         createTable("SimpleGems",
-                "uuid VARCHAR(255) NOT NULL PRIMARY KEY, " +
-                        "name VARCHAR(255) NOT NULL, " +
-                        "gems BIGINT DEFAULT 0 NOT NULL"
+                "uuid VARCHAR(36) NOT NULL PRIMARY KEY, " +
+                        "name VARCHAR(16), " +
+                        "gems BIGINT(50)"
                 );
     }
 
@@ -139,6 +138,7 @@ public class MySQLManager {
 
     public void updatePlayerGems(UUID uuid, long gems) {
         execute("UPDATE SimpleGems SET gems=? WHERE uuid=?", gems, uuid.toString());
+
     }
 
     public void updatePlayerName(UUID uuid, String name) {

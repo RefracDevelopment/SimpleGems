@@ -32,16 +32,13 @@ public class PAPIExpansion extends PlaceholderExpansion {
     public String onPlaceholderRequest(Player player, @NotNull String params) {
         long gems = SimpleGems.getInstance().getGemsAPI().getGems(player);
 
-        if (params.equalsIgnoreCase("balance")) {
-            return String.valueOf(gems);
+        switch (params) {
+            case "balance_formatted":
+                return Methods.format(gems);
+            case "balance_decimal":
+                return Methods.formatDecimal(gems);
+            default:
+                return String.valueOf(gems);
         }
-        if (params.equalsIgnoreCase("balance_formatted")) {
-            return Methods.format(gems);
-        }
-        if (params.equalsIgnoreCase("balance_decimal")) {
-            return Methods.formatDecimal(gems);
-        }
-
-        return null;
     }
 }

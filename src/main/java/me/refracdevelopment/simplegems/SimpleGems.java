@@ -18,9 +18,8 @@ import me.refracdevelopment.simplegems.manager.configuration.cache.Commands;
 import me.refracdevelopment.simplegems.manager.configuration.cache.Config;
 import me.refracdevelopment.simplegems.manager.configuration.cache.Menus;
 import me.refracdevelopment.simplegems.manager.data.DataType;
-import me.refracdevelopment.simplegems.manager.data.mongo.MongoManager;
-import me.refracdevelopment.simplegems.manager.data.sql.MySQLManager;
-import me.refracdevelopment.simplegems.manager.data.sql.SQLiteManager;
+import me.refracdevelopment.simplegems.manager.data.MySQLManager;
+import me.refracdevelopment.simplegems.manager.data.SQLiteManager;
 import me.refracdevelopment.simplegems.manager.leaderboards.LeaderboardManager;
 import me.refracdevelopment.simplegems.menu.GemShop;
 import me.refracdevelopment.simplegems.utilities.DownloadUtil;
@@ -50,7 +49,6 @@ public final class SimpleGems extends JavaPlugin {
 
     // Managers
     private DataType dataType;
-    private MongoManager mongoManager;
     private MySQLManager mySQLManager;
     private SQLiteManager sqLiteManager;
     private ProfileManager profileManager;
@@ -184,13 +182,6 @@ public final class SimpleGems extends JavaPlugin {
 
     private void loadManagers() {
         switch (getSettings().DATA_TYPE.toUpperCase()) {
-            case "MONGODB":
-            case "MONGO":
-                dataType = DataType.MONGO;
-                mongoManager = new MongoManager();
-                getMongoManager().connect();
-                Color.log("&aEnabled MongoDB support.");
-                break;
             case "MARIADB":
             case "MYSQL":
                 dataType = DataType.MYSQL;
@@ -281,21 +272,19 @@ public final class SimpleGems extends JavaPlugin {
             connection.setRequestProperty("User-Agent", "Mozilla/5.0");
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             String input;
-            StringBuffer response = new StringBuffer();
-            while ((input = reader.readLine()) != null) {
+            StringBuilder response = new StringBuilder();
+            while ((input = reader.readLine()) != null)
                 response.append(input);
-            }
             reader.close();
-            JsonObject object = new JsonParser().parse(response.toString()).getAsJsonObject();
+            JsonObject object = JsonParser.parseString(response.toString()).getAsJsonObject();
 
             if (object.has("plugins")) {
                 JsonObject plugins = object.get("plugins").getAsJsonObject();
                 JsonObject info = plugins.get(this.getDescription().getName()).getAsJsonObject();
                 String version = info.get("version").getAsString();
                 if (version.equals(getDescription().getVersion())) {
-                    if (console) {
+                    if (console)
                         sender.sendMessage(Color.translate("&a" + getDescription().getName() + " is on the latest version."));
-                    }
                 } else {
                     sender.sendMessage(Color.translate(""));
                     sender.sendMessage(Color.translate(""));
@@ -306,7 +295,6 @@ public final class SimpleGems extends JavaPlugin {
                     sender.sendMessage(Color.translate("&aNewest Version: &e" + version));
                     sender.sendMessage(Color.translate(""));
                     sender.sendMessage(Color.translate(""));
-                    return;
                 }
             } else {
                 sender.sendMessage(Color.translate("&cWrong response from update API, contact plugin developer!"));
