@@ -3,35 +3,45 @@ package me.refracdevelopment.simplegems.manager.data;
 import lombok.Getter;
 import me.refracdevelopment.simplegems.utilities.Tasks;
 import me.refracdevelopment.simplegems.utilities.chat.Color;
+import org.bukkit.Bukkit;
 import org.sqlite.SQLiteDataSource;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.UUID;
 
 @Getter
 public class SQLiteManager {
 
     private SQLiteDataSource dataSource;
 
+    public SQLiteManager(String path) {
+        Color.log("&eEnabling SQLite support!");
+        Exception ex = connect(path);
+        if (ex != null) {
+            Color.log("&cThere was an error connecting to your database. Here's the suspect: &e" + ex.getLocalizedMessage());
+            ex.printStackTrace();
+            Bukkit.shutdown();
+        } else {
+            Color.log("&aManaged to successfully connect to: &e" + path + "&a!");
+        }
+        createT();
+    }
+
     public void createT() {
         Tasks.runAsync(this::createTables);
     }
 
-    public boolean connect(String path) {
+    public Exception connect(String path) {
         try {
-            Color.log("&aConnecting to SQLite...");
             Class.forName("org.sqlite.JDBC");
             dataSource = new SQLiteDataSource();
             dataSource.setUrl("jdbc:sqlite:" + path);
-            Color.log("&aConnected to SQLite!");
-            return true;
         } catch (Exception exception) {
-            Color.log("&cCould not connect to SQLite! Error: " + exception.getMessage());
-            exception.printStackTrace();
-            return false;
+            dataSource = null;
+            return exception;
         }
+        return null;
     }
 
     public void shutdown() {
@@ -39,23 +49,32 @@ public class SQLiteManager {
     }
 
     public void createTables() {
-        createTable("SimpleGems",
-                "uuid VARCHAR(36) NOT NULL PRIMARY KEY, " +
-                        "name VARCHAR(16) NOT NULL, " +
-                        "gems BIGINT(50) NOT NULL DEFAULT 0"
-        );
+        createTable("SimpleGems", "uuid VARCHAR(36) NOT NULL PRIMARY KEY, name VARCHAR(16), gems BIGINT(50)");
     }
 
     public boolean isInitiated() {
-        return dataSource != null;
+        try {
+            return dataSource.getConnection() != null;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     public void close() {
         try {
-            this.dataSource.getConnection().close();
+            dataSource.getConnection().close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * @return A new database connecting, provided by the Hikari pool.
+     * @throws SQLException
+     */
+    public Connection getConnection() throws SQLException {
+        return dataSource.getConnection();
     }
 
     /**
@@ -66,7 +85,7 @@ public class SQLiteManager {
      */
     public void createTable(String name, String info) {
         new Thread(() -> {
-            try (Connection resource = dataSource.getConnection(); PreparedStatement statement = resource.prepareStatement("CREATE TABLE IF NOT EXISTS " + name + "(" + info + ");")) {
+            try (Connection resource = getConnection(); PreparedStatement statement = resource.prepareStatement("CREATE TABLE IF NOT EXISTS " + name + "(" + info + ");")) {
                 statement.execute();
             } catch (SQLException exception) {
                 Color.log("An error occurred while creating database table " + name + ".");
@@ -83,7 +102,7 @@ public class SQLiteManager {
      */
     public void execute(String query, Object... values) {
         new Thread(() -> {
-            try (Connection resource = dataSource.getConnection(); PreparedStatement statement = resource.prepareStatement(query)) {
+            try (Connection resource = getConnection(); PreparedStatement statement = resource.prepareStatement(query)) {
                 for (int i = 0; i < values.length; i++) {
                     statement.setObject((i + 1), values[i]);
                 }
@@ -105,7 +124,7 @@ public class SQLiteManager {
      */
     public void select(String query, SelectCall callback, Object... values) {
         new Thread(() -> {
-            try (Connection resource = dataSource.getConnection(); PreparedStatement statement = resource.prepareStatement(query)) {
+            try (Connection resource = getConnection(); PreparedStatement statement = resource.prepareStatement(query)) {
                 for (int i = 0; i < values.length; i++) {
                     statement.setObject((i + 1), values[i]);
                 }
@@ -118,19 +137,19 @@ public class SQLiteManager {
         }).start();
     }
 
-    public void updatePlayerGems(UUID uuid, long gems) {
-        execute("UPDATE SimpleGems SET gems=? WHERE uuid=?", gems, uuid.toString());
+    public void updatePlayerGems(String uuid, long gems) {
+        execute("UPDATE SimpleGems SET gems=? WHERE uuid=?", gems, uuid);
     }
 
-    public void updatePlayerName(UUID uuid, String name) {
-        execute("UPDATE SimpleGems SET name=? WHERE uuid=?", name, uuid.toString());
+    public void updatePlayerName(String uuid, String name) {
+        execute("UPDATE SimpleGems SET name=? WHERE uuid=?", name, uuid);
     }
 
     public void delete() {
         execute("DELETE FROM SimpleGems");
     }
 
-    public void deletePlayer(UUID uuid) {
-        execute("DELETE FROM SimpleGems WHERE uuid=?", uuid.toString());
+    public void deletePlayer(String uuid) {
+        execute("DELETE FROM SimpleGems WHERE uuid=?", uuid);
     }
 }

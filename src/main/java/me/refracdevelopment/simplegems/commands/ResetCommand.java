@@ -73,7 +73,7 @@ public class ResetCommand extends SubCommand {
                 Tasks.runAsync(() -> {
                     switch (SimpleGems.getInstance().getDataType()) {
                         case MYSQL:
-                            SimpleGems.getInstance().getMySQLManager().deletePlayer(target.getPlayer().getUniqueId());
+                            SimpleGems.getInstance().getMySQLManager().deletePlayer(target.getPlayer().getUniqueId().toString());
 
                             Tasks.run(() -> {
                                 Color.sendMessage(commandSender, "gems-reset-player");
@@ -82,7 +82,7 @@ public class ResetCommand extends SubCommand {
                             });
                             break;
                         case SQLITE:
-                            SimpleGems.getInstance().getSqLiteManager().deletePlayer(target.getPlayer().getUniqueId());
+                            SimpleGems.getInstance().getSqLiteManager().deletePlayer(target.getPlayer().getUniqueId().toString());
 
                             Tasks.run(() -> {
                                 Color.sendMessage(commandSender, "gems-reset-player");
@@ -100,14 +100,14 @@ public class ResetCommand extends SubCommand {
             } else if (target.hasPlayedBefore()) {
                 switch (SimpleGems.getInstance().getDataType()) {
                     case MYSQL:
-                        SimpleGems.getInstance().getMySQLManager().deletePlayer(target.getUniqueId());
+                        SimpleGems.getInstance().getMySQLManager().deletePlayer(target.getPlayer().getUniqueId().toString());
 
                         Tasks.run(() -> {
                             Color.sendMessage(commandSender, "gems-reset-player");
                         });
                         break;
                     case SQLITE:
-                        SimpleGems.getInstance().getSqLiteManager().deletePlayer(target.getUniqueId());
+                        SimpleGems.getInstance().getSqLiteManager().deletePlayer(target.getPlayer().getUniqueId().toString());
 
                         Tasks.run(() -> {
                             Color.sendMessage(commandSender, "gems-reset-player");

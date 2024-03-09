@@ -35,7 +35,7 @@ public class PlayerListener implements Listener {
         Player player = event.getPlayer();
         Profile profile = SimpleGems.getInstance().getProfileManager().getProfile(player.getUniqueId());
 
-        Tasks.runAsync(() -> profile.getData().load());
+        Tasks.runAsync(() -> profile.getData().load(player));
 
         if (profile == null || profile.getData() == null) {
             player.kickPlayer(Color.translate(SimpleGems.getInstance().getLocaleFile().getString("kick-messages-error")));
@@ -69,8 +69,7 @@ public class PlayerListener implements Listener {
         if (profile == null) return;
         if (profile.getData() == null) return;
 
-        Tasks.runAsync(() -> profile.getData().save());
-        SimpleGems.getInstance().getProfileManager().getProfiles().remove(player.getUniqueId());
+        Tasks.runAsync(() -> profile.getData().save(player));
     }
 
     @EventHandler

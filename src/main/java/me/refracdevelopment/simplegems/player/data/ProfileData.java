@@ -5,6 +5,7 @@ import lombok.Setter;
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.player.stats.Stat;
 import me.refracdevelopment.simplegems.utilities.chat.Color;
+import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
 import java.util.UUID;
@@ -13,6 +14,7 @@ import java.util.UUID;
 @Setter
 public class ProfileData {
 
+    private final SimpleGems plugin = SimpleGems.getInstance();
     private final String name;
     private final UUID uuid;
 
@@ -24,49 +26,49 @@ public class ProfileData {
     }
 
     // Check if the player exists already if not add them to the database then load and cache their data
-    public void load() {
-        switch (SimpleGems.getInstance().getDataType()) {
+    public void load(Player player) {
+        switch (getPlugin().getDataType()) {
             case MYSQL:
-                SimpleGems.getInstance().getMySQLManager().select("SELECT * FROM SimpleGems WHERE uuid=?", resultSet -> {
+                getPlugin().getMySQLManager().select("SELECT * FROM SimpleGems WHERE uuid=?", resultSet -> {
                     try {
                         if (resultSet.next()) {
                             getGems().setAmount(resultSet.getLong("gems"));
-                            SimpleGems.getInstance().getMySQLManager().updatePlayerName(getUuid(), getName());
+                            getPlugin().getMySQLManager().updatePlayerName(player.getUniqueId().toString(), player.getName());
                         } else {
-                            SimpleGems.getInstance().getMySQLManager().execute("INSERT INTO SimpleGems (uuid, name, gems) VALUES (?,?,?)",
-                                    getUuid().toString(), getName(), 0);
+                            getPlugin().getMySQLManager().execute("INSERT INTO SimpleGems (uuid, name, gems) VALUES (?,?,?)",
+                                    player.getUniqueId().toString(), getName(), 0L);
                         }
                     } catch (SQLException exception) {
                         Color.log("MySQL Error: " + exception.getMessage());
                     }
-                }, getUuid().toString());
+                }, player.getUniqueId().toString());
                 break;
             default:
-                SimpleGems.getInstance().getSqLiteManager().select("SELECT * FROM SimpleGems WHERE uuid=?", resultSet -> {
+                getPlugin().getSqLiteManager().select("SELECT * FROM SimpleGems WHERE uuid=?", resultSet -> {
                     try {
                         if (resultSet.next()) {
                             getGems().setAmount(resultSet.getLong("gems"));
-                            SimpleGems.getInstance().getSqLiteManager().updatePlayerName(getUuid(), getName());
+                            getPlugin().getSqLiteManager().updatePlayerName(player.getUniqueId().toString(), player.getName());
                         } else {
-                            SimpleGems.getInstance().getSqLiteManager().execute("INSERT INTO SimpleGems (uuid, name, gems) VALUES (?,?,?)",
-                                    getUuid().toString(), getName(), 0);
+                            getPlugin().getSqLiteManager().execute("INSERT INTO SimpleGems (uuid, name, gems) VALUES (?,?,?)",
+                                    player.getUniqueId().toString(), player.getName(), 0L);
                         }
                     } catch (SQLException exception) {
                         Color.log("SQLite Error: " + exception.getMessage());
                     }
-                }, getUuid().toString());
+                }, player.getUniqueId().toString());
                 break;
         }
     }
 
     // Save the player to the database
-    public void save() {
-        switch (SimpleGems.getInstance().getDataType()) {
+    public void save(Player player) {
+        switch (getPlugin().getDataType()) {
             case MYSQL:
-                SimpleGems.getInstance().getMySQLManager().updatePlayerGems(getUuid(), getGems().getAmount());
+                getPlugin().getMySQLManager().updatePlayerGems(player.getUniqueId().toString(), getGems().getAmount());
                 break;
             default:
-                SimpleGems.getInstance().getSqLiteManager().updatePlayerGems(getUuid(), getGems().getAmount());
+                getPlugin().getSqLiteManager().updatePlayerGems(player.getUniqueId().toString(), getGems().getAmount());
                 break;
         }
     }

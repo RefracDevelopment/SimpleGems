@@ -41,7 +41,7 @@ public class ReloadCommand extends SubCommand {
         }
 
         Bukkit.getScheduler().cancelTasks(SimpleGems.getInstance());
-        SimpleGems.getInstance().reloadFiles();
+        reloadFiles();
         SimpleGems.getInstance().getGemShop().load();
         SimpleGems.getInstance().getLeaderboardManager().updateTask();
         Color.sendMessage(commandSender, "command-reload-success");
@@ -52,4 +52,20 @@ public class ReloadCommand extends SubCommand {
         return null;
     }
 
+    private void reloadFiles() {
+        // Files
+        SimpleGems.getInstance().getConfigFile().reload();
+        SimpleGems.getInstance().getMenusFile().reload();
+        SimpleGems.getInstance().getCommandsFile().reload();
+        SimpleGems.getInstance().getLocaleFile().reload();
+
+        // Cache
+        SimpleGems.getInstance().getSettings().loadConfig();
+        SimpleGems.getInstance().getMenus().loadConfig();
+        SimpleGems.getInstance().getCommands().loadConfig();
+
+        Color.log("&c==========================================");
+        Color.log("&eAll files have been reloaded correctly!");
+        Color.log("&c==========================================");
+    }
 }

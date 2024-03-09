@@ -128,7 +128,7 @@ public class SimpleGemsAPI {
         if (event.isCancelled()) return;
 
         getProfileData(player).getGems().incrementAmount(amount);
-        Tasks.runAsync(() -> getProfileData(player).save());
+        Tasks.runAsync(() -> getProfileData(player).save(player));
     }
 
     /**
@@ -156,7 +156,7 @@ public class SimpleGemsAPI {
         if (event.isCancelled()) return;
 
         getProfileData(player).getGems().decrementAmount(amount);
-        Tasks.runAsync(() -> getProfileData(player).save());
+        Tasks.runAsync(() -> getProfileData(player).save(player));
     }
 
     /**
@@ -184,7 +184,7 @@ public class SimpleGemsAPI {
         if (event.isCancelled()) return;
 
         getProfileData(player).getGems().setAmount(amount);
-        Tasks.runAsync(() -> getProfileData(player).save());
+        Tasks.runAsync(() -> getProfileData(player).save(player));
     }
 
     /**

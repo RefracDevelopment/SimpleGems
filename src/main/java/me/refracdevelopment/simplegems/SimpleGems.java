@@ -154,7 +154,7 @@ public final class SimpleGems extends JavaPlugin {
         }
     }
 
-    public void loadFiles() {
+    private void loadFiles() {
         // Files
         configFile = new ConfigFile("config.yml");
         menusFile = new ConfigFile("menus.yml");
@@ -165,19 +165,10 @@ public final class SimpleGems extends JavaPlugin {
         settings = new Config();
         menus = new Menus();
         commands = new Commands();
-    }
 
-    public void reloadFiles() {
-        // Files
-        getConfigFile().reload();
-        getMenusFile().reload();
-        getCommandsFile().reload();
-        getLocaleFile().reload();
-
-        // Cache
-        getSettings().loadConfig();
-        getMenus().loadConfig();
-        getCommands().loadConfig();
+        Color.log("&c==========================================");
+        Color.log("&eAll files have been loaded correctly!");
+        Color.log("&c==========================================");
     }
 
     private void loadManagers() {
@@ -186,14 +177,10 @@ public final class SimpleGems extends JavaPlugin {
             case "MYSQL":
                 dataType = DataType.MYSQL;
                 mySQLManager = new MySQLManager();
-                getMySQLManager().connect();
-                getMySQLManager().createT();
                 break;
             default:
                 dataType = DataType.SQLITE;
-                sqLiteManager = new SQLiteManager();
-                getSqLiteManager().connect(getDataFolder().getAbsolutePath() + File.separator + "gems.db");
-                getSqLiteManager().createT();
+                sqLiteManager = new SQLiteManager(getDataFolder().getAbsolutePath() + File.separator + "gems.db");
                 break;
         }
 
@@ -273,33 +260,35 @@ public final class SimpleGems extends JavaPlugin {
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             String input;
             StringBuilder response = new StringBuilder();
-            while ((input = reader.readLine()) != null)
+            while ((input = reader.readLine()) != null) {
                 response.append(input);
+            }
             reader.close();
             JsonObject object = JsonParser.parseString(response.toString()).getAsJsonObject();
 
             if (object.has("plugins")) {
                 JsonObject plugins = object.get("plugins").getAsJsonObject();
-                JsonObject info = plugins.get(this.getDescription().getName()).getAsJsonObject();
+                JsonObject info = plugins.get(getDescription().getName()).getAsJsonObject();
                 String version = info.get("version").getAsString();
-                if (version.equals(getDescription().getVersion())) {
-                    if (console)
+                boolean archived = info.get("archived").getAsBoolean();
+
+                if (archived) {
+                    sender.sendMessage(Color.translate("&cThis plugin has been marked as &e&l'Archived' &cby RefracDevelopment."));
+                    sender.sendMessage(Color.translate("&cThis version will continue to work but will not receive updates or support."));
+                } else if (version.equals(getDescription().getVersion())) {
+                    if (console) {
                         sender.sendMessage(Color.translate("&a" + getDescription().getName() + " is on the latest version."));
+                    }
                 } else {
                     sender.sendMessage(Color.translate(""));
-                    sender.sendMessage(Color.translate(""));
-                    sender.sendMessage(Color.translate("&cYour " + getDescription().getName() + " version is out of date!"));
-                    sender.sendMessage(Color.translate("&cWe recommend updating ASAP!"));
-                    sender.sendMessage(Color.translate(""));
-                    sender.sendMessage(Color.translate("&cYour Version: &e" + getDescription().getVersion()));
-                    sender.sendMessage(Color.translate("&aNewest Version: &e" + version));
-                    sender.sendMessage(Color.translate(""));
+                    sender.sendMessage(Color.translate("&cYour " + getDescription().getName() + " version &7(" + getDescription().getVersion() + ") &cis out of date! Newest: &e&lv" + version));
                     sender.sendMessage(Color.translate(""));
                 }
             } else {
                 sender.sendMessage(Color.translate("&cWrong response from update API, contact plugin developer!"));
             }
-        } catch (Exception ex) {
+        } catch (
+                Exception ex) {
             sender.sendMessage(Color.translate("&cFailed to get updater check. (" + ex.getMessage() + ")"));
         }
     }

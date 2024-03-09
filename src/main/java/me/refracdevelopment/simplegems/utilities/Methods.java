@@ -35,10 +35,10 @@ public class Methods {
         Tasks.runAsync(() -> {
             switch (SimpleGems.getInstance().getDataType()) {
                 case MYSQL:
-                    SimpleGems.getInstance().getMySQLManager().updatePlayerGems(player.getUniqueId(), amount);
+                    SimpleGems.getInstance().getMySQLManager().updatePlayerGems(player.getUniqueId().toString(), amount);
                     break;
                 default:
-                    SimpleGems.getInstance().getSqLiteManager().updatePlayerGems(player.getUniqueId(), amount);
+                    SimpleGems.getInstance().getSqLiteManager().updatePlayerGems(player.getUniqueId().toString(), amount);
                     break;
             }
         });
