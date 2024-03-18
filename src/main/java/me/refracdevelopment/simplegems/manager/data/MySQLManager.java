@@ -45,6 +45,10 @@ public class MySQLManager {
             config.setJdbcUrl("jdbc:mariadb://" + host + ':' + port + '/' + database);
             config.setUsername(username);
             config.setPassword(password);
+            config.addDataSourceProperty("cachePrepStmts", "true");
+            config.addDataSourceProperty("prepStmtCacheSize", "250");
+            config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+
             hikariDataSource = new HikariDataSource(config);
         } catch (Exception exception) {
             hikariDataSource = null;
