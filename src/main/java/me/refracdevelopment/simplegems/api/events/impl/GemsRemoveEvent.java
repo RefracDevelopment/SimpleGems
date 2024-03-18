@@ -9,8 +9,8 @@ public class GemsRemoveEvent extends SimpleEvent {
 
     private final long gems;
 
-    public GemsRemoveEvent(Player player, long amount) {
-        super(player);
+    public GemsRemoveEvent(Player target, long amount) {
+        super(target);
         this.gems = amount;
     }
 }

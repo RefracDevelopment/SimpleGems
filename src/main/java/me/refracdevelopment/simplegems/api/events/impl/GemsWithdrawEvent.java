@@ -9,8 +9,8 @@ public class GemsWithdrawEvent extends SimpleEvent {
 
     private final long gems;
 
-    public GemsWithdrawEvent(Player player, long amount) {
-        super(player);
+    public GemsWithdrawEvent(Player target, long amount) {
+        super(target);
         this.gems = amount;
     }
 }

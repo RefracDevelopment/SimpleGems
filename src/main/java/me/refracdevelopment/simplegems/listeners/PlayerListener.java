@@ -26,8 +26,8 @@ public class PlayerListener implements Listener {
     private final UUID getDevUUID2 = UUID.fromString("ab898e40-9088-45eb-9d69-e0b78e872627");
 
     @EventHandler
-    public void onPreLogin(AsyncPlayerPreLoginEvent event) {
-        SimpleGems.getInstance().getProfileManager().handleProfileCreation(event.getUniqueId(), event.getName());
+    public void onLogin(PlayerLoginEvent event) {
+        SimpleGems.getInstance().getProfileManager().handleProfileCreation(event.getPlayer().getUniqueId(), event.getPlayer().getName());
     }
 
     @EventHandler
@@ -42,22 +42,21 @@ public class PlayerListener implements Listener {
             return;
         }
 
-        if (!player.hasPlayedBefore()) {
+        if (!player.hasPlayedBefore())
             SimpleGems.getInstance().getGemsAPI().giveGems(player, SimpleGems.getInstance().getSettings().STARTING_GEMS);
-        }
 
-        if (player.getUniqueId().equals(getDevUUID)) {
+        if (player.getUniqueId().equals(getDevUUID))
             sendDevMessage(player);
-        } else if (player.getUniqueId().equals(getDevUUID2)) {
+        else if (player.getUniqueId().equals(getDevUUID2))
             sendDevMessage(player);
-        }
     }
 
     @EventHandler
     public void onReload(PlayerCommandPreprocessEvent event) {
         Player player = event.getPlayer();
 
-        if (!event.getMessage().equalsIgnoreCase("/reload confirm")) return;
+        if (!event.getMessage().equalsIgnoreCase("/reload confirm"))
+            return;
 
         Color.sendCustomMessage(player, "&cUse of /reload is not recommended as it can cause issues often cases. Please restart your server when possible.");
     }
@@ -66,8 +65,11 @@ public class PlayerListener implements Listener {
     public void onQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
         Profile profile = SimpleGems.getInstance().getProfileManager().getProfile(player.getUniqueId());
-        if (profile == null) return;
-        if (profile.getData() == null) return;
+
+        if (profile == null)
+            return;
+        if (profile.getData() == null)
+            return;
 
         Tasks.runAsync(() -> profile.getData().save(player));
     }
@@ -77,14 +79,17 @@ public class PlayerListener implements Listener {
         Player player = event.getPlayer();
         Profile profile = SimpleGems.getInstance().getProfileManager().getProfile(player.getUniqueId());
 
-        if (profile == null) return;
-        if (profile.getData() == null) return;
+        if (profile == null)
+            return;
+        if (profile.getData() == null)
+            return;
 
         ItemStack item = player.getItemInHand();
         ItemStack gemsItem;
         ItemMeta itemMeta = item.getItemMeta();
 
-        if (itemMeta == null) return;
+        if (itemMeta == null)
+            return;
 
         NBTItem nbtItem = new NBTItem(item);
 
@@ -94,7 +99,9 @@ public class PlayerListener implements Listener {
 
             gemsItem = SimpleGems.getInstance().getGemsAPI().getGemsItem(uuid, foundValue);
 
-            if (!item.isSimilar(gemsItem)) return;
+            if (!item.isSimilar(gemsItem))
+                return;
+
             if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 event.setCancelled(true);
                 player.updateInventory();
@@ -109,8 +116,9 @@ public class PlayerListener implements Listener {
                     .add("gems_decimal", Methods.formatDecimal(foundValue))
                     .build();
 
-            player.getInventory().removeItem(item);
             SimpleGems.getInstance().getGemsAPI().giveGems(player, foundValue);
+
+            player.getInventory().removeItem(item);
             player.updateInventory();
             Color.sendMessage(player, "gems-deposited", placeholders);
         }
@@ -118,20 +126,21 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onItemFrame(PlayerInteractEntityEvent event) {
-        if (!(event.getRightClicked() instanceof ItemFrame)) return;
+        if (!(event.getRightClicked() instanceof ItemFrame))
+            return;
 
         Player player = event.getPlayer();
 
         ItemStack item = player.getItemInHand();
         ItemMeta itemMeta = item.getItemMeta();
 
-        if (itemMeta == null) return;
+        if (itemMeta == null)
+            return;
 
         NBTItem nbtItem = new NBTItem(item);
 
-        if (nbtItem.hasTag("gems-item-value")) {
+        if (nbtItem.hasTag("gems-item-value"))
             event.setCancelled(true);
-        }
     }
 
     private void sendDevMessage(Player player) {

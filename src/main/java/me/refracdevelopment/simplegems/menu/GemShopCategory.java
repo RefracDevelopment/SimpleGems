@@ -40,30 +40,32 @@ public class GemShopCategory extends Menu {
     public void handleMenu(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
 
-        if (playerMenuUtility == null) return;
-        if (event.getCurrentItem() == null) return;
-        if (event.getCurrentItem().getItemMeta() == null) return;
+        if (playerMenuUtility == null)
+            return;
+        if (event.getCurrentItem() == null)
+            return;
+        if (event.getCurrentItem().getItemMeta() == null)
+            return;
 
         SimpleGems.getInstance().getGemShop().getItems(categoryName).forEach(item -> {
-            if (item.getCategory().equalsIgnoreCase(categoryName) && item.getSlot() == event.getRawSlot()) {
+            if (item.getSlot() == event.getRawSlot())
                 item.handleItem(player);
-            }
         });
     }
 
     @Override
     public void setMenuItems() {
-        if (playerMenuUtility == null) return;
+        if (playerMenuUtility == null)
+            return;
 
         SimpleGems.getInstance().getGemShop().getItems(categoryName).forEach(item -> {
-            if (item.getCategory().equalsIgnoreCase(categoryName)) {
-                getInventory().setItem(item.getSlot(), item.getItem(playerMenuUtility.getOwner()));
-            }
+            getInventory().setItem(item.getSlot(), item.getItem(playerMenuUtility.getOwner()));
         });
 
         if (SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getBoolean(categoryName + ".fill.enabled")) {
             for (int i = 0; i < getSlots(); i++) {
-                if (getInventory().getItem(i) != null) continue;
+                if (getInventory().getItem(i) != null)
+                    continue;
 
                 String name = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getString(categoryName + ".fill.name");
                 Material material = Utilities.getMaterial(SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getString(categoryName + ".fill.material")).parseMaterial();

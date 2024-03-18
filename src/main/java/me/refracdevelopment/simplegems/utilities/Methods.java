@@ -112,7 +112,10 @@ public class Methods {
         SimpleGems.getInstance().getGemsAPI().giveGems(target, amount);
 
         Color.sendMessage(player, "gems-paid", placeholders);
-        if (silent) return;
+
+        if (silent)
+            return;
+
         Color.sendMessage(target, "gems-received", placeholders);
     }
 
@@ -183,13 +186,11 @@ public class Methods {
             item.toItemStack().setItemMeta(itemMeta);
         }
 
-        if (SimpleGems.getInstance().getSettings().GEMS_ITEM_CUSTOM_DATA) {
-            if (ReflectionUtils.MINOR_NUMBER >= 14) {
+        if (SimpleGems.getInstance().getSettings().GEMS_ITEM_CUSTOM_DATA)
+            if (ReflectionUtils.MINOR_NUMBER >= 14)
                 item.setCustomModelData(SimpleGems.getInstance().getSettings().GEMS_ITEM_CUSTOM_MODEL_DATA);
-            } else {
+            else
                 Color.log("&cAn error occurred when trying to set custom model data. Make sure your only using custom model data when on 1.14+.");
-            }
-        }
 
         // Attempt to insert a NBT tag of the gems value instead of filling the inventory
 

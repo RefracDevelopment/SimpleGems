@@ -2,7 +2,7 @@
 # If you edit the name/aliases at the top of this file, you will need to restart the server to see all the changes applied properly.
 
 # This is used for automatic file updating purposes
-config-version: '5'
+config-version: "8"
 
 name: gems
 aliases:

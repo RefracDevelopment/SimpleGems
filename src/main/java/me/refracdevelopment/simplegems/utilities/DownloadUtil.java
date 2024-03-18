@@ -23,7 +23,7 @@ public class DownloadUtil {
         Library lib3 = Library.builder()
                 .groupId("org{}xerial") // "{}" is replaced with ".", useful to avoid unwanted changes made by maven-shade-plugin
                 .artifactId("sqlite-jdbc")
-                .version("3.45.1.0")
+                .version("3.45.2.0")
                 .build();
         Library lib4 = Library.builder()
                 .groupId("com{}zaxxer") // "{}" is replaced with ".", useful to avoid unwanted changes made by maven-shade-plugin

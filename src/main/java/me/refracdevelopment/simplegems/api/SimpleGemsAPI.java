@@ -47,9 +47,8 @@ public class SimpleGemsAPI {
      * @return online player's gems amount
      */
     public long getGems(Player player) {
-        if (getProfileData(player) == null) {
+        if (getProfileData(player) == null)
             return 0;
-        }
 
         return getProfileData(player).getGems().getAmount();
     }
@@ -73,7 +72,8 @@ public class SimpleGemsAPI {
      * @param amount gems to remove and turn into an item
      */
     public void giveGemsItem(Player player, long amount) {
-        if (getProfileData(player) == null) return;
+        if (getProfileData(player) == null)
+            return;
 
         Methods.giveGemsItem(player, amount);
     }
@@ -97,7 +97,8 @@ public class SimpleGemsAPI {
      * @return If the player has enough gems
      */
     public boolean hasGems(Player player, long amount) {
-        if (getProfileData(player) == null) return false;
+        if (getProfileData(player) == null)
+            return false;
 
         return getProfileData(player).getGems().hasAmount(amount);
     }
@@ -120,12 +121,14 @@ public class SimpleGemsAPI {
      * @param amount amount of gems to give
      */
     public void giveGems(Player player, long amount) {
-        if (getProfileData(player) == null) return;
+        if (getProfileData(player) == null)
+            return;
 
         GemsAddEvent event = new GemsAddEvent(player, amount);
         Bukkit.getPluginManager().callEvent(event);
 
-        if (event.isCancelled()) return;
+        if (event.isCancelled())
+            return;
 
         getProfileData(player).getGems().incrementAmount(amount);
         Tasks.runAsync(() -> getProfileData(player).save(player));
@@ -148,12 +151,14 @@ public class SimpleGemsAPI {
      * @param amount amount of gems to take
      */
     public void takeGems(Player player, long amount) {
-        if (getProfileData(player) == null) return;
+        if (getProfileData(player) == null)
+            return;
 
         GemsRemoveEvent event = new GemsRemoveEvent(player, amount);
         Bukkit.getPluginManager().callEvent(event);
 
-        if (event.isCancelled()) return;
+        if (event.isCancelled())
+            return;
 
         getProfileData(player).getGems().decrementAmount(amount);
         Tasks.runAsync(() -> getProfileData(player).save(player));
@@ -172,19 +177,21 @@ public class SimpleGemsAPI {
     /**
      * Used to set player gems.
      *
-     * @param player online player
+     * @param target online player
      * @param amount amount of gems to set
      */
-    public void setGems(Player player, long amount) {
-        if (getProfileData(player) == null) return;
+    public void setGems(Player target, long amount) {
+        if (getProfileData(target) == null)
+            return;
 
-        GemsSetEvent event = new GemsSetEvent(player, amount);
+        GemsSetEvent event = new GemsSetEvent(target, amount);
         Bukkit.getPluginManager().callEvent(event);
 
-        if (event.isCancelled()) return;
+        if (event.isCancelled())
+            return;
 
-        getProfileData(player).getGems().setAmount(amount);
-        Tasks.runAsync(() -> getProfileData(player).save(player));
+        getProfileData(target).getGems().setAmount(amount);
+        Tasks.runAsync(() -> getProfileData(target).save(target));
     }
 
     /**
@@ -205,10 +212,14 @@ public class SimpleGemsAPI {
      * @param amount amount of gems to pay
      */
     public void payGems(Player player, Player target, long amount, boolean silent) {
+        if (getProfileData(player) == null)
+            return;
+
         GemsPayEvent event = new GemsPayEvent(player, target, amount);
         Bukkit.getPluginManager().callEvent(event);
 
-        if (event.isCancelled()) return;
+        if (event.isCancelled())
+            return;
 
         Methods.payGems(player, target, amount, silent);
     }
@@ -221,6 +232,9 @@ public class SimpleGemsAPI {
      * @param amount amount of gems to pay
      */
     public void payOfflineGems(Player player, OfflinePlayer target, long amount) {
+        if (getProfileData(player) == null)
+            return;
+
         Methods.payOfflineGems(player, target, amount);
     }
 
@@ -231,10 +245,14 @@ public class SimpleGemsAPI {
      * @param amount amount of gems to withdraw
      */
     public void withdrawGems(Player player, long amount) {
+        if (getProfileData(player) == null)
+            return;
+
         GemsWithdrawEvent event = new GemsWithdrawEvent(player, amount);
         Bukkit.getPluginManager().callEvent(event);
 
-        if (event.isCancelled()) return;
+        if (event.isCancelled())
+            return;
 
         Methods.withdrawGems(player, amount);
     }

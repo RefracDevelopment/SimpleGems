@@ -36,7 +36,7 @@ public class ProfileData {
                             getPlugin().getMySQLManager().updatePlayerName(player.getUniqueId().toString(), player.getName());
                         } else {
                             getPlugin().getMySQLManager().execute("INSERT INTO SimpleGems (uuid, name, gems) VALUES (?,?,?)",
-                                    player.getUniqueId().toString(), getName(), 0L);
+                                    player.getUniqueId().toString(), player.getName(), 0L);
                         }
                     } catch (SQLException exception) {
                         Color.log("MySQL Error: " + exception.getMessage());

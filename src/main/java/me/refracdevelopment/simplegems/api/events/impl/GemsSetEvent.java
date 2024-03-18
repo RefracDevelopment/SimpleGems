@@ -9,8 +9,8 @@ public class GemsSetEvent extends SimpleEvent {
 
     private final long gems;
 
-    public GemsSetEvent(Player player, long amount) {
-        super(player);
+    public GemsSetEvent(Player target, long amount) {
+        super(target);
         this.gems = amount;
     }
 }
