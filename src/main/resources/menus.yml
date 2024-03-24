@@ -40,12 +40,12 @@ categories:
     fill:
       enabled: true
       material: BLACK_STAINED_GLASS_PANE
-      durability: 0
+      data: 0
       name: "&7"
     items:
       infoandbalanceItem:
         material: SUNFLOWER
-        durability: 0
+        data: 0
         skulls: false
         headDatabase: false
         skullOwner: ""
@@ -71,7 +71,7 @@ categories:
         skullOwner: ""
         customData: false
         customModelData: YOURIDHERE
-        durability: 0
+        data: 0
         glow: false
         name: "&dMagic Stick"
         lore:
