@@ -104,8 +104,10 @@ public class GiveCommand extends SubCommand {
                     .add("gems_decimal", Methods.formatDecimal(amount))
                     .build();
 
+            if (message.contains("-s")) return;
             Color.sendMessage(commandSender, "gems-given", placeholders);
-        } else Color.sendMessage(commandSender, "invalid-player", Placeholders.setPlaceholders(commandSender));
+        } else
+            Color.sendMessage(commandSender, "invalid-player");
     }
 
     @Override
@@ -114,9 +116,9 @@ public class GiveCommand extends SubCommand {
 
         Bukkit.getOnlinePlayers().forEach(p -> names.add(p.getName()));
 
-        if (args.length == 2) {
+        if (args.length == 2)
             return names;
-        }
+
         return null;
     }
 }

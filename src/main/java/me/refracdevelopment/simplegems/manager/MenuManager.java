@@ -12,6 +12,7 @@ public class MenuManager {
 
     public PlayerMenuUtility getPlayerMenuUtility(Player p) {
         PlayerMenuUtility playerMenuUtility;
+
         if (!(playerMenuUtilityMap.containsKey(p.getUniqueId()))) {
 
             playerMenuUtility = new PlayerMenuUtility(p);
@@ -19,6 +20,7 @@ public class MenuManager {
 
             return playerMenuUtility;
         }
+
         return playerMenuUtilityMap.get(p.getUniqueId());
     }
 

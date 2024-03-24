@@ -14,11 +14,13 @@ public class MenuListener implements Listener {
     @EventHandler
     public void onMenuClick(InventoryClickEvent event) {
         InventoryHolder holder = event.getInventory().getHolder();
+
         if (holder instanceof Menu) {
             event.setCancelled(true);
-            if (event.getCurrentItem() == null) {
+
+            if (event.getCurrentItem() == null)
                 return;
-            }
+
             Menu menu = (Menu) holder;
             menu.handleMenu(event);
         }
@@ -29,9 +31,7 @@ public class MenuListener implements Listener {
         InventoryHolder holder = event.getInventory().getHolder();
         Player player = (Player) event.getPlayer();
 
-        if (holder instanceof Menu) {
+        if (holder instanceof Menu)
             SimpleGems.getInstance().getMenuManager().remove(player);
-        }
     }
-
 }

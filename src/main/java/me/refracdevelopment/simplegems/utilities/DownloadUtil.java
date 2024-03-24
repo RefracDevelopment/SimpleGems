@@ -1,15 +1,13 @@
 package me.refracdevelopment.simplegems.utilities;
 
-import lombok.experimental.UtilityClass;
-import me.refracdevelopment.simplegems.SimpleGems;
 import net.byteflux.libby.BukkitLibraryManager;
 import net.byteflux.libby.Library;
+import org.bukkit.plugin.java.JavaPlugin;
 
-@UtilityClass
 public class DownloadUtil {
 
-    public void downloadAndEnable() {
-        BukkitLibraryManager libraryManager = new BukkitLibraryManager(SimpleGems.getInstance());
+    public void downloadAndEnable(JavaPlugin plugin) {
+        BukkitLibraryManager libraryManager = new BukkitLibraryManager(plugin);
         Library lib = Library.builder()
                 .groupId("org{}mariadb{}jdbc") // "{}" is replaced with ".", useful to avoid unwanted changes made by maven-shade-plugin
                 .artifactId("mariadb-java-client")

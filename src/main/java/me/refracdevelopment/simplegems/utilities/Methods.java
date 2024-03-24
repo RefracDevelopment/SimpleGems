@@ -174,7 +174,7 @@ public class Methods {
 
     public ItemStack getGemsItem(UUID uuid, long amount) {
         String name = SimpleGems.getInstance().getSettings().GEMS_ITEM_NAME;
-        XMaterial material = Utilities.getMaterial(SimpleGems.getInstance().getSettings().GEMS_ITEM_MATERIAL);
+        XMaterial material = getMaterial(SimpleGems.getInstance().getSettings().GEMS_ITEM_MATERIAL);
         int data = SimpleGems.getInstance().getSettings().GEMS_ITEM_DATA;
         List<String> lore = SimpleGems.getInstance().getSettings().GEMS_ITEM_LORE;
         ItemBuilder item = new ItemBuilder(material.parseMaterial(), 1);
@@ -216,7 +216,7 @@ public class Methods {
     }
 
     public String formatDecimal(long amount) {
-        DecimalFormat decimalFormat = new DecimalFormat("###.###");
+        DecimalFormat decimalFormat = new DecimalFormat("###,###");
         return decimalFormat.format(amount);
     }
 
@@ -244,5 +244,15 @@ public class Methods {
             return NumberFormat.getNumberInstance(Locale.US).format(amount);
         }
         return fin;
+    }
+
+    public XMaterial getMaterial(String source) {
+        XMaterial material;
+        try {
+            material = XMaterial.matchXMaterial(source).get();
+        } catch (Exception e) {
+            material = XMaterial.REDSTONE_BLOCK;
+        }
+        return material;
     }
 }

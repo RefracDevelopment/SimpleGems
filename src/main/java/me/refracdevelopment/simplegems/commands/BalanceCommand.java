@@ -65,7 +65,8 @@ public class BalanceCommand extends SubCommand {
                     .build();
 
             Color.sendMessage(commandSender, "gems-balance", placeholders);
-        } else Color.sendMessage(commandSender, "invalid-player", Placeholders.setPlaceholders(commandSender));
+        } else
+            Color.sendMessage(commandSender, "invalid-player");
     }
 
     @Override
@@ -74,9 +75,9 @@ public class BalanceCommand extends SubCommand {
 
         Bukkit.getOnlinePlayers().forEach(p -> names.add(p.getName()));
 
-        if (args.length == 2) {
+        if (args.length == 2)
             return names;
-        }
+
         return null;
     }
 }

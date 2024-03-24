@@ -113,8 +113,10 @@ public class TakeCommand extends SubCommand {
 
             SimpleGems.getInstance().getGemsAPI().takeOfflineGems(target, amount);
 
+            if (message.contains("-s")) return;
             Color.sendMessage(commandSender, "gems-taken", placeholders);
-        } else Color.sendMessage(commandSender, "invalid-player");
+        } else
+            Color.sendMessage(commandSender, "invalid-player");
     }
 
     @Override
@@ -123,9 +125,9 @@ public class TakeCommand extends SubCommand {
 
         Bukkit.getOnlinePlayers().forEach(p -> names.add(p.getName()));
 
-        if (args.length == 2) {
+        if (args.length == 2)
             return names;
-        }
+
         return null;
     }
 }

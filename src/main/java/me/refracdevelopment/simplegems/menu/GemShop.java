@@ -16,10 +16,11 @@ public class GemShop {
 
     public GemShop() {
         this.categories = new HashMap<>();
-        load();
+
+        setupCustomMenuData();
     }
 
-    public void load() {
+    public void setupCustomMenuData() {
         getCategories().clear();
 
         List<GemShopItem> items = new ArrayList<>();

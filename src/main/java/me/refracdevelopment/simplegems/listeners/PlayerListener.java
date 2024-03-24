@@ -102,7 +102,7 @@ public class PlayerListener implements Listener {
             if (!item.isSimilar(gemsItem))
                 return;
 
-            if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 event.setCancelled(true);
                 player.updateInventory();
                 return;

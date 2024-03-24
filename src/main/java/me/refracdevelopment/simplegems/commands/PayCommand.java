@@ -88,7 +88,8 @@ public class PayCommand extends SubCommand {
             }
 
             SimpleGems.getInstance().getGemsAPI().payOfflineGems(player, target, amount);
-        } else Color.sendMessage(player, "invalid-player", Placeholders.setPlaceholders(player));
+        } else
+            Color.sendMessage(player, "invalid-player");
     }
 
     @Override
@@ -97,9 +98,9 @@ public class PayCommand extends SubCommand {
 
         Bukkit.getOnlinePlayers().forEach(p -> names.add(p.getName()));
 
-        if (args.length == 2) {
+        if (args.length == 2)
             return names;
-        }
+
         return null;
     }
 }

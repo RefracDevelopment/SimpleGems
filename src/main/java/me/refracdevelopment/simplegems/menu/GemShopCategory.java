@@ -3,7 +3,7 @@ package me.refracdevelopment.simplegems.menu;
 import lombok.Getter;
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.utilities.ItemBuilder;
-import me.refracdevelopment.simplegems.utilities.Utilities;
+import me.refracdevelopment.simplegems.utilities.Methods;
 import me.refracdevelopment.simplegems.utilities.chat.Color;
 import me.refracdevelopment.simplegems.utilities.menu.Menu;
 import me.refracdevelopment.simplegems.utilities.menu.PlayerMenuUtility;
@@ -16,14 +16,15 @@ import org.jetbrains.annotations.Nullable;
 public class GemShopCategory extends Menu {
 
     private final String categoryName, permission;
-    private final boolean enabled, defaultCategory;
+    private final boolean enabled, isDefault;
 
     public GemShopCategory(@Nullable PlayerMenuUtility playerMenuUtility, String categoryName) {
         super(playerMenuUtility);
+
         this.categoryName = categoryName;
         this.permission = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getString(categoryName + ".permission", "");
         this.enabled = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getBoolean(categoryName + ".enabled");
-        this.defaultCategory = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getBoolean(categoryName + ".default");
+        this.isDefault = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getBoolean(categoryName + ".default");
     }
 
     @Override
@@ -69,12 +70,12 @@ public class GemShopCategory extends Menu {
                     continue;
 
                 String name = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getString(categoryName + ".fill.name");
-                Material material = Utilities.getMaterial(SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getString(categoryName + ".fill.material")).parseMaterial();
-                int data = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getInt(categoryName + ".fill.data");
+                Material material = Methods.getMaterial(SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getString(categoryName + ".fill.material")).parseMaterial();
+                int durability = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getInt(categoryName + ".fill.durability");
                 ItemBuilder item = new ItemBuilder(material);
 
                 item.setName(name);
-                item.setDurability(data);
+                item.setDurability(durability);
 
                 getInventory().setItem(i, item.toItemStack());
             }

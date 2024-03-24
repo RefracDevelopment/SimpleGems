@@ -21,7 +21,7 @@ public class SimpleGemsAPI {
 
     public SimpleGemsAPI() {
         Color.log("&aSimpleGemsAPI has been enabled!");
-        Color.log("&aWiki: https://refracdevelopment.gitbook.io/simplegems/");
+        Color.log("&aWiki: &ehttps://refracdevelopment.gitbook.io/simplegems/");
     }
 
     /**

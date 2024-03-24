@@ -16,13 +16,16 @@ public class LeaderboardManager {
 
     public LeaderboardManager() {
         cachedMap = new HashMap<>();
+
         update();
         updateTask();
+
         Color.log("&aLoaded Leaderboards!");
     }
 
     private void load() {
-        if (Bukkit.getOnlinePlayers().isEmpty()) return;
+        if (Bukkit.getOnlinePlayers().isEmpty())
+            return;
 
         cachedMap.clear();
 
@@ -60,9 +63,8 @@ public class LeaderboardManager {
 
     public void sendLeaderboard(Player player) {
         Tasks.runAsync(() -> {
-            if (cachedMap.isEmpty()) {
+            if (cachedMap.isEmpty())
                 load();
-            }
 
             Tasks.run(() -> {
                 Map<String, Long> sortedMap = sortByValue(cachedMap);
@@ -71,15 +73,15 @@ public class LeaderboardManager {
                         .replace("%entries%", String.valueOf(SimpleGems.getInstance().getSettings().GEMS_TOP_ENTRIES))
                 ));
 
-                int number = 1;
+                int placement = 1;
                 for (Map.Entry<String, Long> entry : sortedMap.entrySet()) {
                     String key = entry.getKey();
                     long gems = entry.getValue();
 
-                    if (number == 11) break;
+                    if (placement == 11) break;
 
                     Color.sendCustomMessage(player, Color.translate(player, SimpleGems.getInstance().getSettings().GEMS_TOP_FORMAT
-                            .replace("%number%", String.valueOf(number))
+                            .replace("%number%", String.valueOf(placement))
                             .replace("%value%", String.valueOf(gems))
                             .replace("%gems%", String.valueOf(gems))
                             .replace("%gems_formatted%", Methods.format(gems))
@@ -87,7 +89,7 @@ public class LeaderboardManager {
                             .replace("%player%", key)
                     ));
 
-                    number++;
+                    placement++;
                 }
             });
         });
@@ -98,9 +100,9 @@ public class LeaderboardManager {
         list.sort(Map.Entry.comparingByValue(Collections.reverseOrder()));
 
         Map<String, Long> sortedMap = new LinkedHashMap<>();
-        for (Map.Entry<String, Long> entry : list) {
+
+        for (Map.Entry<String, Long> entry : list)
             sortedMap.put(entry.getKey(), entry.getValue());
-        }
 
         return sortedMap;
     }

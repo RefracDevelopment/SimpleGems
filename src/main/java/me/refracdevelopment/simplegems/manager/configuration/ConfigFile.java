@@ -27,7 +27,7 @@ public class ConfigFile {
                     LoaderSettings.builder().setAutoUpdate(true).build(),
                     DumperSettings.DEFAULT,
                     UpdaterSettings.builder().setVersioning(new BasicVersioning("config-version"))
-                            .setOptionSorting(UpdaterSettings.OptionSorting.SORT_BY_DEFAULTS).build()
+                            .setKeepAll(true).build()
             );
 
             configFile.update();
@@ -73,7 +73,7 @@ public class ConfigFile {
 
     public String getString(String path) {
         if (configFile.contains(path)) {
-            return configFile.getString(path, "String at path '" + path + "' not found.").replace("|", "\u2503");
+            return configFile.getString(path, "String at path '" + path + "' not found.").replace("|", "┃");
         }
 
         return null;

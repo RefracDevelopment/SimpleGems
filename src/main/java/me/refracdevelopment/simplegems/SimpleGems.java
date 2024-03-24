@@ -25,7 +25,6 @@ import me.refracdevelopment.simplegems.menu.GemShop;
 import me.refracdevelopment.simplegems.utilities.DownloadUtil;
 import me.refracdevelopment.simplegems.utilities.chat.Color;
 import me.refracdevelopment.simplegems.utilities.chat.PAPIExpansion;
-import me.refracdevelopment.simplegems.utilities.command.CommandList;
 import me.refracdevelopment.simplegems.utilities.command.SubCommand;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.command.CommandSender;
@@ -72,6 +71,7 @@ public final class SimpleGems extends JavaPlugin {
     private Menus menus;
 
     // Utilities
+    private DownloadUtil downloadUtil;
     private SimpleGemsAPI gemsAPI;
     private FoliaLib foliaLib;
     private final List<SubCommand> subCommands = new ArrayList<>();
@@ -83,9 +83,10 @@ public final class SimpleGems extends JavaPlugin {
         long startTiming = System.currentTimeMillis();
         PluginManager pluginManager = getServer().getPluginManager();
 
-        foliaLib = new FoliaLib(this);
+        downloadUtil = new DownloadUtil();
+        downloadUtil.downloadAndEnable(this);
 
-        DownloadUtil.downloadAndEnable();
+        foliaLib = new FoliaLib(this);
 
         loadFiles();
 
@@ -197,14 +198,10 @@ public final class SimpleGems extends JavaPlugin {
         try {
             getCommandManager().createCoreCommand(this, getCommands().GEMS_COMMAND_NAME,
                     getLocaleFile().getString("command-help-description"),
-                    "/" + getCommands().GEMS_COMMAND_NAME, new CommandList() {
-                        @Override
-                        public void displayCommandList(CommandSender commandSender, List<SubCommand> list) {
-                            getSettings().GEMS_BALANCE.forEach(message -> {
-                                Color.sendCustomMessage(commandSender, message);
-                            });
-                        }
-                    }, getCommands().GEMS_COMMAND_ALIASES,
+                    "/" + getCommands().GEMS_COMMAND_NAME,
+                    (commandSender, list) -> getSettings().GEMS_BALANCE.forEach(message ->
+                            Color.sendCustomMessage(commandSender, message)),
+                    getCommands().GEMS_COMMAND_ALIASES,
                     HelpCommand.class,
                     BalanceCommand.class,
                     TopCommand.class,

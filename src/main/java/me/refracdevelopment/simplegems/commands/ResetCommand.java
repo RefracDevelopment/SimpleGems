@@ -129,9 +129,9 @@ public class ResetCommand extends SubCommand {
 
         Bukkit.getOnlinePlayers().forEach(p -> names.add(p.getName()));
 
-        if (args.length == 2) {
+        if (args.length == 2)
             return names;
-        }
+
         return null;
     }
 }
