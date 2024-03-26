@@ -71,7 +71,7 @@ public class GemShopCategory extends Menu {
 
                 String name = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getString(categoryName + ".fill.name");
                 Material material = Methods.getMaterial(SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getString(categoryName + ".fill.material")).parseMaterial();
-                int durability = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getInt(categoryName + ".fill.data");
+                int durability = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getInt(categoryName + ".fill.durability");
                 ItemBuilder item = new ItemBuilder(material);
 
                 item.setName(name);

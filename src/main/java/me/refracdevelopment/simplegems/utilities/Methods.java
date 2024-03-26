@@ -3,6 +3,7 @@ package me.refracdevelopment.simplegems.utilities;
 import com.cryptomorin.xseries.ReflectionUtils;
 import com.cryptomorin.xseries.XMaterial;
 import de.tr7zw.nbtapi.NBTItem;
+import dev.lone.itemsadder.api.CustomStack;
 import lombok.experimental.UtilityClass;
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.player.data.ProfileData;
@@ -14,7 +15,6 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import java.sql.SQLException;
 import java.text.DecimalFormat;
@@ -174,27 +174,36 @@ public class Methods {
 
     public ItemStack getGemsItem(UUID uuid, long amount) {
         String name = SimpleGems.getInstance().getSettings().GEMS_ITEM_NAME;
-        XMaterial material = getMaterial(SimpleGems.getInstance().getSettings().GEMS_ITEM_MATERIAL);
-        int data = SimpleGems.getInstance().getSettings().GEMS_ITEM_DATA;
+        String material = SimpleGems.getInstance().getSettings().GEMS_ITEM_MATERIAL;
+        int durability = SimpleGems.getInstance().getSettings().GEMS_ITEM_DURABILITY;
         List<String> lore = SimpleGems.getInstance().getSettings().GEMS_ITEM_LORE;
-        ItemBuilder item = new ItemBuilder(material.parseMaterial(), 1);
+        ItemBuilder item = new ItemBuilder(getMaterial(material).parseMaterial(), 1);
 
         if (SimpleGems.getInstance().getSettings().GEMS_ITEM_GLOW) {
             item.addEnchant(Enchantment.ARROW_DAMAGE, 1);
-            ItemMeta itemMeta = item.toItemStack().getItemMeta();
-            itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-            item.toItemStack().setItemMeta(itemMeta);
+            item.setItemFlags(ItemFlag.HIDE_ENCHANTS);
         }
 
-        if (SimpleGems.getInstance().getSettings().GEMS_ITEM_CUSTOM_DATA)
+        if (SimpleGems.getInstance().getSettings().GEMS_ITEM_CUSTOM_DATA) {
             if (ReflectionUtils.MINOR_NUMBER >= 14)
                 item.setCustomModelData(SimpleGems.getInstance().getSettings().GEMS_ITEM_CUSTOM_MODEL_DATA);
             else
                 Color.log("&cAn error occurred when trying to set custom model data. Make sure your only using custom model data when on 1.14+.");
+        }
+
+        if (SimpleGems.getInstance().getSettings().GEMS_ITEM_ITEMS_ADDER) {
+            CustomStack api = CustomStack.getInstance(material);
+            if (api != null)
+                item = new ItemBuilder(api.getItemStack());
+            else
+                Color.log("&cAn error occurred when trying to set items adder custom item. Make sure you are typing the correct namespaced id.");
+        }
+
+        ItemBuilder finalItem = item;
 
         // Attempt to insert a NBT tag of the gems value instead of filling the inventory
 
-        NBTItem nbtItem = new NBTItem(item.toItemStack());
+        NBTItem nbtItem = new NBTItem(finalItem.toItemStack());
         nbtItem.setUUID("uuid", uuid);
         nbtItem.setLong("gems-item-value", amount);
         nbtItem.applyNBT(item.toItemStack());
@@ -202,17 +211,17 @@ public class Methods {
         if (nbtItem.hasTag("gems-item-value")) {
             long foundValue = nbtItem.getLong("gems-item-value");
 
-            item.setName(name.replace("%value%", String.valueOf(foundValue))
+            finalItem.setName(name.replace("%value%", String.valueOf(foundValue))
                     .replace("%gems%", String.valueOf(foundValue)));
-            lore.forEach(s -> item.addLoreLine(Color.translate(s
+            lore.forEach(s -> finalItem.addLoreLine(Color.translate(s
                     .replace("%value%", String.valueOf(foundValue))
                     .replace("%gems%", String.valueOf(foundValue))
             )));
         }
 
-        item.setDurability(data);
+        finalItem.setDurability(durability);
 
-        return item.toItemStack();
+        return finalItem.toItemStack();
     }
 
     public String formatDecimal(long amount) {

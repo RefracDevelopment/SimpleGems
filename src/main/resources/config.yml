@@ -6,7 +6,7 @@
 #         \/         \/|__|             \/        \/     \/      \/     \/
 
 # This is used for automatic file updating purposes
-config-version: "8"
+config-version: "9"
 
 # The locale to use in the /locale folder
 locale: en_US
@@ -57,13 +57,15 @@ gems-balance:
 gems-item:
   # This is used for withdrawing gems
   # Default: DIAMOND
-  material: DIAMOND
+  material: "DIAMOND"
   # Default: 0
   data: 0
   # Default: false
   customData: false
   # Default: 0
   customModelData: 0
+  # Default: false
+  itemsAdder: false
   # Default: &e&lGems &7(Right Click)
   name: '&e&lGems &7(Right Click)'
   # Default: false

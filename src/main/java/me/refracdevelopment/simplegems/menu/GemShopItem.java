@@ -3,7 +3,7 @@ package me.refracdevelopment.simplegems.menu;
 import ca.tweetzy.skulls.Skulls;
 import ca.tweetzy.skulls.api.interfaces.Skull;
 import com.cryptomorin.xseries.ReflectionUtils;
-import com.cryptomorin.xseries.XMaterial;
+import dev.lone.itemsadder.api.CustomStack;
 import lombok.Getter;
 import me.arcaniax.hdb.api.HeadDatabaseAPI;
 import me.refracdevelopment.simplegems.SimpleGems;
@@ -25,9 +25,9 @@ public class GemShopItem {
 
     private final String category, item;
 
-    private XMaterial material;
+    private String material;
     private String skullOwner, name, permission;
-    private boolean skulls, headDatabase, messageEnabled, broadcastMessage, customData, glow, action, buyable;
+    private boolean skulls, headDatabase, messageEnabled, broadcastMessage, customData, glow, action, buyable, itemsAdder;
     private int durability, slot, customModelData;
     private List<String> lore, actions, commands, messages;
     private long cost;
@@ -40,8 +40,8 @@ public class GemShopItem {
     }
 
     private void setupMenuItemData() {
-        this.material = Methods.getMaterial(SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getString(getCategory() + ".items." + getItem() + ".material"));
-        this.durability = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getInt(getCategory() + ".items." + getItem() + ".data");
+        this.material = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getString(getCategory() + ".items." + getItem() + ".material");
+        this.durability = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getInt(getCategory() + ".items." + getItem() + ".durability");
         this.customModelData = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getInt(getCategory() + ".items." + getItem() + ".customModelData");
         this.name = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getString(getCategory() + ".items." + getItem() + ".name");
         this.lore = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getStringList(getCategory() + ".items." + getItem() + ".lore");
@@ -85,6 +85,11 @@ public class GemShopItem {
             this.buyable = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getBoolean(getCategory() + ".items." + getItem() + ".buyable");
         else
             this.buyable = true;
+
+        if (SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getBoolean(getCategory() + ".items." + getItem() + ".itemsAdder"))
+            this.itemsAdder = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getBoolean(getCategory() + ".items." + getItem() + ".itemsAdder");
+        else
+            this.itemsAdder = false;
     }
 
     public void sendMessage(Player player) {
@@ -156,7 +161,7 @@ public class GemShopItem {
     }
 
     public ItemStack getItem(Player player) {
-        ItemBuilder item = new ItemBuilder(getMaterial().parseMaterial());
+        ItemBuilder item = new ItemBuilder(Methods.getMaterial(getMaterial()).parseMaterial());
 
         if (isHeadDatabase()) {
             HeadDatabaseAPI api = new HeadDatabaseAPI();
@@ -169,6 +174,12 @@ public class GemShopItem {
                 item.setCustomModelData(getCustomModelData());
             else
                 Color.log("&cAn error occurred when trying to set custom model data. Make sure your only using custom model data when on 1.14+.");
+        } else if (isItemsAdder()) {
+            CustomStack api = CustomStack.getInstance(getMaterial());
+            if (api != null)
+                item = new ItemBuilder(api.getItemStack());
+            else
+                Color.log("&cAn error occurred when trying to set items adder custom item. Make sure you are typing the correct namespaced id.");
         }
 
         ItemBuilder finalItem = item;

@@ -5,9 +5,11 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.tcoded.folialib.FoliaLib;
 import lombok.Getter;
+import lombok.Setter;
 import me.gabytm.util.actions.ActionManager;
 import me.refracdevelopment.simplegems.api.SimpleGemsAPI;
 import me.refracdevelopment.simplegems.commands.*;
+import me.refracdevelopment.simplegems.listeners.ItemsAdderListener;
 import me.refracdevelopment.simplegems.listeners.MenuListener;
 import me.refracdevelopment.simplegems.listeners.PlayerListener;
 import me.refracdevelopment.simplegems.manager.CommandManager;
@@ -41,6 +43,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Getter
+@Setter
 public final class SimpleGems extends JavaPlugin {
 
     @Getter
@@ -55,7 +58,10 @@ public final class SimpleGems extends JavaPlugin {
     private LeaderboardManager leaderboardManager;
     private MenuManager menuManager;
     private CommandManager commandManager;
-    
+
+    // Listeners
+    private ItemsAdderListener itemsAdderListener;
+
     // Menus
     private GemShop gemShop;
 
@@ -126,6 +132,10 @@ public final class SimpleGems extends JavaPlugin {
             Color.log("&aHeadDatabase Detected!");
         }
 
+        if (pluginManager.isPluginEnabled("ItemsAdder")) {
+            Color.log("&aItemsAdder Detected!");
+        }
+
         loadManagers();
         loadCommands();
         loadListeners();
@@ -145,14 +155,15 @@ public final class SimpleGems extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
-        switch (getDataType()) {
-            case MYSQL:
-                getMySQLManager().shutdown();
-                break;
-            case SQLITE:
-                getSqLiteManager().shutdown();
-                break;
-        }
+        if (getDataType() != null)
+            switch (getDataType()) {
+                case MYSQL:
+                    getMySQLManager().shutdown();
+                    break;
+                case SQLITE:
+                    getSqLiteManager().shutdown();
+                    break;
+            }
     }
 
     private void loadFiles() {
@@ -243,7 +254,12 @@ public final class SimpleGems extends JavaPlugin {
     private void loadListeners() {
         getServer().getPluginManager().registerEvents(new PlayerListener(), this);
         getServer().getPluginManager().registerEvents(new MenuListener(), this);
-        gemShop = new GemShop();
+
+        if (getServer().getPluginManager().isPluginEnabled("ItemsAdder"))
+            getServer().getPluginManager().registerEvents(itemsAdderListener = new ItemsAdderListener(), this);
+        else
+            gemShop = new GemShop();
+
         Color.log("&aLoaded listeners.");
     }
 
