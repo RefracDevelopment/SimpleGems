@@ -33,12 +33,19 @@ public class DownloadUtil {
                 .artifactId("boosted-yaml")
                 .version("1.3.3")
                 .build();
+        Library lib6 = Library.builder()
+                .groupId("com{}tcoded") // "{}" is replaced with ".", useful to avoid unwanted changes made by maven-shade-plugin
+                .artifactId("FoliaLib")
+                .version("0.3.1")
+                .build();
 
         libraryManager.addMavenCentral();
+        libraryManager.addRepository("https://nexuslite.gcnt.net/repos/other/");
         libraryManager.loadLibrary(lib);
         libraryManager.loadLibrary(lib2);
         libraryManager.loadLibrary(lib3);
         libraryManager.loadLibrary(lib4);
         libraryManager.loadLibrary(lib5);
+        libraryManager.loadLibrary(lib6);
     }
 }

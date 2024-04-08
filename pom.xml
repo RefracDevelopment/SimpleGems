@@ -222,7 +222,7 @@
             <groupId>com.tcoded</groupId>
             <artifactId>FoliaLib</artifactId>
             <version>0.3.1</version>
-            <scope>compile</scope>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.github.LoneDev6</groupId>
