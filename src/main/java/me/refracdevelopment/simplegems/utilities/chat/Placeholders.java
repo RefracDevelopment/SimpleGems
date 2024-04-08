@@ -64,6 +64,7 @@ public class Placeholders {
         StringPlaceholders.Builder placeholders = StringPlaceholders.builder();
 
         placeholders.add("prefix", SimpleGems.getInstance().getLocaleFile().getString("prefix"));
+
         if (sender instanceof Player) {
             Player player = (Player) sender;
             long gems = SimpleGems.getInstance().getGemsAPI().getGems(player);
@@ -81,6 +82,7 @@ public class Placeholders {
             placeholders.add("gems_formatted", Methods.format(gems));
             placeholders.add("gems_decimal", Methods.formatDecimal(gems));
         }
+
         placeholders.add("arrow", "»");
         placeholders.add("arrowright", "»");
         placeholders.add("arrowleft", "«");

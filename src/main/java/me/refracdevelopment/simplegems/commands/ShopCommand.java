@@ -52,7 +52,9 @@ public class ShopCommand extends SubCommand {
             SimpleGems.getInstance().getGemShop().getCategories().forEach((gemShopCategory, gemShopItems) -> {
                 GemShopCategory category = new GemShopCategory(SimpleGems.getInstance().getMenuManager().getPlayerMenuUtility(player), gemShopCategory);
 
-                if (!category.isDefault()) return;
+                if (!category.isDefault())
+                    return;
+
                 if (!category.isEnabled()) {
                     Color.sendMessage(player, "shop-disabled");
                     return;
@@ -66,6 +68,7 @@ public class ShopCommand extends SubCommand {
 
                 category.open();
             });
+
             return;
         }
 

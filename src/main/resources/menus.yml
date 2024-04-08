@@ -25,7 +25,7 @@
 # [close] - Close the current menu
 #---------------------------------------------------------------------------
 # This is used for automatic file updating purposes
-config-version: "9"
+config-version: "10"
 
 categories:
   gems-menu:
@@ -60,6 +60,7 @@ categories:
         # Set to false so the menu knows this is not a buyable item
         buyable: false
         slot: 4
+        amount: 1
       "1":
         # Set a permission here
         # if you want only certain people
@@ -93,3 +94,4 @@ categories:
           - "give %player% stick 1"
         cost: 1
         slot: 10
+        amount: 1

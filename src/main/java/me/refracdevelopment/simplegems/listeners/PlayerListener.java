@@ -93,11 +93,10 @@ public class PlayerListener implements Listener {
 
         NBTItem nbtItem = new NBTItem(item);
 
-        if (nbtItem.hasTag("uuid") && nbtItem.hasTag("gems-item-value")) {
-            UUID uuid = nbtItem.getUUID("uuid");
+        if (nbtItem.hasTag("gems-item-value")) {
             long foundValue = nbtItem.getLong("gems-item-value");
 
-            gemsItem = SimpleGems.getInstance().getGemsAPI().getGemsItem(uuid, foundValue);
+            gemsItem = SimpleGems.getInstance().getGemsAPI().getGemsItem(foundValue);
 
             if (!item.isSimilar(gemsItem))
                 return;

@@ -32,12 +32,32 @@ public class PAPIExpansion extends PlaceholderExpansion {
     public String onPlaceholderRequest(Player player, @NotNull String params) {
         long gems = SimpleGems.getInstance().getGemsAPI().getGems(player);
 
+        if (SimpleGems.getInstance().getLeaderboardManager().getCachedMap().isEmpty())
+            SimpleGems.getInstance().getLeaderboardManager().update();
+
         switch (params) {
             case "balance_formatted":
                 return Methods.format(gems);
             case "balance_decimal":
                 return Methods.formatDecimal(gems);
             default:
+                if (params.startsWith("player_")) {
+                    try {
+                        int value = Integer.parseInt(params.replace("player_", "")) - 1;
+                        String name = SimpleGems.getInstance().getLeaderboardManager().getPlayers().get(value);
+                        gems = SimpleGems.getInstance().getLeaderboardManager().getCachedMap().get(name);
+
+                        return SimpleGems.getInstance().getSettings().GEMS_TOP_FORMAT
+                                .replace("%number%", String.valueOf(value + 1))
+                                .replace("%player%", name)
+                                .replace("%gems%", String.valueOf(gems))
+                                .replace("%gems_formatted%", Methods.format(gems))
+                                .replace("%gems_decimal%", Methods.formatDecimal(gems));
+                    } catch (Exception exception) {
+                        return "Error...";
+                    }
+                }
+
                 return String.valueOf(gems);
         }
     }

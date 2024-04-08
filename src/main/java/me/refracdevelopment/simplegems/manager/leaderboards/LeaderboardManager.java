@@ -1,5 +1,6 @@
 package me.refracdevelopment.simplegems.manager.leaderboards;
 
+import lombok.Getter;
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.utilities.Methods;
 import me.refracdevelopment.simplegems.utilities.Tasks;
@@ -10,12 +11,15 @@ import org.bukkit.entity.Player;
 import java.sql.SQLException;
 import java.util.*;
 
+@Getter
 public class LeaderboardManager {
 
     private final Map<String, Long> cachedMap;
+    private final List<String> players;
 
     public LeaderboardManager() {
         cachedMap = new HashMap<>();
+        players = new ArrayList<>();
 
         update();
         updateTask();
@@ -27,6 +31,7 @@ public class LeaderboardManager {
         if (Bukkit.getOnlinePlayers().isEmpty())
             return;
 
+        players.clear();
         cachedMap.clear();
 
         switch (SimpleGems.getInstance().getDataType()) {
@@ -37,6 +42,7 @@ public class LeaderboardManager {
                             String name = resultSet.getString("name");
                             long gems = resultSet.getLong("gems");
 
+                            players.add(name);
                             cachedMap.put(name, gems);
                         }
                     } catch (SQLException exception) {
@@ -51,6 +57,7 @@ public class LeaderboardManager {
                             String name = resultSet.getString("name");
                             long gems = resultSet.getLong("gems");
 
+                            players.add(name);
                             cachedMap.put(name, gems);
                         }
                     } catch (SQLException exception) {
@@ -63,7 +70,7 @@ public class LeaderboardManager {
 
     public void sendLeaderboard(Player player) {
         Tasks.runAsync(() -> {
-            if (cachedMap.isEmpty())
+            if (cachedMap.isEmpty() || players.isEmpty())
                 load();
 
             Tasks.run(() -> {
@@ -74,11 +81,13 @@ public class LeaderboardManager {
                 ));
 
                 int placement = 1;
+
                 for (Map.Entry<String, Long> entry : sortedMap.entrySet()) {
                     String key = entry.getKey();
                     long gems = entry.getValue();
 
-                    if (placement == 11) break;
+                    if (placement == 11)
+                        break;
 
                     Color.sendCustomMessage(player, Color.translate(player, SimpleGems.getInstance().getSettings().GEMS_TOP_FORMAT
                             .replace("%number%", String.valueOf(placement))

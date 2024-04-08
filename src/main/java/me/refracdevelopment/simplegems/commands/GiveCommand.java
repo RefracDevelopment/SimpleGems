@@ -63,7 +63,6 @@ public class GiveCommand extends SubCommand {
 
         if (target.isOnline()) {
             Player player = target.getPlayer();
-
             long amount;
 
             try {
@@ -83,7 +82,10 @@ public class GiveCommand extends SubCommand {
                     .build();
 
             Color.sendMessage(commandSender, "gems-given", placeholders);
-            if (message.contains("-s")) return;
+
+            if (message.contains("-s"))
+                return;
+
             Color.sendMessage(player, "gems-gained", placeholders);
         } else if (target.hasPlayedBefore()) {
             long amount;
@@ -104,7 +106,9 @@ public class GiveCommand extends SubCommand {
                     .add("gems_decimal", Methods.formatDecimal(amount))
                     .build();
 
-            if (message.contains("-s")) return;
+            if (message.contains("-s"))
+                return;
+
             Color.sendMessage(commandSender, "gems-given", placeholders);
         } else
             Color.sendMessage(commandSender, "invalid-player");

@@ -18,10 +18,10 @@ import org.bukkit.inventory.ItemStack;
 
 import java.sql.SQLException;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
-import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 
 @UtilityClass
@@ -58,13 +58,13 @@ public class Methods {
 
     public long getOfflineGems(OfflinePlayer player) {
         AtomicLong gems = new AtomicLong(0);
+
         switch (SimpleGems.getInstance().getDataType()) {
             case MYSQL:
                 SimpleGems.getInstance().getMySQLManager().select("SELECT gems FROM SimpleGems WHERE uuid=?", resultSet -> {
                     try {
-                        if (resultSet.next()) {
+                        if (resultSet.next())
                             gems.set(resultSet.getLong("gems"));
-                        }
                     } catch (SQLException exception) {
                         Color.log(exception.getMessage());
                     }
@@ -73,9 +73,8 @@ public class Methods {
             default:
                 SimpleGems.getInstance().getSqLiteManager().select("SELECT gems FROM SimpleGems WHERE uuid=?", resultSet -> {
                     try {
-                        if (resultSet.next()) {
+                        if (resultSet.next())
                             gems.set(resultSet.getLong("gems"));
-                        }
                     } catch (SQLException exception) {
                         Color.log(exception.getMessage());
                     }
@@ -161,7 +160,7 @@ public class Methods {
     }
 
     public void giveGemsItem(Player player, long amount) {
-        ItemStack gemsItem = getGemsItem(UUID.randomUUID(), amount);
+        ItemStack gemsItem = getGemsItem(amount);
 
         if (player.getInventory().firstEmpty() == -1) {
             player.getWorld().dropItem(player.getLocation(), gemsItem);
@@ -172,7 +171,7 @@ public class Methods {
         player.updateInventory();
     }
 
-    public ItemStack getGemsItem(UUID uuid, long amount) {
+    public ItemStack getGemsItem(long amount) {
         String name = SimpleGems.getInstance().getSettings().GEMS_ITEM_NAME;
         String material = SimpleGems.getInstance().getSettings().GEMS_ITEM_MATERIAL;
         int durability = SimpleGems.getInstance().getSettings().GEMS_ITEM_DURABILITY;
@@ -204,7 +203,6 @@ public class Methods {
         // Attempt to insert a NBT tag of the gems value instead of filling the inventory
 
         NBTItem nbtItem = new NBTItem(finalItem.toItemStack());
-        nbtItem.setUUID("uuid", uuid);
         nbtItem.setLong("gems-item-value", amount);
         nbtItem.applyNBT(item.toItemStack());
 
@@ -225,7 +223,9 @@ public class Methods {
     }
 
     public String formatDecimal(long amount) {
-        DecimalFormat decimalFormat = new DecimalFormat("###,###");
+        DecimalFormat decimalFormat = new DecimalFormat("###,###", DecimalFormatSymbols.getInstance(Locale.ENGLISH));
+        decimalFormat.setMaximumFractionDigits(340);
+
         return decimalFormat.format(amount);
     }
 

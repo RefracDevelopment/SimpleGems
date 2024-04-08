@@ -6,7 +6,7 @@
 #         \/         \/|__|             \/        \/     \/      \/     \/
 
 # This is used for automatic file updating purposes
-config-version: "9"
+config-version: "10"
 
 # The locale to use in the /locale folder
 locale: en_US
@@ -44,6 +44,7 @@ gems-top:
   # Default: &e&lGems %arrow% &6&lTop %entries%
   title: '&e&lGems %arrow% &6&lTop %entries%'
   # Default: &6&l%number%. &e%player% &7- &e%gems_formatted%
+  # This format will be used for the command and placeholders
   format: '&6&l%number%. &e%player% &7- &e%gems_formatted%'
   # Default: 10
   top-entries: 10

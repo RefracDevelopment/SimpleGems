@@ -82,7 +82,10 @@ public class SetCommand extends SubCommand {
                     .build();
 
             Color.sendMessage(commandSender, "gems-set", placeholders);
-            if (message.contains("-s")) return;
+
+            if (message.contains("-s"))
+                return;
+
             Color.sendMessage(player, "gems-setted", placeholders);
         } else if (target.hasPlayedBefore()) {
             long amount;

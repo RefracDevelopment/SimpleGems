@@ -41,6 +41,7 @@ public class VersionCommand extends SubCommand {
         }
 
         String baseColor = SimpleGems.getInstance().getLocaleFile().getString("base-command-color");
+
         Color.sendCustomMessage(commandSender, baseColor + "Running <g:#8A2387:#E94057:#F27121>" + SimpleGems.getInstance().getDescription().getName() + baseColor + " v" + SimpleGems.getInstance().getDescription().getVersion());
         Color.sendCustomMessage(commandSender, baseColor + "Plugin created by: <g:#41E0F0:#FF8DCE>" + SimpleGems.getInstance().getDescription().getAuthors().get(0));
         Color.sendMessage(commandSender, "base-command-help", StringPlaceholders.of("cmd", SimpleGems.getInstance().getCommands().GEMS_COMMAND_NAME));

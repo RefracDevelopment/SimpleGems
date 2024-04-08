@@ -35,6 +35,7 @@ public class HelpCommand extends SubCommand {
     @Override
     public void perform(CommandSender commandSender, String[] args) {
         Color.sendMessage(commandSender, "command-help-title");
+
         SimpleGems.getInstance().getSubCommands().forEach(command -> {
             StringPlaceholders placeholders;
 

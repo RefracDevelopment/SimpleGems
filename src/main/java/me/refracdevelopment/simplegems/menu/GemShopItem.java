@@ -28,7 +28,7 @@ public class GemShopItem {
     private String material;
     private String skullOwner, name, permission;
     private boolean skulls, headDatabase, messageEnabled, broadcastMessage, customData, glow, action, buyable, itemsAdder;
-    private int durability, slot, customModelData;
+    private int durability, slot, customModelData, amount;
     private List<String> lore, actions, commands, messages;
     private long cost;
 
@@ -53,6 +53,7 @@ public class GemShopItem {
         this.cost = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getLong(getCategory() + ".items." + getItem() + ".cost");
         this.slot = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getInt(getCategory() + ".items." + getItem() + ".slot");
         this.permission = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getString(getCategory() + ".items." + getItem() + ".permission", "");
+        this.amount = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getInt(getCategory() + ".items." + getItem() + ".amount");
 
         if (SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getBoolean(getCategory() + ".items." + getItem() + ".head-database"))
             this.headDatabase = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getBoolean(getCategory() + ".items." + getItem() + ".head-database", false);
@@ -132,7 +133,8 @@ public class GemShopItem {
                 SimpleGems.getInstance().getGemShop().getCategories().forEach((gemShopCategory, gemShopItems) -> {
                     String menu = action.replace("{openmenu:", "").replace("}", "");
 
-                    if (!gemShopCategory.equalsIgnoreCase(menu)) return;
+                    if (!gemShopCategory.equalsIgnoreCase(menu))
+                        return;
 
                     GemShopCategory category = new GemShopCategory(SimpleGems.getInstance().getMenuManager().getPlayerMenuUtility(player), gemShopCategory);
 
@@ -161,7 +163,7 @@ public class GemShopItem {
     }
 
     public ItemStack getItem(Player player) {
-        ItemBuilder item = new ItemBuilder(Methods.getMaterial(getMaterial()).parseMaterial());
+        ItemBuilder item = new ItemBuilder(Methods.getMaterial(getMaterial()).parseMaterial(), getAmount());
 
         if (isHeadDatabase()) {
             HeadDatabaseAPI api = new HeadDatabaseAPI();

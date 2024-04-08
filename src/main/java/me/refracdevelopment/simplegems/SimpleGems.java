@@ -273,11 +273,13 @@ public final class SimpleGems extends JavaPlugin {
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             String input;
             StringBuilder response = new StringBuilder();
+
             while ((input = reader.readLine()) != null) {
                 response.append(input);
             }
+
             reader.close();
-            JsonObject object = JsonParser.parseString(response.toString()).getAsJsonObject();
+            JsonObject object = new JsonParser().parse(response.toString()).getAsJsonObject();
 
             if (object.has("plugins")) {
                 JsonObject plugins = object.get("plugins").getAsJsonObject();

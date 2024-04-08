@@ -42,6 +42,7 @@ public class MySQLManager {
     public Exception connect() {
         try {
             HikariConfig config = new HikariConfig();
+
             Class.forName("org.mariadb.jdbc.Driver");
             config.setDriverClassName("org.mariadb.jdbc.Driver");
             config.setJdbcUrl("jdbc:mariadb://" + host + ':' + port + '/' + database);

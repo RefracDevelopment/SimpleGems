@@ -12,6 +12,7 @@ public class Config {
     public String DATA_TYPE;
 
     // Top
+    public boolean LUCKPERMS;
     public String GEMS_TOP_TITLE;
     public String GEMS_TOP_FORMAT;
     public int GEMS_TOP_ENTRIES;
@@ -40,6 +41,7 @@ public class Config {
         DATA_TYPE = SimpleGems.getInstance().getConfigFile().getString("data-type");
 
         // Top
+        LUCKPERMS = SimpleGems.getInstance().getConfigFile().getBoolean("gems-top.luckperms");
         GEMS_TOP_TITLE = SimpleGems.getInstance().getConfigFile().getString("gems-top.title");
         GEMS_TOP_FORMAT = SimpleGems.getInstance().getConfigFile().getString("gems-top.format");
         GEMS_TOP_ENTRIES = SimpleGems.getInstance().getConfigFile().getInt("gems-top.top-entries");
