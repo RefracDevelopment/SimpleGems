@@ -28,11 +28,17 @@ public class DownloadUtil {
                 .artifactId("HikariCP")
                 .version("4.0.3")
                 .build();
+        Library lib5 = Library.builder()
+                .groupId("dev{}dejvokep") // "{}" is replaced with ".", useful to avoid unwanted changes made by maven-shade-plugin
+                .artifactId("boosted-yaml")
+                .version("1.3.3")
+                .build();
 
         libraryManager.addMavenCentral();
         libraryManager.loadLibrary(lib);
         libraryManager.loadLibrary(lib2);
         libraryManager.loadLibrary(lib3);
         libraryManager.loadLibrary(lib4);
+        libraryManager.loadLibrary(lib5);
     }
 }
