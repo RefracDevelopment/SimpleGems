@@ -2,7 +2,7 @@
 
 SimpleGems is a plugin that adds a custom gems economy into minecraft.
 
-[Spigot](https://www.spigotmc.org/resources/96827/) [Craftaro](https://craftaro.com/marketplace/product/simplegems.755) [BuiltByBit](https://builtbybit.com/resources/simplegems.21583/) [Hangar](https://hangar.papermc.io/RefracDevelopment/SimpleGems/)
+[Spigot](https://www.spigotmc.org/resources/96827/) [BuiltByBit](https://builtbybit.com/resources/simplegems.21583/) [Hangar](https://hangar.papermc.io/RefracDevelopment/SimpleGems/)
 
 ### Issue Reporting/Support
 
