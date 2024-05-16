@@ -1,7 +1,7 @@
 package me.refracdevelopment.simplegems.commands;
 
 import me.refracdevelopment.simplegems.SimpleGems;
-import me.refracdevelopment.simplegems.utilities.chat.Color;
+import me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils;
 import me.refracdevelopment.simplegems.utilities.chat.StringPlaceholders;
 import me.refracdevelopment.simplegems.utilities.command.SubCommand;
 import org.bukkit.command.CommandSender;
@@ -34,9 +34,9 @@ public class HelpCommand extends SubCommand {
 
     @Override
     public void perform(CommandSender commandSender, String[] args) {
-        Color.sendMessage(commandSender, "command-help-title");
+        RyMessageUtils.sendPluginMessage(commandSender, "command-help-title");
 
-        SimpleGems.getInstance().getSubCommands().forEach(command -> {
+        SimpleGems.getInstance().getCommandManager().getCommands().forEach(command -> {
             StringPlaceholders placeholders;
 
             if (!command.getSyntax().isEmpty()) {
@@ -46,14 +46,14 @@ public class HelpCommand extends SubCommand {
                         .add("args", command.getSyntax())
                         .add("desc", command.getDescription())
                         .build();
-                Color.sendMessage(commandSender, "command-help-list-description", placeholders);
+                RyMessageUtils.sendPluginMessage(commandSender, "command-help-list-description", placeholders);
             } else {
                 placeholders = StringPlaceholders.builder()
                         .add("cmd", SimpleGems.getInstance().getCommands().GEMS_COMMAND_NAME)
                         .add("subcmd", command.getName())
                         .add("desc", command.getDescription())
                         .build();
-                Color.sendMessage(commandSender, "command-help-list-description-no-args", placeholders);
+                RyMessageUtils.sendPluginMessage(commandSender, "command-help-list-description-no-args", placeholders);
             }
         });
     }

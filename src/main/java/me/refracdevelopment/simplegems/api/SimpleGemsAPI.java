@@ -5,7 +5,7 @@ import me.refracdevelopment.simplegems.api.events.impl.*;
 import me.refracdevelopment.simplegems.player.data.ProfileData;
 import me.refracdevelopment.simplegems.utilities.Methods;
 import me.refracdevelopment.simplegems.utilities.Tasks;
-import me.refracdevelopment.simplegems.utilities.chat.Color;
+import me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -18,8 +18,8 @@ import org.bukkit.inventory.ItemStack;
 public class SimpleGemsAPI {
 
     public SimpleGemsAPI() {
-        Color.log("&aSimpleGemsAPI has been enabled!");
-        Color.log("&aWiki: &ehttps://refracdevelopment.gitbook.io/simplegems/");
+        RyMessageUtils.sendConsole(true, "&aSimpleGemsAPI has been enabled!");
+        RyMessageUtils.sendConsole(true, "&aWiki: &ehttps://refracdevelopment.gitbook.io/simplegems/");
     }
 
     /**
@@ -44,7 +44,7 @@ public class SimpleGemsAPI {
      * @param player online player
      * @return online player's gems amount
      */
-    public long getGems(Player player) {
+    public double getGems(Player player) {
         if (getProfileData(player) == null)
             return 0;
 
@@ -57,19 +57,19 @@ public class SimpleGemsAPI {
      * @param player offline player
      * @return offline player's gems amount
      */
-    public long getOfflineGems(OfflinePlayer player) {
+    public double getOfflineGems(OfflinePlayer player) {
         return Methods.getOfflineGems(player);
     }
 
     /**
      * This will give gems in item form
-     * to the player who withdraw them or
-     * received them by doing events etc
+     * to the player who withdrew them or
+     * received them by doing events etc.
      *
      * @param player player profile
      * @param amount gems to remove and turn into an item
      */
-    public void giveGemsItem(Player player, long amount) {
+    public void giveGemsItem(Player player, double amount) {
         if (getProfileData(player) == null)
             return;
 
@@ -78,23 +78,24 @@ public class SimpleGemsAPI {
 
     /**
      * This is used to compare gems
-     * that are in item form to deposit properly
+     * that are in item form to deposit properly.
      *
+     * @param player The player
      * @param amount The amount of the item.
      * @return an item stack to redeem gems
      */
-    public ItemStack getGemsItem(long amount) {
-        return Methods.getGemsItem(amount);
+    public ItemStack getGemsItem(Player player, double amount) {
+        return Methods.getGemsItem(player, amount);
     }
 
     /**
-     * Used to check if the player has enough gems
+     * Used to check if the player has enough gems.
      *
      * @param player online player
      * @param amount amount of gems to check
-     * @return If the player has enough gems
+     * @return true - If the player has enough gems
      */
-    public boolean hasGems(Player player, long amount) {
+    public boolean hasGems(Player player, double amount) {
         if (getProfileData(player) == null)
             return false;
 
@@ -102,87 +103,129 @@ public class SimpleGemsAPI {
     }
 
     /**
-     * Used to check if the offline player has enough gems
+     * Used to check if the offline player has enough gems.
      *
      * @param player offline player
      * @param amount amount of gems to check
-     * @return If the player has enough gems
+     * @return true - If the player has enough gems
      */
-    public boolean hasOfflineGems(OfflinePlayer player, long amount) {
+    public boolean hasOfflineGems(OfflinePlayer player, double amount) {
         return Methods.hasOfflineGems(player, amount);
     }
 
     /**
-     * Used to give player gems.
+     * Used to give/deposit player gems into their account.
      *
-     * @param player online player
+     * @param target the player who received the gems
      * @param amount amount of gems to give
      */
-    public void giveGems(Player player, long amount) {
-        if (getProfileData(player) == null)
+    public void giveGems(Player target, double amount) {
+        if (getProfileData(target) == null)
             return;
 
-        GemsAddEvent event = new GemsAddEvent(player, amount);
+        GemsAddEvent event = new GemsAddEvent(null, target, amount);
         Bukkit.getPluginManager().callEvent(event);
 
         if (event.isCancelled())
             return;
 
-        getProfileData(player).getGems().incrementAmount(amount);
-        Tasks.runAsync(() -> getProfileData(player).save(player));
+        getProfileData(target).getGems().incrementAmount(amount);
+        Tasks.runAsync(() -> getProfileData(target).save(target));
     }
 
     /**
-     * Used to give offline player gems.
+     * Used to give/deposit player gems into their account.
      *
-     * @param player offline player
+     * @param player the player who gave the gems
+     * @param target the player who received the gems
      * @param amount amount of gems to give
      */
-    public void giveOfflineGems(OfflinePlayer player, long amount) {
+    public void giveGems(Player player, Player target, double amount) {
+        if (getProfileData(target) == null)
+            return;
+
+        GemsAddEvent event = new GemsAddEvent(player, target, amount);
+        Bukkit.getPluginManager().callEvent(event);
+
+        if (event.isCancelled())
+            return;
+
+        getProfileData(target).getGems().incrementAmount(amount);
+        Tasks.runAsync(() -> getProfileData(target).save(target));
+    }
+
+    /**
+     * Used to give/deposit offline player gems into their account.
+     *
+     * @param player the target player
+     * @param amount amount of gems to give
+     */
+    public void giveOfflineGems(OfflinePlayer player, double amount) {
         Methods.giveOfflineGems(player, amount);
     }
 
     /**
-     * Used to take player gems.
+     * Used to take/remove player gems from their account.
      *
-     * @param player online player
+     * @param target the target player
      * @param amount amount of gems to take
      */
-    public void takeGems(Player player, long amount) {
-        if (getProfileData(player) == null)
+    public void takeGems(Player target, double amount) {
+        if (getProfileData(target) == null)
             return;
 
-        GemsRemoveEvent event = new GemsRemoveEvent(player, amount);
+        GemsRemoveEvent event = new GemsRemoveEvent(null, target, amount);
         Bukkit.getPluginManager().callEvent(event);
 
         if (event.isCancelled())
             return;
 
-        getProfileData(player).getGems().decrementAmount(amount);
-        Tasks.runAsync(() -> getProfileData(player).save(player));
+        getProfileData(target).getGems().decrementAmount(amount);
+        Tasks.runAsync(() -> getProfileData(target).save(target));
+    }
+
+    /**
+     * Used to take/remove player gems from their account.
+     *
+     * @param player the player who took the gems
+     * @param target the target player
+     * @param amount amount of gems to take
+     */
+    public void takeGems(Player player, Player target, double amount) {
+        if (getProfileData(target) == null)
+            return;
+
+        GemsRemoveEvent event = new GemsRemoveEvent(player, target, amount);
+        Bukkit.getPluginManager().callEvent(event);
+
+        if (event.isCancelled())
+            return;
+
+        getProfileData(target).getGems().decrementAmount(amount);
+        Tasks.runAsync(() -> getProfileData(target).save(target));
     }
 
     /**
      * Used to take offline player gems.
      *
-     * @param player offline player
+     * @param target the target player
      * @param amount amount of gems to take
      */
-    public void takeOfflineGems(OfflinePlayer player, long amount) {
-        Methods.takeOfflineGems(player, amount);
+    public void takeOfflineGems(OfflinePlayer target, double amount) {
+        Methods.takeOfflineGems(target, amount);
     }
 
     /**
-     * Used to set player gems.
+     * Used to set a player gems.
      *
-     * @param target online player
+     * @param target the player who received the gems
      * @param amount amount of gems to set
      */
-    public void setGems(Player target, long amount) {
+    public void setGems(Player target, double amount) {
         if (getProfileData(target) == null)
             return;
 
-        GemsSetEvent event = new GemsSetEvent(target, amount);
+        GemsSetEvent event = new GemsSetEvent(null, target, amount);
         Bukkit.getPluginManager().callEvent(event);
 
         if (event.isCancelled())
@@ -193,23 +236,45 @@ public class SimpleGemsAPI {
     }
 
     /**
-     * Used to set offline player gems.
+     * Used to set a player gems.
      *
-     * @param player offline player
+     * @param player the player who set the gems
+     * @param target the player who received the gems
      * @param amount amount of gems to set
      */
-    public void setOfflineGems(OfflinePlayer player, long amount) {
+    public void setGems(Player player, Player target, double amount) {
+        if (getProfileData(target) == null)
+            return;
+
+        GemsSetEvent event = new GemsSetEvent(player, target, amount);
+        Bukkit.getPluginManager().callEvent(event);
+
+        if (event.isCancelled())
+            return;
+
+        getProfileData(target).getGems().setAmount(amount);
+        Tasks.runAsync(() -> getProfileData(target).save(target));
+    }
+
+    /**
+     * Used to set an offline player gems.
+     *
+     * @param player the player who received the gems
+     * @param amount amount of gems to set
+     */
+    public void setOfflineGems(OfflinePlayer player, double amount) {
         Methods.setOfflineGems(player, amount);
     }
 
     /**
-     * Used to pay player gems
+     * Used to pay the target player gems
+     * from the player's account.
      *
-     * @param player online player
-     * @param target online target
+     * @param player the player who paid the gems
+     * @param target the player who received the gems
      * @param amount amount of gems to pay
      */
-    public void payGems(Player player, Player target, long amount, boolean silent) {
+    public void payGems(Player player, Player target, double amount, boolean silent) {
         if (getProfileData(player) == null)
             return;
 
@@ -223,13 +288,14 @@ public class SimpleGemsAPI {
     }
 
     /**
-     * Used to pay offline player gems
+     * Used to pay the target offline player gems
+     * from the player's account.
      *
-     * @param player online player
-     * @param target offline target
+     * @param player the player who paid the gems
+     * @param target the player who received the gems
      * @param amount amount of gems to pay
      */
-    public void payOfflineGems(Player player, OfflinePlayer target, long amount) {
+    public void payOfflineGems(Player player, OfflinePlayer target, double amount) {
         if (getProfileData(player) == null)
             return;
 
@@ -237,12 +303,15 @@ public class SimpleGemsAPI {
     }
 
     /**
-     * Used to withdraw player gems.
+     * Used to withdraw player gems into an item form.
+     * <p>
+     * WARNING: If you want to take/remove gems from
+     * a player's account then you should use #takeGems instead.
      *
-     * @param player online player
+     * @param player the player who received the gems in item form
      * @param amount amount of gems to withdraw
      */
-    public void withdrawGems(Player player, long amount) {
+    public void withdrawGems(Player player, double amount) {
         if (getProfileData(player) == null)
             return;
 
@@ -254,4 +323,5 @@ public class SimpleGemsAPI {
 
         Methods.withdrawGems(player, amount);
     }
+
 }

@@ -1,21 +1,21 @@
 package me.refracdevelopment.simplegems.utilities.chat;
 
-import lombok.experimental.UtilityClass;
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.utilities.Methods;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-@UtilityClass
 public class Placeholders {
 
-    public String setPlaceholders(CommandSender sender, String placeholder) {
+    private Placeholders() {
+    }
+
+    public static String setPlaceholders(CommandSender sender, String placeholder) {
         placeholder = placeholder.replace("%prefix%", SimpleGems.getInstance().getLocaleFile().getString("prefix"));
 
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
-            long gems = SimpleGems.getInstance().getGemsAPI().getGems(player);
+        if (sender instanceof Player player) {
+            double gems = SimpleGems.getInstance().getGemsAPI().getGems(player);
 
             placeholder = placeholder.replace("%player%", player.getName());
             placeholder = placeholder.replace("%gems%", String.valueOf(gems));
@@ -34,14 +34,13 @@ public class Placeholders {
         return placeholder;
     }
 
-    public StringPlaceholders setPlaceholders(CommandSender sender) {
+    public static StringPlaceholders setPlaceholders(CommandSender sender) {
         StringPlaceholders.Builder placeholders = StringPlaceholders.builder();
 
         placeholders.add("prefix", SimpleGems.getInstance().getLocaleFile().getString("prefix"));
 
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
-            long gems = SimpleGems.getInstance().getGemsAPI().getGems(player);
+        if (sender instanceof Player player) {
+            double gems = SimpleGems.getInstance().getGemsAPI().getGems(player);
 
             placeholders.add("player", player.getName());
             placeholders.add("gems", String.valueOf(gems));
@@ -60,14 +59,13 @@ public class Placeholders {
         return placeholders.build();
     }
 
-    public StringPlaceholders setOfflinePlaceholders(OfflinePlayer sender) {
+    public static StringPlaceholders setOfflinePlaceholders(OfflinePlayer sender) {
         StringPlaceholders.Builder placeholders = StringPlaceholders.builder();
 
         placeholders.add("prefix", SimpleGems.getInstance().getLocaleFile().getString("prefix"));
 
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
-            long gems = SimpleGems.getInstance().getGemsAPI().getGems(player);
+        if (sender instanceof Player player) {
+            double gems = SimpleGems.getInstance().getGemsAPI().getGems(player);
 
             placeholders.add("player", player.getName());
             placeholders.add("gems", String.valueOf(gems));
@@ -75,7 +73,7 @@ public class Placeholders {
             placeholders.add("gems_decimal", Methods.formatDecimal(gems));
             placeholders.add("displayname", player.getDisplayName());
         } else {
-            long gems = SimpleGems.getInstance().getGemsAPI().getOfflineGems(sender);
+            double gems = SimpleGems.getInstance().getGemsAPI().getOfflineGems(sender);
 
             placeholders.add("player", sender.getName());
             placeholders.add("gems", String.valueOf(gems));

@@ -2,10 +2,11 @@ name: SimpleGems
 version: '${project.version}'
 main: me.refracdevelopment.simplegems.SimpleGems
 authors:
-  - Refrac
+  - RefracDevelopment
 api-version: "1.13"
-softdepend:
+depend:
   - NBTAPI
+softdepend:
   - PlaceholderAPI
   - Skulls
   - HeadDatabase

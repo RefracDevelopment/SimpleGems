@@ -5,8 +5,8 @@ import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.player.Profile;
 import me.refracdevelopment.simplegems.utilities.Methods;
 import me.refracdevelopment.simplegems.utilities.Tasks;
-import me.refracdevelopment.simplegems.utilities.chat.Color;
 import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
+import me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils;
 import me.refracdevelopment.simplegems.utilities.chat.StringPlaceholders;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.ItemFrame;
@@ -38,7 +38,7 @@ public class PlayerListener implements Listener {
         Tasks.runAsync(() -> profile.getData().load(player));
 
         if (profile == null || profile.getData() == null) {
-            player.kickPlayer(Color.translate(SimpleGems.getInstance().getLocaleFile().getString("kick-messages-error")));
+            SimpleGems.getInstance().getPaperLibAdventure().kickPlayer(player, RyMessageUtils.adventureTranslate(player, SimpleGems.getInstance().getLocaleFile().getString("kick-messages-error")));
             return;
         }
 
@@ -58,7 +58,7 @@ public class PlayerListener implements Listener {
         if (!event.getMessage().equalsIgnoreCase("/reload confirm"))
             return;
 
-        Color.sendCustomMessage(player, "&cUse of /reload is not recommended as it can cause issues often cases. Please restart your server when possible.");
+        RyMessageUtils.sendPlayer(player, "&cUse of /reload is not recommended as it can cause issues often cases. Please restart your server when possible.");
     }
 
     @EventHandler
@@ -94,9 +94,9 @@ public class PlayerListener implements Listener {
         NBTItem nbtItem = new NBTItem(item);
 
         if (nbtItem.hasTag("gems-item-value")) {
-            long foundValue = nbtItem.getLong("gems-item-value");
+            double foundValue = nbtItem.getLong("gems-item-value");
 
-            gemsItem = SimpleGems.getInstance().getGemsAPI().getGemsItem(foundValue);
+            gemsItem = SimpleGems.getInstance().getGemsAPI().getGemsItem(player, foundValue);
 
             if (!item.isSimilar(gemsItem))
                 return;
@@ -119,7 +119,7 @@ public class PlayerListener implements Listener {
 
             player.getInventory().removeItem(item);
             player.updateInventory();
-            Color.sendMessage(player, "gems-deposited", placeholders);
+            RyMessageUtils.sendPluginMessage(player, "gems-deposited", placeholders);
         }
     }
 
@@ -143,12 +143,12 @@ public class PlayerListener implements Listener {
     }
 
     private void sendDevMessage(Player player) {
-        Color.sendCustomMessage(player, " ");
-        Color.sendCustomMessage(player, "&aWelcome " + SimpleGems.getInstance().getDescription().getName() + " Developer!");
-        Color.sendCustomMessage(player, "&aThis server is currently running " + SimpleGems.getInstance().getDescription().getName() + " &bv" + SimpleGems.getInstance().getDescription().getVersion() + "&a.");
-        Color.sendCustomMessage(player, "&aPlugin name&7: &f" + SimpleGems.getInstance().getDescription().getName());
-        Color.sendCustomMessage(player, " ");
-        Color.sendCustomMessage(player, "&aServer version&7: &f" + Bukkit.getVersion());
-        Color.sendCustomMessage(player, " ");
+        RyMessageUtils.sendPlayer(player, " ");
+        RyMessageUtils.sendPlayer(player, "&aWelcome " + SimpleGems.getInstance().getDescription().getName() + " Developer!");
+        RyMessageUtils.sendPlayer(player, "&aThis server is currently running " + SimpleGems.getInstance().getDescription().getName() + " &bv" + SimpleGems.getInstance().getDescription().getVersion() + "&a.");
+        RyMessageUtils.sendPlayer(player, "&aPlugin name&7: &f" + SimpleGems.getInstance().getDescription().getName());
+        RyMessageUtils.sendPlayer(player, " ");
+        RyMessageUtils.sendPlayer(player, "&aServer version&7: &f" + Bukkit.getVersion());
+        RyMessageUtils.sendPlayer(player, " ");
     }
 }

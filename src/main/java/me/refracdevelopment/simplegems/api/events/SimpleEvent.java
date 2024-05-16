@@ -11,8 +11,8 @@ import org.jetbrains.annotations.NotNull;
 public abstract class SimpleEvent extends Event implements Cancellable {
 
     private final Player player;
-    private boolean isCancelled;
     private final HandlerList HANDLERS = new HandlerList();
+    private boolean isCancelled;
 
     public SimpleEvent(Player player) {
         this.player = player;

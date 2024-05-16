@@ -3,8 +3,8 @@ package me.refracdevelopment.simplegems.commands;
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.utilities.Methods;
 import me.refracdevelopment.simplegems.utilities.Permissions;
-import me.refracdevelopment.simplegems.utilities.chat.Color;
 import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
+import me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils;
 import me.refracdevelopment.simplegems.utilities.chat.StringPlaceholders;
 import me.refracdevelopment.simplegems.utilities.command.SubCommand;
 import org.bukkit.Bukkit;
@@ -40,21 +40,24 @@ public class BalanceCommand extends SubCommand {
     @Override
     public void perform(CommandSender commandSender, String[] args) {
         if (!commandSender.hasPermission(Permissions.GEMS_BALANCE_COMMAND)) {
-            Color.sendMessage(commandSender, "no-permission");
+            RyMessageUtils.sendPluginMessage(commandSender, "no-permission");
             return;
         }
 
         if (args.length != 2) {
-            Color.sendMessage(commandSender, "gems-balance");
+            if (!(commandSender instanceof Player))
+                return;
+
+            RyMessageUtils.sendPluginMessage(commandSender, "gems-balance");
             return;
         }
 
         if (Bukkit.getPlayer(args[1]) != null) {
             Player target = Bukkit.getPlayer(args[1]);
-            Color.sendMessage(commandSender, "gems-balance", Placeholders.setPlaceholders(target));
+            RyMessageUtils.sendPluginMessage(commandSender, "gems-balance", Placeholders.setPlaceholders(target));
         } else if (Bukkit.getOfflinePlayer(args[1]) != null && Bukkit.getOfflinePlayer(args[0]).hasPlayedBefore()) {
             OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
-            long amount = SimpleGems.getInstance().getGemsAPI().getOfflineGems(target);
+            double amount = SimpleGems.getInstance().getGemsAPI().getOfflineGems(target);
 
             StringPlaceholders placeholders = StringPlaceholders.builder()
                     .addAll(Placeholders.setOfflinePlaceholders(target))
@@ -64,9 +67,9 @@ public class BalanceCommand extends SubCommand {
                     .add("gems_decimal", Methods.formatDecimal(amount))
                     .build();
 
-            Color.sendMessage(commandSender, "gems-balance", placeholders);
+            RyMessageUtils.sendPluginMessage(commandSender, "gems-balance", placeholders);
         } else
-            Color.sendMessage(commandSender, "invalid-player");
+            RyMessageUtils.sendPluginMessage(commandSender, "invalid-player");
     }
 
     @Override

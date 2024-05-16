@@ -4,7 +4,7 @@ import com.cryptomorin.xseries.ReflectionUtils;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.CommandSender;
 
-import java.awt.Color;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -12,8 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-// Taken from
-// https://github.com/Rosewood-Development/RoseGarden/
+@SuppressWarnings("deprecation")
 public final class HexUtils {
 
     private static final int CHARS_UNTIL_LOOP = 30;
@@ -276,13 +275,13 @@ public final class HexUtils {
      * @return The closest ChatColor value
      */
     public static ChatColor translateHex(String hex) {
-        if (ReflectionUtils.MINOR_NUMBER >= 16)
+        if (ReflectionUtils.supports(16))
             return ChatColor.of(hex);
         return translateHex(Color.decode(hex));
     }
 
     public static ChatColor translateHex(Color color) {
-        if (ReflectionUtils.MINOR_NUMBER >= 16)
+        if (ReflectionUtils.supports(16))
             return ChatColor.of(color);
 
         int minDist = Integer.MAX_VALUE;
@@ -390,7 +389,7 @@ public final class HexUtils {
         @Override
         public ChatColor nextChatColor() {
             // Gradients will use the first color if the entire spectrum won't be available to preserve prettiness
-            if (ReflectionUtils.MINOR_NUMBER < 16 || this.steps <= 1)
+            if (ReflectionUtils.supports(16) || this.steps <= 1)
                 return translateHex(this.gradients.get(0).colorAt(0));
             return translateHex(this.nextColor());
         }

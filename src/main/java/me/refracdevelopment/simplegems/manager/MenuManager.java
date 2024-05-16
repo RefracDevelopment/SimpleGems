@@ -14,8 +14,8 @@ public class MenuManager {
         PlayerMenuUtility playerMenuUtility;
 
         if (!(playerMenuUtilityMap.containsKey(p.getUniqueId()))) {
-
             playerMenuUtility = new PlayerMenuUtility(p);
+
             playerMenuUtilityMap.put(p.getUniqueId(), playerMenuUtility);
 
             return playerMenuUtility;

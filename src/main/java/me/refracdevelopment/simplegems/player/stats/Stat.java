@@ -7,17 +7,17 @@ import lombok.Setter;
 @Getter
 public class Stat {
 
-    private long amount;
+    private double amount;
 
-    public void incrementAmount(long amount) {
+    public void incrementAmount(double amount) {
         this.amount += amount;
     }
 
-    public void decrementAmount(long amount) {
+    public void decrementAmount(double amount) {
         this.amount -= amount;
     }
 
-    public boolean hasAmount(long amount) {
+    public boolean hasAmount(double amount) {
         return this.amount >= amount;
     }
 }

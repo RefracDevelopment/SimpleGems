@@ -3,8 +3,8 @@ package me.refracdevelopment.simplegems.commands;
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.menu.GemShopCategory;
 import me.refracdevelopment.simplegems.utilities.Permissions;
-import me.refracdevelopment.simplegems.utilities.chat.Color;
 import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
+import me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils;
 import me.refracdevelopment.simplegems.utilities.command.SubCommand;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -36,15 +36,13 @@ public class ShopCommand extends SubCommand {
     @Override
     public void perform(CommandSender commandSender, String[] args) {
         // Make sure the sender is a player.
-        if (!(commandSender instanceof Player)) {
-            Color.sendMessage(commandSender, "no-console", Placeholders.setPlaceholders(commandSender));
+        if (!(commandSender instanceof Player player)) {
+            RyMessageUtils.sendPluginMessage(commandSender, "no-console", Placeholders.setPlaceholders(commandSender));
             return;
         }
 
-        Player player = (Player) commandSender;
-
         if (!player.hasPermission(Permissions.GEMS_SHOP_COMMAND)) {
-            Color.sendMessage(commandSender, "no-permission");
+            RyMessageUtils.sendPluginMessage(commandSender, "no-permission");
             return;
         }
 
@@ -56,13 +54,13 @@ public class ShopCommand extends SubCommand {
                     return;
 
                 if (!category.isEnabled()) {
-                    Color.sendMessage(player, "shop-disabled");
+                    RyMessageUtils.sendPluginMessage(player, "shop-disabled");
                     return;
                 }
 
                 if (!player.hasPermission(category.getPermission()) && !category.getPermission().isEmpty()) {
                     player.closeInventory();
-                    Color.sendMessage(player, "no-permission");
+                    RyMessageUtils.sendPluginMessage(player, "no-permission");
                     return;
                 }
 
@@ -74,21 +72,21 @@ public class ShopCommand extends SubCommand {
 
         SimpleGems.getInstance().getGemShop().getCategories().forEach((gemShopCategory, gemShopItems) -> {
             if (!gemShopCategory.equalsIgnoreCase(args[1])) {
-                Color.log("The 'categories." + args[1] + "' menu category in 'menus.yml' config file doesn't exist.");
-                Color.sendMessage(player, "invalid-category");
+                RyMessageUtils.sendConsole(true, "The 'categories." + args[1] + "' menu category in 'menus.yml' config file doesn't exist.");
+                RyMessageUtils.sendPluginMessage(player, "invalid-category");
                 return;
             }
 
             GemShopCategory category = new GemShopCategory(SimpleGems.getInstance().getMenuManager().getPlayerMenuUtility(player), gemShopCategory);
 
             if (!category.isEnabled()) {
-                Color.sendMessage(player, "shop-disabled");
+                RyMessageUtils.sendPluginMessage(player, "shop-disabled");
                 return;
             }
 
             if (!player.hasPermission(category.getPermission()) && !category.getPermission().isEmpty()) {
                 player.closeInventory();
-                Color.sendMessage(player, "no-permission");
+                RyMessageUtils.sendPluginMessage(player, "no-permission");
                 return;
             }
 

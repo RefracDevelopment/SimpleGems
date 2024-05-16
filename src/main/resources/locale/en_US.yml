@@ -1,10 +1,10 @@
 # en_US translation by Refrac
 
 # This is used for automatic file updating purposes
-config-version: "8"
+config-version: "10"
 
 # Plugin Message Prefix
-prefix: <g:#8A2387:#E94057:#F27121>SimpleGems &8| &f
+prefix: '<gradient:#8A2387:#E94057:#F27121:0>SimpleGems &8| &f'
 
 # Generic Command Messages
 no-permission: '&cYou don''t have permission for that!'

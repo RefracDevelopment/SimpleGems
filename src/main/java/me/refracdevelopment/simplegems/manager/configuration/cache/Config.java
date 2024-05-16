@@ -7,8 +7,8 @@ import java.util.List;
 public class Config {
 
     // Settings
-    public long STARTING_GEMS;
-    public int LEADERBOARD_UPDATE_INTERVAL;
+    public double STARTING_GEMS;
+    public long LEADERBOARD_UPDATE_INTERVAL;
     public String DATA_TYPE;
 
     // Top
@@ -22,12 +22,9 @@ public class Config {
 
     // Gems Item
     public String GEMS_ITEM_MATERIAL;
-    public int GEMS_ITEM_DURABILITY;
-    public boolean GEMS_ITEM_CUSTOM_DATA;
-    public int GEMS_ITEM_CUSTOM_MODEL_DATA;
-    public boolean GEMS_ITEM_ITEMS_ADDER;
+    public int GEMS_ITEM_DURABILITY, GEMS_ITEM_CUSTOM_MODEL_DATA;
+    public boolean GEMS_ITEM_CUSTOM_DATA, GEMS_ITEM_ITEMS_ADDER, GEMS_ITEM_GLOW, GEMS_ITEM_ORAXEN;
     public String GEMS_ITEM_NAME;
-    public boolean GEMS_ITEM_GLOW;
     public List<String> GEMS_ITEM_LORE;
 
     public Config() {
@@ -36,8 +33,8 @@ public class Config {
 
     public void loadConfig() {
         // Settings
-        STARTING_GEMS = SimpleGems.getInstance().getConfigFile().getInt("starting-gems");
-        LEADERBOARD_UPDATE_INTERVAL = SimpleGems.getInstance().getConfigFile().getInt("leaderboard-update-interval");
+        STARTING_GEMS = SimpleGems.getInstance().getConfigFile().getDouble("starting-gems");
+        LEADERBOARD_UPDATE_INTERVAL = SimpleGems.getInstance().getConfigFile().getLong("leaderboard-update-interval");
         DATA_TYPE = SimpleGems.getInstance().getConfigFile().getString("data-type");
 
         // Top
@@ -55,6 +52,7 @@ public class Config {
         GEMS_ITEM_CUSTOM_DATA = SimpleGems.getInstance().getConfigFile().getBoolean("gems-item.customData");
         GEMS_ITEM_CUSTOM_MODEL_DATA = SimpleGems.getInstance().getConfigFile().getInt("gems-item.customModelData");
         GEMS_ITEM_ITEMS_ADDER = SimpleGems.getInstance().getConfigFile().getBoolean("gems-item.itemsAdder");
+        GEMS_ITEM_ORAXEN = SimpleGems.getInstance().getConfigFile().getBoolean("gems-item.oraxen");
         GEMS_ITEM_NAME = SimpleGems.getInstance().getConfigFile().getString("gems-item.name");
         GEMS_ITEM_GLOW = SimpleGems.getInstance().getConfigFile().getBoolean("gems-item.glow");
         GEMS_ITEM_LORE = SimpleGems.getInstance().getConfigFile().getStringList("gems-item.lore");

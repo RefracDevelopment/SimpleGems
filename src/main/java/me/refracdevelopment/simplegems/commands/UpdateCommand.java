@@ -2,7 +2,7 @@ package me.refracdevelopment.simplegems.commands;
 
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.utilities.Permissions;
-import me.refracdevelopment.simplegems.utilities.chat.Color;
+import me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils;
 import me.refracdevelopment.simplegems.utilities.command.SubCommand;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -34,7 +34,7 @@ public class UpdateCommand extends SubCommand {
     @Override
     public void perform(CommandSender commandSender, String[] args) {
         if (!commandSender.hasPermission(Permissions.GEMS_UPDATE_COMMAND)) {
-            Color.sendMessage(commandSender, "no-permission");
+            RyMessageUtils.sendPluginMessage(commandSender, "no-permission");
             return;
         }
 

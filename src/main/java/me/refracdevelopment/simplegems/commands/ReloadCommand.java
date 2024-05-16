@@ -2,9 +2,8 @@ package me.refracdevelopment.simplegems.commands;
 
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.utilities.Permissions;
-import me.refracdevelopment.simplegems.utilities.chat.Color;
+import me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils;
 import me.refracdevelopment.simplegems.utilities.command.SubCommand;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -36,15 +35,15 @@ public class ReloadCommand extends SubCommand {
     @Override
     public void perform(CommandSender commandSender, String[] args) {
         if (!commandSender.hasPermission(Permissions.GEMS_RELOAD_COMMAND)) {
-            Color.sendMessage(commandSender, "no-permission");
+            RyMessageUtils.sendPluginMessage(commandSender, "no-permission");
             return;
         }
 
-        Bukkit.getScheduler().cancelTasks(SimpleGems.getInstance());
+        SimpleGems.getInstance().getPaperLib().scheduling().cancelGlobalTasks();
         reloadFiles();
         SimpleGems.getInstance().getGemShop().setupCustomMenuData();
         SimpleGems.getInstance().getLeaderboardManager().updateTask();
-        Color.sendMessage(commandSender, "command-reload-success");
+        RyMessageUtils.sendPluginMessage(commandSender, "command-reload-success");
     }
 
     @Override
@@ -64,8 +63,6 @@ public class ReloadCommand extends SubCommand {
         SimpleGems.getInstance().getMenus().loadConfig();
         SimpleGems.getInstance().getCommands().loadConfig();
 
-        Color.log("&c==========================================");
-        Color.log("&eAll files have been reloaded correctly!");
-        Color.log("&c==========================================");
+        RyMessageUtils.sendConsole(true, "&aReloaded all files.");
     }
 }

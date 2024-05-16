@@ -4,7 +4,7 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.utilities.Tasks;
-import me.refracdevelopment.simplegems.utilities.chat.Color;
+import me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils;
 import org.bukkit.Bukkit;
 
 import java.sql.Connection;
@@ -13,24 +13,24 @@ import java.sql.SQLException;
 
 public class MySQLManager {
 
-    private HikariDataSource hikariDataSource;
     private final String host = SimpleGems.getInstance().getConfigFile().getString("mysql.host");
     private final String username = SimpleGems.getInstance().getConfigFile().getString("mysql.username");
     private final String password = SimpleGems.getInstance().getConfigFile().getString("mysql.password");
     private final String database = SimpleGems.getInstance().getConfigFile().getString("mysql.database");
     private final String port = SimpleGems.getInstance().getConfigFile().getString("mysql.port");
+    private HikariDataSource hikariDataSource;
 
     public MySQLManager() {
-        Color.log("&eEnabling MySQL support!");
+        RyMessageUtils.sendConsole(true, "&aEnabling MySQL support.");
 
         Exception ex = connect();
 
         if (ex != null) {
-            Color.log("&cThere was an error connecting to your database. Here's the suspect: &e" + ex.getLocalizedMessage());
+            RyMessageUtils.sendConsole(true, "&cThere was an error connecting to your database. Here's the suspect: &e" + ex.getLocalizedMessage());
             ex.printStackTrace();
             Bukkit.shutdown();
         } else
-            Color.log("&aManaged to successfully connect to: &e" + database + "&a!");
+            RyMessageUtils.sendConsole(true, "&aManaged to successfully connect to: &e" + database + "&a!");
 
         createT();
     }
@@ -58,6 +58,7 @@ public class MySQLManager {
             exception.printStackTrace();
             return exception;
         }
+
         return null;
     }
 
@@ -97,7 +98,7 @@ public class MySQLManager {
             try (Connection resource = getConnection(); PreparedStatement statement = resource.prepareStatement("CREATE TABLE IF NOT EXISTS " + name + "(" + info + ");")) {
                 statement.execute();
             } catch (SQLException exception) {
-                Color.log("An error occurred while creating database table " + name + ".");
+                RyMessageUtils.sendConsole(true, "An error occurred while creating database table " + name + ".");
                 exception.printStackTrace();
             }
         }).start();
@@ -117,8 +118,8 @@ public class MySQLManager {
 
                 statement.execute();
             } catch (SQLException exception) {
-                Color.log("An error occurred while executing an update on the database.");
-                Color.log("MySQL#execute : " + query);
+                RyMessageUtils.sendConsole(true, "An error occurred while executing an update on the database.");
+                RyMessageUtils.sendConsole(true, "MySQL#execute : " + query);
                 exception.printStackTrace();
             }
         }).start();
@@ -139,14 +140,14 @@ public class MySQLManager {
 
                 callback.call(statement.executeQuery());
             } catch (SQLException exception) {
-                Color.log("An error occurred while executing a query on the database.");
-                Color.log("MySQL#select : " + query);
+                RyMessageUtils.sendConsole(true, "An error occurred while executing a query on the database.");
+                RyMessageUtils.sendConsole(true, "MySQL#select : " + query);
                 exception.printStackTrace();
             }
         }).start();
     }
 
-    public void updatePlayerGems(String uuid, long gems) {
+    public void updatePlayerGems(String uuid, double gems) {
         execute("UPDATE SimpleGems SET gems=? WHERE uuid=?", gems, uuid);
     }
 

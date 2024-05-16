@@ -3,12 +3,14 @@ package me.refracdevelopment.simplegems.commands;
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.utilities.Permissions;
 import me.refracdevelopment.simplegems.utilities.Tasks;
-import me.refracdevelopment.simplegems.utilities.chat.Color;
+import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
+import me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils;
 import me.refracdevelopment.simplegems.utilities.command.SubCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import space.arim.morepaperlib.adventure.MorePaperLibAdventure;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,10 +39,18 @@ public class ResetCommand extends SubCommand {
 
     @Override
     public void perform(CommandSender commandSender, String[] args) {
-        if (!commandSender.hasPermission(Permissions.GEMS_RESET_COMMAND)) {
-            Color.sendMessage(commandSender, "no-permission");
+        // Make sure the sender is a player.
+        if (!(commandSender instanceof Player player)) {
+            RyMessageUtils.sendPluginMessage(commandSender, "no-console", Placeholders.setPlaceholders(commandSender));
             return;
         }
+
+        if (!commandSender.hasPermission(Permissions.GEMS_RESET_COMMAND)) {
+            RyMessageUtils.sendPluginMessage(player, "no-permission");
+            return;
+        }
+
+        MorePaperLibAdventure paperLibAdventure = SimpleGems.getInstance().getPaperLibAdventure();
 
         if (args.length == 1) {
             Tasks.runAsync(() -> {
@@ -48,21 +58,19 @@ public class ResetCommand extends SubCommand {
                     case MYSQL:
                         SimpleGems.getInstance().getMySQLManager().delete();
 
-                        Tasks.run(() -> Bukkit.getOnlinePlayers().forEach(player -> {
-                            player.kickPlayer(Color.translate(player, SimpleGems.getInstance().getLocaleFile().getString("kick-messages-error")));
-                        }));
+                        Bukkit.getOnlinePlayers().forEach(p -> {
+                            paperLibAdventure.kickPlayer(p, RyMessageUtils.adventureTranslate(p, SimpleGems.getInstance().getLocaleFile().getString("kick-messages-error")));
+                        });
                         break;
                     case SQLITE:
                         SimpleGems.getInstance().getSqLiteManager().delete();
 
-                        Tasks.run(() -> Bukkit.getOnlinePlayers().forEach(player -> {
-                            player.kickPlayer(Color.translate(player, SimpleGems.getInstance().getLocaleFile().getString("kick-messages-error")));
-                        }));
+                        Bukkit.getOnlinePlayers().forEach(p -> {
+                            paperLibAdventure.kickPlayer(p, RyMessageUtils.adventureTranslate(p, SimpleGems.getInstance().getLocaleFile().getString("kick-messages-error")));
+                        });
                         break;
                     default:
-                        Tasks.run(() -> {
-                            Color.sendCustomMessage(commandSender, "This command is only available for MySQL, MariaDB and SQLite.");
-                        });
+                        RyMessageUtils.sendPlayer(player, "This command is only available for MySQL, MariaDB and SQLite.");
                         break;
                 }
             });
@@ -75,25 +83,17 @@ public class ResetCommand extends SubCommand {
                         case MYSQL:
                             SimpleGems.getInstance().getMySQLManager().deletePlayer(target.getPlayer().getUniqueId().toString());
 
-                            Tasks.run(() -> {
-                                Color.sendMessage(commandSender, "gems-reset-player");
-
-                                target.getPlayer().kickPlayer(Color.translate(target.getPlayer(), SimpleGems.getInstance().getLocaleFile().getString("kick-messages-error")));
-                            });
+                            RyMessageUtils.sendPluginMessage(player, "gems-reset-player");
+                            paperLibAdventure.kickPlayer(target.getPlayer(), RyMessageUtils.adventureTranslate(target.getPlayer(), SimpleGems.getInstance().getLocaleFile().getString("kick-messages-error")));
                             break;
                         case SQLITE:
                             SimpleGems.getInstance().getSqLiteManager().deletePlayer(target.getPlayer().getUniqueId().toString());
 
-                            Tasks.run(() -> {
-                                Color.sendMessage(commandSender, "gems-reset-player");
-
-                                target.getPlayer().kickPlayer(Color.translate(target.getPlayer(), SimpleGems.getInstance().getLocaleFile().getString("kick-messages-error")));
-                            });
+                            RyMessageUtils.sendPluginMessage(player, "gems-reset-player");
+                            paperLibAdventure.kickPlayer(target.getPlayer(), RyMessageUtils.adventureTranslate(target.getPlayer(), SimpleGems.getInstance().getLocaleFile().getString("kick-messages-error")));
                             break;
                         default:
-                            Tasks.run(() -> {
-                                Color.sendCustomMessage(commandSender, "This command is only available for MySQL, MariaDB and SQLite.");
-                            });
+                            RyMessageUtils.sendPlayer(player, "This command is only available for MySQL, MariaDB and SQLite.");
                             break;
                     }
                 });
@@ -102,21 +102,15 @@ public class ResetCommand extends SubCommand {
                     case MYSQL:
                         SimpleGems.getInstance().getMySQLManager().deletePlayer(target.getPlayer().getUniqueId().toString());
 
-                        Tasks.run(() -> {
-                            Color.sendMessage(commandSender, "gems-reset-player");
-                        });
+                        RyMessageUtils.sendPluginMessage(player, "gems-reset-player");
                         break;
                     case SQLITE:
                         SimpleGems.getInstance().getSqLiteManager().deletePlayer(target.getPlayer().getUniqueId().toString());
 
-                        Tasks.run(() -> {
-                            Color.sendMessage(commandSender, "gems-reset-player");
-                        });
+                        RyMessageUtils.sendPluginMessage(player, "gems-reset-player");
                         break;
                     default:
-                        Tasks.run(() -> {
-                            Color.sendCustomMessage(commandSender, "This command is only available for MySQL, MariaDB and SQLite.");
-                        });
+                        RyMessageUtils.sendPlayer(player, "This command is only available for MySQL, MariaDB and SQLite.");
                         break;
                 }
             }

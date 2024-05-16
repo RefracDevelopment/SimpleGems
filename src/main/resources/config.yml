@@ -9,7 +9,7 @@
 config-version: "10"
 
 # The locale to use in the /locale folder
-locale: en_US
+locale: "en_US"
 
 # This is used to allow players to start with
 # a defined amount of gems on first join
@@ -24,36 +24,36 @@ leaderboard-update-interval: 1800
 # MYSQL/MARIADB - Database saving
 # SQLITE - Local Database saving
 # Default: SQLITE
-data-type: SQLITE
+data-type: "SQLITE"
 
 # Either MySQL or MariaDB will work here.
 mysql:
   # Default: 127.0.0.1
-  host: 127.0.0.1
+  host: "127.0.0.1"
   # Default: 3306
-  port: '3306'
+  port: "3306"
   # Default: SimpleGems
-  database: SimpleGems
+  database: "SimpleGems"
   # Default: root
-  username: root
+  username: "root"
   # Default:
-  password: ''
+  password: ""
 
 gems-top:
   # This is used for viewing top players
   # Default: &e&lGems %arrow% &6&lTop %entries%
-  title: '&e&lGems %arrow% &6&lTop %entries%'
+  title: "&e&lGems %arrow% &6&lTop %entries%"
   # Default: &6&l%number%. &e%player% &7- &e%gems_formatted%
   # This format will be used for the command and placeholders
-  format: '&6&l%number%. &e%player% &7- &e%gems_formatted%'
+  format: "&6&l%number%. &e%player% &7- &e%gems_formatted%"
   # Default: 10
   top-entries: 10
 
 gems-balance:
-  - ''
-  - '&e&l&eYou currently have &f&n%gems_formatted%&e gems!'
-  - '&7&o(( &f&oTip&7&o: You can get gems by doing &e&oevents&7&o! ))'
-  - ''
+  - ""
+  - "&e&l&eYou currently have &f&n%gems_formatted%&e gems!"
+  - "&7&o(( &f&oTip&7&o: You can get gems by doing &e&oevents&7&o! ))"
+  - ""
 
 gems-item:
   # This is used for withdrawing gems
@@ -68,9 +68,9 @@ gems-item:
   # Default: false
   itemsAdder: false
   # Default: &e&lGems &7(Right Click)
-  name: '&e&lGems &7(Right Click)'
+  name: "&e&lGems &7(Right Click)"
   # Default: false
   glow: false
   lore:
-    - '&7&oRight click to redeem these gems you'
-    - '&7&ohave obtained through your journey'
+    - "&7&oRight click to redeem these gems you"
+    - "&7&ohave obtained through your journey"

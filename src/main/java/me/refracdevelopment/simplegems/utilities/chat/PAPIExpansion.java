@@ -30,7 +30,7 @@ public class PAPIExpansion extends PlaceholderExpansion {
 
     @Override
     public String onPlaceholderRequest(Player player, @NotNull String params) {
-        long gems = SimpleGems.getInstance().getGemsAPI().getGems(player);
+        double gems = SimpleGems.getInstance().getGemsAPI().getGems(player);
 
         if (SimpleGems.getInstance().getLeaderboardManager().getCachedMap().isEmpty())
             SimpleGems.getInstance().getLeaderboardManager().update();

@@ -4,7 +4,7 @@ import lombok.Getter;
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.utilities.ItemBuilder;
 import me.refracdevelopment.simplegems.utilities.Methods;
-import me.refracdevelopment.simplegems.utilities.chat.Color;
+import me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils;
 import me.refracdevelopment.simplegems.utilities.menu.Menu;
 import me.refracdevelopment.simplegems.utilities.menu.PlayerMenuUtility;
 import org.bukkit.Material;
@@ -29,7 +29,7 @@ public class GemShopCategory extends Menu {
 
     @Override
     public String getMenuName() {
-        return Color.translate(playerMenuUtility.getOwner(), SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getString(categoryName + ".title"));
+        return RyMessageUtils.translate(playerMenuUtility.getOwner(), SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getString(categoryName + ".title"));
     }
 
     @Override
@@ -74,7 +74,7 @@ public class GemShopCategory extends Menu {
                 int durability = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getInt(categoryName + ".fill.durability");
                 ItemBuilder item = new ItemBuilder(material);
 
-                item.setName(name);
+                item.setName(RyMessageUtils.translate(playerMenuUtility.getOwner(), name));
                 item.setDurability(durability);
 
                 getInventory().setItem(i, item.toItemStack());

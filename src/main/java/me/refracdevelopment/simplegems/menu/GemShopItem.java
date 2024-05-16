@@ -2,18 +2,17 @@ package me.refracdevelopment.simplegems.menu;
 
 import ca.tweetzy.skulls.Skulls;
 import ca.tweetzy.skulls.api.interfaces.Skull;
-import com.cryptomorin.xseries.ReflectionUtils;
+import com.cryptomorin.xseries.XEnchantment;
 import dev.lone.itemsadder.api.CustomStack;
 import lombok.Getter;
 import me.arcaniax.hdb.api.HeadDatabaseAPI;
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.utilities.ItemBuilder;
 import me.refracdevelopment.simplegems.utilities.Methods;
-import me.refracdevelopment.simplegems.utilities.chat.Color;
 import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
+import me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils;
 import me.refracdevelopment.simplegems.utilities.chat.StringPlaceholders;
 import org.bukkit.Bukkit;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -27,10 +26,10 @@ public class GemShopItem {
 
     private String material;
     private String skullOwner, name, permission;
-    private boolean skulls, headDatabase, messageEnabled, broadcastMessage, customData, glow, action, buyable, itemsAdder;
+    private boolean skulls, headDatabase, messageEnabled, broadcastMessage, customData, glow, action, buyable, itemsAdder, oraxen;
     private int durability, slot, customModelData, amount;
     private List<String> lore, actions, commands, messages;
-    private long cost;
+    private double cost;
 
     public GemShopItem(String category, String item) {
         this.category = category;
@@ -50,47 +49,52 @@ public class GemShopItem {
         this.messageEnabled = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getBoolean(getCategory() + ".items." + getItem() + ".message.enabled");
         this.broadcastMessage = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getBoolean(getCategory() + ".items." + getItem() + ".message.broadcast");
         this.messages = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getStringList(getCategory() + ".items." + getItem() + ".message.text");
-        this.cost = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getLong(getCategory() + ".items." + getItem() + ".cost");
+        this.cost = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getDouble(getCategory() + ".items." + getItem() + ".cost");
         this.slot = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getInt(getCategory() + ".items." + getItem() + ".slot");
         this.permission = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getString(getCategory() + ".items." + getItem() + ".permission", "");
         this.amount = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getInt(getCategory() + ".items." + getItem() + ".amount");
 
-        if (SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getBoolean(getCategory() + ".items." + getItem() + ".head-database"))
+        if (SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.get(getCategory() + ".items." + getItem() + ".head-database") != null)
             this.headDatabase = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getBoolean(getCategory() + ".items." + getItem() + ".head-database", false);
         else
             this.headDatabase = false;
 
-        if (SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getBoolean(getCategory() + ".items." + getItem() + ".skulls"))
+        if (SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.get(getCategory() + ".items." + getItem() + ".skulls") != null)
             this.skulls = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getBoolean(getCategory() + ".items." + getItem() + ".skulls", false);
         else
             this.skulls = false;
 
-        if (SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getBoolean(getCategory() + ".items." + getItem() + ".customData"))
+        if (SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.get(getCategory() + ".items." + getItem() + ".customData") != null)
             this.customData = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getBoolean(getCategory() + ".items." + getItem() + ".customData", false);
         else
             this.customData = false;
 
         this.skullOwner = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getString(getCategory() + ".items." + getItem() + ".skullOwner");
 
-        if (SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getBoolean(getCategory() + ".items." + getItem() + ".glow"))
+        if (SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.get(getCategory() + ".items." + getItem() + ".glow") != null)
             this.glow = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getBoolean(getCategory() + ".items." + getItem() + ".glow");
         else
             this.glow = false;
 
-        if (SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getBoolean(getCategory() + ".items." + getItem() + ".action.enabled"))
+        if (SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.get(getCategory() + ".items." + getItem() + ".action.enabled") != null)
             this.action = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getBoolean(getCategory() + ".items." + getItem() + ".action.enabled", false);
         else
             this.action = false;
 
-        if (SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getBoolean(getCategory() + ".items." + getItem() + ".buyable"))
+        if (SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.get(getCategory() + ".items." + getItem() + ".buyable") != null)
             this.buyable = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getBoolean(getCategory() + ".items." + getItem() + ".buyable");
         else
             this.buyable = true;
 
-        if (SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getBoolean(getCategory() + ".items." + getItem() + ".itemsAdder"))
+        if (SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.get(getCategory() + ".items." + getItem() + ".itemsAdder") != null)
             this.itemsAdder = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getBoolean(getCategory() + ".items." + getItem() + ".itemsAdder");
         else
             this.itemsAdder = false;
+
+        if (SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.get(getCategory() + ".items." + getItem() + ".oraxen") != null)
+            this.oraxen = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getBoolean(getCategory() + ".items." + getItem() + ".oraxen");
+        else
+            this.oraxen = false;
     }
 
     public void sendMessage(Player player) {
@@ -98,29 +102,28 @@ public class GemShopItem {
             return;
 
         if (isBroadcastMessage()) {
-            Bukkit.getOnlinePlayers().forEach(p -> getMessages().forEach(message -> {
-                Color.sendCustomMessage(p, Color.translate(player, message
-                        .replace("%item%", Color.translate(getName()))
+            getMessages().forEach(message -> {
+                RyMessageUtils.broadcast(player, message
+                        .replace("%item%", getName())
                         .replace("%cost%", Methods.formatDecimal(getCost()))
-                        .replace("%price%", String.valueOf(getCost()))
-                ));
-            }));
+                        .replace("%price%", String.valueOf(getCost())));
+            });
             return;
         }
 
         getMessages().forEach(message -> {
-            Color.sendCustomMessage(player, Color.translate(player, message
-                    .replace("%item%", Color.translate(getName()))
+            RyMessageUtils.sendPlayer(player, message
+                    .replace("%item%", getName())
                     .replace("%cost%", Methods.formatDecimal(getCost()))
                     .replace("%price%", String.valueOf(getCost()))
-            ));
+            );
         });
     }
 
     public void runCommands(Player player) {
         getCommands().forEach(command -> {
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), Placeholders.setPlaceholders(player, command
-                    .replace("%item%", Color.translate(getName()))
+                    .replace("%item%", getName())
                     .replace("%cost%", String.valueOf(getCost()))
                     .replace("%price%", String.valueOf(getCost()))
             ));
@@ -138,23 +141,23 @@ public class GemShopItem {
 
                     GemShopCategory category = new GemShopCategory(SimpleGems.getInstance().getMenuManager().getPlayerMenuUtility(player), gemShopCategory);
 
-                    if (!category.isEnabled()) {
+                    if (!player.hasPermission(category.getPermission()) && !category.getPermission().isEmpty()) {
                         player.closeInventory();
-                        Color.sendMessage(player, "shop-disabled");
+                        RyMessageUtils.sendPluginMessage(player, "no-permission");
                         return;
                     }
 
-                    if (!player.hasPermission(category.getPermission()) && !category.getPermission().isEmpty()) {
+                    if (!category.isEnabled()) {
                         player.closeInventory();
-                        Color.sendMessage(player, "no-permission");
+                        RyMessageUtils.sendPluginMessage(player, "shop-disabled");
                         return;
                     }
 
                     category.open();
                 });
             } else {
-                SimpleGems.getInstance().getActionManager().execute(player, Color.translate(player, action
-                        .replace("%item%", Color.translate(getName()))
+                SimpleGems.getInstance().getActionManager().execute(player, Placeholders.setPlaceholders(player, action
+                        .replace("%item%", getName())
                         .replace("%cost%", String.valueOf(getCost()))
                         .replace("%price%", String.valueOf(getCost()))
                 ));
@@ -172,33 +175,31 @@ public class GemShopItem {
             Skull api = Skulls.getAPI().getSkull(Integer.parseInt(getSkullOwner()));
             item = new ItemBuilder(api.getItemStack());
         } else if (isCustomData()) {
-            if (ReflectionUtils.MINOR_NUMBER >= 14)
-                item.setCustomModelData(getCustomModelData());
-            else
-                Color.log("&cAn error occurred when trying to set custom model data. Make sure your only using custom model data when on 1.14+.");
+            item.setCustomModelData(getCustomModelData());
         } else if (isItemsAdder()) {
             CustomStack api = CustomStack.getInstance(getMaterial());
+
             if (api != null)
                 item = new ItemBuilder(api.getItemStack());
             else
-                Color.log("&cAn error occurred when trying to set items adder custom item. Make sure you are typing the correct namespaced id.");
+                RyMessageUtils.sendConsole(true, "&cAn error occurred when trying to set an items adder custom item. Make sure you are typing the correct namespaced id.");
         }
 
         ItemBuilder finalItem = item;
 
         if (isGlow()) {
-            finalItem.addEnchant(Enchantment.ARROW_DAMAGE, 1);
+            finalItem.addEnchant(XEnchantment.POWER.getEnchant(), 1);
             finalItem.setItemFlags(ItemFlag.HIDE_ENCHANTS);
         }
 
-        finalItem.setName(getName());
-        getLore().forEach(s -> finalItem.addLoreLine(Color.translate(player, s
+        finalItem.setName(RyMessageUtils.translate(player, getName()));
+        getLore().forEach(line -> finalItem.addLoreLine(RyMessageUtils.translate(player, line
                 .replace("%item%", getName())
                 .replace("%cost%", String.valueOf(getCost()))
                 .replace("%price%", String.valueOf(getCost())))));
         finalItem.setDurability(getDurability());
 
-        if (!isSkulls())
+        if (!isSkulls() && !isHeadDatabase())
             finalItem.setSkullOwner(getSkullOwner());
 
         return finalItem.toItemStack();
@@ -218,13 +219,13 @@ public class GemShopItem {
 
         if (!player.hasPermission(getPermission()) && !getPermission().isEmpty()) {
             player.closeInventory();
-            Color.sendMessage(player, "no-permission", placeholders);
+            RyMessageUtils.sendPluginMessage(player, "no-permission", placeholders);
             return;
         }
 
         if (isBuyable()) {
             if (!SimpleGems.getInstance().getGemsAPI().hasGems(player, getCost())) {
-                Color.sendMessage(player, "not-enough-gems", placeholders);
+                RyMessageUtils.sendPluginMessage(player, "not-enough-gems", placeholders);
                 return;
             }
 

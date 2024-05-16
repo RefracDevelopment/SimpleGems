@@ -6,7 +6,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class DownloadUtil {
 
-    public void downloadAndEnable(JavaPlugin plugin) {
+    public static void downloadAndEnable(JavaPlugin plugin) {
         BukkitLibraryManager libraryManager = new BukkitLibraryManager(plugin);
         Library lib = Library.builder()
                 .groupId("org{}mariadb{}jdbc") // "{}" is replaced with ".", useful to avoid unwanted changes made by maven-shade-plugin
@@ -16,24 +16,24 @@ public class DownloadUtil {
         Library lib2 = Library.builder()
                 .groupId("org{}slf4j") // "{}" is replaced with ".", useful to avoid unwanted changes made by maven-shade-plugin
                 .artifactId("slf4j-reload4j")
-                .version("2.0.12")
+                .version("2.0.13")
                 .build();
         Library lib3 = Library.builder()
                 .groupId("org{}xerial") // "{}" is replaced with ".", useful to avoid unwanted changes made by maven-shade-plugin
                 .artifactId("sqlite-jdbc")
-                .version("3.45.2.0")
+                .version("3.45.3.0")
                 .build();
         Library lib4 = Library.builder()
                 .groupId("com{}zaxxer") // "{}" is replaced with ".", useful to avoid unwanted changes made by maven-shade-plugin
                 .artifactId("HikariCP")
-                .version("4.0.3")
+                .version("5.1.0")
                 .build();
 
         libraryManager.addMavenCentral();
-        libraryManager.addRepository("https://nexuslite.gcnt.net/repos/other/");
         libraryManager.loadLibrary(lib);
         libraryManager.loadLibrary(lib2);
         libraryManager.loadLibrary(lib3);
         libraryManager.loadLibrary(lib4);
     }
+
 }

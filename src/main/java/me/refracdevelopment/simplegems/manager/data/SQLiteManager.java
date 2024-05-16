@@ -2,7 +2,7 @@ package me.refracdevelopment.simplegems.manager.data;
 
 import lombok.Getter;
 import me.refracdevelopment.simplegems.utilities.Tasks;
-import me.refracdevelopment.simplegems.utilities.chat.Color;
+import me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils;
 import org.bukkit.Bukkit;
 import org.sqlite.SQLiteDataSource;
 
@@ -16,16 +16,16 @@ public class SQLiteManager {
     private SQLiteDataSource dataSource;
 
     public SQLiteManager(String path) {
-        Color.log("&eEnabling SQLite support!");
+        RyMessageUtils.sendConsole(true, "&aEnabling SQLite support.");
 
         Exception ex = connect(path);
 
         if (ex != null) {
-            Color.log("&cThere was an error connecting to your database. Here's the suspect: &e" + ex.getLocalizedMessage());
+            RyMessageUtils.sendConsole(true, "&cThere was an error connecting to your database. Here's the suspect: &e" + ex.getLocalizedMessage());
             ex.printStackTrace();
             Bukkit.shutdown();
         } else
-            Color.log("&aManaged to successfully connect to: &e" + path + "&a!");
+            RyMessageUtils.sendConsole(true, "&aManaged to successfully connect to: &e" + path + "&a!");
 
         createT();
     }
@@ -43,6 +43,7 @@ public class SQLiteManager {
             dataSource = null;
             return exception;
         }
+
         return null;
     }
 
@@ -90,7 +91,7 @@ public class SQLiteManager {
             try (Connection resource = getConnection(); PreparedStatement statement = resource.prepareStatement("CREATE TABLE IF NOT EXISTS " + name + "(" + info + ");")) {
                 statement.execute();
             } catch (SQLException exception) {
-                Color.log("An error occurred while creating database table " + name + ".");
+                RyMessageUtils.sendConsole(true, "An error occurred while creating database table " + name + ".");
                 exception.printStackTrace();
             }
         }).start();
@@ -110,8 +111,8 @@ public class SQLiteManager {
 
                 statement.execute();
             } catch (SQLException exception) {
-                Color.log("An error occurred while executing an update on the database.");
-                Color.log("SQLite#execute : " + query);
+                RyMessageUtils.sendConsole(true, "An error occurred while executing an update on the database.");
+                RyMessageUtils.sendConsole(true, "SQLite#execute : " + query);
                 exception.printStackTrace();
             }
         }).start();
@@ -132,14 +133,14 @@ public class SQLiteManager {
 
                 callback.call(statement.executeQuery());
             } catch (SQLException exception) {
-                Color.log("An error occurred while executing a query on the database.");
-                Color.log("SQLite#select : " + query);
+                RyMessageUtils.sendConsole(true, "An error occurred while executing a query on the database.");
+                RyMessageUtils.sendConsole(true, "SQLite#select : " + query);
                 exception.printStackTrace();
             }
         }).start();
     }
 
-    public void updatePlayerGems(String uuid, long gems) {
+    public void updatePlayerGems(String uuid, double gems) {
         execute("UPDATE SimpleGems SET gems=? WHERE uuid=?", gems, uuid);
     }
 

@@ -4,8 +4,8 @@ import com.google.common.base.Joiner;
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.utilities.Methods;
 import me.refracdevelopment.simplegems.utilities.Permissions;
-import me.refracdevelopment.simplegems.utilities.chat.Color;
 import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
+import me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils;
 import me.refracdevelopment.simplegems.utilities.chat.StringPlaceholders;
 import me.refracdevelopment.simplegems.utilities.command.SubCommand;
 import org.bukkit.Bukkit;
@@ -41,19 +41,19 @@ public class GiveCommand extends SubCommand {
     @Override
     public void perform(CommandSender commandSender, String[] args) {
         if (!commandSender.hasPermission(Permissions.GEMS_GIVE_COMMAND)) {
-            Color.sendMessage(commandSender, "no-permission");
+            RyMessageUtils.sendPluginMessage(commandSender, "no-permission");
             return;
         }
 
         if (!(args.length >= 3)) {
             String baseColor = SimpleGems.getInstance().getLocaleFile().getString("base-command-color");
-            Color.sendCustomMessage(commandSender, baseColor + "/" + SimpleGems.getInstance().getCommands().GEMS_COMMAND_NAME + " " + getName() + " " + getSyntax());
+            RyMessageUtils.sendSender(commandSender, baseColor + "/" + SimpleGems.getInstance().getCommands().GEMS_COMMAND_NAME + " " + getName() + " " + getSyntax());
             return;
         }
 
         // note: used to prevent adding/removing negative numbers.
         if (args[2].contains("-")) {
-            Color.sendMessage(commandSender, "invalid-number", Placeholders.setPlaceholders(commandSender));
+            RyMessageUtils.sendPluginMessage(commandSender, "invalid-number", Placeholders.setPlaceholders(commandSender));
             return;
         }
 
@@ -62,39 +62,41 @@ public class GiveCommand extends SubCommand {
         OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
 
         if (target.isOnline()) {
-            Player player = target.getPlayer();
-            long amount;
+            Player targetPlayer = target.getPlayer();
+            double amount;
 
             try {
-                amount = Long.parseLong(args[2]);
+                amount = Double.parseDouble(args[2]);
             } catch (NumberFormatException exception) {
-                Color.sendMessage(commandSender, "invalid-number", Placeholders.setPlaceholders(commandSender));
+                RyMessageUtils.sendPluginMessage(commandSender, "invalid-number", Placeholders.setPlaceholders(commandSender));
                 return;
             }
 
-            SimpleGems.getInstance().getGemsAPI().giveGems(player, amount);
-
             StringPlaceholders placeholders = StringPlaceholders.builder()
-                    .addAll(Placeholders.setPlaceholders(player))
+                    .addAll(Placeholders.setPlaceholders(targetPlayer))
                     .add("gems", String.valueOf(amount))
                     .add("gems_formatted", Methods.format(amount))
                     .add("gems_decimal", Methods.formatDecimal(amount))
                     .build();
 
-            Color.sendMessage(commandSender, "gems-given", placeholders);
+            if (commandSender instanceof Player player)
+                SimpleGems.getInstance().getGemsAPI().giveGems(player, targetPlayer, amount);
+            else
+                SimpleGems.getInstance().getGemsAPI().giveGems(targetPlayer, amount);
 
             if (message.contains("-s"))
                 return;
 
-            Color.sendMessage(player, "gems-gained", placeholders);
+            RyMessageUtils.sendPluginMessage(commandSender, "gems-given", placeholders);
+            RyMessageUtils.sendPluginMessage(targetPlayer, "gems-gained", placeholders);
         } else if (target.hasPlayedBefore()) {
-            long amount;
+            double amount;
 
             try {
-                amount = Long.parseLong(args[2]);
+                amount = Double.parseDouble(args[2]);
             } catch (NumberFormatException exception) {
-                amount = 0;
-                Color.sendMessage(commandSender, "invalid-number", Placeholders.setPlaceholders(commandSender));
+                RyMessageUtils.sendPluginMessage(commandSender, "invalid-number", Placeholders.setPlaceholders(commandSender));
+                return;
             }
 
             SimpleGems.getInstance().getGemsAPI().giveOfflineGems(target, amount);
@@ -109,9 +111,9 @@ public class GiveCommand extends SubCommand {
             if (message.contains("-s"))
                 return;
 
-            Color.sendMessage(commandSender, "gems-given", placeholders);
+            RyMessageUtils.sendPluginMessage(commandSender, "gems-given", placeholders);
         } else
-            Color.sendMessage(commandSender, "invalid-player");
+            RyMessageUtils.sendPluginMessage(commandSender, "invalid-player");
     }
 
     @Override

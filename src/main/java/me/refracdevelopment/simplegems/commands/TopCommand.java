@@ -2,8 +2,8 @@ package me.refracdevelopment.simplegems.commands;
 
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.utilities.Permissions;
-import me.refracdevelopment.simplegems.utilities.chat.Color;
 import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
+import me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils;
 import me.refracdevelopment.simplegems.utilities.command.SubCommand;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -35,15 +35,13 @@ public class TopCommand extends SubCommand {
     @Override
     public void perform(CommandSender commandSender, String[] args) {
         // Make sure the sender is a player.
-        if (!(commandSender instanceof Player)) {
-            Color.sendMessage(commandSender, "no-console", Placeholders.setPlaceholders(commandSender));
+        if (!(commandSender instanceof Player player)) {
+            RyMessageUtils.sendPluginMessage(commandSender, "no-console", Placeholders.setPlaceholders(commandSender));
             return;
         }
 
-        Player player = (Player) commandSender;
-
         if (!player.hasPermission(Permissions.GEMS_TOP_COMMAND)) {
-            Color.sendMessage(commandSender, "no-permission");
+            RyMessageUtils.sendPluginMessage(commandSender, "no-permission");
             return;
         }
 

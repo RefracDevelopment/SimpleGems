@@ -7,11 +7,12 @@ import org.bukkit.entity.Player;
 @Getter
 public class GemsPayEvent extends SimpleEvent {
 
-    private final long gems;
+    private final double gems;
     private final Player target;
 
-    public GemsPayEvent(Player player, Player target, long amount) {
+    public GemsPayEvent(Player player, Player target, double amount) {
         super(player);
+
         this.target = target;
         this.gems = amount;
     }

@@ -36,8 +36,7 @@ public class ProfileManager {
     }
 
     public Profile getProfile(Object object) {
-        if (object instanceof Player) {
-            Player target = (Player) object;
+        if (object instanceof Player target) {
 
             if (!this.profiles.containsKey(target.getUniqueId()))
                 return null;
@@ -45,8 +44,7 @@ public class ProfileManager {
             return profiles.get(target.getUniqueId());
         }
 
-        if (object instanceof UUID) {
-            UUID uuid = (UUID) object;
+        if (object instanceof UUID uuid) {
 
             if (!this.profiles.containsKey(uuid))
                 return null;

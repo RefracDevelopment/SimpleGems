@@ -7,10 +7,11 @@ import org.bukkit.entity.Player;
 @Getter
 public class GemsWithdrawEvent extends SimpleEvent {
 
-    private final long gems;
+    private final double gems;
 
-    public GemsWithdrawEvent(Player target, long amount) {
+    public GemsWithdrawEvent(Player target, double amount) {
         super(target);
+
         this.gems = amount;
     }
 }

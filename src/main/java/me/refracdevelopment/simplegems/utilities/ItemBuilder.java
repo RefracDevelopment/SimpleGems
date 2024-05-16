@@ -58,7 +58,7 @@ public class ItemBuilder {
 
     public ItemBuilder setName(String name) {
         ItemMeta im = is.getItemMeta();
-        im.setDisplayName(me.refracdevelopment.simplegems.utilities.chat.Color.translate(name));
+        im.setDisplayName(me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils.translate(name));
         is.setItemMeta(im);
         return this;
     }
@@ -122,14 +122,14 @@ public class ItemBuilder {
 
     public ItemBuilder setLore(String... lore) {
         ItemMeta im = is.getItemMeta();
-        im.setLore(me.refracdevelopment.simplegems.utilities.chat.Color.translate(Arrays.asList(lore)));
+        im.setLore(me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils.translate(Arrays.asList(lore)));
         is.setItemMeta(im);
         return this;
     }
 
     public ItemBuilder setLore(List<String> lore) {
         ItemMeta im = is.getItemMeta();
-        im.setLore(me.refracdevelopment.simplegems.utilities.chat.Color.translate(lore));
+        im.setLore(me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils.translate(lore));
         is.setItemMeta(im);
         return this;
     }
@@ -162,7 +162,7 @@ public class ItemBuilder {
         if (im.hasLore())
             lore = new ArrayList<>(im.getLore());
         lore.add(line);
-        im.setLore(me.refracdevelopment.simplegems.utilities.chat.Color.translate(lore));
+        im.setLore(me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils.translate(lore));
         is.setItemMeta(im);
         return this;
     }
@@ -182,7 +182,7 @@ public class ItemBuilder {
         ItemMeta im = is.getItemMeta();
         List<String> lore = new ArrayList<>(im.getLore());
         lore.set(pos, line);
-        im.setLore(me.refracdevelopment.simplegems.utilities.chat.Color.translate(lore));
+        im.setLore(me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils.translate(lore));
         is.setItemMeta(im);
         return this;
     }
