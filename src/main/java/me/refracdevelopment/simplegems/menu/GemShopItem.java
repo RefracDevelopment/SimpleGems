@@ -26,7 +26,7 @@ public class GemShopItem {
 
     private String material;
     private String skullOwner, name, permission;
-    private boolean skulls, headDatabase, messageEnabled, broadcastMessage, customData, glow, action, buyable, itemsAdder, oraxen;
+    private boolean skulls, headDatabase, messageEnabled, broadcastMessage, customData, glow, action, buyable, itemsAdder;
     private int durability, slot, customModelData, amount;
     private List<String> lore, actions, commands, messages;
     private double cost;
@@ -90,11 +90,6 @@ public class GemShopItem {
             this.itemsAdder = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getBoolean(getCategory() + ".items." + getItem() + ".itemsAdder");
         else
             this.itemsAdder = false;
-
-        if (SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.get(getCategory() + ".items." + getItem() + ".oraxen") != null)
-            this.oraxen = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getBoolean(getCategory() + ".items." + getItem() + ".oraxen");
-        else
-            this.oraxen = false;
     }
 
     public void sendMessage(Player player) {

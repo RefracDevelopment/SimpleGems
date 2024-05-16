@@ -23,7 +23,7 @@ public class Config {
     // Gems Item
     public String GEMS_ITEM_MATERIAL;
     public int GEMS_ITEM_DURABILITY, GEMS_ITEM_CUSTOM_MODEL_DATA;
-    public boolean GEMS_ITEM_CUSTOM_DATA, GEMS_ITEM_ITEMS_ADDER, GEMS_ITEM_GLOW, GEMS_ITEM_ORAXEN;
+    public boolean GEMS_ITEM_CUSTOM_DATA, GEMS_ITEM_ITEMS_ADDER, GEMS_ITEM_GLOW;
     public String GEMS_ITEM_NAME;
     public List<String> GEMS_ITEM_LORE;
 
@@ -52,7 +52,6 @@ public class Config {
         GEMS_ITEM_CUSTOM_DATA = SimpleGems.getInstance().getConfigFile().getBoolean("gems-item.customData");
         GEMS_ITEM_CUSTOM_MODEL_DATA = SimpleGems.getInstance().getConfigFile().getInt("gems-item.customModelData");
         GEMS_ITEM_ITEMS_ADDER = SimpleGems.getInstance().getConfigFile().getBoolean("gems-item.itemsAdder");
-        GEMS_ITEM_ORAXEN = SimpleGems.getInstance().getConfigFile().getBoolean("gems-item.oraxen");
         GEMS_ITEM_NAME = SimpleGems.getInstance().getConfigFile().getString("gems-item.name");
         GEMS_ITEM_GLOW = SimpleGems.getInstance().getConfigFile().getBoolean("gems-item.glow");
         GEMS_ITEM_LORE = SimpleGems.getInstance().getConfigFile().getStringList("gems-item.lore");
