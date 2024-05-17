@@ -156,7 +156,7 @@ public class MySQLManager {
     }
 
     public void delete() {
-        execute("DELETE FROM SimpleGems");
+        execute("TRUNCATE TABLE SimpleGems");
     }
 
     public void deletePlayer(String uuid) {
