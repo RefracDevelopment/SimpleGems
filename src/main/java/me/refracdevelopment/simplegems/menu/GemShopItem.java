@@ -1,5 +1,6 @@
 package me.refracdevelopment.simplegems.menu;
 
+import ca.tweetzy.flight.comp.ReflectionUtils;
 import ca.tweetzy.skulls.Skulls;
 import ca.tweetzy.skulls.api.interfaces.Skull;
 import com.cryptomorin.xseries.XEnchantment;
@@ -170,7 +171,10 @@ public class GemShopItem {
             Skull api = Skulls.getAPI().getSkull(Integer.parseInt(getSkullOwner()));
             item = new ItemBuilder(api.getItemStack());
         } else if (isCustomData()) {
-            item.setCustomModelData(getCustomModelData());
+            if (ReflectionUtils.supports(14))
+                item.setCustomModelData(getCustomModelData());
+            else
+                RyMessageUtils.sendPluginError("An error occurred when trying to set custom model data. Make sure your only using custom model data when on 1.14+.");
         } else if (isItemsAdder()) {
             CustomStack api = CustomStack.getInstance(getMaterial());
 

@@ -12,7 +12,7 @@ public class Tasks {
     }
 
     public static void runAsyncTimer(Runnable callable, long delay) {
-        SimpleGems.getInstance().getPaperLib().scheduling().asyncScheduler().runDelayed(callable, Duration.of(delay, TimeUnit.SECONDS.toChronoUnit()));
+        SimpleGems.getInstance().getPaperLib().scheduling().asyncScheduler().runDelayed(callable, Duration.of(delay, TimeUnit.MICROSECONDS.toChronoUnit()));
     }
 
 }

@@ -119,7 +119,8 @@ public class LeaderboardManager {
     }
 
     public void updateTask() {
-        Tasks.runAsyncTimer(() -> new LeaderBoardUpdate().update(), SimpleGems.getInstance().getSettings().LEADERBOARD_UPDATE_INTERVAL);
+        Tasks.runAsyncTimer(() -> new LeaderBoardUpdate().update(),
+                SimpleGems.getInstance().getSettings().LEADERBOARD_UPDATE_INTERVAL * 20L);
     }
 
     private class LeaderBoardUpdate {
