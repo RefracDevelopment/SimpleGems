@@ -39,6 +39,9 @@ public class Commands {
     public String RESET_COMMAND_NAME;
     public List<String> RESET_COMMAND_ALIASES;
 
+    public String RANDOM_GIVE_COMMAND_NAME;
+    public List<String> RANDOM_GIVE_COMMAND_ALIASES;
+
     public Commands() {
         loadConfig();
     }
@@ -76,5 +79,8 @@ public class Commands {
 
         RESET_COMMAND_NAME = SimpleGems.getInstance().getCommandsFile().getString("subcommands.reset.name");
         RESET_COMMAND_ALIASES = SimpleGems.getInstance().getCommandsFile().getStringList("subcommands.reset.aliases");
+
+        RANDOM_GIVE_COMMAND_NAME = SimpleGems.getInstance().getCommandsFile().getString("subcommands.random-give.name");
+        RANDOM_GIVE_COMMAND_ALIASES = SimpleGems.getInstance().getCommandsFile().getStringList("subcommands.random-give.aliases");
     }
 }

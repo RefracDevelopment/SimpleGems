@@ -210,10 +210,11 @@ public final class SimpleGems extends JavaPlugin {
                     ReloadCommand.class,
                     VersionCommand.class,
                     UpdateCommand.class,
-                    ResetCommand.class
+                    ResetCommand.class,
+                    RandomGiveCommand.class
             );
         } catch (NoSuchFieldException | IllegalAccessException e) {
-            RyMessageUtils.sendConsole(true, "&aFailed to load commands.");
+            RyMessageUtils.sendConsole(true, "&cFailed to load commands.");
             e.printStackTrace();
             return;
         }

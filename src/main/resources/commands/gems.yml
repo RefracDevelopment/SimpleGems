@@ -1,8 +1,15 @@
+#   ___________                __           ________
+#  /   _____/__| _____ ______ |  |   ____  /  _____/  ____   _____   ______
+#  \_____  \|  |/     \\____ \|  | _/ __ \/   \  ____/ __ \ /     \ /  ___/
+#  /        \  |  | |  \  |_\ \  |__  ___/_    \_\  \  ___/_  | |  \\___ \
+# /_______  /__|__|_|  /   ___/____/\___  /\______  /\___  /__|_|  /____  \
+#         \/         \/|__|             \/        \/     \/      \/     \/
+
 # This file lets you change the name and aliases for the simplegems command.
-# If you edit the name/aliases at the top of this file, you will need to restart the server to see all the changes applied properly.
+# If you edit the name/aliases in this file, you will need to restart the server to see all the changes applied properly.
 
 # This is used for automatic file updating purposes
-config-version: "10"
+config-version: '11'
 
 name: gems
 aliases:
@@ -32,7 +39,8 @@ subcommands:
     aliases: [ ]
   top:
     name: top
-    aliases: [ ]
+    aliases:
+      - leaderboard
   balance:
     name: balance
     aliases:
@@ -45,3 +53,7 @@ subcommands:
     name: reset
     aliases:
       - resetdata
+  random-give:
+    name: randomgive
+    aliases:
+      - rgive

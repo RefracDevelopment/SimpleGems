@@ -209,11 +209,15 @@ public class Methods {
             finalItem.setName(RyMessageUtils.translate(player, name
                     .replace("%value%", String.valueOf(foundValue))
                     .replace("%gems%", String.valueOf(foundValue))
+                    .replace("%gems_formatted%", Methods.format(foundValue))
+                    .replace("%gems_decimal%", Methods.formatDecimal(foundValue))
             ));
 
             lore.forEach(line -> finalItem.addLoreLine(RyMessageUtils.translate(player, line
                     .replace("%value%", String.valueOf(foundValue))
                     .replace("%gems%", String.valueOf(foundValue))
+                    .replace("%gems_formatted%", Methods.format(foundValue))
+                    .replace("%gems_decimal%", Methods.formatDecimal(foundValue))
             )));
         }
 

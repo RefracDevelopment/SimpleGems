@@ -60,6 +60,6 @@ public class HelpCommand extends SubCommand {
 
     @Override
     public List<String> getSubcommandArguments(Player player, String[] args) {
-        return null;
+        return List.of();
     }
 }
