@@ -89,6 +89,7 @@ public class SQLiteManager {
     public void createTable(String name, String info) {
         new Thread(() -> {
             try (Connection resource = getConnection(); PreparedStatement statement = resource.prepareStatement("CREATE TABLE IF NOT EXISTS " + name + "(" + info + ");")) {
+                statement.setQueryTimeout(30);
                 statement.execute();
             } catch (SQLException exception) {
                 RyMessageUtils.sendConsole(true, "An error occurred while creating database table " + name + ".");
@@ -106,6 +107,8 @@ public class SQLiteManager {
     public void execute(String query, Object... values) {
         new Thread(() -> {
             try (Connection resource = getConnection(); PreparedStatement statement = resource.prepareStatement(query)) {
+                statement.setQueryTimeout(30);
+
                 for (int i = 0; i < values.length; i++)
                     statement.setObject((i + 1), values[i]);
 
@@ -128,6 +131,8 @@ public class SQLiteManager {
     public void select(String query, SelectCall callback, Object... values) {
         new Thread(() -> {
             try (Connection resource = getConnection(); PreparedStatement statement = resource.prepareStatement(query)) {
+                statement.setQueryTimeout(30);
+
                 for (int i = 0; i < values.length; i++)
                     statement.setObject((i + 1), values[i]);
 

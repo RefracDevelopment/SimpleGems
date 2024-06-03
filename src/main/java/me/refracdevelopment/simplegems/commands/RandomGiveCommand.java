@@ -54,7 +54,7 @@ public class RandomGiveCommand extends SubCommand {
         }
 
         if (target.isOnline()) {
-            Player player = target.getPlayer();
+            Player targetPlayer = target.getPlayer();
 
             double min;
             double max;
@@ -69,20 +69,24 @@ public class RandomGiveCommand extends SubCommand {
                 return;
             }
 
-            SimpleGems.getInstance().getGemsAPI().giveGems(player, amount);
+            if (commandSender instanceof Player player)
+                SimpleGems.getInstance().getGemsAPI().giveGems(player, targetPlayer, amount);
+            else
+                SimpleGems.getInstance().getGemsAPI().giveGems(targetPlayer, amount);
 
             StringPlaceholders placeholders = StringPlaceholders.builder()
-                    .addAll(Placeholders.setPlaceholders(player))
-                    .add("player", player.getName())
-                    .add("eco", Methods.format(amount))
-                    .add("type", "gems")
+                    .addAll(Placeholders.setPlaceholders(targetPlayer))
+                    .add("player", targetPlayer.getName())
+                    .add("gems", String.valueOf(amount))
+                    .add("gems_formatted", Methods.format(amount))
+                    .add("gems_decimal", Methods.formatDecimal(amount))
                     .build();
 
             if (message.contains("-s"))
                 return;
 
             RyMessageUtils.sendPluginMessage(commandSender, "gems-given", placeholders);
-            RyMessageUtils.sendPluginMessage(player, "gems-gained", placeholders);
+            RyMessageUtils.sendPluginMessage(targetPlayer, "gems-gained", placeholders);
         } else if (target.hasPlayedBefore()) {
             double min;
             double max;
@@ -102,8 +106,9 @@ public class RandomGiveCommand extends SubCommand {
             StringPlaceholders placeholders = StringPlaceholders.builder()
                     .addAll(Placeholders.setPlaceholders(commandSender))
                     .add("player", target.getName())
-                    .add("eco", Methods.format(amount))
-                    .add("type", "gems")
+                    .add("gems", String.valueOf(amount))
+                    .add("gems_formatted", Methods.format(amount))
+                    .add("gems_decimal", Methods.formatDecimal(amount))
                     .build();
 
             RyMessageUtils.sendPluginMessage(commandSender, "gems-given", placeholders);
