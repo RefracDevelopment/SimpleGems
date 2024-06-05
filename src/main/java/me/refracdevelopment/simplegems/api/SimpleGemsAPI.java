@@ -324,4 +324,26 @@ public class SimpleGemsAPI {
         Methods.withdrawGems(player, amount);
     }
 
+    /**
+     * Used to deposit a gems item into the player's account.
+     * <p>
+     * WARNING: If you want to add/give gems to
+     * a player's account then you should use #giveGems instead.
+     *
+     * @param player the player who will receive the gems
+     * @param amount amount of gems to deposit
+     */
+    public void depositGems(Player player, double amount) {
+        if (getProfileData(player) == null)
+            return;
+
+        GemsDepositEvent event = new GemsDepositEvent(player, amount);
+        Bukkit.getPluginManager().callEvent(event);
+
+        if (event.isCancelled())
+            return;
+
+        Methods.withdrawGems(player, amount);
+    }
+
 }

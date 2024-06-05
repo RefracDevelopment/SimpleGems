@@ -23,7 +23,7 @@ public class ConfigFile {
         try {
             configFile = YamlDocument.create(new File(SimpleGems.getInstance().getDataFolder(), name),
                     getClass().getResourceAsStream("/" + name),
-                    GeneralSettings.builder().setUseDefaults(autoUpdate).build(),
+                    GeneralSettings.builder().setUseDefaults(false).build(),
                     LoaderSettings.builder().setAutoUpdate(autoUpdate).build(),
                     DumperSettings.DEFAULT,
                     UpdaterSettings.builder().setVersioning(new BasicVersioning("config-version"))

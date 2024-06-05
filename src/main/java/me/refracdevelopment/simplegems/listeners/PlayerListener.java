@@ -115,10 +115,15 @@ public class PlayerListener implements Listener {
                     .add("gems_decimal", Methods.formatDecimal(foundValue))
                     .build();
 
-            SimpleGems.getInstance().getGemsAPI().giveGems(player, foundValue);
+            if (item.getAmount() == 1)
+                player.getInventory().setItemInHand(null);
+            else
+                item.setAmount(item.getAmount() - 1);
 
-            player.getInventory().removeItem(item);
             player.updateInventory();
+
+            SimpleGems.getInstance().getGemsAPI().depositGems(player, foundValue);
+
             RyMessageUtils.sendPluginMessage(player, "gems-deposited", placeholders);
         }
     }
