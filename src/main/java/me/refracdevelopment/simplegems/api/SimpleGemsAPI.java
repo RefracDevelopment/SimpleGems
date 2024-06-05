@@ -343,7 +343,8 @@ public class SimpleGemsAPI {
         if (event.isCancelled())
             return;
 
-        Methods.withdrawGems(player, amount);
+        getProfileData(player).getGems().incrementAmount(amount);
+        Tasks.runAsync(() -> getProfileData(player).save(player));
     }
 
 }
