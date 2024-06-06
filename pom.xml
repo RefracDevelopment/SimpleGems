@@ -126,10 +126,6 @@
             <id>arim-mvn-lgpl3</id>
             <url>https://mvn-repo.arim.space/lesser-gpl3/</url>
         </repository>
-        <repository>
-            <id>sonatype-oss-snapshots1</id>
-            <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
-        </repository>
     </repositories>
 
     <dependencies>
@@ -250,7 +246,7 @@
         <dependency>
             <groupId>net.kyori</groupId>
             <artifactId>adventure-platform-bukkit</artifactId>
-            <version>4.3.3</version>
+            <version>4.3.2</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

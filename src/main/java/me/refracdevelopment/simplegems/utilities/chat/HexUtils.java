@@ -1,6 +1,5 @@
 package me.refracdevelopment.simplegems.utilities.chat;
 
-import com.cryptomorin.xseries.ReflectionUtils;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -275,79 +274,11 @@ public final class HexUtils {
      * @return The closest ChatColor value
      */
     public static ChatColor translateHex(String hex) {
-        if (ReflectionUtils.supports(16))
-            return ChatColor.of(hex);
-        return translateHex(Color.decode(hex));
+        return ChatColor.of(hex);
     }
 
     public static ChatColor translateHex(Color color) {
-        if (ReflectionUtils.supports(16))
-            return ChatColor.of(color);
-
-        int minDist = Integer.MAX_VALUE;
-        ChatColor legacy = ChatColor.WHITE;
-        for (ChatColorHexMapping mapping : ChatColorHexMapping.values()) {
-            int r = mapping.getRed() - color.getRed();
-            int g = mapping.getGreen() - color.getGreen();
-            int b = mapping.getBlue() - color.getBlue();
-            int dist = r * r + g * g + b * b;
-            if (dist < minDist) {
-                minDist = dist;
-                legacy = mapping.getChatColor();
-            }
-        }
-
-        return legacy;
-    }
-
-    /**
-     * Maps hex codes to ChatColors
-     */
-    public enum ChatColorHexMapping {
-
-        BLACK(0x000000, ChatColor.BLACK),
-        DARK_BLUE(0x0000AA, ChatColor.DARK_BLUE),
-        DARK_GREEN(0x00AA00, ChatColor.DARK_GREEN),
-        DARK_AQUA(0x00AAAA, ChatColor.DARK_AQUA),
-        DARK_RED(0xAA0000, ChatColor.DARK_RED),
-        DARK_PURPLE(0xAA00AA, ChatColor.DARK_PURPLE),
-        GOLD(0xFFAA00, ChatColor.GOLD),
-        GRAY(0xAAAAAA, ChatColor.GRAY),
-        DARK_GRAY(0x555555, ChatColor.DARK_GRAY),
-        BLUE(0x5555FF, ChatColor.BLUE),
-        GREEN(0x55FF55, ChatColor.GREEN),
-        AQUA(0x55FFFF, ChatColor.AQUA),
-        RED(0xFF5555, ChatColor.RED),
-        LIGHT_PURPLE(0xFF55FF, ChatColor.LIGHT_PURPLE),
-        YELLOW(0xFFFF55, ChatColor.YELLOW),
-        WHITE(0xFFFFFF, ChatColor.WHITE);
-
-        private final int r, g, b;
-        private final ChatColor chatColor;
-
-        ChatColorHexMapping(int hex, ChatColor chatColor) {
-            this.r = (hex >> 16) & 0xFF;
-            this.g = (hex >> 8) & 0xFF;
-            this.b = hex & 0xFF;
-            this.chatColor = chatColor;
-        }
-
-        public int getRed() {
-            return this.r;
-        }
-
-        public int getGreen() {
-            return this.g;
-        }
-
-        public int getBlue() {
-            return this.b;
-        }
-
-        public ChatColor getChatColor() {
-            return this.chatColor;
-        }
-
+        return ChatColor.of(color);
     }
 
     public interface ColorGenerator {
@@ -389,7 +320,7 @@ public final class HexUtils {
         @Override
         public ChatColor nextChatColor() {
             // Gradients will use the first color if the entire spectrum won't be available to preserve prettiness
-            if (ReflectionUtils.supports(16) || this.steps <= 1)
+            if (this.steps <= 1)
                 return translateHex(this.gradients.get(0).colorAt(0));
             return translateHex(this.nextColor());
         }

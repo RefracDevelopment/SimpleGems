@@ -29,7 +29,7 @@ public class ProfileData {
             case MYSQL:
                 getPlugin().getMySQLManager().select("SELECT * FROM SimpleGems WHERE uuid=?", resultSet -> {
                     if (resultSet.next()) {
-                        getGems().setAmount(resultSet.getLong("gems"));
+                        getGems().setAmount(resultSet.getDouble("gems"));
                         getPlugin().getMySQLManager().updatePlayerName(player.getUniqueId().toString(), player.getName());
                     } else {
                         getPlugin().getMySQLManager().execute("INSERT INTO SimpleGems (uuid, name, gems) VALUES (?,?,?)",
@@ -40,7 +40,7 @@ public class ProfileData {
             default:
                 getPlugin().getSqLiteManager().select("SELECT * FROM SimpleGems WHERE uuid=?", resultSet -> {
                     if (resultSet.next()) {
-                        getGems().setAmount(resultSet.getLong("gems"));
+                        getGems().setAmount(resultSet.getDouble("gems"));
                         getPlugin().getSqLiteManager().updatePlayerName(player.getUniqueId().toString(), player.getName());
                     } else {
                         getPlugin().getSqLiteManager().execute("INSERT INTO SimpleGems (uuid, name, gems) VALUES (?,?,?)",

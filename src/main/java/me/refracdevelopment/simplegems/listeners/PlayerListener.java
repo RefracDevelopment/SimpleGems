@@ -94,7 +94,7 @@ public class PlayerListener implements Listener {
         NBTItem nbtItem = new NBTItem(item);
 
         if (nbtItem.hasTag("gems-item-value")) {
-            double foundValue = nbtItem.getLong("gems-item-value");
+            double foundValue = nbtItem.getDouble("gems-item-value");
 
             gemsItem = SimpleGems.getInstance().getGemsAPI().getGemsItem(player, foundValue);
 

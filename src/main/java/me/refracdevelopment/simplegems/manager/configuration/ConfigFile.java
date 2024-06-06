@@ -27,7 +27,6 @@ public class ConfigFile {
                     LoaderSettings.builder().setAutoUpdate(autoUpdate).build(),
                     DumperSettings.DEFAULT,
                     UpdaterSettings.builder().setVersioning(new BasicVersioning("config-version"))
-                            .setOptionSorting(autoUpdate ? UpdaterSettings.OptionSorting.SORT_BY_DEFAULTS : UpdaterSettings.OptionSorting.NONE)
                             .build()
             );
 

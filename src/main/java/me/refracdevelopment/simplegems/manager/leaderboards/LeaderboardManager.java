@@ -40,7 +40,7 @@ public class LeaderboardManager {
                     try {
                         while (resultSet.next()) {
                             String name = resultSet.getString("name");
-                            double gems = resultSet.getLong("gems");
+                            double gems = resultSet.getDouble("gems");
 
                             players.add(name);
                             cachedMap.put(name, gems);
@@ -55,7 +55,7 @@ public class LeaderboardManager {
                     try {
                         while (resultSet.next()) {
                             String name = resultSet.getString("name");
-                            double gems = resultSet.getLong("gems");
+                            double gems = resultSet.getDouble("gems");
 
                             players.add(name);
                             cachedMap.put(name, gems);

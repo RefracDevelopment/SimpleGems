@@ -63,7 +63,7 @@ public class Methods {
                 SimpleGems.getInstance().getMySQLManager().select("SELECT gems FROM SimpleGems WHERE uuid=?", resultSet -> {
                     try {
                         if (resultSet.next())
-                            gems.set(resultSet.getLong("gems"));
+                            gems.set(resultSet.getDouble("gems"));
                     } catch (SQLException exception) {
                         RyMessageUtils.sendConsole(true, exception.getMessage());
                     }
@@ -73,7 +73,7 @@ public class Methods {
                 SimpleGems.getInstance().getSqLiteManager().select("SELECT gems FROM SimpleGems WHERE uuid=?", resultSet -> {
                     try {
                         if (resultSet.next())
-                            gems.set(resultSet.getLong("gems"));
+                            gems.set(resultSet.getDouble("gems"));
                     } catch (SQLException exception) {
                         RyMessageUtils.sendConsole(true, exception.getMessage());
                     }
@@ -204,7 +204,7 @@ public class Methods {
         nbtItem.applyNBT(item.toItemStack());
 
         if (nbtItem.hasTag("gems-item-value")) {
-            double foundValue = nbtItem.getLong("gems-item-value");
+            double foundValue = nbtItem.getDouble("gems-item-value");
 
             finalItem.setName(RyMessageUtils.translate(player, name
                     .replace("%value%", String.valueOf(foundValue))
