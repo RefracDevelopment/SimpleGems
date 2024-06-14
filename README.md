@@ -1,3 +1,5 @@
+[![](https://jitpack.io/v/RefracDevelopment/SimpleGems.svg)](https://jitpack.io/#RefracDevelopment/SimpleGems)
+
 ![](https://i.imgur.com/pMKvWrk.png)
 
 SimpleGems is a plugin that adds a custom gems economy into minecraft.
