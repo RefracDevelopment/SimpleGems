@@ -2,17 +2,17 @@ package me.refracdevelopment.simplegems;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import io.papermc.lib.PaperLib;
 import lombok.Getter;
 import lombok.Setter;
 import me.gabytm.util.actions.ActionManager;
+import me.kodysimpson.simpapi.command.CommandList;
+import me.kodysimpson.simpapi.command.CommandManager;
+import me.kodysimpson.simpapi.command.SubCommand;
+import me.kodysimpson.simpapi.menu.MenuManager;
 import me.refracdevelopment.simplegems.api.SimpleGemsAPI;
 import me.refracdevelopment.simplegems.commands.*;
 import me.refracdevelopment.simplegems.hooks.ItemsAdderListener;
-import me.refracdevelopment.simplegems.listeners.MenuListener;
 import me.refracdevelopment.simplegems.listeners.PlayerListener;
-import me.refracdevelopment.simplegems.manager.CommandManager;
-import me.refracdevelopment.simplegems.manager.MenuManager;
 import me.refracdevelopment.simplegems.manager.ProfileManager;
 import me.refracdevelopment.simplegems.manager.configuration.ConfigFile;
 import me.refracdevelopment.simplegems.manager.configuration.cache.Commands;
@@ -29,6 +29,7 @@ import me.refracdevelopment.simplegems.utilities.chat.PAPIExpansion;
 import me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils;
 import me.refracdevelopment.simplegems.utilities.chat.StringPlaceholders;
 import org.bstats.bukkit.Metrics;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -40,6 +41,7 @@ import java.io.File;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -56,8 +58,6 @@ public final class SimpleGems extends JavaPlugin {
     private ProfileManager profileManager;
     private ActionManager actionManager;
     private LeaderboardManager leaderboardManager;
-    private MenuManager menuManager;
-    private CommandManager commandManager;
 
     // Menus
     private GemShop gemShop;
@@ -78,18 +78,17 @@ public final class SimpleGems extends JavaPlugin {
     private SimpleGemsAPI gemsAPI;
     private MorePaperLib paperLib;
     private MorePaperLibAdventure paperLibAdventure;
+    private List<SubCommand> commandsList;
 
     @Override
     public void onEnable() {
         // Plugin startup logic
         instance = this;
 
-        DownloadUtil.downloadAndEnable(this);
-
-        new Metrics(this, 13117);
-
         paperLib = new MorePaperLib(this);
         paperLibAdventure = new MorePaperLibAdventure(paperLib);
+
+        DownloadUtil.downloadAndEnable(this);
 
         loadFiles();
 
@@ -108,10 +107,9 @@ public final class SimpleGems extends JavaPlugin {
         loadListeners();
         loadHooks();
 
-        // Paper is recommended but not required
-        PaperLib.suggestPaper(this);
-
         Tasks.runAsync(this::updateCheck);
+
+        new Metrics(this, 13117);
     }
 
     @Override
@@ -130,7 +128,7 @@ public final class SimpleGems extends JavaPlugin {
         configFile = new ConfigFile("config.yml", true);
         menusFile = new ConfigFile("menus.yml", false);
         commandsFile = new ConfigFile("commands/gems.yml", true);
-        localeFile = new ConfigFile("locale/" + getConfigFile().getString("locale") + ".yml", true);
+        localeFile = new ConfigFile("locale/" + getConfigFile().getString("locale", "en_US") + ".yml", true);
 
         // Cache
         settings = new Config();
@@ -157,45 +155,49 @@ public final class SimpleGems extends JavaPlugin {
         profileManager = new ProfileManager();
         actionManager = new ActionManager(this);
         leaderboardManager = new LeaderboardManager();
-        menuManager = new MenuManager();
-        commandManager = new CommandManager();
+        MenuManager.setup(getServer(), this);
 
         RyMessageUtils.sendConsole(true, "&aLoaded managers.");
     }
 
     private void loadCommands() {
         try {
-            getCommandManager().createCoreCommand(this, getCommands().GEMS_COMMAND_NAME,
+            CommandManager.createCoreCommand(this, getCommands().GEMS_COMMAND_NAME,
                     getLocaleFile().getString("command-help-description"),
                     "/" + getCommands().GEMS_COMMAND_NAME,
-                    (commandSender, subCommandList) -> {
-                        if (!(commandSender instanceof Player player)) {
-                            getCommandManager().getCommands().forEach(command -> {
-                                StringPlaceholders placeholders;
+                    new CommandList() {
+                        @Override
+                        public void displayCommandList(CommandSender commandSender, List<SubCommand> list) {
+                            commandsList = list;
 
-                                if (!command.getSyntax().isEmpty()) {
-                                    placeholders = StringPlaceholders.builder()
-                                            .add("cmd", SimpleGems.getInstance().getCommands().GEMS_COMMAND_NAME)
-                                            .add("subcmd", command.getName())
-                                            .add("args", command.getSyntax())
-                                            .add("desc", command.getDescription())
-                                            .build();
-                                    RyMessageUtils.sendPluginMessage(commandSender, "command-help-list-description", placeholders);
-                                } else {
-                                    placeholders = StringPlaceholders.builder()
-                                            .add("cmd", SimpleGems.getInstance().getCommands().GEMS_COMMAND_NAME)
-                                            .add("subcmd", command.getName())
-                                            .add("desc", command.getDescription())
-                                            .build();
-                                    RyMessageUtils.sendPluginMessage(commandSender, "command-help-list-description-no-args", placeholders);
-                                }
-                            });
-                            return;
+                            if (!(commandSender instanceof Player player)) {
+                                list.forEach(command -> {
+                                    StringPlaceholders placeholders;
+
+                                    if (!command.getSyntax().isEmpty()) {
+                                        placeholders = StringPlaceholders.builder()
+                                                .add("cmd", SimpleGems.getInstance().getCommands().GEMS_COMMAND_NAME)
+                                                .add("subcmd", command.getName())
+                                                .add("args", command.getSyntax())
+                                                .add("desc", command.getDescription())
+                                                .build();
+                                        RyMessageUtils.sendPluginMessage(commandSender, "command-help-list-description", placeholders);
+                                    } else {
+                                        placeholders = StringPlaceholders.builder()
+                                                .add("cmd", SimpleGems.getInstance().getCommands().GEMS_COMMAND_NAME)
+                                                .add("subcmd", command.getName())
+                                                .add("desc", command.getDescription())
+                                                .build();
+                                        RyMessageUtils.sendPluginMessage(commandSender, "command-help-list-description-no-args", placeholders);
+                                    }
+                                });
+                                return;
+                            }
+
+                            getSettings().GEMS_BALANCE.forEach(message ->
+                                    RyMessageUtils.sendPlayer(player, message)
+                            );
                         }
-
-                        getSettings().GEMS_BALANCE.forEach(message ->
-                                RyMessageUtils.sendPlayer(player, message)
-                        );
                     },
                     getCommands().GEMS_COMMAND_ALIASES,
                     HelpCommand.class,
@@ -214,7 +216,7 @@ public final class SimpleGems extends JavaPlugin {
                     RandomGiveCommand.class
             );
         } catch (NoSuchFieldException | IllegalAccessException e) {
-            RyMessageUtils.sendConsole(true, "&cFailed to load commands.");
+            RyMessageUtils.sendPluginError("&cFailed to load commands.", e, true, true);
             e.printStackTrace();
             return;
         }
@@ -224,7 +226,6 @@ public final class SimpleGems extends JavaPlugin {
 
     private void loadListeners() {
         getServer().getPluginManager().registerEvents(new PlayerListener(), this);
-        getServer().getPluginManager().registerEvents(new MenuListener(), this);
 
         if (getServer().getPluginManager().isPluginEnabled("ItemsAdder"))
             getServer().getPluginManager().registerEvents(new ItemsAdderListener(), this);

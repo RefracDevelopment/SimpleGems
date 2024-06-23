@@ -1,10 +1,8 @@
 package me.refracdevelopment.simplegems.player.stats;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Setter
-@Getter
+@Data
 public class Stat {
 
     private double amount;

@@ -1,16 +1,15 @@
 package me.refracdevelopment.simplegems.menu;
 
 import lombok.Getter;
+import me.kodysimpson.simpapi.menu.Menu;
+import me.kodysimpson.simpapi.menu.PlayerMenuUtility;
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.utilities.ItemBuilder;
 import me.refracdevelopment.simplegems.utilities.Methods;
 import me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils;
-import me.refracdevelopment.simplegems.utilities.menu.Menu;
-import me.refracdevelopment.simplegems.utilities.menu.PlayerMenuUtility;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.jetbrains.annotations.Nullable;
 
 @Getter
 public class GemShopCategory extends Menu {
@@ -18,7 +17,7 @@ public class GemShopCategory extends Menu {
     private final String categoryName, permission;
     private final boolean enabled, isDefault;
 
-    public GemShopCategory(@Nullable PlayerMenuUtility playerMenuUtility, String categoryName) {
+    public GemShopCategory(PlayerMenuUtility playerMenuUtility, String categoryName) {
         super(playerMenuUtility);
 
         this.categoryName = categoryName;
@@ -35,6 +34,11 @@ public class GemShopCategory extends Menu {
     @Override
     public int getSlots() {
         return SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getInt(categoryName + ".size");
+    }
+
+    @Override
+    public boolean cancelAllClicks() {
+        return true;
     }
 
     @Override

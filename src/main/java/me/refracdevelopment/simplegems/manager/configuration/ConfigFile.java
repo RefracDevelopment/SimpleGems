@@ -9,7 +9,6 @@ import dev.dejvokep.boostedyaml.settings.loader.LoaderSettings;
 import dev.dejvokep.boostedyaml.settings.updater.UpdaterSettings;
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils;
-import org.bukkit.Bukkit;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,9 +32,7 @@ public class ConfigFile {
             configFile.update();
             configFile.save();
         } catch (IOException e) {
-            RyMessageUtils.sendConsole(true, "&cFailed to load " + name + " file! The plugin will now shutdown.");
-            e.printStackTrace();
-            Bukkit.getPluginManager().disablePlugin(SimpleGems.getInstance());
+            RyMessageUtils.sendPluginError("&cFailed to load " + name + " file! The plugin will now shutdown.", e, true, true);
         }
     }
 
@@ -71,25 +68,23 @@ public class ConfigFile {
         return configFile.getBoolean(path, false);
     }
 
-    public String getString(String path, boolean check) {
-        return configFile.getString(path, null);
+    public String getString(String path, Object defined) {
+        return configFile.getString(path, ((String) defined));
     }
 
     public String getString(String path) {
         if (configFile.contains(path)) {
-            return configFile.getString(path, "String at path '" + path + "' not found.").replace("|", "┃");
+            return configFile.getString(path, "String at path '" + path + "' not found.");
         }
 
         return null;
     }
 
     public List<String> getStringList(String path) {
-        return configFile.getStringList(path);
-    }
+        if (configFile.contains(path))
+            return configFile.getStringList(path, List.of("String at path '" + path + "' not found."));
 
-    public List<String> getStringList(String path, boolean check) {
-        if (!configFile.contains(path)) return null;
-        return getStringList(path);
+        return null;
     }
 
     public Section getSection(String path) {

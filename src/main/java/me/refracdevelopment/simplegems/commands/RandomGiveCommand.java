@@ -1,13 +1,13 @@
 package me.refracdevelopment.simplegems.commands;
 
 import com.google.common.base.Joiner;
+import me.kodysimpson.simpapi.command.SubCommand;
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.utilities.Methods;
 import me.refracdevelopment.simplegems.utilities.Permissions;
 import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
 import me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils;
 import me.refracdevelopment.simplegems.utilities.chat.StringPlaceholders;
-import me.refracdevelopment.simplegems.utilities.command.SubCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class RandomGiveCommand extends SubCommand {
+
     @Override
     public String getName() {
         return SimpleGems.getInstance().getCommands().RANDOM_GIVE_COMMAND_NAME;

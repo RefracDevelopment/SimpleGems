@@ -1,9 +1,9 @@
 package me.refracdevelopment.simplegems.commands;
 
+import me.kodysimpson.simpapi.command.SubCommand;
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils;
 import me.refracdevelopment.simplegems.utilities.chat.StringPlaceholders;
-import me.refracdevelopment.simplegems.utilities.command.SubCommand;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -36,7 +36,7 @@ public class HelpCommand extends SubCommand {
     public void perform(CommandSender commandSender, String[] args) {
         RyMessageUtils.sendPluginMessage(commandSender, "command-help-title");
 
-        SimpleGems.getInstance().getCommandManager().getCommands().forEach(command -> {
+        SimpleGems.getInstance().getCommandsList().forEach(command -> {
             StringPlaceholders placeholders;
 
             if (!command.getSyntax().isEmpty()) {

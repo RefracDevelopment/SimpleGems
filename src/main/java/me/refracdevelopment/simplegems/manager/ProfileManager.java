@@ -1,7 +1,6 @@
 package me.refracdevelopment.simplegems.manager;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import me.refracdevelopment.simplegems.player.Profile;
 import me.refracdevelopment.simplegems.utilities.Tasks;
 import org.bukkit.Bukkit;
@@ -11,8 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-@Getter
-@Setter
+@Data
 public class ProfileManager {
 
     private Map<UUID, Profile> profiles = new HashMap<>();

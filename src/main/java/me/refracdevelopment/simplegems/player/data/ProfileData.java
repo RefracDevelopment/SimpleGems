@@ -1,15 +1,13 @@
 package me.refracdevelopment.simplegems.player.data;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.player.stats.Stat;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
-@Getter
-@Setter
+@Data
 public class ProfileData {
 
     private final SimpleGems plugin = SimpleGems.getInstance();

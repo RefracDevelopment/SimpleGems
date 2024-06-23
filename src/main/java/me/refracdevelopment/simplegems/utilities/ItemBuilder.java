@@ -1,6 +1,5 @@
 package me.refracdevelopment.simplegems.utilities;
 
-import com.cryptomorin.xseries.ReflectionUtils;
 import com.cryptomorin.xseries.XMaterial;
 import org.bukkit.Color;
 import org.bukkit.DyeColor;

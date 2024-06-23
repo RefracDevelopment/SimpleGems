@@ -1,11 +1,13 @@
 package me.refracdevelopment.simplegems.commands;
 
+import me.kodysimpson.simpapi.command.SubCommand;
+import me.kodysimpson.simpapi.exceptions.MenuManagerNotSetupException;
+import me.kodysimpson.simpapi.menu.MenuManager;
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.menu.GemShopCategory;
 import me.refracdevelopment.simplegems.utilities.Permissions;
 import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
 import me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils;
-import me.refracdevelopment.simplegems.utilities.command.SubCommand;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -48,7 +50,14 @@ public class ShopCommand extends SubCommand {
 
         if (args.length != 2) {
             SimpleGems.getInstance().getGemShop().getCategories().forEach((gemShopCategory, gemShopItems) -> {
-                GemShopCategory category = new GemShopCategory(SimpleGems.getInstance().getMenuManager().getPlayerMenuUtility(player), gemShopCategory);
+                GemShopCategory category;
+
+                try {
+                    category = new GemShopCategory(MenuManager.getPlayerMenuUtility(player), gemShopCategory);
+                } catch (MenuManagerNotSetupException e) {
+                    RyMessageUtils.sendPluginError("MenuManager not setup!", e, true, true);
+                    return;
+                }
 
                 if (!category.isDefault())
                     return;
@@ -77,7 +86,14 @@ public class ShopCommand extends SubCommand {
                 return;
             }
 
-            GemShopCategory category = new GemShopCategory(SimpleGems.getInstance().getMenuManager().getPlayerMenuUtility(player), gemShopCategory);
+            GemShopCategory category;
+
+            try {
+                category = new GemShopCategory(MenuManager.getPlayerMenuUtility(player), gemShopCategory);
+            } catch (MenuManagerNotSetupException e) {
+                RyMessageUtils.sendPluginError("MenuManager not setup!", e, true, true);
+                return;
+            }
 
             if (!category.isEnabled()) {
                 RyMessageUtils.sendPluginMessage(player, "shop-disabled");

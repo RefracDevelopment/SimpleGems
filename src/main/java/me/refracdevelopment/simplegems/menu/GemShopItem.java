@@ -1,12 +1,14 @@
 package me.refracdevelopment.simplegems.menu;
 
-import ca.tweetzy.flight.comp.ReflectionUtils;
 import ca.tweetzy.skulls.Skulls;
 import ca.tweetzy.skulls.api.interfaces.Skull;
 import com.cryptomorin.xseries.XEnchantment;
+import com.cryptomorin.xseries.reflection.XReflection;
 import dev.lone.itemsadder.api.CustomStack;
-import lombok.Getter;
+import lombok.Data;
 import me.arcaniax.hdb.api.HeadDatabaseAPI;
+import me.kodysimpson.simpapi.exceptions.MenuManagerNotSetupException;
+import me.kodysimpson.simpapi.menu.MenuManager;
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.utilities.ItemBuilder;
 import me.refracdevelopment.simplegems.utilities.Methods;
@@ -20,7 +22,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
-@Getter
+@Data
 public class GemShopItem {
 
     private final String category, item;
@@ -135,7 +137,12 @@ public class GemShopItem {
                     if (!gemShopCategory.equalsIgnoreCase(menu))
                         return;
 
-                    GemShopCategory category = new GemShopCategory(SimpleGems.getInstance().getMenuManager().getPlayerMenuUtility(player), gemShopCategory);
+                    GemShopCategory category = null;
+                    try {
+                        category = new GemShopCategory(MenuManager.getPlayerMenuUtility(player), gemShopCategory);
+                    } catch (MenuManagerNotSetupException e) {
+                        RyMessageUtils.sendPluginError("MenuManager not setup!", e, true, true);
+                    }
 
                     if (!player.hasPermission(category.getPermission()) && !category.getPermission().isEmpty()) {
                         player.closeInventory();
@@ -171,7 +178,7 @@ public class GemShopItem {
             Skull api = Skulls.getAPI().getSkull(Integer.parseInt(getSkullOwner()));
             item = new ItemBuilder(api.getItemStack());
         } else if (isCustomData()) {
-            if (ReflectionUtils.supports(14))
+            if (XReflection.supports(14))
                 item.setCustomModelData(getCustomModelData());
             else
                 RyMessageUtils.sendPluginError("An error occurred when trying to set custom model data. Make sure your only using custom model data when on 1.14+.");
@@ -181,7 +188,7 @@ public class GemShopItem {
             if (api != null)
                 item = new ItemBuilder(api.getItemStack());
             else
-                RyMessageUtils.sendConsole(true, "&cAn error occurred when trying to set an items adder custom item. Make sure you are typing the correct namespaced id.");
+                RyMessageUtils.sendPluginError("&cAn error occurred when trying to set an items adder custom item. Make sure you are typing the correct namespaced id.");
         }
 
         ItemBuilder finalItem = item;

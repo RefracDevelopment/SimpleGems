@@ -1,13 +1,11 @@
 package me.refracdevelopment.simplegems.player;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import me.refracdevelopment.simplegems.player.data.ProfileData;
 
 import java.util.UUID;
 
-@Getter
-@Setter
+@Data
 public class Profile {
 
     private ProfileData data;

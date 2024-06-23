@@ -1,6 +1,6 @@
 package me.refracdevelopment.simplegems.manager.leaderboards;
 
-import lombok.Getter;
+import lombok.Data;
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.utilities.Methods;
 import me.refracdevelopment.simplegems.utilities.Tasks;
@@ -10,8 +10,9 @@ import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
-@Getter
+@Data
 public class LeaderboardManager {
 
     private final Map<String, Double> cachedMap;
@@ -46,7 +47,7 @@ public class LeaderboardManager {
                             cachedMap.put(name, gems);
                         }
                     } catch (SQLException exception) {
-                        RyMessageUtils.sendConsole(true, exception.getMessage());
+                        RyMessageUtils.sendPluginError(exception.getMessage());
                     }
                 });
                 break;
@@ -61,7 +62,7 @@ public class LeaderboardManager {
                             cachedMap.put(name, gems);
                         }
                     } catch (SQLException exception) {
-                        RyMessageUtils.sendConsole(true, exception.getMessage());
+                        RyMessageUtils.sendPluginError(exception.getMessage());
                     }
                 });
                 break;
@@ -119,8 +120,8 @@ public class LeaderboardManager {
     }
 
     public void updateTask() {
-        Tasks.runAsyncTimer(() -> new LeaderBoardUpdate().update(),
-                SimpleGems.getInstance().getSettings().LEADERBOARD_UPDATE_INTERVAL * 20L);
+        Tasks.runAsyncDelayed(() -> new LeaderBoardUpdate().update(),
+                SimpleGems.getInstance().getSettings().LEADERBOARD_UPDATE_INTERVAL, TimeUnit.SECONDS);
     }
 
     private class LeaderBoardUpdate {
