@@ -46,6 +46,17 @@
                                 <exclude>com/cryptomorin/xseries/XTag*</exclude>
                                 <exclude>com/cryptomorin/xseries/XBiome*</exclude>
                                 <exclude>com/cryptomorin/xseries/NMSExtras*</exclude>
+                                <!--> SimpAPI <-->
+                                <exclude>me/kodysimpson/simpapi/items/ItemUtils*</exclude>
+                                <exclude>me/kodysimpson/simpapi/heads/SkullCreator*</exclude>
+                                <exclude>me/kodysimpson/simpapi/config/ConfigManager*</exclude>
+                                <exclude>me/kodysimpson/simpapi/config/Config*</exclude>
+                                <exclude>me/kodysimpson/simpapi/colors/ColorTranslator*</exclude>
+                                <exclude>me/kodysimpson/simpapi/conversations/ArrayMatchCanceller*</exclude>
+                                <exclude>me/kodysimpson/simpapi/conversations/ConversationStarter*</exclude>
+                                <exclude>me/kodysimpson/simpapi/conversations/MultilineMessage*</exclude>
+                                <exclude>me/kodysimpson/simpapi/conversations/PrefixedAbandonedListener*</exclude>
+                                <exclude>me/kodysimpson/simpapi/conversations/ServerReloadListener*</exclude>
                             </excludes>
                         </filter>
                     </filters>
