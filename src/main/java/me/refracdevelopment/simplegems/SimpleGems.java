@@ -1,5 +1,6 @@
 package me.refracdevelopment.simplegems;
 
+import com.cryptomorin.xseries.reflection.XReflection;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import lombok.Getter;

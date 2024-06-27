@@ -79,6 +79,10 @@
                             <pattern>me.kodysimpson.simpapi</pattern>
                             <shadedPattern>me.refracdevelopment.libs.simpapi</shadedPattern>
                         </relocation>
+                        <relocation>
+                            <pattern>net.kyori.adventure.text.minimessage</pattern>
+                            <shadedPattern>me.refracdevelopment.libs.minimessage</shadedPattern>
+                        </relocation>
                     </relocations>
                 </configuration>
                 <executions>
@@ -241,6 +245,12 @@
             <artifactId>api</artifactId>
             <version>5.4</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.papermc</groupId>
+            <artifactId>paperlib</artifactId>
+            <version>1.0.8</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>space.arim.morepaperlib</groupId>
