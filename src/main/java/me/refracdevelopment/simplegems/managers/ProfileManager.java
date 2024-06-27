@@ -1,4 +1,4 @@
-package me.refracdevelopment.simplegems.manager;
+package me.refracdevelopment.simplegems.managers;
 
 import lombok.Data;
 import me.refracdevelopment.simplegems.player.Profile;
@@ -18,9 +18,6 @@ public class ProfileManager {
     public ProfileManager() {
         // Refresh to remove profiles from a previous instance of plugin
         // This is basically /reload support (not recommended)
-        if (Bukkit.getOnlinePlayers().isEmpty())
-            return;
-
         Bukkit.getOnlinePlayers().forEach(onlinePlayer -> {
             getProfiles().clear();
             handleProfileCreation(onlinePlayer.getUniqueId(), onlinePlayer.getName());
@@ -35,7 +32,6 @@ public class ProfileManager {
 
     public Profile getProfile(Object object) {
         if (object instanceof Player target) {
-
             if (!this.profiles.containsKey(target.getUniqueId()))
                 return null;
 
@@ -43,7 +39,6 @@ public class ProfileManager {
         }
 
         if (object instanceof UUID uuid) {
-
             if (!this.profiles.containsKey(uuid))
                 return null;
 

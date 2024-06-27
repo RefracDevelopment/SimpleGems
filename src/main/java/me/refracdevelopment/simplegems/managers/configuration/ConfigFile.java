@@ -1,4 +1,4 @@
-package me.refracdevelopment.simplegems.manager.configuration;
+package me.refracdevelopment.simplegems.managers.configuration;
 
 import dev.dejvokep.boostedyaml.YamlDocument;
 import dev.dejvokep.boostedyaml.block.implementation.Section;

@@ -1,4 +1,4 @@
-package me.refracdevelopment.simplegems.manager.leaderboards;
+package me.refracdevelopment.simplegems.managers.leaderboards;
 
 import lombok.Data;
 import me.refracdevelopment.simplegems.SimpleGems;
@@ -8,7 +8,6 @@ import me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -29,40 +28,29 @@ public class LeaderboardManager {
     }
 
     private void load() {
-        if (Bukkit.getOnlinePlayers().isEmpty())
-            return;
-
         players.clear();
         cachedMap.clear();
 
         switch (SimpleGems.getInstance().getDataType()) {
             case MYSQL:
                 SimpleGems.getInstance().getMySQLManager().select("SELECT * FROM SimpleGems", resultSet -> {
-                    try {
-                        while (resultSet.next()) {
-                            String name = resultSet.getString("name");
-                            double gems = resultSet.getDouble("gems");
+                    while (resultSet.next()) {
+                        String name = resultSet.getString("name");
+                        double gems = resultSet.getDouble("gems");
 
-                            players.add(name);
-                            cachedMap.put(name, gems);
-                        }
-                    } catch (SQLException exception) {
-                        RyMessageUtils.sendPluginError(exception.getMessage());
+                        players.add(name);
+                        cachedMap.put(name, gems);
                     }
                 });
                 break;
             default:
                 SimpleGems.getInstance().getSqLiteManager().select("SELECT * FROM SimpleGems", resultSet -> {
-                    try {
-                        while (resultSet.next()) {
-                            String name = resultSet.getString("name");
-                            double gems = resultSet.getDouble("gems");
+                    while (resultSet.next()) {
+                        String name = resultSet.getString("name");
+                        double gems = resultSet.getDouble("gems");
 
-                            players.add(name);
-                            cachedMap.put(name, gems);
-                        }
-                    } catch (SQLException exception) {
-                        RyMessageUtils.sendPluginError(exception.getMessage());
+                        players.add(name);
+                        cachedMap.put(name, gems);
                     }
                 });
                 break;
@@ -104,10 +92,10 @@ public class LeaderboardManager {
     }
 
     private Map<String, Double> sortByValue(Map<String, Double> unsortMap) {
-        List<Map.Entry<String, Double>> list = new LinkedList<>(unsortMap.entrySet());
+        List<Map.Entry<String, Double>> list = new ArrayList<>(unsortMap.entrySet());
         list.sort(Map.Entry.comparingByValue(Collections.reverseOrder()));
 
-        Map<String, Double> sortedMap = new LinkedHashMap<>();
+        Map<String, Double> sortedMap = new HashMap<>();
 
         for (Map.Entry<String, Double> entry : list)
             sortedMap.put(entry.getKey(), entry.getValue());

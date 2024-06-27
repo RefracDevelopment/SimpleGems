@@ -1,4 +1,4 @@
-package me.refracdevelopment.simplegems.manager.data;
+package me.refracdevelopment.simplegems.managers.data;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

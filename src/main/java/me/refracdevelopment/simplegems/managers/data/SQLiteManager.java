@@ -1,36 +1,31 @@
-package me.refracdevelopment.simplegems.manager.data;
+package me.refracdevelopment.simplegems.managers.data;
 
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
-import me.refracdevelopment.simplegems.SimpleGems;
+import lombok.Getter;
 import me.refracdevelopment.simplegems.utilities.Tasks;
 import me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils;
 import org.bukkit.Bukkit;
+import org.sqlite.SQLiteDataSource;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class MySQLManager {
+@Getter
+public class SQLiteManager {
 
-    private final String host = SimpleGems.getInstance().getConfigFile().getString("mysql.host");
-    private final String username = SimpleGems.getInstance().getConfigFile().getString("mysql.username");
-    private final String password = SimpleGems.getInstance().getConfigFile().getString("mysql.password");
-    private final String database = SimpleGems.getInstance().getConfigFile().getString("mysql.database");
-    private final String port = SimpleGems.getInstance().getConfigFile().getString("mysql.port");
-    private HikariDataSource hikariDataSource;
+    private SQLiteDataSource dataSource;
 
-    public MySQLManager() {
-        RyMessageUtils.sendConsole(true, "&aEnabling MySQL support.");
+    public SQLiteManager(String path) {
+        RyMessageUtils.sendConsole(true, "&aEnabling SQLite support.");
 
-        Exception ex = connect();
+        Exception ex = connect(path);
 
         if (ex != null) {
             RyMessageUtils.sendConsole(true, "&cThere was an error connecting to your database. Here's the suspect: &e" + ex.getLocalizedMessage());
             ex.printStackTrace();
             Bukkit.shutdown();
         } else
-            RyMessageUtils.sendConsole(true, "&aManaged to successfully connect to: &e" + database + "&a!");
+            RyMessageUtils.sendConsole(true, "&aManaged to successfully connect to: &e" + path + "&a!");
 
         createT();
     }
@@ -39,23 +34,13 @@ public class MySQLManager {
         Tasks.runAsync(this::createTables);
     }
 
-    public Exception connect() {
+    public Exception connect(String path) {
         try {
-            HikariConfig config = new HikariConfig();
-
-            Class.forName("org.mariadb.jdbc.Driver");
-            config.setDriverClassName("org.mariadb.jdbc.Driver");
-            config.setJdbcUrl("jdbc:mariadb://" + host + ':' + port + '/' + database);
-            config.setUsername(username);
-            config.setPassword(password);
-            config.addDataSourceProperty("cachePrepStmts", "true");
-            config.addDataSourceProperty("prepStmtCacheSize", "250");
-            config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
-
-            hikariDataSource = new HikariDataSource(config);
+            Class.forName("org.sqlite.JDBC");
+            dataSource = new SQLiteDataSource();
+            dataSource.setUrl("jdbc:sqlite:" + path);
         } catch (Exception exception) {
-            hikariDataSource = null;
-            exception.printStackTrace();
+            dataSource = null;
             return exception;
         }
 
@@ -71,20 +56,28 @@ public class MySQLManager {
     }
 
     public boolean isInitiated() {
-        return hikariDataSource != null;
+        try {
+            return dataSource.getConnection() != null;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     public void close() {
-        this.hikariDataSource.close();
+        try {
+            dataSource.getConnection().close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
-
 
     /**
      * @return A new database connecting, provided by the Hikari pool.
      * @throws SQLException
      */
     public Connection getConnection() throws SQLException {
-        return hikariDataSource.getConnection();
+        return dataSource.getConnection();
     }
 
     /**
@@ -96,6 +89,7 @@ public class MySQLManager {
     public void createTable(String name, String info) {
         new Thread(() -> {
             try (Connection resource = getConnection(); PreparedStatement statement = resource.prepareStatement("CREATE TABLE IF NOT EXISTS " + name + "(" + info + ");")) {
+                statement.setQueryTimeout(30);
                 statement.execute();
             } catch (SQLException exception) {
                 RyMessageUtils.sendConsole(true, "An error occurred while creating database table " + name + ".");
@@ -113,13 +107,15 @@ public class MySQLManager {
     public void execute(String query, Object... values) {
         new Thread(() -> {
             try (Connection resource = getConnection(); PreparedStatement statement = resource.prepareStatement(query)) {
+                statement.setQueryTimeout(30);
+
                 for (int i = 0; i < values.length; i++)
                     statement.setObject((i + 1), values[i]);
 
                 statement.execute();
             } catch (SQLException exception) {
                 RyMessageUtils.sendConsole(true, "An error occurred while executing an update on the database.");
-                RyMessageUtils.sendConsole(true, "MySQL#execute : " + query);
+                RyMessageUtils.sendConsole(true, "SQLite#execute : " + query);
                 exception.printStackTrace();
             }
         }).start();
@@ -135,13 +131,15 @@ public class MySQLManager {
     public void select(String query, SelectCall callback, Object... values) {
         new Thread(() -> {
             try (Connection resource = getConnection(); PreparedStatement statement = resource.prepareStatement(query)) {
+                statement.setQueryTimeout(30);
+
                 for (int i = 0; i < values.length; i++)
                     statement.setObject((i + 1), values[i]);
 
                 callback.call(statement.executeQuery());
             } catch (SQLException exception) {
                 RyMessageUtils.sendConsole(true, "An error occurred while executing a query on the database.");
-                RyMessageUtils.sendConsole(true, "MySQL#select : " + query);
+                RyMessageUtils.sendConsole(true, "SQLite#select : " + query);
                 exception.printStackTrace();
             }
         }).start();

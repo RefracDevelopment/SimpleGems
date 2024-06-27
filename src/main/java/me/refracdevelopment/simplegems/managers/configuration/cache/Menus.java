@@ -1,4 +1,4 @@
-package me.refracdevelopment.simplegems.manager.configuration.cache;
+package me.refracdevelopment.simplegems.managers.configuration.cache;
 
 import dev.dejvokep.boostedyaml.block.implementation.Section;
 import me.refracdevelopment.simplegems.SimpleGems;
