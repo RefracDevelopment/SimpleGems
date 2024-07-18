@@ -1,34 +1,31 @@
 package me.refracdevelopment.simplegems.utilities;
 
+import com.tcoded.folialib.wrapper.task.WrappedTask;
 import me.refracdevelopment.simplegems.SimpleGems;
 import org.bukkit.entity.Entity;
-import space.arim.morepaperlib.scheduling.ScheduledTask;
 
-import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 public class Tasks {
 
     public static void executeAtEntity(Entity entity, Runnable runnable) {
-        Consumer<ScheduledTask> consumer = task -> runnable.run();
-        SimpleGems.getInstance().getPaperLib().scheduling().entitySpecificScheduler(entity).run(consumer, runnable);
+        Consumer<WrappedTask> consumer = task -> runnable.run();
+        SimpleGems.getInstance().getFoliaLib().getImpl().runAtEntity(entity, consumer);
     }
 
     public static void runAtEntityDelayed(Entity entity, Runnable runnable, long delay) {
-        Consumer<ScheduledTask> consumer = task -> runnable.run();
-        SimpleGems.getInstance().getPaperLib().scheduling().entitySpecificScheduler(entity).runDelayed(consumer, runnable, delay);
+        Consumer<WrappedTask> consumer = task -> runnable.run();
+        SimpleGems.getInstance().getFoliaLib().getImpl().runAtEntityLater(entity, consumer, runnable, delay);
     }
 
     public static void runAsync(Runnable runnable) {
-        SimpleGems.getInstance().getPaperLib().scheduling().asyncScheduler().run(runnable);
+        Consumer<WrappedTask> consumer = task -> runnable.run();
+        SimpleGems.getInstance().getFoliaLib().getImpl().runAsync(consumer);
     }
 
-    public static void runAsyncDelayed(Runnable runnable, long delay, TimeUnit unit) {
-        SimpleGems.getInstance().getPaperLib().scheduling().asyncScheduler().runDelayed(runnable, Duration.of(delay, unit.toChronoUnit()));
-    }
-
-    public static void runAsyncRate(Runnable runnable, long delay, long period, TimeUnit unit) {
-        SimpleGems.getInstance().getPaperLib().scheduling().asyncScheduler().runAtFixedRate(runnable, Duration.of(delay, unit.toChronoUnit()), Duration.of(period, unit.toChronoUnit()));
+    public static void runAsyncTimer(Runnable runnable, long delay, long period, TimeUnit unit) {
+        Consumer<WrappedTask> consumer = task -> runnable.run();
+        SimpleGems.getInstance().getFoliaLib().getImpl().runTimerAsync(consumer, delay, period, unit);
     }
 }

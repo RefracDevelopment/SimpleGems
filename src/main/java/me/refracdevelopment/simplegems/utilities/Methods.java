@@ -3,7 +3,6 @@ package me.refracdevelopment.simplegems.utilities;
 import com.cryptomorin.xseries.XEnchantment;
 import com.cryptomorin.xseries.XMaterial;
 import com.google.common.util.concurrent.AtomicDouble;
-import de.tr7zw.nbtapi.NBTItem;
 import dev.lone.itemsadder.api.CustomStack;
 import lombok.experimental.UtilityClass;
 import me.refracdevelopment.simplegems.SimpleGems;
@@ -11,10 +10,13 @@ import me.refracdevelopment.simplegems.player.data.ProfileData;
 import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
 import me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils;
 import me.refracdevelopment.simplegems.utilities.chat.StringPlaceholders;
+import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.sql.SQLException;
 import java.text.DecimalFormat;
@@ -199,12 +201,12 @@ public class Methods {
 
         // Attempt to insert a NBT tag of the gems value instead of filling the inventory
 
-        NBTItem nbtItem = new NBTItem(finalItem.toItemStack());
-        nbtItem.setDouble("gems-item-value", amount);
-        nbtItem.applyNBT(item.toItemStack());
+        PersistentDataContainer pdc = finalItem.getPersistentDataContainer();
+        NamespacedKey namespacedKey = new NamespacedKey(SimpleGems.getInstance(), "gems-item-value");
+        pdc.set(namespacedKey, PersistentDataType.DOUBLE, amount);
 
-        if (nbtItem.hasTag("gems-item-value")) {
-            double foundValue = nbtItem.getDouble("gems-item-value");
+        if (pdc.has(namespacedKey)) {
+            double foundValue = pdc.get(namespacedKey, PersistentDataType.DOUBLE);
 
             finalItem.setName(RyMessageUtils.translate(player, name
                     .replace("%value%", String.valueOf(foundValue))

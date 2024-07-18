@@ -1,6 +1,7 @@
 package me.refracdevelopment.simplegems.managers.data;
 
 import lombok.Getter;
+import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.utilities.Tasks;
 import me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils;
 import org.bukkit.Bukkit;
@@ -23,7 +24,7 @@ public class SQLiteManager {
         if (ex != null) {
             RyMessageUtils.sendConsole(true, "&cThere was an error connecting to your database. Here's the suspect: &e" + ex.getLocalizedMessage());
             ex.printStackTrace();
-            Bukkit.shutdown();
+            Bukkit.getPluginManager().disablePlugin(SimpleGems.getInstance());
         } else
             RyMessageUtils.sendConsole(true, "&aManaged to successfully connect to: &e" + path + "&a!");
 
@@ -34,7 +35,7 @@ public class SQLiteManager {
         Tasks.runAsync(this::createTables);
     }
 
-    public Exception connect(String path) {
+    private Exception connect(String path) {
         try {
             Class.forName("org.sqlite.JDBC");
             dataSource = new SQLiteDataSource();
@@ -43,7 +44,6 @@ public class SQLiteManager {
             dataSource = null;
             return exception;
         }
-
         return null;
     }
 
@@ -51,7 +51,7 @@ public class SQLiteManager {
         close();
     }
 
-    public void createTables() {
+    private void createTables() {
         createTable("SimpleGems", "uuid VARCHAR(36) NOT NULL PRIMARY KEY, name VARCHAR(16), gems BIGINT(50)");
     }
 

@@ -1,6 +1,5 @@
 package me.refracdevelopment.simplegems.listeners;
 
-import de.tr7zw.nbtapi.NBTItem;
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.player.Profile;
 import me.refracdevelopment.simplegems.utilities.Methods;
@@ -9,6 +8,7 @@ import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
 import me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils;
 import me.refracdevelopment.simplegems.utilities.chat.StringPlaceholders;
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -17,6 +17,8 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.UUID;
 
@@ -38,7 +40,7 @@ public class PlayerListener implements Listener {
         Tasks.runAsync(() -> profile.getData().load(player));
 
         if (profile == null || profile.getData() == null) {
-            SimpleGems.getInstance().getPaperLibAdventure().kickPlayer(player, RyMessageUtils.adventureTranslate(player, SimpleGems.getInstance().getLocaleFile().getString("kick-messages-error")));
+            player.kick(RyMessageUtils.translate(player, SimpleGems.getInstance().getLocaleFile().getString("kick-messages-error")));
             return;
         }
 
@@ -84,24 +86,25 @@ public class PlayerListener implements Listener {
         if (profile.getData() == null)
             return;
 
-        ItemStack item = player.getItemInHand();
+        ItemStack item = player.getInventory().getItemInMainHand();
         ItemStack gemsItem;
         ItemMeta itemMeta = item.getItemMeta();
 
         if (itemMeta == null)
             return;
 
-        NBTItem nbtItem = new NBTItem(item);
+        PersistentDataContainer pdc = itemMeta.getPersistentDataContainer();
+        NamespacedKey namespacedKey = NamespacedKey.fromString("gems-item-value");
 
-        if (nbtItem.hasTag("gems-item-value")) {
-            double foundValue = nbtItem.getDouble("gems-item-value");
+        if (pdc.has(namespacedKey)) {
+            double foundValue = pdc.get(namespacedKey, PersistentDataType.DOUBLE);
 
             gemsItem = SimpleGems.getInstance().getGemsAPI().getGemsItem(player, foundValue);
 
             if (!item.isSimilar(gemsItem))
                 return;
 
-            if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.PHYSICAL) {
                 event.setCancelled(true);
                 player.updateInventory();
                 return;
@@ -141,9 +144,25 @@ public class PlayerListener implements Listener {
         if (itemMeta == null)
             return;
 
-        NBTItem nbtItem = new NBTItem(item);
+        PersistentDataContainer pdc = itemMeta.getPersistentDataContainer();
+        NamespacedKey namespacedKey = NamespacedKey.fromString("gems-item-value");
 
-        if (nbtItem.hasTag("gems-item-value"))
+        if (pdc.has(namespacedKey))
+            event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onDropItem(PlayerDropItemEvent event) {
+        ItemStack item = event.getItemDrop().getItemStack();
+        ItemMeta itemMeta = item.getItemMeta();
+
+        if (itemMeta == null)
+            return;
+
+        PersistentDataContainer pdc = itemMeta.getPersistentDataContainer();
+        NamespacedKey namespacedKey = NamespacedKey.fromString("gems-item-value");
+
+        if (pdc.has(namespacedKey))
             event.setCancelled(true);
     }
 

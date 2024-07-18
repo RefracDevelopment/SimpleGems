@@ -1,16 +1,15 @@
 package me.refracdevelopment.simplegems.commands;
 
-import me.kodysimpson.simpapi.command.SubCommand;
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.utilities.Permissions;
 import me.refracdevelopment.simplegems.utilities.Tasks;
 import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
 import me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils;
+import me.refracdevelopment.simplegems.utilities.command.SubCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import space.arim.morepaperlib.adventure.MorePaperLibAdventure;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,31 +49,21 @@ public class ResetCommand extends SubCommand {
             return;
         }
 
-        MorePaperLibAdventure paperLibAdventure = SimpleGems.getInstance().getPaperLibAdventure();
-
         Tasks.runAsync(() -> {
             if (args.length == 1) {
                 switch (SimpleGems.getInstance().getDataType()) {
                     case MYSQL:
                         SimpleGems.getInstance().getMySQLManager().delete();
 
-                        Tasks.executeAtEntity(player, () -> {
-                            Bukkit.getOnlinePlayers().forEach(p -> {
-                                Tasks.executeAtEntity(p, () -> {
-                                    paperLibAdventure.kickPlayer(p, RyMessageUtils.adventureTranslate(p, SimpleGems.getInstance().getLocaleFile().getString("kick-messages-error")));
-                                });
-                            });
+                        Bukkit.getOnlinePlayers().forEach(p -> {
+                            p.kick(RyMessageUtils.translate(p, SimpleGems.getInstance().getLocaleFile().getString("kick-messages-error")));
                         });
                         break;
                     default:
                         SimpleGems.getInstance().getSqLiteManager().delete();
 
-                        Tasks.executeAtEntity(player, () -> {
-                            Bukkit.getOnlinePlayers().forEach(p -> {
-                                Tasks.executeAtEntity(p, () -> {
-                                    paperLibAdventure.kickPlayer(p, RyMessageUtils.adventureTranslate(p, SimpleGems.getInstance().getLocaleFile().getString("kick-messages-error")));
-                                });
-                            });
+                        Bukkit.getOnlinePlayers().forEach(p -> {
+                            p.kick(RyMessageUtils.translate(p, SimpleGems.getInstance().getLocaleFile().getString("kick-messages-error")));
                         });
                         break;
                 }
@@ -86,23 +75,15 @@ public class ResetCommand extends SubCommand {
                         case MYSQL:
                             SimpleGems.getInstance().getMySQLManager().deletePlayer(target.getPlayer().getUniqueId().toString());
 
-                            Tasks.executeAtEntity(player, () -> {
-                                Bukkit.getOnlinePlayers().forEach(p -> {
-                                    Tasks.executeAtEntity(p, () -> {
-                                        paperLibAdventure.kickPlayer(p, RyMessageUtils.adventureTranslate(p, SimpleGems.getInstance().getLocaleFile().getString("kick-messages-error")));
-                                    });
-                                });
+                            Bukkit.getOnlinePlayers().forEach(p -> {
+                                p.kick(RyMessageUtils.translate(p, SimpleGems.getInstance().getLocaleFile().getString("kick-messages-error")));
                             });
                             break;
                         default:
                             SimpleGems.getInstance().getSqLiteManager().deletePlayer(target.getPlayer().getUniqueId().toString());
 
-                            Tasks.executeAtEntity(player, () -> {
-                                Bukkit.getOnlinePlayers().forEach(p -> {
-                                    Tasks.executeAtEntity(p, () -> {
-                                        paperLibAdventure.kickPlayer(p, RyMessageUtils.adventureTranslate(p, SimpleGems.getInstance().getLocaleFile().getString("kick-messages-error")));
-                                    });
-                                });
+                            Bukkit.getOnlinePlayers().forEach(p -> {
+                                p.kick(RyMessageUtils.translate(p, SimpleGems.getInstance().getLocaleFile().getString("kick-messages-error")));
                             });
                             break;
                     }

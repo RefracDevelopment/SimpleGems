@@ -6,7 +6,7 @@
 
     <groupId>me.refracdevelopment</groupId>
     <artifactId>SimpleGems</artifactId>
-    <version>3.8.0</version>
+    <version>4.0.0</version>
     <packaging>jar</packaging>
 
     <name>SimpleGems</name>
@@ -46,17 +46,6 @@
                                 <exclude>com/cryptomorin/xseries/XTag*</exclude>
                                 <exclude>com/cryptomorin/xseries/XBiome*</exclude>
                                 <exclude>com/cryptomorin/xseries/NMSExtras*</exclude>
-                                <!--> SimpAPI <-->
-                                <exclude>me/kodysimpson/simpapi/items/ItemUtils*</exclude>
-                                <exclude>me/kodysimpson/simpapi/heads/SkullCreator*</exclude>
-                                <exclude>me/kodysimpson/simpapi/config/ConfigManager*</exclude>
-                                <exclude>me/kodysimpson/simpapi/config/Config*</exclude>
-                                <exclude>me/kodysimpson/simpapi/colors/ColorTranslator*</exclude>
-                                <exclude>me/kodysimpson/simpapi/conversations/ArrayMatchCanceller*</exclude>
-                                <exclude>me/kodysimpson/simpapi/conversations/ConversationStarter*</exclude>
-                                <exclude>me/kodysimpson/simpapi/conversations/MultilineMessage*</exclude>
-                                <exclude>me/kodysimpson/simpapi/conversations/PrefixedAbandonedListener*</exclude>
-                                <exclude>me/kodysimpson/simpapi/conversations/ServerReloadListener*</exclude>
                             </excludes>
                         </filter>
                     </filters>
@@ -85,14 +74,6 @@
                         <relocation>
                             <pattern>com.tcoded.folialib</pattern>
                             <shadedPattern>me.refracdevelopment.libs.folialib</shadedPattern>
-                        </relocation>
-                        <relocation>
-                            <pattern>me.kodysimpson.simpapi</pattern>
-                            <shadedPattern>me.refracdevelopment.libs.simpapi</shadedPattern>
-                        </relocation>
-                        <relocation>
-                            <pattern>net.kyori.adventure.text.minimessage</pattern>
-                            <shadedPattern>me.refracdevelopment.libs.minimessage</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
@@ -137,8 +118,8 @@
             <layout>default</layout>
         </repository>
         <repository>
-            <id>arim-mvn-lgpl3</id>
-            <url>https://mvn-repo.arim.space/lesser-gpl3/</url>
+            <id>devmart-other</id>
+            <url>https://nexuslite.gcnt.net/repos/other/</url>
         </repository>
     </repositories>
 
@@ -204,12 +185,6 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>de.tr7zw</groupId>
-            <artifactId>item-nbt-api-plugin</artifactId>
-            <version>2.13.1</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>org.mariadb.jdbc</groupId>
             <artifactId>mariadb-java-client</artifactId>
             <version>3.4.1</version>
@@ -258,33 +233,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>io.papermc</groupId>
-            <artifactId>paperlib</artifactId>
-            <version>1.0.8</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>space.arim.morepaperlib</groupId>
-            <artifactId>morepaperlib</artifactId>
-            <version>0.4.4</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.github.KodySimpson</groupId>
-            <artifactId>SimpAPI</artifactId>
-            <version>4.5.6</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.kyori</groupId>
-            <artifactId>adventure-api</artifactId>
-            <version>4.17.0</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.kyori</groupId>
-            <artifactId>adventure-platform-bukkit</artifactId>
-            <version>4.3.3</version>
+            <groupId>com.tcoded</groupId>
+            <artifactId>FoliaLib</artifactId>
+            <version>0.3.4</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

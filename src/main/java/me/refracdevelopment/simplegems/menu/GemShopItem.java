@@ -3,18 +3,17 @@ package me.refracdevelopment.simplegems.menu;
 import ca.tweetzy.skulls.Skulls;
 import ca.tweetzy.skulls.api.interfaces.Skull;
 import com.cryptomorin.xseries.XEnchantment;
-import com.cryptomorin.xseries.reflection.XReflection;
 import dev.lone.itemsadder.api.CustomStack;
 import lombok.Data;
 import me.arcaniax.hdb.api.HeadDatabaseAPI;
-import me.kodysimpson.simpapi.exceptions.MenuManagerNotSetupException;
-import me.kodysimpson.simpapi.menu.MenuManager;
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.utilities.ItemBuilder;
 import me.refracdevelopment.simplegems.utilities.Methods;
 import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
 import me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils;
 import me.refracdevelopment.simplegems.utilities.chat.StringPlaceholders;
+import me.refracdevelopment.simplegems.utilities.exceptions.MenuManagerNotSetupException;
+import me.refracdevelopment.simplegems.utilities.paginated.MenuManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
@@ -75,7 +74,7 @@ public class GemShopItem {
         this.skullOwner = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getString(getCategory() + ".items." + getItem() + ".skullOwner");
 
         if (SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.get(getCategory() + ".items." + getItem() + ".glow") != null)
-            this.glow = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getBoolean(getCategory() + ".items." + getItem() + ".glow");
+            this.glow = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getBoolean(getCategory() + ".items." + getItem() + ".glow", false);
         else
             this.glow = false;
 
@@ -85,12 +84,12 @@ public class GemShopItem {
             this.action = false;
 
         if (SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.get(getCategory() + ".items." + getItem() + ".buyable") != null)
-            this.buyable = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getBoolean(getCategory() + ".items." + getItem() + ".buyable");
+            this.buyable = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getBoolean(getCategory() + ".items." + getItem() + ".buyable", true);
         else
             this.buyable = true;
 
         if (SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.get(getCategory() + ".items." + getItem() + ".itemsAdder") != null)
-            this.itemsAdder = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getBoolean(getCategory() + ".items." + getItem() + ".itemsAdder");
+            this.itemsAdder = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getBoolean(getCategory() + ".items." + getItem() + ".itemsAdder", false);
         else
             this.itemsAdder = false;
     }
@@ -139,7 +138,7 @@ public class GemShopItem {
 
                     GemShopCategory category = null;
                     try {
-                        category = new GemShopCategory(MenuManager.getPlayerMenuUtility(player), gemShopCategory);
+                        category = new GemShopCategory(MenuManager.getPlayerMenuUtil(player), gemShopCategory);
                     } catch (MenuManagerNotSetupException e) {
                         RyMessageUtils.sendPluginError("MenuManager not setup!", e, true, true);
                     }
@@ -178,10 +177,7 @@ public class GemShopItem {
             Skull api = Skulls.getAPI().getSkull(Integer.parseInt(getSkullOwner()));
             item = new ItemBuilder(api.getItemStack());
         } else if (isCustomData()) {
-            if (XReflection.supports(14))
-                item.setCustomModelData(getCustomModelData());
-            else
-                RyMessageUtils.sendPluginError("An error occurred when trying to set custom model data. Make sure your only using custom model data when on 1.14+.");
+            item.setCustomModelData(getCustomModelData());
         } else if (isItemsAdder()) {
             CustomStack api = CustomStack.getInstance(getMaterial());
 

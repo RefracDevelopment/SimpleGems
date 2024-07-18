@@ -1,10 +1,10 @@
 package me.refracdevelopment.simplegems.commands;
 
-import me.kodysimpson.simpapi.command.SubCommand;
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.utilities.Permissions;
 import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
 import me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils;
+import me.refracdevelopment.simplegems.utilities.command.SubCommand;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -39,6 +39,7 @@ public class WithdrawCommand extends SubCommand {
             RyMessageUtils.sendPluginMessage(commandSender, "no-console", Placeholders.setPlaceholders(commandSender));
             return;
         }
+
 
         if (args.length != 2) {
             String baseColor = SimpleGems.getInstance().getLocaleFile().getString("base-command-color");

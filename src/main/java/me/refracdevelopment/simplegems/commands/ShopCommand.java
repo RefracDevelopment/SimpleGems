@@ -1,13 +1,13 @@
 package me.refracdevelopment.simplegems.commands;
 
-import me.kodysimpson.simpapi.command.SubCommand;
-import me.kodysimpson.simpapi.exceptions.MenuManagerNotSetupException;
-import me.kodysimpson.simpapi.menu.MenuManager;
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.menu.GemShopCategory;
 import me.refracdevelopment.simplegems.utilities.Permissions;
 import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
 import me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils;
+import me.refracdevelopment.simplegems.utilities.command.SubCommand;
+import me.refracdevelopment.simplegems.utilities.exceptions.MenuManagerNotSetupException;
+import me.refracdevelopment.simplegems.utilities.paginated.MenuManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -53,7 +53,7 @@ public class ShopCommand extends SubCommand {
                 GemShopCategory category;
 
                 try {
-                    category = new GemShopCategory(MenuManager.getPlayerMenuUtility(player), gemShopCategory);
+                    category = new GemShopCategory(MenuManager.getPlayerMenuUtil(player), gemShopCategory);
                 } catch (MenuManagerNotSetupException e) {
                     RyMessageUtils.sendPluginError("MenuManager not setup!", e, true, true);
                     return;
@@ -89,7 +89,7 @@ public class ShopCommand extends SubCommand {
             GemShopCategory category;
 
             try {
-                category = new GemShopCategory(MenuManager.getPlayerMenuUtility(player), gemShopCategory);
+                category = new GemShopCategory(MenuManager.getPlayerMenuUtil(player), gemShopCategory);
             } catch (MenuManagerNotSetupException e) {
                 RyMessageUtils.sendPluginError("MenuManager not setup!", e, true, true);
                 return;

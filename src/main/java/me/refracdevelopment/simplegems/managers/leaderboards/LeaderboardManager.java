@@ -74,7 +74,7 @@ public class LeaderboardManager {
                 String key = entry.getKey();
                 double gems = entry.getValue();
 
-                if (placement == 11)
+                if (placement == SimpleGems.getInstance().getSettings().GEMS_TOP_ENTRIES + 1)
                     break;
 
                 RyMessageUtils.sendPlayer(player, SimpleGems.getInstance().getSettings().GEMS_TOP_FORMAT
@@ -108,7 +108,7 @@ public class LeaderboardManager {
     }
 
     public void updateTask() {
-        Tasks.runAsyncDelayed(() -> new LeaderBoardUpdate().update(),
+        Tasks.runAsyncTimer(() -> new LeaderBoardUpdate().update(), SimpleGems.getInstance().getSettings().LEADERBOARD_UPDATE_INTERVAL,
                 SimpleGems.getInstance().getSettings().LEADERBOARD_UPDATE_INTERVAL, TimeUnit.SECONDS);
     }
 

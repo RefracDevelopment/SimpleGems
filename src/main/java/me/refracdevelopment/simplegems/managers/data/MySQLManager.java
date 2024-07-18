@@ -58,7 +58,6 @@ public class MySQLManager {
             exception.printStackTrace();
             return exception;
         }
-
         return null;
     }
 

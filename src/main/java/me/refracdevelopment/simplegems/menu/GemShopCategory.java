@@ -1,14 +1,14 @@
 package me.refracdevelopment.simplegems.menu;
 
 import lombok.Getter;
-import me.kodysimpson.simpapi.menu.Menu;
-import me.kodysimpson.simpapi.menu.PlayerMenuUtility;
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.utilities.ItemBuilder;
 import me.refracdevelopment.simplegems.utilities.Methods;
 import me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils;
+import me.refracdevelopment.simplegems.utilities.paginated.Menu;
+import me.refracdevelopment.simplegems.utilities.paginated.PlayerMenuUtil;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
 @Getter
@@ -17,8 +17,8 @@ public class GemShopCategory extends Menu {
     private final String categoryName, permission;
     private final boolean enabled, isDefault;
 
-    public GemShopCategory(PlayerMenuUtility playerMenuUtility, String categoryName) {
-        super(playerMenuUtility);
+    public GemShopCategory(PlayerMenuUtil playerMenuUtil, String categoryName) {
+        super(playerMenuUtil);
 
         this.categoryName = categoryName;
         this.permission = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getString(categoryName + ".permission", "");
@@ -27,8 +27,8 @@ public class GemShopCategory extends Menu {
     }
 
     @Override
-    public String getMenuName() {
-        return RyMessageUtils.translate(playerMenuUtility.getOwner(), SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getString(categoryName + ".title"));
+    public Component getMenuName() {
+        return RyMessageUtils.translate(playerMenuUtil.getOwner(), SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getString(categoryName + ".title"));
     }
 
     @Override
@@ -43,9 +43,7 @@ public class GemShopCategory extends Menu {
 
     @Override
     public void handleMenu(InventoryClickEvent event) {
-        Player player = (Player) event.getWhoClicked();
-
-        if (playerMenuUtility == null)
+        if (playerMenuUtil == null)
             return;
         if (event.getCurrentItem() == null)
             return;
@@ -54,18 +52,18 @@ public class GemShopCategory extends Menu {
 
         SimpleGems.getInstance().getGemShop().getItems(categoryName).forEach(item -> {
             if (item.getCategory().equalsIgnoreCase(categoryName) && item.getSlot() == event.getRawSlot())
-                item.handleItem(player);
+                item.handleItem(playerMenuUtil.getOwner());
         });
     }
 
     @Override
     public void setMenuItems() {
-        if (playerMenuUtility == null)
+        if (playerMenuUtil == null)
             return;
 
         SimpleGems.getInstance().getGemShop().getItems(categoryName).forEach(item -> {
             if (item.getCategory().equalsIgnoreCase(categoryName))
-                getInventory().setItem(item.getSlot(), item.getItem(playerMenuUtility.getOwner()));
+                getInventory().setItem(item.getSlot(), item.getItem(playerMenuUtil.getOwner()));
         });
 
         if (SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getBoolean(categoryName + ".fill.enabled")) {
@@ -78,7 +76,7 @@ public class GemShopCategory extends Menu {
                 int durability = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getInt(categoryName + ".fill.durability");
                 ItemBuilder item = new ItemBuilder(material);
 
-                item.setName(RyMessageUtils.translate(playerMenuUtility.getOwner(), name));
+                item.setName(RyMessageUtils.translate(playerMenuUtil.getOwner(), name));
                 item.setDurability(durability);
 
                 getInventory().setItem(i, item.toItemStack());
