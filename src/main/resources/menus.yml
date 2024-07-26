@@ -21,14 +21,17 @@
 # Actions:
 # [console] - Send a console command
 # [message] - Send a message to the player
-# {openmenu:menu-name} - Open a new category menu
+# [menu] menu-name - Open a new category menu, replace menu-name with the category name
 # [close] - Close the current menu
+# [back] - Go back to last opened menu
 #---------------------------------------------------------------------------
 # This is used for automatic file updating purposes
-config-version: '11'
+config-version: '12'
 
 categories:
   gems-menu:
+    # The menu name used for the "[menu] menu-name" action
+    menu-name: "gems-menu"
     enabled: true
     default: true
     title: "&e&lGems Shop"

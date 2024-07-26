@@ -68,9 +68,7 @@ public class PlayerListener implements Listener {
         Player player = event.getPlayer();
         Profile profile = SimpleGems.getInstance().getProfileManager().getProfile(player.getUniqueId());
 
-        if (profile == null)
-            return;
-        if (profile.getData() == null)
+        if (profile == null || profile.getData() == null)
             return;
 
         Tasks.runAsync(() -> profile.getData().save(player));
@@ -81,9 +79,7 @@ public class PlayerListener implements Listener {
         Player player = event.getPlayer();
         Profile profile = SimpleGems.getInstance().getProfileManager().getProfile(player.getUniqueId());
 
-        if (profile == null)
-            return;
-        if (profile.getData() == null)
+        if (profile == null || profile.getData() == null)
             return;
 
         ItemStack item = player.getInventory().getItemInMainHand();
@@ -104,7 +100,7 @@ public class PlayerListener implements Listener {
             if (!item.isSimilar(gemsItem))
                 return;
 
-            if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.PHYSICAL) {
+            if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 event.setCancelled(true);
                 player.updateInventory();
                 return;
@@ -119,7 +115,7 @@ public class PlayerListener implements Listener {
                     .build();
 
             if (item.getAmount() == 1)
-                player.getInventory().setItemInHand(null);
+                player.getInventory().setItemInMainHand(null);
             else
                 item.setAmount(item.getAmount() - 1);
 
@@ -138,7 +134,7 @@ public class PlayerListener implements Listener {
 
         Player player = event.getPlayer();
 
-        ItemStack item = player.getItemInHand();
+        ItemStack item = player.getInventory().getItemInMainHand();
         ItemMeta itemMeta = item.getItemMeta();
 
         if (itemMeta == null)

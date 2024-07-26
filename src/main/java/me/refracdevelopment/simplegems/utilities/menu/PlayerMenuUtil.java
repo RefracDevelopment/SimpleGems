@@ -1,4 +1,4 @@
-package me.refracdevelopment.simplegems.utilities.paginated;
+package me.refracdevelopment.simplegems.utilities.menu;
 
 import lombok.Getter;
 import org.bukkit.entity.Player;

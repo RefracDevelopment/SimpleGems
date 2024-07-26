@@ -1,4 +1,4 @@
-package me.refracdevelopment.simplegems.utilities.paginated;
+package me.refracdevelopment.simplegems.utilities.menu;
 
 import me.refracdevelopment.simplegems.utilities.exceptions.MenuManagerException;
 import me.refracdevelopment.simplegems.utilities.exceptions.MenuManagerNotSetupException;

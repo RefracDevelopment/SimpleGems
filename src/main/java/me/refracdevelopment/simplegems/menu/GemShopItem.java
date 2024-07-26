@@ -13,7 +13,7 @@ import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
 import me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils;
 import me.refracdevelopment.simplegems.utilities.chat.StringPlaceholders;
 import me.refracdevelopment.simplegems.utilities.exceptions.MenuManagerNotSetupException;
-import me.refracdevelopment.simplegems.utilities.paginated.MenuManager;
+import me.refracdevelopment.simplegems.utilities.menu.MenuManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
@@ -129,41 +129,11 @@ public class GemShopItem {
 
     public void runActions(Player player) {
         for (String action : getActions()) {
-            if (action.startsWith("{openmenu:")) {
-                SimpleGems.getInstance().getGemShop().getCategories().forEach((gemShopCategory, gemShopItems) -> {
-                    String menu = action.replace("{openmenu:", "").replace("}", "");
-
-                    if (!gemShopCategory.equalsIgnoreCase(menu))
-                        return;
-
-                    GemShopCategory category = null;
-                    try {
-                        category = new GemShopCategory(MenuManager.getPlayerMenuUtil(player), gemShopCategory);
-                    } catch (MenuManagerNotSetupException e) {
-                        RyMessageUtils.sendPluginError("MenuManager not setup!", e, true, true);
-                    }
-
-                    if (!player.hasPermission(category.getPermission()) && !category.getPermission().isEmpty()) {
-                        player.closeInventory();
-                        RyMessageUtils.sendPluginMessage(player, "no-permission");
-                        return;
-                    }
-
-                    if (!category.isEnabled()) {
-                        player.closeInventory();
-                        RyMessageUtils.sendPluginMessage(player, "shop-disabled");
-                        return;
-                    }
-
-                    category.open();
-                });
-            } else {
-                SimpleGems.getInstance().getActionManager().execute(player, Placeholders.setPlaceholders(player, action
-                        .replace("%item%", getName())
-                        .replace("%cost%", String.valueOf(getCost()))
-                        .replace("%price%", String.valueOf(getCost()))
-                ));
-            }
+            SimpleGems.getInstance().getActionManager().execute(player, Placeholders.setPlaceholders(player, action
+                    .replace("%item%", getName())
+                    .replace("%cost%", String.valueOf(getCost()))
+                    .replace("%price%", String.valueOf(getCost()))
+            ));
         }
     }
 

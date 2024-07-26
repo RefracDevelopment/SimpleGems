@@ -29,12 +29,13 @@ public class GemShop {
 
         section.getRoutesAsStrings(false).forEach(gemShopCategory -> {
             Section category = section.getSection(gemShopCategory + ".items");
+            String name = section.getString(gemShopCategory + ".menu-name");
 
             category.getRoutesAsStrings(false).forEach(item -> {
-                items.add(new GemShopItem(gemShopCategory, item));
+                items.add(new GemShopItem(name, item));
             });
 
-            getCategories().put(gemShopCategory, items);
+            getCategories().put(name, items);
         });
     }
 

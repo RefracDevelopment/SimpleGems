@@ -1,6 +1,7 @@
-package me.refracdevelopment.simplegems.utilities.paginated;
+package me.refracdevelopment.simplegems.utilities.menu;
 
 import me.refracdevelopment.simplegems.SimpleGems;
+import me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils;
 import me.refracdevelopment.simplegems.utilities.exceptions.MenuManagerException;
 import me.refracdevelopment.simplegems.utilities.exceptions.MenuManagerNotSetupException;
 import org.bukkit.event.EventHandler;
@@ -24,7 +25,7 @@ public class MenuListener implements Listener {
             try {
                 menu.handleMenu(e);
             } catch (MenuManagerNotSetupException menuManagerNotSetupException) {
-                SimpleGems.getInstance().getLogger().severe("THE MENU MANAGER HAS NOT BEEN CONFIGURED. CALL MENUMANAGER.SETUP()");
+                RyMessageUtils.sendPluginError("THE MENU MANAGER HAS NOT BEEN CONFIGURED. CALL MENUMANAGER.SETUP()");
             } catch (MenuManagerException menuManagerException) {
                 menuManagerException.printStackTrace();
             }

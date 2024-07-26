@@ -7,7 +7,7 @@ import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
 import me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils;
 import me.refracdevelopment.simplegems.utilities.command.SubCommand;
 import me.refracdevelopment.simplegems.utilities.exceptions.MenuManagerNotSetupException;
-import me.refracdevelopment.simplegems.utilities.paginated.MenuManager;
+import me.refracdevelopment.simplegems.utilities.menu.MenuManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 

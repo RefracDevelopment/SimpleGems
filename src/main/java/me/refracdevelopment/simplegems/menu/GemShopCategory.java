@@ -5,8 +5,8 @@ import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.utilities.ItemBuilder;
 import me.refracdevelopment.simplegems.utilities.Methods;
 import me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils;
-import me.refracdevelopment.simplegems.utilities.paginated.Menu;
-import me.refracdevelopment.simplegems.utilities.paginated.PlayerMenuUtil;
+import me.refracdevelopment.simplegems.utilities.menu.Menu;
+import me.refracdevelopment.simplegems.utilities.menu.PlayerMenuUtil;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -38,7 +38,7 @@ public class GemShopCategory extends Menu {
 
     @Override
     public boolean cancelAllClicks() {
-        return true;
+        return false;
     }
 
     @Override
@@ -49,6 +49,8 @@ public class GemShopCategory extends Menu {
             return;
         if (event.getCurrentItem().getItemMeta() == null)
             return;
+
+        event.setCancelled(true);
 
         SimpleGems.getInstance().getGemShop().getItems(categoryName).forEach(item -> {
             if (item.getCategory().equalsIgnoreCase(categoryName) && item.getSlot() == event.getRawSlot())

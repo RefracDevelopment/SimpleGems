@@ -1,4 +1,4 @@
-package me.refracdevelopment.simplegems.utilities.paginated;
+package me.refracdevelopment.simplegems.utilities.menu;
 
 import me.refracdevelopment.simplegems.utilities.Methods;
 import me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils;

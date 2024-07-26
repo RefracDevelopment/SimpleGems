@@ -27,7 +27,8 @@ import me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils;
 import me.refracdevelopment.simplegems.utilities.chat.StringPlaceholders;
 import me.refracdevelopment.simplegems.utilities.command.CommandManager;
 import me.refracdevelopment.simplegems.utilities.command.SubCommand;
-import me.refracdevelopment.simplegems.utilities.paginated.MenuManager;
+import me.refracdevelopment.simplegems.utilities.menu.MenuManager;
+import me.refracdevelopment.simplegems.utilities.menu.actions.BackAction;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
@@ -159,7 +160,10 @@ public final class SimpleGems extends JavaPlugin {
         profileManager = new ProfileManager();
         actionManager = new ActionManager(this);
         leaderboardManager = new LeaderboardManager();
+
         MenuManager.setup(getServer(), this);
+
+        actionManager.register(new BackAction(), false);
 
         RyMessageUtils.sendConsole(true, "&aLoaded managers.");
     }
