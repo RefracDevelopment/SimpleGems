@@ -12,8 +12,6 @@ import me.refracdevelopment.simplegems.utilities.Methods;
 import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
 import me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils;
 import me.refracdevelopment.simplegems.utilities.chat.StringPlaceholders;
-import me.refracdevelopment.simplegems.utilities.exceptions.MenuManagerNotSetupException;
-import me.refracdevelopment.simplegems.utilities.menu.MenuManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;

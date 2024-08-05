@@ -81,10 +81,10 @@ public final class SimpleGems extends JavaPlugin {
         // Plugin startup logic
         instance = this;
 
-        this.foliaLib = new FoliaLib(this);
+        foliaLib = new FoliaLib(this);
 
         if (!XReflection.supports(18) || getFoliaLib().isSpigot()) {
-            getLogger().info("This version is no longer supported.");
+            getLogger().info("This version and or software (Spigot) is no longer supported.");
             getLogger().info("Please update to at least Paper 1.18.x or above.");
             getServer().getPluginManager().disablePlugin(this);
             return;
@@ -109,9 +109,9 @@ public final class SimpleGems extends JavaPlugin {
         loadListeners();
         loadHooks();
 
-        new Metrics(this, 13117);
-
         updateCheck();
+
+        new Metrics(this, 13117);
     }
 
     @Override

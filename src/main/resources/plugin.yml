@@ -4,6 +4,8 @@ main: me.refracdevelopment.simplegems.SimpleGems
 authors:
   - RefracDevelopment
 api-version: '1.13'
+depend:
+  - NBTAPI
 softdepend:
   - PlaceholderAPI
   - Skulls

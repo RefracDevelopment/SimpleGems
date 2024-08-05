@@ -3,6 +3,7 @@ package me.refracdevelopment.simplegems.managers.configuration;
 import dev.dejvokep.boostedyaml.YamlDocument;
 import dev.dejvokep.boostedyaml.block.implementation.Section;
 import dev.dejvokep.boostedyaml.settings.general.GeneralSettings;
+import dev.dejvokep.boostedyaml.settings.loader.LoaderSettings;
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils;
 
@@ -18,7 +19,8 @@ public class ConfigFile {
         try {
             configFile = YamlDocument.create(new File(SimpleGems.getInstance().getDataFolder(), name),
                     getClass().getResourceAsStream("/" + name),
-                    GeneralSettings.DEFAULT
+                    GeneralSettings.builder().setUseDefaults(false).build(),
+                    LoaderSettings.builder().setAutoUpdate(false).build()
             );
 
             configFile.update();
