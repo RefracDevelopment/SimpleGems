@@ -6,6 +6,7 @@ import lombok.Setter;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.refracdevelopment.simplegems.SimpleGems;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -99,7 +100,10 @@ public class RyMessageUtils {
     public static Component translate(String message) {
         message = legacyToAdventure(message);
 
-        Component component = MiniMessage.miniMessage().deserialize(message);
+        Component component = MiniMessage.miniMessage().deserialize(message)
+                .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+                .decoration(TextDecoration.BOLD, TextDecoration.State.FALSE)
+                .decoration(TextDecoration.OBFUSCATED, TextDecoration.State.FALSE);
 
         return component;
     }
