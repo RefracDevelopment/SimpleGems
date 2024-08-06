@@ -223,7 +223,7 @@ public class Methods {
 
         finalItem.setDurability(durability);
 
-        return nbtItem.getItem();
+        return finalItem.toItemStack();
     }
 
     public String formatDecimal(double amount) {

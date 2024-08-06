@@ -97,7 +97,7 @@ public class PlayerListener implements Listener {
             if (!item.isSimilar(gemsItem))
                 return;
 
-            if (event.getAction().isRightClick() || event.getAction() == Action.PHYSICAL) {
+            if (event.getAction().isLeftClick() || event.getAction() == Action.PHYSICAL) {
                 event.setCancelled(true);
                 player.updateInventory();
                 return;
