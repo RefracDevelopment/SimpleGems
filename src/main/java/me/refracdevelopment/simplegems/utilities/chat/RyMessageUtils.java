@@ -101,9 +101,9 @@ public class RyMessageUtils {
         message = legacyToAdventure(message);
 
         Component component = MiniMessage.miniMessage().deserialize(message)
-                .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-                .decoration(TextDecoration.BOLD, TextDecoration.State.FALSE)
-                .decoration(TextDecoration.OBFUSCATED, TextDecoration.State.FALSE);
+                .decorationIfAbsent(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+                .decorationIfAbsent(TextDecoration.BOLD, TextDecoration.State.FALSE)
+                .decorationIfAbsent(TextDecoration.OBFUSCATED, TextDecoration.State.FALSE);
 
         return component;
     }

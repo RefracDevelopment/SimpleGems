@@ -59,7 +59,7 @@ categories:
           - "&7The Gem Shop sells you items"
           - "&7you can not get in /shop."
           - ""
-          - "&eYour Gem Balance: &b&l%star% &f%gems_formatted%"
+          - "&eYour Gem Balance: &b%star% &f%gems_formatted%"
         # Set to false so the menu knows this is not a buyable item
         buyable: false
         slot: 4
