@@ -220,7 +220,7 @@ public class RyMessageUtils {
      * @param message The message you wish for console to receive.
      */
     public static void sendConsole(boolean prefix, String message) {
-        if (prefix) message = "<#7D0DC3>[SimpleGems] &f" + message;
+        if (prefix) message = "<#7D0DC3>[" + instance.getDescription().getName() + "] &f" + message;
 
         Bukkit.getConsoleSender().sendMessage(translate(message));
     }
@@ -233,7 +233,7 @@ public class RyMessageUtils {
      */
     public static void sendConsole(boolean prefix, String... messages) {
         for (String message : messages) {
-            if (prefix) message = "<#7D0DC3>[SimpleGems] &f" + message;
+            if (prefix) message = "<#7D0DC3>[" + instance.getDescription().getName() + "] &f" + message;
 
             Bukkit.getConsoleSender().sendMessage(translate(message));
         }
@@ -247,7 +247,7 @@ public class RyMessageUtils {
      */
     public static void sendConsole(boolean prefix, List<String> messages) {
         for (String message : messages) {
-            if (prefix) message = "<#7D0DC3>[SimpleGems] &f" + message;
+            if (prefix) message = "<#7D0DC3>[" + instance.getDescription().getName() + "] &f" + message;
 
             Bukkit.getConsoleSender().sendMessage(translate(message));
         }
