@@ -1,4 +1,4 @@
-[![](https://jitpack.io/v/RefracDevelopment/SimpleGems.svg)](https://jitpack.io/#RefracDevelopment/SimpleGems)
+[![](https://jitpack.io/v/RefracDevelopment/SimpleGems.svg)](https://jitpack.io/#RefracDevelopment/SimpleGems) [![Java CI with Maven](https://github.com/RefracDevelopment/SimpleGems/actions/workflows/maven.yml/badge.svg)](https://github.com/RefracDevelopment/SimpleGems/actions/workflows/maven.yml)
 
 ![](https://i.imgur.com/pMKvWrk.png)
 
