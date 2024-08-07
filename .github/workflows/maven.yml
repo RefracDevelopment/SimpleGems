@@ -25,4 +25,4 @@ jobs:
       uses: actions/upload-artifact@v4.3.3 # https://github.com/actions/upload-artifact/releases
       with:
         name: Click here to download
-        path: jar/build/libs/SimpleGems-*+${{ github.run_number }}.jar
+        path: target/SimpleGems-*+${{ github.run_number }}.jar
