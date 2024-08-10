@@ -172,6 +172,8 @@ public class GemShopItem {
         if (!isSkulls() && !isHeadDatabase())
             finalItem.setSkullOwner(getSkullOwner());
 
+        finalItem.setItemFlags(ItemFlag.HIDE_ADDITIONAL_TOOLTIP);
+
         return finalItem.toItemStack();
     }
 
