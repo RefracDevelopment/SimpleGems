@@ -38,8 +38,6 @@ public abstract class Menu implements InventoryHolder {
 
     public abstract int getSlots();
 
-    public abstract boolean cancelAllClicks();
-
     public abstract void handleMenu(InventoryClickEvent e) throws MenuManagerNotSetupException, MenuManagerException;
 
     public abstract void setMenuItems();

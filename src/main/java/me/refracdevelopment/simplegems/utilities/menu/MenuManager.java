@@ -82,4 +82,12 @@ public class MenuManager {
             return playerMenuUtilityMap.get(p); //Return the object by using the provided player
         }
     }
+
+    public static void remove(Player p) throws MenuManagerNotSetupException {
+        if (!isSetup) {
+            throw new MenuManagerNotSetupException();
+        }
+
+        playerMenuUtilityMap.remove(p.getUniqueId());
+    }
 }

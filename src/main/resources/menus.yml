@@ -30,8 +30,6 @@ config-version: '12'
 
 categories:
   gems-menu:
-    # The menu name used for the "[menu] menu-name" action
-    menu-name: "gems-menu"
     enabled: true
     default: true
     title: "&e&lGems Shop"

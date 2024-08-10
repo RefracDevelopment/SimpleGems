@@ -112,8 +112,7 @@ public class RyMessageUtils {
      * Translate a string from legacy to Adventure API.
      *
      * @param input The string that needs translating.
-     * @return      String which is in an adventure format.
-     *
+     * @return String which is in an adventure format.
      * @Author: EternalCodeTeam (https://github.com/EternalCodeTeam/ChatFormatter/)
      */
     private static String legacyToAdventure(String input) {

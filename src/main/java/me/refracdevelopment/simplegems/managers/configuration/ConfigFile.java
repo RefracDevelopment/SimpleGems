@@ -23,7 +23,6 @@ public class ConfigFile {
                     LoaderSettings.builder().setAutoUpdate(false).build()
             );
 
-            configFile.update();
             configFile.save();
         } catch (IOException e) {
             RyMessageUtils.sendPluginError("&cFailed to load " + name + " file! The plugin will now shutdown.", e, true, true);

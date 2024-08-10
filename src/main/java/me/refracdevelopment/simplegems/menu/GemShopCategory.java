@@ -37,19 +37,7 @@ public class GemShopCategory extends Menu {
     }
 
     @Override
-    public boolean cancelAllClicks() {
-        return false;
-    }
-
-    @Override
     public void handleMenu(InventoryClickEvent event) {
-        if (playerMenuUtil == null)
-            return;
-        if (event.getCurrentItem() == null)
-            return;
-        if (event.getCurrentItem().getItemMeta() == null)
-            return;
-
         event.setCancelled(true);
 
         SimpleGems.getInstance().getGemShop().getItems(categoryName).forEach(item -> {

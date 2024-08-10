@@ -21,8 +21,9 @@
 # Actions:
 # [console] - Send a console command
 # [message] - Send a message to the player
-# {openmenu:menu-name} - Open a new category menu
+# [menu] menu-name - Open a new category menu, replace menu-name with the category name
 # [close] - Close the current menu
+# [back] - Go back to the last menu
 #---------------------------------------------------------------------------
 
 # This is used for automatic file updating purposes

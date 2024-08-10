@@ -164,8 +164,8 @@ public final class SimpleGems extends JavaPlugin {
 
         MenuManager.setup(getServer(), this);
 
-        actionManager.register(new BackAction(), false);
-        actionManager.register(new MenuAction(), false);
+        actionManager.register(new BackAction(), true);
+        actionManager.register(new MenuAction(), true);
 
         RyMessageUtils.sendConsole(true, "&aLoaded managers.");
     }

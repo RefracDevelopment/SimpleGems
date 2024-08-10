@@ -2,12 +2,12 @@ package me.refracdevelopment.simplegems.utilities.menu.actions;
 
 import me.gabytm.util.actions.Action;
 import me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils;
-import me.refracdevelopment.simplegems.utilities.exceptions.MenuManagerException;
 import me.refracdevelopment.simplegems.utilities.exceptions.MenuManagerNotSetupException;
 import me.refracdevelopment.simplegems.utilities.menu.MenuManager;
 import org.bukkit.entity.Player;
 
 public class BackAction implements Action {
+
     @Override
     public String getID() {
         return "back";
@@ -26,11 +26,10 @@ public class BackAction implements Action {
     @Override
     public void run(Player player, String data) {
         try {
-            MenuManager.getPlayerMenuUtil(player).lastMenu().back();
+            MenuManager.getPlayerMenuUtil(player).lastMenu().open();
         } catch (MenuManagerNotSetupException menuManagerNotSetupException) {
             RyMessageUtils.sendPluginError("THE MENU MANAGER HAS NOT BEEN CONFIGURED. CALL MENUMANAGER.SETUP()");
-        } catch (MenuManagerException menuManagerException) {
-            menuManagerException.printStackTrace();
+            player.closeInventory();
         }
     }
 }

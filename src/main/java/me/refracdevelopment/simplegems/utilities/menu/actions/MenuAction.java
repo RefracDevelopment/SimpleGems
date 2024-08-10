@@ -9,6 +9,7 @@ import me.refracdevelopment.simplegems.utilities.menu.MenuManager;
 import org.bukkit.entity.Player;
 
 public class MenuAction implements Action {
+
     @Override
     public String getID() {
         return "menu";
@@ -26,32 +27,30 @@ public class MenuAction implements Action {
 
     @Override
     public void run(Player player, String data) {
-        SimpleGems.getInstance().getGemShop().getCategories().forEach((gemShopCategory, gemShopItems) -> {
-            if (!gemShopCategory.equalsIgnoreCase(data))
-                return;
+        if (!SimpleGems.getInstance().getGemShop().getCategories().containsKey(data))
+            return;
 
-            GemShopCategory category;
-            try {
-                category = new GemShopCategory(MenuManager.getPlayerMenuUtil(player), data);
-            } catch (MenuManagerNotSetupException e) {
-                RyMessageUtils.sendPluginError("THE MENU MANAGER HAS NOT BEEN CONFIGURED. CALL MENUMANAGER.SETUP()");
-                player.closeInventory();
-                return;
-            }
+        GemShopCategory category;
+        try {
+            category = new GemShopCategory(MenuManager.getPlayerMenuUtil(player), data);
+        } catch (MenuManagerNotSetupException e) {
+            RyMessageUtils.sendPluginError("THE MENU MANAGER HAS NOT BEEN CONFIGURED. CALL MENUMANAGER.SETUP()");
+            player.closeInventory();
+            return;
+        }
 
-            if (!player.hasPermission(category.getPermission()) && !category.getPermission().isEmpty()) {
-                player.closeInventory();
-                RyMessageUtils.sendPluginMessage(player, "no-permission");
-                return;
-            }
+        if (!player.hasPermission(category.getPermission()) && !category.getPermission().isEmpty()) {
+            player.closeInventory();
+            RyMessageUtils.sendPluginMessage(player, "no-permission");
+            return;
+        }
 
-            if (!category.isEnabled()) {
-                player.closeInventory();
-                RyMessageUtils.sendPluginMessage(player, "shop-disabled");
-                return;
-            }
+        if (!category.isEnabled()) {
+            player.closeInventory();
+            RyMessageUtils.sendPluginMessage(player, "shop-disabled");
+            return;
+        }
 
-            category.open();
-        });
+        category.open();
     }
 }

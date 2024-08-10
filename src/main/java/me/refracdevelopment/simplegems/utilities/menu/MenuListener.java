@@ -3,9 +3,11 @@ package me.refracdevelopment.simplegems.utilities.menu;
 import me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils;
 import me.refracdevelopment.simplegems.utilities.exceptions.MenuManagerException;
 import me.refracdevelopment.simplegems.utilities.exceptions.MenuManagerNotSetupException;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.InventoryHolder;
 
 public class MenuListener implements Listener {
@@ -18,9 +20,6 @@ public class MenuListener implements Listener {
             if (e.getCurrentItem() == null)
                 return;
 
-            if (menu.cancelAllClicks())
-                e.setCancelled(true);
-
             try {
                 menu.handleMenu(e);
             } catch (MenuManagerNotSetupException menuManagerNotSetupException) {
@@ -28,6 +27,21 @@ public class MenuListener implements Listener {
             } catch (MenuManagerException menuManagerException) {
                 menuManagerException.printStackTrace();
             }
+        }
+    }
+
+    @EventHandler
+    public void onMenuClose(InventoryCloseEvent event) {
+        InventoryHolder holder = event.getInventory().getHolder();
+        Player player = (Player) event.getPlayer();
+
+        if (!(holder instanceof Menu))
+            return;
+
+        try {
+            MenuManager.remove(player);
+        } catch (MenuManagerNotSetupException e) {
+            RyMessageUtils.sendPluginError("THE MENU MANAGER HAS NOT BEEN CONFIGURED. CALL MENUMANAGER.SETUP()");
         }
     }
 }
