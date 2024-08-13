@@ -42,6 +42,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -120,13 +121,13 @@ public final class SimpleGems extends JavaPlugin {
     public void onDisable() {
         // Plugin shutdown logic
         try {
-            if (dataType == DataType.MYSQL)
+            if (Objects.requireNonNull(dataType) == DataType.MYSQL)
                 getMySQLManager().shutdown();
-            else if (dataType == DataType.SQLITE)
+            else if (Objects.requireNonNull(dataType) == DataType.SQLITE)
                 getSqLiteManager().shutdown();
 
             getFoliaLib().getScheduler().cancelAllTasks();
-        } catch (Exception ignored) {
+        } catch (Throwable ignored) {
         }
     }
 
