@@ -11,21 +11,21 @@ public class Tasks {
 
     public static void executeAtEntity(Entity entity, Runnable runnable) {
         Consumer<WrappedTask> consumer = task -> runnable.run();
-        SimpleGems.getInstance().getFoliaLib().getImpl().runAtEntity(entity, consumer);
+        SimpleGems.getInstance().getFoliaLib().getScheduler().runAtEntity(entity, consumer);
     }
 
     public static void runAtEntityDelayed(Entity entity, Runnable runnable, long delay) {
         Consumer<WrappedTask> consumer = task -> runnable.run();
-        SimpleGems.getInstance().getFoliaLib().getImpl().runAtEntityLater(entity, consumer, runnable, delay);
+        SimpleGems.getInstance().getFoliaLib().getScheduler().runAtEntityLater(entity, consumer, runnable, delay);
     }
 
     public static void runAsync(Runnable runnable) {
         Consumer<WrappedTask> consumer = task -> runnable.run();
-        SimpleGems.getInstance().getFoliaLib().getImpl().runAsync(consumer);
+        SimpleGems.getInstance().getFoliaLib().getScheduler().runAsync(consumer);
     }
 
     public static void runAsyncTimer(Runnable runnable, long delay, long period, TimeUnit unit) {
         Consumer<WrappedTask> consumer = task -> runnable.run();
-        SimpleGems.getInstance().getFoliaLib().getImpl().runTimerAsync(consumer, delay, period, unit);
+        SimpleGems.getInstance().getFoliaLib().getScheduler().runTimerAsync(consumer, delay, period, unit);
     }
 }

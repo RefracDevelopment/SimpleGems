@@ -31,6 +31,7 @@ import me.refracdevelopment.simplegems.utilities.menu.MenuManager;
 import me.refracdevelopment.simplegems.utilities.menu.actions.BackAction;
 import me.refracdevelopment.simplegems.utilities.menu.actions.MenuAction;
 import org.bstats.bukkit.Metrics;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -85,7 +86,7 @@ public final class SimpleGems extends JavaPlugin {
         foliaLib = new FoliaLib(this);
 
         if (!XReflection.supports(18) || getFoliaLib().isSpigot()) {
-            getLogger().info("This version and or software (Spigot) is no longer supported.");
+            getLogger().info("This version and or software (" + Bukkit.getName() + ") is not supported.");
             getLogger().info("Please update to at least Paper 1.18.x or above.");
             getServer().getPluginManager().disablePlugin(this);
             return;
@@ -124,7 +125,7 @@ public final class SimpleGems extends JavaPlugin {
             else if (dataType == DataType.SQLITE)
                 getSqLiteManager().shutdown();
 
-            getFoliaLib().getImpl().cancelAllTasks();
+            getFoliaLib().getScheduler().cancelAllTasks();
         } catch (Exception ignored) {
         }
     }

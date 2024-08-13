@@ -89,12 +89,16 @@ public class SQLiteManager {
     public void createTable(String name, String info) {
         new Thread(() -> {
             try (Connection resource = getConnection(); PreparedStatement statement = resource.prepareStatement("CREATE TABLE IF NOT EXISTS " + name + "(" + info + ");")) {
-                statement.setQueryTimeout(30);
                 statement.execute();
+                statement.closeOnCompletion();
             } catch (SQLException exception) {
                 RyMessageUtils.sendConsole(true, "An error occurred while creating database table " + name + ".");
                 exception.printStackTrace();
+            } finally {
+                Thread.currentThread().interrupt();
             }
+
+            Thread.currentThread().interrupt();
         }).start();
     }
 
@@ -107,17 +111,20 @@ public class SQLiteManager {
     public void execute(String query, Object... values) {
         new Thread(() -> {
             try (Connection resource = getConnection(); PreparedStatement statement = resource.prepareStatement(query)) {
-                statement.setQueryTimeout(30);
-
                 for (int i = 0; i < values.length; i++)
                     statement.setObject((i + 1), values[i]);
 
                 statement.execute();
+                statement.closeOnCompletion();
             } catch (SQLException exception) {
                 RyMessageUtils.sendConsole(true, "An error occurred while executing an update on the database.");
                 RyMessageUtils.sendConsole(true, "SQLite#execute : " + query);
                 exception.printStackTrace();
+            } finally {
+                Thread.currentThread().interrupt();
             }
+
+            Thread.currentThread().interrupt();
         }).start();
     }
 
@@ -131,17 +138,20 @@ public class SQLiteManager {
     public void select(String query, SelectCall callback, Object... values) {
         new Thread(() -> {
             try (Connection resource = getConnection(); PreparedStatement statement = resource.prepareStatement(query)) {
-                statement.setQueryTimeout(30);
-
                 for (int i = 0; i < values.length; i++)
                     statement.setObject((i + 1), values[i]);
 
                 callback.call(statement.executeQuery());
+                statement.closeOnCompletion();
             } catch (SQLException exception) {
                 RyMessageUtils.sendConsole(true, "An error occurred while executing a query on the database.");
                 RyMessageUtils.sendConsole(true, "SQLite#select : " + query);
                 exception.printStackTrace();
+            } finally {
+                Thread.currentThread().interrupt();
             }
+
+            Thread.currentThread().interrupt();
         }).start();
     }
 
