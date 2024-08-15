@@ -239,7 +239,9 @@ public final class SimpleGems extends JavaPlugin {
     private void loadListeners() {
         getServer().getPluginManager().registerEvents(new PlayerListener(), this);
 
+        // Loads all available menu data
         if (getServer().getPluginManager().isPluginEnabled("ItemsAdder"))
+            // Wait for ItemsAdder custom items to be loaded first
             getServer().getPluginManager().registerEvents(new ItemsAdderListener(), this);
         else
             gemShop = new GemShop();
