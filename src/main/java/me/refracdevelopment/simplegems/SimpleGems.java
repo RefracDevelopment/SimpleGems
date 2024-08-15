@@ -147,6 +147,7 @@ public final class SimpleGems extends JavaPlugin {
     }
 
     private void loadManagers() {
+        // Setup database
         switch (getSettings().DATA_TYPE.toUpperCase()) {
             case "MARIADB":
             case "MYSQL":
@@ -164,8 +165,10 @@ public final class SimpleGems extends JavaPlugin {
         actionManager = new ActionManager(this);
         leaderboardManager = new LeaderboardManager();
 
+        // Setup menus
         MenuManager.setup(getServer(), this);
 
+        // Register custom actions
         actionManager.register(new BackAction(), true);
         actionManager.register(new MenuAction(), true);
 
