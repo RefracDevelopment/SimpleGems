@@ -53,8 +53,8 @@ public class PAPIExpansion extends PlaceholderExpansion {
                                 .replace("%gems%", String.valueOf(gems))
                                 .replace("%gems_formatted%", Methods.format(gems))
                                 .replace("%gems_decimal%", Methods.formatDecimal(gems));
-                    } catch (Exception exception) {
-                        exception.printStackTrace();
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
                         return "Error...";
                     }
                 }

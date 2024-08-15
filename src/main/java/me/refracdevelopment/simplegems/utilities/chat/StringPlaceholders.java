@@ -9,9 +9,9 @@ import java.util.regex.Pattern;
 
 /**
  * An immutable class that holds a map of placeholders and their values
+ *
+ * @Author: RoseWood-Development (https://github.com/RoseWood-Development/RoseGarden/)
  */
-// Taken from
-// https://github.com/Rosewood-Development/RoseGarden/
 public final class StringPlaceholders {
 
     private static final StringPlaceholders EMPTY = new StringPlaceholders(Collections.emptyMap(), "%", "%");
