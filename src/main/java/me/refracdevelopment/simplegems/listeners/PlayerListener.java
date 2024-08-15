@@ -18,12 +18,7 @@ import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.UUID;
-
 public class PlayerListener implements Listener {
-
-    private final UUID getDevUUID = UUID.fromString("d9c670ed-d7d5-45fb-a144-8b8be86c4a2d");
-    private final UUID getDevUUID2 = UUID.fromString("ab898e40-9088-45eb-9d69-e0b78e872627");
 
     @EventHandler
     public void onLogin(PlayerLoginEvent event) {
@@ -44,11 +39,6 @@ public class PlayerListener implements Listener {
 
         if (!player.hasPlayedBefore())
             SimpleGems.getInstance().getGemsAPI().giveGems(player, SimpleGems.getInstance().getSettings().STARTING_GEMS);
-
-        if (player.getUniqueId().equals(getDevUUID))
-            sendDevMessage(player);
-        else if (player.getUniqueId().equals(getDevUUID2))
-            sendDevMessage(player);
     }
 
     @EventHandler
@@ -97,11 +87,8 @@ public class PlayerListener implements Listener {
             if (!item.isSimilar(gemsItem))
                 return;
 
-            if (event.getAction().isLeftClick() || event.getAction() == Action.PHYSICAL) {
-                event.setCancelled(true);
-                player.updateInventory();
+            if (event.getAction().isLeftClick() || event.getAction() == Action.PHYSICAL)
                 return;
-            }
 
             StringPlaceholders placeholders = StringPlaceholders.builder()
                     .addAll(Placeholders.setPlaceholders(player))
@@ -155,15 +142,5 @@ public class PlayerListener implements Listener {
 
         if (nbtItem.hasTag("gems-item-value"))
             event.setCancelled(true);
-    }
-
-    private void sendDevMessage(Player player) {
-        RyMessageUtils.sendPlayer(player, " ");
-        RyMessageUtils.sendPlayer(player, "&aWelcome " + SimpleGems.getInstance().getDescription().getName() + " Developer!");
-        RyMessageUtils.sendPlayer(player, "&aThis server is currently running " + SimpleGems.getInstance().getDescription().getName() + " &bv" + SimpleGems.getInstance().getDescription().getVersion() + "&a.");
-        RyMessageUtils.sendPlayer(player, "&aPlugin name&7: &f" + SimpleGems.getInstance().getDescription().getName());
-        RyMessageUtils.sendPlayer(player, " ");
-        RyMessageUtils.sendPlayer(player, "&aServer version&7: &f" + Bukkit.getVersion());
-        RyMessageUtils.sendPlayer(player, " ");
     }
 }
