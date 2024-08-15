@@ -55,40 +55,42 @@ public class LeaderboardManager {
                 });
                 break;
         }
+
+        Bukkit.getOnlinePlayers().forEach(onlinePlayer -> {
+            RyMessageUtils.sendPluginMessage(onlinePlayer, "leaderboard-update");
+        });
     }
 
     public void sendLeaderboard(Player player) {
-        Tasks.runAsync(() -> {
-            if (cachedMap.isEmpty() || players.isEmpty())
-                load();
+        if (cachedMap.isEmpty() || players.isEmpty())
+            update();
 
-            Map<String, Double> sortedMap = sortByValue(cachedMap);
+        Map<String, Double> sortedMap = sortByValue(cachedMap);
 
-            RyMessageUtils.sendPlayer(player, SimpleGems.getInstance().getSettings().GEMS_TOP_TITLE
-                    .replace("%entries%", String.valueOf(SimpleGems.getInstance().getSettings().GEMS_TOP_ENTRIES))
+        RyMessageUtils.sendPlayer(player, SimpleGems.getInstance().getSettings().GEMS_TOP_TITLE
+                .replace("%entries%", String.valueOf(SimpleGems.getInstance().getSettings().GEMS_TOP_ENTRIES))
+        );
+
+        int placement = 1;
+
+        for (Map.Entry<String, Double> entry : sortedMap.entrySet()) {
+            String key = entry.getKey();
+            double gems = entry.getValue();
+
+            if (placement == SimpleGems.getInstance().getSettings().GEMS_TOP_ENTRIES + 1)
+                break;
+
+            RyMessageUtils.sendPlayer(player, SimpleGems.getInstance().getSettings().GEMS_TOP_FORMAT
+                    .replace("%number%", String.valueOf(placement))
+                    .replace("%value%", String.valueOf(gems))
+                    .replace("%gems%", String.valueOf(gems))
+                    .replace("%gems_formatted%", Methods.format(gems))
+                    .replace("%gems_decimal%", Methods.formatDecimal(gems))
+                    .replace("%player%", key)
             );
 
-            int placement = 1;
-
-            for (Map.Entry<String, Double> entry : sortedMap.entrySet()) {
-                String key = entry.getKey();
-                double gems = entry.getValue();
-
-                if (placement == SimpleGems.getInstance().getSettings().GEMS_TOP_ENTRIES + 1)
-                    break;
-
-                RyMessageUtils.sendPlayer(player, SimpleGems.getInstance().getSettings().GEMS_TOP_FORMAT
-                        .replace("%number%", String.valueOf(placement))
-                        .replace("%value%", String.valueOf(gems))
-                        .replace("%gems%", String.valueOf(gems))
-                        .replace("%gems_formatted%", Methods.format(gems))
-                        .replace("%gems_decimal%", Methods.formatDecimal(gems))
-                        .replace("%player%", key)
-                );
-
-                placement++;
-            }
-        });
+            placement++;
+        }
     }
 
     private Map<String, Double> sortByValue(Map<String, Double> unsortMap) {
@@ -104,21 +106,16 @@ public class LeaderboardManager {
     }
 
     public void update() {
-        Tasks.runAsync(() -> new LeaderBoardUpdate().update());
+        Tasks.runAsync(this::load);
     }
 
     public void updateTask() {
-        Tasks.runAsyncTimer(() -> new LeaderBoardUpdate().update(), SimpleGems.getInstance().getSettings().LEADERBOARD_UPDATE_INTERVAL,
-                SimpleGems.getInstance().getSettings().LEADERBOARD_UPDATE_INTERVAL, TimeUnit.SECONDS);
-    }
-
-    private class LeaderBoardUpdate {
-        private void update() {
-            load();
-
-            Bukkit.getOnlinePlayers().forEach(onlinePlayer -> {
-                RyMessageUtils.sendPluginMessage(onlinePlayer, "leaderboard-update");
-            });
+        try {
+            Tasks.runAsyncTimer(this::load, SimpleGems.getInstance().getSettings().LEADERBOARD_UPDATE_INTERVAL,
+                    SimpleGems.getInstance().getSettings().LEADERBOARD_UPDATE_INTERVAL, TimeUnit.SECONDS);
+        } catch (Throwable throwable) {
+            RyMessageUtils.sendConsole(true, "An error occurred while updating the leaderboard.");
+            throwable.printStackTrace();
         }
     }
 }

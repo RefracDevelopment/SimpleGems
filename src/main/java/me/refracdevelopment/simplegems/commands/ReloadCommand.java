@@ -39,7 +39,7 @@ public class ReloadCommand extends SubCommand {
             return;
         }
 
-        SimpleGems.getInstance().getFoliaLib().getImpl().cancelAllTasks();
+        SimpleGems.getInstance().getFoliaLib().getScheduler().cancelAllTasks();
         reloadFiles();
         SimpleGems.getInstance().getGemShop().setupCustomMenuData();
         SimpleGems.getInstance().getLeaderboardManager().updateTask();
