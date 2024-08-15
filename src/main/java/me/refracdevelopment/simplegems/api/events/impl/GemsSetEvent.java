@@ -12,7 +12,7 @@ public class GemsSetEvent extends SimpleEvent {
     private final Player target;
 
     public GemsSetEvent(@Nullable Player player, Player target, double amount) {
-        super(player);
+        super(player != null ? player : target);
 
         this.target = target;
         this.gems = amount;
