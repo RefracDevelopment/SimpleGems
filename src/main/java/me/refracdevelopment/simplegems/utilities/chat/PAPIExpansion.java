@@ -6,6 +6,8 @@ import me.refracdevelopment.simplegems.utilities.Methods;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Map;
+
 public class PAPIExpansion extends PlaceholderExpansion {
 
     @Override
@@ -44,15 +46,20 @@ public class PAPIExpansion extends PlaceholderExpansion {
                 if (params.startsWith("player_")) {
                     try {
                         int value = Integer.parseInt(params.replace("player_", "")) - 1;
-                        String name = SimpleGems.getInstance().getLeaderboardManager().getPlayers().get(value);
-                        gems = SimpleGems.getInstance().getLeaderboardManager().getCachedMap().get(name);
+                        Map<String, Double> cachedMap = SimpleGems.getInstance().getLeaderboardManager().getCachedMap();
+                        Map<String, Double> sortedMap = SimpleGems.getInstance().getLeaderboardManager().sortByValue(cachedMap);
 
-                        return SimpleGems.getInstance().getSettings().GEMS_TOP_FORMAT
-                                .replace("%number%", String.valueOf(value + 1))
-                                .replace("%player%", name)
-                                .replace("%gems%", String.valueOf(gems))
-                                .replace("%gems_formatted%", Methods.format(gems))
-                                .replace("%gems_decimal%", Methods.formatDecimal(gems));
+                        for (Map.Entry<String, Double> entry : sortedMap.entrySet()) {
+                            String key = entry.getKey();
+                            gems = entry.getValue();
+
+                            return SimpleGems.getInstance().getSettings().GEMS_TOP_FORMAT
+                                    .replace("%number%", String.valueOf(value + 1))
+                                    .replace("%player%", key)
+                                    .replace("%gems%", String.valueOf(gems))
+                                    .replace("%gems_formatted%", Methods.format(gems))
+                                    .replace("%gems_decimal%", Methods.formatDecimal(gems));
+                        }
                     } catch (Throwable throwable) {
                         throwable.printStackTrace();
                         return "Error...";

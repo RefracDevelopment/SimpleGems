@@ -93,7 +93,7 @@ public class LeaderboardManager {
         }
     }
 
-    private Map<String, Double> sortByValue(Map<String, Double> unsortMap) {
+    public Map<String, Double> sortByValue(Map<String, Double> unsortMap) {
         List<Map.Entry<String, Double>> list = new LinkedList<>(unsortMap.entrySet());
         list.sort(Map.Entry.comparingByValue(Collections.reverseOrder()));
 
