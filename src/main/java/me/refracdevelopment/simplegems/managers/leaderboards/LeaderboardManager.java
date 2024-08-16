@@ -14,12 +14,12 @@ import java.util.concurrent.TimeUnit;
 @Data
 public class LeaderboardManager {
 
-    private final Map<String, Double> cachedMap;
+    private Map<String, Double> cachedMap;
     private final List<String> players;
 
     public LeaderboardManager() {
-        cachedMap = new HashMap<>();
-        players = new ArrayList<>();
+        cachedMap = new LinkedHashMap<>();
+        players = new LinkedList<>();
 
         update();
         updateTask();
@@ -33,7 +33,7 @@ public class LeaderboardManager {
 
         switch (SimpleGems.getInstance().getDataType()) {
             case MYSQL:
-                SimpleGems.getInstance().getMySQLManager().select("SELECT * FROM SimpleGems", resultSet -> {
+                SimpleGems.getInstance().getMySQLManager().select("SELECT * FROM SimpleGems ORDER BY gems DESC", resultSet -> {
                     while (resultSet.next()) {
                         String name = resultSet.getString("name");
                         double gems = resultSet.getDouble("gems");
@@ -44,7 +44,7 @@ public class LeaderboardManager {
                 });
                 break;
             default:
-                SimpleGems.getInstance().getSqLiteManager().select("SELECT * FROM SimpleGems", resultSet -> {
+                SimpleGems.getInstance().getSqLiteManager().select("SELECT * FROM SimpleGems ORDER BY gems DESC", resultSet -> {
                     while (resultSet.next()) {
                         String name = resultSet.getString("name");
                         double gems = resultSet.getDouble("gems");
@@ -59,13 +59,13 @@ public class LeaderboardManager {
         Bukkit.getOnlinePlayers().forEach(onlinePlayer -> {
             RyMessageUtils.sendPluginMessage(onlinePlayer, "leaderboard-update");
         });
+
+        cachedMap = sortByValue(cachedMap);
     }
 
     public void sendLeaderboard(Player player) {
         if (cachedMap.isEmpty() || players.isEmpty())
             update();
-
-        Map<String, Double> sortedMap = sortByValue(cachedMap);
 
         RyMessageUtils.sendPlayer(player, SimpleGems.getInstance().getSettings().GEMS_TOP_TITLE
                 .replace("%entries%", String.valueOf(SimpleGems.getInstance().getSettings().GEMS_TOP_ENTRIES))
@@ -73,7 +73,7 @@ public class LeaderboardManager {
 
         int placement = 1;
 
-        for (Map.Entry<String, Double> entry : sortedMap.entrySet()) {
+        for (Map.Entry<String, Double> entry : cachedMap.entrySet()) {
             String key = entry.getKey();
             double gems = entry.getValue();
 
