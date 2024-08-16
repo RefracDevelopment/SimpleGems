@@ -39,10 +39,9 @@ public class ReloadCommand extends SubCommand {
             return;
         }
 
-        SimpleGems.getInstance().getFoliaLib().getScheduler().cancelAllTasks();
         reloadFiles();
         SimpleGems.getInstance().getGemShop().setupCustomMenuData();
-        SimpleGems.getInstance().getLeaderboardManager().updateTask();
+        SimpleGems.getInstance().getLeaderboardManager().update();
         RyMessageUtils.sendPluginMessage(commandSender, "command-reload-success");
     }
 
