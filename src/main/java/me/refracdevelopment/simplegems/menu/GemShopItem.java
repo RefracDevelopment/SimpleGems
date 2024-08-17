@@ -3,6 +3,8 @@ package me.refracdevelopment.simplegems.menu;
 import ca.tweetzy.skulls.Skulls;
 import ca.tweetzy.skulls.api.interfaces.Skull;
 import com.cryptomorin.xseries.XEnchantment;
+import com.cryptomorin.xseries.XItemStack;
+import com.cryptomorin.xseries.reflection.XReflection;
 import dev.lone.itemsadder.api.CustomStack;
 import lombok.Data;
 import me.arcaniax.hdb.api.HeadDatabaseAPI;
@@ -172,7 +174,8 @@ public class GemShopItem {
         if (!isSkulls() && !isHeadDatabase())
             finalItem.setSkullOwner(getSkullOwner());
 
-        finalItem.setItemFlags(ItemFlag.HIDE_ADDITIONAL_TOOLTIP);
+        if (XReflection.supports(20))
+            finalItem.setItemFlags(ItemFlag.HIDE_ITEM_SPECIFICS);
 
         return finalItem.toItemStack();
     }
