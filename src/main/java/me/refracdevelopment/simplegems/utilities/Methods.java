@@ -201,7 +201,7 @@ public class Methods {
 
         NBTItem nbtItem = new NBTItem(finalItem.toItemStack());
         nbtItem.setDouble("gems-item-value", amount);
-        nbtItem.applyNBT(item.toItemStack());
+        nbtItem.applyNBT(finalItem.toItemStack());
 
         if (nbtItem.hasTag("gems-item-value")) {
             double foundValue = nbtItem.getDouble("gems-item-value");

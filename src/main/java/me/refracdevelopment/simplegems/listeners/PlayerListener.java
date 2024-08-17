@@ -8,7 +8,6 @@ import me.refracdevelopment.simplegems.utilities.Tasks;
 import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
 import me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils;
 import me.refracdevelopment.simplegems.utilities.chat.StringPlaceholders;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -33,7 +32,7 @@ public class PlayerListener implements Listener {
         Tasks.runAsync(() -> profile.getData().load(player));
 
         if (profile == null || profile.getData() == null) {
-            player.kick(RyMessageUtils.translate(player, SimpleGems.getInstance().getLocaleFile().getString("kick-messages-error")));
+            player.kick(RyMessageUtils.adventureTranslate(player, SimpleGems.getInstance().getLocaleFile().getString("kick-messages-error")));
             return;
         }
 

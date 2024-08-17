@@ -14,8 +14,8 @@ import java.util.concurrent.TimeUnit;
 @Data
 public class LeaderboardManager {
 
-    private Map<String, Double> cachedMap;
     private final List<String> players;
+    private Map<String, Double> cachedMap;
 
     public LeaderboardManager() {
         cachedMap = new LinkedHashMap<>();

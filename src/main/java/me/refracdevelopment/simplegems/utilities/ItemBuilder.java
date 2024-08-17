@@ -51,9 +51,9 @@ public class ItemBuilder {
         return this;
     }
 
-    public ItemBuilder setName(Component name) {
+    public ItemBuilder setName(String name) {
         ItemMeta im = is.getItemMeta();
-        im.displayName(name);
+        im.setDisplayName(name);
         is.setItemMeta(im);
         return this;
     }
@@ -115,49 +115,49 @@ public class ItemBuilder {
         return this;
     }
 
-    public ItemBuilder setLore(Component... lore) {
+    public ItemBuilder setLore(String... lore) {
         ItemMeta im = is.getItemMeta();
-        im.lore(Arrays.asList(lore));
+        im.setLore(Arrays.asList(lore));
         is.setItemMeta(im);
         return this;
     }
 
-    public ItemBuilder setLore(List<Component> lore) {
+    public ItemBuilder setLore(List<String> lore) {
         ItemMeta im = is.getItemMeta();
-        im.lore(lore);
+        im.setLore(lore);
         is.setItemMeta(im);
         return this;
     }
 
-    public ItemBuilder removeLoreLine(Component line) {
+    public ItemBuilder removeLoreLine(String line) {
         ItemMeta im = is.getItemMeta();
-        List<Component> lore = new ArrayList<>(im.lore());
+        List<String> lore = new ArrayList<>(im.getLore());
         if (!lore.contains(line))
             return this;
         lore.remove(line);
-        im.lore(lore);
+        im.setLore(lore);
         is.setItemMeta(im);
         return this;
     }
 
     public ItemBuilder removeLoreLine(int index) {
         ItemMeta im = is.getItemMeta();
-        List<Component> lore = new ArrayList<>(im.lore());
+        List<String> lore = new ArrayList<>(im.getLore());
         if (index < 0 || index > lore.size())
             return this;
         lore.remove(index);
-        im.lore(lore);
+        im.setLore(lore);
         is.setItemMeta(im);
         return this;
     }
 
-    public ItemBuilder addLoreLine(Component line) {
+    public ItemBuilder addLoreLine(String line) {
         ItemMeta im = is.getItemMeta();
-        List<Component> lore = new ArrayList<>();
+        List<String> lore = new ArrayList<>();
         if (im.hasLore())
-            lore = new ArrayList<>(im.lore());
+            lore = new ArrayList<>(im.getLore());
         lore.add(line);
-        im.lore(lore);
+        im.setLore(lore);
         is.setItemMeta(im);
         return this;
     }

@@ -7,7 +7,6 @@ import me.refracdevelopment.simplegems.utilities.Methods;
 import me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils;
 import me.refracdevelopment.simplegems.utilities.menu.Menu;
 import me.refracdevelopment.simplegems.utilities.menu.PlayerMenuUtil;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
@@ -27,7 +26,7 @@ public class GemShopCategory extends Menu {
     }
 
     @Override
-    public Component getMenuName() {
+    public String getMenuName() {
         return RyMessageUtils.translate(playerMenuUtil.getOwner(), SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES.getString(categoryName + ".title"));
     }
 

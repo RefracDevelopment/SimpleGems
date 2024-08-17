@@ -4,7 +4,6 @@ import me.refracdevelopment.simplegems.utilities.Methods;
 import me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils;
 import me.refracdevelopment.simplegems.utilities.exceptions.MenuManagerException;
 import me.refracdevelopment.simplegems.utilities.exceptions.MenuManagerNotSetupException;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -34,7 +33,7 @@ public abstract class Menu implements InventoryHolder {
         this.player = playerMenuUtil.getOwner();
     }
 
-    public abstract Component getMenuName();
+    public abstract String getMenuName();
 
     public abstract int getSlots();
 
@@ -107,10 +106,10 @@ public abstract class Menu implements InventoryHolder {
         ItemStack item = new ItemStack(material);
         ItemMeta itemMeta = item.getItemMeta();
         assert itemMeta != null;
-        itemMeta.displayName(RyMessageUtils.translate(displayName));
+        itemMeta.setDisplayName(RyMessageUtils.translate(displayName));
 
         //Automatically translate color codes provided
-        itemMeta.lore(Arrays.stream(lore).map(RyMessageUtils::translate).collect(Collectors.toList()));
+        itemMeta.setLore(Arrays.stream(lore).map(RyMessageUtils::translate).collect(Collectors.toList()));
         item.setItemMeta(itemMeta);
 
         return item;

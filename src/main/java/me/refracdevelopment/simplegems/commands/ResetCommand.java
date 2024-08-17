@@ -56,14 +56,14 @@ public class ResetCommand extends SubCommand {
                         SimpleGems.getInstance().getMySQLManager().delete();
 
                         Bukkit.getOnlinePlayers().forEach(p -> {
-                            p.kick(RyMessageUtils.translate(p, SimpleGems.getInstance().getLocaleFile().getString("kick-messages-error")));
+                            p.kick(RyMessageUtils.adventureTranslate(p, SimpleGems.getInstance().getLocaleFile().getString("kick-messages-error")));
                         });
                         break;
                     default:
                         SimpleGems.getInstance().getSqLiteManager().delete();
 
                         Bukkit.getOnlinePlayers().forEach(p -> {
-                            p.kick(RyMessageUtils.translate(p, SimpleGems.getInstance().getLocaleFile().getString("kick-messages-error")));
+                            p.kick(RyMessageUtils.adventureTranslate(p, SimpleGems.getInstance().getLocaleFile().getString("kick-messages-error")));
                         });
                         break;
                 }
@@ -76,14 +76,14 @@ public class ResetCommand extends SubCommand {
                             SimpleGems.getInstance().getMySQLManager().deletePlayer(target.getPlayer().getUniqueId().toString());
 
                             Bukkit.getOnlinePlayers().forEach(p -> {
-                                p.kick(RyMessageUtils.translate(p, SimpleGems.getInstance().getLocaleFile().getString("kick-messages-error")));
+                                p.kick(RyMessageUtils.adventureTranslate(p, SimpleGems.getInstance().getLocaleFile().getString("kick-messages-error")));
                             });
                             break;
                         default:
                             SimpleGems.getInstance().getSqLiteManager().deletePlayer(target.getPlayer().getUniqueId().toString());
 
                             Bukkit.getOnlinePlayers().forEach(p -> {
-                                p.kick(RyMessageUtils.translate(p, SimpleGems.getInstance().getLocaleFile().getString("kick-messages-error")));
+                                p.kick(RyMessageUtils.adventureTranslate(p, SimpleGems.getInstance().getLocaleFile().getString("kick-messages-error")));
                             });
                             break;
                     }
