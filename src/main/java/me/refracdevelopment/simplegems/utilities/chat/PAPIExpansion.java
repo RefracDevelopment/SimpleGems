@@ -35,9 +35,6 @@ public class PAPIExpansion extends PlaceholderExpansion {
     public String onPlaceholderRequest(Player player, @NotNull String params) {
         double gems = SimpleGems.getInstance().getGemsAPI().getGems(player);
 
-        if (SimpleGems.getInstance().getLeaderboardManager().getCachedMap().isEmpty())
-            SimpleGems.getInstance().getLeaderboardManager().update();
-
         switch (params) {
             case "balance":
                 return String.valueOf(gems);
