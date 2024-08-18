@@ -14,12 +14,10 @@ import java.util.concurrent.TimeUnit;
 @Data
 public class LeaderboardManager {
 
-    private final List<String> players;
     private Map<String, Double> cachedMap;
 
     public LeaderboardManager() {
         cachedMap = new LinkedHashMap<>();
-        players = new LinkedList<>();
 
         update();
         updateTask();
@@ -28,7 +26,6 @@ public class LeaderboardManager {
     }
 
     private void load() {
-        players.clear();
         cachedMap.clear();
 
         switch (SimpleGems.getInstance().getDataType()) {
@@ -38,7 +35,6 @@ public class LeaderboardManager {
                         String name = resultSet.getString("name");
                         double gems = resultSet.getDouble("gems");
 
-                        players.add(name);
                         cachedMap.put(name, gems);
                     }
                 });
@@ -49,7 +45,6 @@ public class LeaderboardManager {
                         String name = resultSet.getString("name");
                         double gems = resultSet.getDouble("gems");
 
-                        players.add(name);
                         cachedMap.put(name, gems);
                     }
                 });
@@ -64,7 +59,7 @@ public class LeaderboardManager {
     }
 
     public void sendLeaderboard(Player player) {
-        if (cachedMap.isEmpty() || players.isEmpty())
+        if (cachedMap.isEmpty())
             update();
 
         RyMessageUtils.sendPlayer(player, SimpleGems.getInstance().getSettings().GEMS_TOP_TITLE

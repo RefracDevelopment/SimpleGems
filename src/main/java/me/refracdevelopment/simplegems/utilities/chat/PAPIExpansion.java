@@ -6,6 +6,9 @@ import me.refracdevelopment.simplegems.utilities.Methods;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Map;
+import java.util.stream.Collectors;
+
 public class PAPIExpansion extends PlaceholderExpansion {
 
     @Override
@@ -46,8 +49,9 @@ public class PAPIExpansion extends PlaceholderExpansion {
                 if (params.startsWith("player_")) {
                     try {
                         int value = Integer.parseInt(params.replace("player_", "")) - 1;
-                        String name = SimpleGems.getInstance().getLeaderboardManager().getPlayers().get(value);
-                        gems = SimpleGems.getInstance().getLeaderboardManager().getCachedMap().get(name);
+                        Map.Entry<String, Double> leaderboardMap = SimpleGems.getInstance().getLeaderboardManager().getCachedMap().entrySet().stream().toList().get(value);
+                        String name = leaderboardMap.getKey();
+                        gems = leaderboardMap.getValue();
 
                         return SimpleGems.getInstance().getSettings().GEMS_TOP_FORMAT
                                 .replace("%number%", String.valueOf(value + 1))
