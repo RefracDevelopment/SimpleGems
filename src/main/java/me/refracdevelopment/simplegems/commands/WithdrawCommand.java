@@ -58,11 +58,16 @@ public class WithdrawCommand extends SubCommand {
             return;
         }
 
-        double amount;
+        long amount;
 
         try {
-            amount = Double.parseDouble(args[1]);
+            amount = Long.parseLong(args[1]);
         } catch (NumberFormatException exception) {
+            RyMessageUtils.sendPluginMessage(commandSender, "invalid-number", Placeholders.setPlaceholders(commandSender));
+            return;
+        }
+
+        if (amount <= 0) {
             RyMessageUtils.sendPluginMessage(commandSender, "invalid-number", Placeholders.setPlaceholders(commandSender));
             return;
         }

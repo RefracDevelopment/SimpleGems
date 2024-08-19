@@ -63,10 +63,10 @@ public class SetCommand extends SubCommand {
 
         if (target.isOnline()) {
             Player targetPlayer = target.getPlayer();
-            double amount;
+            long amount;
 
             try {
-                amount = Double.parseDouble(args[2]);
+                amount = Long.parseLong(args[2]);
             } catch (NumberFormatException exception) {
                 RyMessageUtils.sendPluginMessage(commandSender, "invalid-number");
                 return;
@@ -90,10 +90,10 @@ public class SetCommand extends SubCommand {
             RyMessageUtils.sendPluginMessage(commandSender, "gems-set", placeholders);
             RyMessageUtils.sendPluginMessage(targetPlayer, "gems-setted", placeholders);
         } else if (target.hasPlayedBefore()) {
-            double amount;
+            long amount;
 
             try {
-                amount = Double.parseDouble(args[2]);
+                amount = Long.parseLong(args[2]);
             } catch (NumberFormatException exception) {
                 RyMessageUtils.sendPluginMessage(commandSender, "invalid-number");
                 return;

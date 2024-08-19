@@ -63,10 +63,10 @@ public class TakeCommand extends SubCommand {
 
         if (target.isOnline()) {
             Player targetPlayer = target.getPlayer();
-            double amount;
+            long amount;
 
             try {
-                amount = Double.parseDouble(args[2]);
+                amount = Long.parseLong(args[2]);
             } catch (NumberFormatException exception) {
                 RyMessageUtils.sendPluginMessage(commandSender, "invalid-number", Placeholders.setPlaceholders(commandSender));
                 return;
@@ -100,6 +100,11 @@ public class TakeCommand extends SubCommand {
             try {
                 amount = Double.parseDouble(args[2]);
             } catch (NumberFormatException exception) {
+                RyMessageUtils.sendPluginMessage(commandSender, "invalid-number", Placeholders.setPlaceholders(commandSender));
+                return;
+            }
+
+            if (amount <= 0) {
                 RyMessageUtils.sendPluginMessage(commandSender, "invalid-number", Placeholders.setPlaceholders(commandSender));
                 return;
             }
