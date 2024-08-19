@@ -39,7 +39,7 @@ locale: "en_US"
 starting-gems: 100
 
 # Leaderboard update interval in seconds
-leaderboard-update-interval: 1800
+leaderboard-update-interval: 600
 
 # Choose your data saving type:
 # MYSQL/MARIADB - Database saving
