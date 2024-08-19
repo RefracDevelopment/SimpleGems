@@ -223,7 +223,6 @@ public final class SimpleGems extends JavaPlugin {
                     SetCommand.class,
                     ReloadCommand.class,
                     VersionCommand.class,
-                    UpdateCommand.class,
                     ResetCommand.class,
                     RandomGiveCommand.class
             );
