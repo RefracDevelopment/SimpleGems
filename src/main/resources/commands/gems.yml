@@ -45,10 +45,6 @@ subcommands:
     name: balance
     aliases:
       - bal
-  update:
-    name: update
-    aliases:
-      - lbupdate
   reset:
     name: reset
     aliases:

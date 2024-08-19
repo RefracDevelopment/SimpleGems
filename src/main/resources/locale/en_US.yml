@@ -109,9 +109,6 @@ command-version-description: Display the version info for SimpleGems
 # Top Command
 command-top-description: Display the top leaderboard info for SimpleGems
 
-# Update Command
-command-update-description: Allows you to manually update the leaderboard
-
 # Reset Command
 command-reset-description: Allows you to reset a player's data or the entire database
 
