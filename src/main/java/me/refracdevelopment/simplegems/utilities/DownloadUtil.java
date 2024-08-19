@@ -24,7 +24,7 @@ public class DownloadUtil {
             Library lib3 = Library.builder()
                     .groupId("org{}xerial") // "{}" is replaced with ".", useful to avoid unwanted changes made by maven-shade-plugin
                     .artifactId("sqlite-jdbc")
-                    .version("3.46.0.0")
+                    .version("3.46.1.0")
                     .build();
             Library lib4 = Library.builder()
                     .groupId("com{}zaxxer") // "{}" is replaced with ".", useful to avoid unwanted changes made by maven-shade-plugin
@@ -41,7 +41,7 @@ public class DownloadUtil {
             plugin.getLogger().severe("Failed to download one or more dependencies: " + throwable.getMessage());
             throwable.printStackTrace();
         } finally {
-            plugin.getLogger().info("Successfully downloaded all dependencies!");
+            plugin.getLogger().info("Successfully loaded all dependencies!");
         }
     }
 
