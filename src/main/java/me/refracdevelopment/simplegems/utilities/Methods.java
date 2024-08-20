@@ -106,7 +106,7 @@ public class Methods {
             return;
         }
 
-        SimpleGems.getInstance().getGemsAPI().takeGems(target, amount);
+        SimpleGems.getInstance().getGemsAPI().takeGems(player, amount);
         SimpleGems.getInstance().getGemsAPI().giveGems(target, amount);
 
         RyMessageUtils.sendPluginMessage(player, "gems-paid", placeholders);
