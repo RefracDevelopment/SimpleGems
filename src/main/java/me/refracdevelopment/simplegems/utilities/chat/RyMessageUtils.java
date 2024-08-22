@@ -141,8 +141,11 @@ public class RyMessageUtils {
     public static Component adventureTranslate(String message) {
         message = legacyToAdventure(message);
 
-        Component component = MiniMessage.miniMessage().deserialize(message)
-                .decorationIfAbsent(TextDecoration.ITALIC, TextDecoration.State.FALSE);
+        Component component = MiniMessage.miniMessage().deserialize(message);
+
+        if (!component.hasDecoration(TextDecoration.ITALIC)) {
+            component = component.decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE);
+        }
 
         return component;
     }

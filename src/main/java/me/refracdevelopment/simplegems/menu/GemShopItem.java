@@ -174,7 +174,9 @@ public class GemShopItem {
         if (!isSkulls() && !isHeadDatabase())
             finalItem.setSkullOwner(getSkullOwner());
 
-        if (XReflection.supports(20))
+        if (XReflection.supports(18))
+            finalItem.setItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+        else if (XReflection.supports(19))
             finalItem.setItemFlags(ItemFlag.HIDE_ITEM_SPECIFICS);
 
         return finalItem.toItemStack();

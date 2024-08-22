@@ -17,7 +17,7 @@ public class LeaderboardManager {
     private Map<String, Double> cachedMap;
 
     public LeaderboardManager() {
-        cachedMap = new LinkedHashMap<>();
+        cachedMap = Collections.synchronizedMap(cachedMap);
 
         update();
         updateTask();
@@ -88,7 +88,7 @@ public class LeaderboardManager {
         }
     }
 
-    public Map<String, Double> sortByValue(Map<String, Double> unsortMap) {
+    private Map<String, Double> sortByValue(Map<String, Double> unsortMap) {
         List<Map.Entry<String, Double>> list = new LinkedList<>(unsortMap.entrySet());
         list.sort(Map.Entry.comparingByValue(Collections.reverseOrder()));
 
