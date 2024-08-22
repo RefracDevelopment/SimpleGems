@@ -17,7 +17,7 @@ public class LeaderboardManager {
     private Map<String, Double> cachedMap;
 
     public LeaderboardManager() {
-        cachedMap = Collections.synchronizedMap(cachedMap);
+        cachedMap = new LinkedHashMap<>();
 
         update();
         updateTask();
