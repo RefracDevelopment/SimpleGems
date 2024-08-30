@@ -40,7 +40,6 @@ public class WithdrawCommand extends SubCommand {
             return;
         }
 
-
         if (args.length != 2) {
             String baseColor = SimpleGems.getInstance().getLocaleFile().getString("base-command-color");
             RyMessageUtils.sendSender(commandSender, baseColor + "/" + SimpleGems.getInstance().getCommands().GEMS_COMMAND_NAME + " " + getName() + " " + getSyntax());

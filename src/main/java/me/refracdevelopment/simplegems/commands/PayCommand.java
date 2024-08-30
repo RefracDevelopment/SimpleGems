@@ -80,7 +80,7 @@ public class PayCommand extends SubCommand {
                 return;
             }
 
-            SimpleGems.getInstance().getGemsAPI().payGems(player, target.getPlayer(), amount, message.contains("-s"));
+            SimpleGems.getInstance().getGemsAPI().payGems(player, target.getPlayer(), (double)amount, message.contains("-s"));
         } else if (target.hasPlayedBefore()) {
             long amount;
 
@@ -96,7 +96,7 @@ public class PayCommand extends SubCommand {
                 return;
             }
 
-            SimpleGems.getInstance().getGemsAPI().payOfflineGems(player, target, amount);
+            SimpleGems.getInstance().getGemsAPI().payOfflineGems(player, target, (double)amount);
         } else
             RyMessageUtils.sendPluginMessage(player, "invalid-player");
     }

@@ -72,6 +72,11 @@ public class SetCommand extends SubCommand {
                 return;
             }
 
+            if (amount <= 0) {
+                RyMessageUtils.sendPluginMessage(commandSender, "invalid-number", Placeholders.setPlaceholders(commandSender));
+                return;
+            }
+
             StringPlaceholders placeholders = StringPlaceholders.builder()
                     .addAll(Placeholders.setPlaceholders(targetPlayer))
                     .add("gems", String.valueOf(amount))
@@ -80,9 +85,9 @@ public class SetCommand extends SubCommand {
                     .build();
 
             if (commandSender instanceof Player player)
-                SimpleGems.getInstance().getGemsAPI().setGems(player, targetPlayer, amount);
+                SimpleGems.getInstance().getGemsAPI().setGems(player, targetPlayer, (double)amount);
             else
-                SimpleGems.getInstance().getGemsAPI().setGems(targetPlayer, amount);
+                SimpleGems.getInstance().getGemsAPI().setGems(targetPlayer, (double)amount);
 
             if (message.contains("-s"))
                 return;
@@ -99,7 +104,12 @@ public class SetCommand extends SubCommand {
                 return;
             }
 
-            SimpleGems.getInstance().getGemsAPI().setOfflineGems(target, amount);
+            if (amount <= 0) {
+                RyMessageUtils.sendPluginMessage(commandSender, "invalid-number", Placeholders.setPlaceholders(commandSender));
+                return;
+            }
+
+            SimpleGems.getInstance().getGemsAPI().setOfflineGems(target, (double)amount);
 
             StringPlaceholders placeholders = StringPlaceholders.builder()
                     .addAll(Placeholders.setOfflinePlaceholders(target))

@@ -72,6 +72,11 @@ public class TakeCommand extends SubCommand {
                 return;
             }
 
+            if (amount <= 0) {
+                RyMessageUtils.sendPluginMessage(commandSender, "invalid-number", Placeholders.setPlaceholders(commandSender));
+                return;
+            }
+
             StringPlaceholders placeholders = StringPlaceholders.builder()
                     .addAll(Placeholders.setPlaceholders(targetPlayer))
                     .add("gems", String.valueOf(amount))
@@ -85,9 +90,9 @@ public class TakeCommand extends SubCommand {
             }
 
             if (commandSender instanceof Player player)
-                SimpleGems.getInstance().getGemsAPI().takeGems(player, targetPlayer, amount);
+                SimpleGems.getInstance().getGemsAPI().takeGems(player, targetPlayer, (double)amount);
             else
-                SimpleGems.getInstance().getGemsAPI().takeGems(targetPlayer, amount);
+                SimpleGems.getInstance().getGemsAPI().takeGems(targetPlayer, (double)amount);
 
             if (message.contains("-s"))
                 return;
@@ -95,10 +100,10 @@ public class TakeCommand extends SubCommand {
             RyMessageUtils.sendPluginMessage(commandSender, "gems-taken", placeholders);
             RyMessageUtils.sendPluginMessage(targetPlayer, "gems-lost", placeholders);
         } else if (target.hasPlayedBefore()) {
-            double amount;
+            long amount;
 
             try {
-                amount = Double.parseDouble(args[2]);
+                amount = Long.parseLong(args[2]);
             } catch (NumberFormatException exception) {
                 RyMessageUtils.sendPluginMessage(commandSender, "invalid-number", Placeholders.setPlaceholders(commandSender));
                 return;
@@ -121,7 +126,7 @@ public class TakeCommand extends SubCommand {
                 return;
             }
 
-            SimpleGems.getInstance().getGemsAPI().takeOfflineGems(target, amount);
+            SimpleGems.getInstance().getGemsAPI().takeOfflineGems(target, (double)amount);
 
             if (message.contains("-s"))
                 return;

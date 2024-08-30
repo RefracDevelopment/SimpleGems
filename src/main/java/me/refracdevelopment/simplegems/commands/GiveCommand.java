@@ -85,9 +85,9 @@ public class GiveCommand extends SubCommand {
                     .build();
 
             if (commandSender instanceof Player player)
-                SimpleGems.getInstance().getGemsAPI().giveGems(player, targetPlayer, amount);
+                SimpleGems.getInstance().getGemsAPI().giveGems(player, targetPlayer, (double)amount);
             else
-                SimpleGems.getInstance().getGemsAPI().giveGems(targetPlayer, amount);
+                SimpleGems.getInstance().getGemsAPI().giveGems(targetPlayer, (double)amount);
 
             if (message.contains("-s"))
                 return;

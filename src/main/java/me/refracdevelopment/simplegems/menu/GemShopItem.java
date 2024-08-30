@@ -3,7 +3,6 @@ package me.refracdevelopment.simplegems.menu;
 import ca.tweetzy.skulls.Skulls;
 import ca.tweetzy.skulls.api.interfaces.Skull;
 import com.cryptomorin.xseries.XEnchantment;
-import com.cryptomorin.xseries.XItemStack;
 import com.cryptomorin.xseries.reflection.XReflection;
 import dev.lone.itemsadder.api.CustomStack;
 import lombok.Data;

@@ -7,7 +7,6 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class PAPIExpansion extends PlaceholderExpansion {
 
