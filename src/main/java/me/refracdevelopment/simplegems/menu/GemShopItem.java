@@ -3,7 +3,7 @@ package me.refracdevelopment.simplegems.menu;
 import ca.tweetzy.skulls.Skulls;
 import ca.tweetzy.skulls.api.interfaces.Skull;
 import com.cryptomorin.xseries.XEnchantment;
-import com.cryptomorin.xseries.reflection.XReflection;
+import com.cryptomorin.xseries.XItemFlag;
 import dev.lone.itemsadder.api.CustomStack;
 import lombok.Data;
 import me.arcaniax.hdb.api.HeadDatabaseAPI;
@@ -137,7 +137,7 @@ public class GemShopItem {
     }
 
     public ItemStack getItem(Player player) {
-        ItemBuilder item = new ItemBuilder(Methods.getMaterial(getMaterial()).parseMaterial(), getAmount());
+        ItemBuilder item = new ItemBuilder(Methods.getMaterial(getMaterial()).get(), getAmount());
 
         if (isHeadDatabase()) {
             HeadDatabaseAPI api = new HeadDatabaseAPI();
@@ -159,7 +159,7 @@ public class GemShopItem {
         ItemBuilder finalItem = item;
 
         if (isGlow()) {
-            finalItem.addEnchant(XEnchantment.POWER.getEnchant(), 1);
+            finalItem.addEnchant(XEnchantment.POWER.get(), 1);
             finalItem.setItemFlags(ItemFlag.HIDE_ENCHANTS);
         }
 
@@ -173,10 +173,8 @@ public class GemShopItem {
         if (!isSkulls() && !isHeadDatabase())
             finalItem.setSkullOwner(getSkullOwner());
 
-        if (XReflection.supports(18))
-            finalItem.setItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
-        else if (XReflection.supports(19))
-            finalItem.setItemFlags(ItemFlag.HIDE_ITEM_SPECIFICS);
+        // Hide Potion Effects from lore
+        finalItem.setItemFlags(XItemFlag.HIDE_ADDITIONAL_TOOLTIP.get());
 
         return finalItem.toItemStack();
     }

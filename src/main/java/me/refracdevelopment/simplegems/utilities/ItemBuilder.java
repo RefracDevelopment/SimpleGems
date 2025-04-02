@@ -30,11 +30,11 @@ public class ItemBuilder {
     }
 
     public ItemBuilder(Material m, int amount) {
-        is = new ItemStack(Objects.requireNonNull(XMaterial.matchXMaterial(m).parseMaterial()), amount);
+        is = new ItemStack(Objects.requireNonNull(XMaterial.matchXMaterial(m).get()), amount);
     }
 
     public ItemBuilder(Material m, int amount, byte durability) {
-        is = new ItemStack(Objects.requireNonNull(XMaterial.matchXMaterial(m).parseMaterial()), amount, durability);
+        is = new ItemStack(Objects.requireNonNull(XMaterial.matchXMaterial(m).get()), amount, durability);
     }
 
     public ItemBuilder clone() {

@@ -19,10 +19,18 @@ import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+/*
+ * This software and its content is copyright of RyanMoodGAMING - © RyanMoodGAMING 2023. All rights reserved.
+ * Any redistribution or reproduction of part or all of the contents in any form is prohibited other than the following:
+ * you may print or download to a local hard disk extracts for your personal and non-commercial use only
+ * you may copy the content to individual third parties for their personal use, but only if you acknowledge the website as the source of the material
+ * You may not, except with our express written permission, distribute or commercially exploit the content. Nor may you transmit it or store it in any other website or other form of electronic retrieval system.
+ */
+
 /**
  * Modified version of <a href="https://github.com/RyanMoodGAMING/RyUtils">RyMessageUtils</a>
  *
- * @Author: RyanMoodGAMING (https://github.com/RyanMoodGAMING/RyUtils)
+ * @author <a href="https://github.com/RyanMoodGAMING/">RyanMoodGAMING</a>
  */
 @SuppressWarnings("unused")
 public class RyMessageUtils {
@@ -155,7 +163,7 @@ public class RyMessageUtils {
      *
      * @param input The string that needs translating.
      * @return String which is in an adventure format.
-     * @Author: EternalCodeTeam (https://github.com/EternalCodeTeam/ChatFormatter/)
+     * @author EternalCodeTeam (https://github.com/EternalCodeTeam/ChatFormatter/)
      */
     private static String legacyToAdventure(String input) {
         String result = HEX_PATTERN.matcher(input).replaceAll(matchResult -> {

@@ -127,7 +127,7 @@ public final class SimpleGems extends JavaPlugin {
                 getSqLiteManager().shutdown();
 
             getFoliaLib().getScheduler().cancelAllTasks();
-        } catch (Throwable ignored) {
+        } catch (Exception ignored) {
         }
     }
 
