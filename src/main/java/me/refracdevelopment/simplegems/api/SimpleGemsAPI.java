@@ -306,7 +306,7 @@ public class SimpleGemsAPI {
      * Used to withdraw player gems into an item form.
      * <p>
      * WARNING: If you want to take/remove gems from
-     * a player's account then you should use #takeGems instead.
+     * another player's account then you should use #takeGems instead.
      *
      * @param player the player who received the gems in item form
      * @param amount amount of gems to withdraw
@@ -328,7 +328,7 @@ public class SimpleGemsAPI {
      * Used to deposit a gems item into the player's account.
      * <p>
      * WARNING: If you want to add/give gems to
-     * a player's account then you should use #giveGems instead.
+     * another player's account then you should use #giveGems instead.
      *
      * @param player the player who will receive the gems
      * @param amount amount of gems to deposit
