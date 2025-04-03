@@ -137,7 +137,7 @@
         <dependency>
             <groupId>com.github.cryptomorin</groupId>
             <artifactId>XSeries</artifactId>
-            <version>13.2.0</version>
+            <version>13.1.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -239,7 +239,7 @@
         <dependency>
             <groupId>com.github.technicallycoded</groupId>
             <artifactId>FoliaLib</artifactId>
-            <version>main-SNAPSHOT</version>
+            <version>0.4.4</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

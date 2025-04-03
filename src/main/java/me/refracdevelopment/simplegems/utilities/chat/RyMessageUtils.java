@@ -217,7 +217,7 @@ public class RyMessageUtils {
     public static void sendPlayer(@NotNull Player player, @NotNull String... messages) {
         for (String message : messages) {
             if (message.equalsIgnoreCase("%empty%") || message.contains("%empty%"))
-                return;
+                break;
 
             player.sendMessage(adventureTranslate(player, getPrefix() + message));
         }
@@ -232,7 +232,7 @@ public class RyMessageUtils {
     public static void sendPlayer(Player player, @NotNull List<String> messages) {
         for (String message : messages) {
             if (message.equalsIgnoreCase("%empty%") || message.contains("%empty%"))
-                return;
+                break;
 
             player.sendMessage(adventureTranslate(player, getPrefix() + message));
         }
@@ -262,7 +262,7 @@ public class RyMessageUtils {
     public static void sendSender(@NotNull CommandSender sender, @NotNull String... messages) {
         for (String message : messages) {
             if (message.equalsIgnoreCase("%empty%") || message.contains("%empty%"))
-                return;
+                break;
 
             message = Placeholders.setPlaceholders(sender, message);
 
@@ -279,7 +279,7 @@ public class RyMessageUtils {
     public static void sendSender(@NotNull CommandSender sender, @NotNull List<String> messages) {
         for (String message : messages) {
             if (message.equalsIgnoreCase("%empty%") || message.contains("%empty%"))
-                return;
+                break;
 
             message = Placeholders.setPlaceholders(sender, message);
 
