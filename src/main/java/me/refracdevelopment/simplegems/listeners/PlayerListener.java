@@ -8,6 +8,8 @@ import me.refracdevelopment.simplegems.utilities.Tasks;
 import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
 import me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils;
 import me.refracdevelopment.simplegems.utilities.chat.StringPlaceholders;
+import me.refracdevelopment.simplegems.utilities.exceptions.MenuManagerNotSetupException;
+import me.refracdevelopment.simplegems.utilities.menu.MenuManager;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -57,6 +59,12 @@ public class PlayerListener implements Listener {
 
         if (profile == null || profile.getData() == null)
             return;
+
+        try {
+            MenuManager.remove(player);
+        } catch (MenuManagerNotSetupException e) {
+            RyMessageUtils.sendPluginError("THE MENU MANAGER HAS NOT BEEN CONFIGURED. CALL MENUMANAGER.SETUP()");
+        }
 
         Tasks.runAsync(() -> profile.getData().save(player));
     }
