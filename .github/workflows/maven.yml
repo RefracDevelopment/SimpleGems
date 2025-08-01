@@ -1,28 +1,43 @@
 name: Build
+
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
+
       - name: Set up JDK 21
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v3
         with:
           java-version: '21'
           distribution: 'temurin'
           cache: maven
+
       - name: Build with Maven
-        run: mvn -B package --file pom.xml
-      - name: Rename JAR with Build Number
         run: |
-          original_jar=$(find target/ -type f -name "SimpleGems-*.jar")
-          new_name=$(echo "$original_jar" | sed "s/SimpleGems-\(.*\)\.jar/SimpleGems-\1+${{ github.run_number }}.jar/")
-          mv "$original_jar" "$new_name"
-      - name: Upload a Build Artifact
-        uses: actions/upload-artifact@v4.3.3 # https://github.com/actions/upload-artifact/releases
+          mvn clean install -B
+          echo "PROJECT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
+
+      - name: Upload JAR Artifact
+        uses: actions/upload-artifact@v4
         with:
-          name: Click here to download
-          path: target/SimpleGems-*+${{ github.run_number }}.jar
+          name: SimpleGems-${{ env.PROJECT_VERSION }}
+          path: '**/target/SimpleGems-${{ env.PROJECT_VERSION }}.jar'
+
+      - name: Create Release
+        uses: ncipollo/release-action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: v${{ github.run_number }} 
+          name: SimpleGems v${{ github.run_number }}
+          body: Auto-generated release for run #v${{ github.run_number }}
+          artifacts: '**/target/SimpleGems-${{ env.PROJECT_VERSION }}.jar'
+          draft: false
+          prerelease: false
