@@ -37,7 +37,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           tag: v${{ github.run_number }} 
           name: SimpleGems v${{ github.run_number }}
-          body: Auto-generated release for run #v${{ github.run_number }}
+          body: 'Auto-generated release for run #v${{ github.run_number }}'
           artifacts: '**/target/SimpleGems-${{ env.PROJECT_VERSION }}.jar'
           draft: false
           prerelease: false
