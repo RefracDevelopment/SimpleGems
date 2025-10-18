@@ -8,9 +8,6 @@
 # This file lets you change the name and aliases for the simplegems command.
 # If you edit the name/aliases in this file, you will need to restart the server to see all the changes applied properly.
 
-# This is used for automatic file updating purposes
-config-version: '11'
-
 name: gems
 aliases:
   - consolegems

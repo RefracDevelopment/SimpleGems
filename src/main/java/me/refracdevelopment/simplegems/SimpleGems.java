@@ -121,9 +121,9 @@ public final class SimpleGems extends JavaPlugin {
     public void onDisable() {
         // Plugin shutdown logic
         try {
-            if (Objects.requireNonNull(dataType) == DataType.MYSQL)
+            if (dataType == DataType.MYSQL)
                 getMySQLManager().shutdown();
-            else if (Objects.requireNonNull(dataType) == DataType.SQLITE)
+            else if (dataType == DataType.SQLITE)
                 getSqLiteManager().shutdown();
 
             getFoliaLib().getScheduler().cancelAllTasks();
@@ -133,10 +133,10 @@ public final class SimpleGems extends JavaPlugin {
 
     private void loadFiles() {
         // Files
-        configFile = new ConfigFile("config.yml");
-        menusFile = new ConfigFile("menus.yml");
-        commandsFile = new ConfigFile("commands/gems.yml");
-        localeFile = new ConfigFile("locale/" + getConfigFile().getString("locale", "en_US") + ".yml");
+        configFile = new ConfigFile(this, "config.yml");
+        menusFile = new ConfigFile(this, "menus.yml");
+        commandsFile = new ConfigFile(this, "commands/gems.yml");
+        localeFile = new ConfigFile(this, "locale/" + configFile.getString("locale", "en_US") + ".yml");
 
         // Cache
         settings = new Config();
@@ -177,9 +177,9 @@ public final class SimpleGems extends JavaPlugin {
 
     private void loadCommands() {
         try {
-            CommandManager.createCoreCommand(this, getCommands().GEMS_COMMAND_NAME,
-                    getLocaleFile().getString("command-help-description"),
-                    "/" + getCommands().GEMS_COMMAND_NAME,
+            CommandManager.createCoreCommand(this, commands.GEMS_COMMAND_NAME,
+                    localeFile.getString("command-help-description"),
+                    "/" + commands.GEMS_COMMAND_NAME,
                     (commandSender, list) -> {
                         commandsList = list;
 
@@ -207,11 +207,11 @@ public final class SimpleGems extends JavaPlugin {
                             return;
                         }
 
-                        getSettings().GEMS_BALANCE.forEach(message ->
+                        settings.GEMS_BALANCE.forEach(message ->
                                 RyMessageUtils.sendPlayer(player, message)
                         );
                     },
-                    getCommands().GEMS_COMMAND_ALIASES,
+                    commands.GEMS_COMMAND_ALIASES,
                     HelpCommand.class,
                     BalanceCommand.class,
                     TopCommand.class,
@@ -285,7 +285,7 @@ public final class SimpleGems extends JavaPlugin {
             }
 
             reader.close();
-            JsonObject object = new JsonParser().parse(response.toString()).getAsJsonObject();
+            JsonObject object = JsonParser.parseString(response.toString()).getAsJsonObject();
 
             if (object.has("plugins")) {
                 JsonObject plugins = object.get("plugins").getAsJsonObject();

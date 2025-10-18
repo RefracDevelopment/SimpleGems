@@ -1,8 +1,8 @@
 package me.refracdevelopment.simplegems.menu;
 
-import dev.dejvokep.boostedyaml.block.implementation.Section;
 import lombok.Getter;
 import me.refracdevelopment.simplegems.SimpleGems;
+import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,12 +25,12 @@ public class GemShop {
 
         List<GemShopItem> items = new ArrayList<>();
 
-        Section section = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES;
+        ConfigurationSection section = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES;
 
-        section.getRoutesAsStrings(false).forEach(gemShopCategory -> {
-            Section category = section.getSection(gemShopCategory + ".items");
+        section.getKeys(false).forEach(gemShopCategory -> {
+            ConfigurationSection category = section.getConfigurationSection(gemShopCategory + ".items");
 
-            category.getRoutesAsStrings(false).forEach(item -> {
+            category.getKeys(false).forEach(item -> {
                 items.add(new GemShopItem(gemShopCategory, item));
             });
 

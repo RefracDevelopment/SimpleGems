@@ -1,33 +1,4 @@
-#   ___________                __           ________
-#  /   _____/__| _____ ______ |  |   ____  /  _____/  ____   _____   ______
-#  \_____  \|  |/     \\____ \|  | _/ __ \/   \  ____/ __ \ /     \ /  ___/
-#  /        \  |  | |  \  |_\ \  |__  ___/_    \_\  \  ___/_  | |  \\___ \
-# /_______  /__|__|_|  /   ___/____/\___  /\______  /\___  /__|_|  /____  \
-#         \/         \/|__|             \/        \/     \/      \/     \/
-#---------------------------------------------------------------------------
-# Placeholders:
-# %player% - Get the player's name
-# %gems% - Get the player's gems
-# %gems_formatted% - Get the player's formatted gems
-# %gems_decimal% - Get the player's decimal formatted gems
-# %arrowright% - Get right arrow for a message
-# %arrowleft% - Get left arrow for a message
-# %star% - Get a star for a message
-# %circle% - Get a circle for a message
-# PlaceholderAPI:
-# %simplegems_balance% - Get the unformatted gems amount (100000)
-# %simplegems_balance_formatted% - Get the formatted gems amount (100k)
-# %simplegems_balance_decimal% - Get the decimal formatted gems amount (100000.0)
-# Actions:
-# [console] - Send a console command
-# [message] - Send a message to the player
-# [menu] menu-name - Open a new category menu, replace menu-name with the category name
-# [close] - Close the current menu
-#---------------------------------------------------------------------------
 # en_US translation by Refrac
-
-# This is used for automatic file updating purposes
-config-version: '11'
 
 # Plugin Message Prefix
 prefix: '<gradient:#8A2387:#E94057:#F27121:0>SimpleGems &8| &f'

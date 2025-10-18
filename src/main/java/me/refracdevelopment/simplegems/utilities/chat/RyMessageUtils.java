@@ -12,7 +12,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
@@ -117,7 +116,7 @@ public class RyMessageUtils {
      * @param messages The string list you wish to be translated.
      * @return a string list of translated messages.
      */
-    public static List<String> translate(@NotNull List<String> messages) {
+    public static List<String> translate(List<String> messages) {
         return messages.stream().map(RyMessageUtils::translate).collect(Collectors.toList());
     }
 
@@ -191,7 +190,7 @@ public class RyMessageUtils {
      * @param messages The string list you wish to be translated.
      * @return a component list of translated messages.
      */
-    public static List<Component> adventureTranslate(@NotNull List<String> messages) {
+    public static List<Component> adventureTranslate(List<String> messages) {
         return messages.stream().map(RyMessageUtils::adventureTranslate).collect(Collectors.toList());
     }
 
@@ -201,7 +200,7 @@ public class RyMessageUtils {
      * @param player  The player who you wish to receive the message.
      * @param message The message you wish to send the player.
      */
-    public static void sendPlayer(@NotNull Player player, @NotNull String message) {
+    public static void sendPlayer(Player player, String message) {
         if (message.equalsIgnoreCase("%empty%") || message.contains("%empty%") || message.isEmpty())
             return;
 
@@ -214,7 +213,7 @@ public class RyMessageUtils {
      * @param player   The player who you wish to receive the messages.
      * @param messages The string list of messages you wish to send to the player.
      */
-    public static void sendPlayer(@NotNull Player player, @NotNull String... messages) {
+    public static void sendPlayer(Player player, String... messages) {
         for (String message : messages) {
             if (message.equalsIgnoreCase("%empty%") || message.contains("%empty%"))
                 break;
@@ -229,7 +228,7 @@ public class RyMessageUtils {
      * @param player   The player who you wish to receive the messages.
      * @param messages The string list of messages you wish to send to the player.
      */
-    public static void sendPlayer(Player player, @NotNull List<String> messages) {
+    public static void sendPlayer(Player player, List<String> messages) {
         for (String message : messages) {
             if (message.equalsIgnoreCase("%empty%") || message.contains("%empty%"))
                 break;
@@ -244,7 +243,7 @@ public class RyMessageUtils {
      * @param sender  The sender who you wish to receive the messages.
      * @param message The message you wish to send to the sender.
      */
-    public static void sendSender(@NotNull CommandSender sender, @NotNull String message) {
+    public static void sendSender(CommandSender sender, String message) {
         if (message.equalsIgnoreCase("%empty%") || message.contains("%empty%"))
             return;
 
@@ -259,7 +258,7 @@ public class RyMessageUtils {
      * @param sender   The sender who you wish to receive the messages.
      * @param messages The messages you wish to send to the sender.
      */
-    public static void sendSender(@NotNull CommandSender sender, @NotNull String... messages) {
+    public static void sendSender(CommandSender sender, String... messages) {
         for (String message : messages) {
             if (message.equalsIgnoreCase("%empty%") || message.contains("%empty%"))
                 break;
@@ -276,7 +275,7 @@ public class RyMessageUtils {
      * @param sender   The sender who you wish to receive the messages.
      * @param messages The messages you wish to send to the sender.
      */
-    public static void sendSender(@NotNull CommandSender sender, @NotNull List<String> messages) {
+    public static void sendSender(CommandSender sender, List<String> messages) {
         for (String message : messages) {
             if (message.equalsIgnoreCase("%empty%") || message.contains("%empty%"))
                 break;
@@ -340,7 +339,7 @@ public class RyMessageUtils {
 
         for (Player online : Bukkit.getOnlinePlayers()) {
             if (online.hasPermission(permission)) {
-                online.sendMessage(adventureTranslate(player, "%prefix%" + message));
+                online.sendMessage(adventureTranslate(player, getPrefix() + message));
             }
         }
     }
@@ -358,7 +357,7 @@ public class RyMessageUtils {
 
         for (Player online : Bukkit.getOnlinePlayers()) {
             if (online.hasPermission(permission)) {
-                online.sendMessage(adventureTranslate(player, "%prefix%" + message));
+                online.sendMessage(adventureTranslate(player, getPrefix() + message));
             }
         }
     }
@@ -373,7 +372,7 @@ public class RyMessageUtils {
             return;
 
         for (Player online : Bukkit.getOnlinePlayers()) {
-            online.sendMessage(adventureTranslate("%prefix%" + message));
+            online.sendMessage(adventureTranslate(getPrefix() + message));
         }
     }
 
@@ -388,7 +387,7 @@ public class RyMessageUtils {
             return;
 
         for (Player online : Bukkit.getOnlinePlayers()) {
-            online.sendMessage(adventureTranslate(player, "%prefix%" + message));
+            online.sendMessage(adventureTranslate(player, getPrefix() + message));
         }
     }
 

@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 /**
  * An immutable class that holds a map of placeholders and their values
  *
- * @Author: RoseWood-Development (https://github.com/RoseWood-Development/RoseGarden/)
+ * @author <a href="https://github.com/RoseWood-Development/">RoseWood Development</a>
  */
 public final class StringPlaceholders {
 

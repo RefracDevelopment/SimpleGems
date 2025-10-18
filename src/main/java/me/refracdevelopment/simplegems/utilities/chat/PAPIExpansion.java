@@ -4,24 +4,23 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.utilities.Methods;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
 public class PAPIExpansion extends PlaceholderExpansion {
 
     @Override
-    public @NotNull String getAuthor() {
+    public String getAuthor() {
         return SimpleGems.getInstance().getDescription().getAuthors().get(0);
     }
 
     @Override
-    public @NotNull String getIdentifier() {
+    public String getIdentifier() {
         return SimpleGems.getInstance().getDescription().getName();
     }
 
     @Override
-    public @NotNull String getVersion() {
+    public String getVersion() {
         return SimpleGems.getInstance().getDescription().getVersion();
     }
 
@@ -31,7 +30,7 @@ public class PAPIExpansion extends PlaceholderExpansion {
     }
 
     @Override
-    public String onPlaceholderRequest(Player player, @NotNull String params) {
+    public String onPlaceholderRequest(Player player, String params) {
         double gems = SimpleGems.getInstance().getGemsAPI().getGems(player);
 
         switch (params) {

@@ -1,87 +1,101 @@
 package me.refracdevelopment.simplegems.managers.configuration;
 
-import dev.dejvokep.boostedyaml.YamlDocument;
-import dev.dejvokep.boostedyaml.block.implementation.Section;
-import dev.dejvokep.boostedyaml.settings.general.GeneralSettings;
-import dev.dejvokep.boostedyaml.settings.loader.LoaderSettings;
-import me.refracdevelopment.simplegems.SimpleGems;
-import me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class ConfigFile {
+public class ConfigFile extends YamlConfiguration {
 
-    private YamlDocument configFile;
+    private File file;
+    private final JavaPlugin plugin;
+    private final String name;
 
-    public ConfigFile(String name) {
+    public ConfigFile(JavaPlugin plugin, String name) {
+        this.file = new File(plugin.getDataFolder(), name);
+        this.plugin = plugin;
+        this.name = name;
+
+        if (!this.file.exists()) {
+            plugin.saveResource(name, false);
+        }
+
         try {
-            configFile = YamlDocument.create(new File(SimpleGems.getInstance().getDataFolder(), name),
-                    getClass().getResourceAsStream("/" + name),
-                    GeneralSettings.builder().setUseDefaults(false).build(),
-                    LoaderSettings.builder().setAutoUpdate(false).build()
-            );
+            this.load(this.file);
+        } catch (IOException | InvalidConfigurationException e) {
+            e.printStackTrace();
+        }
+    }
 
-            configFile.update();
-            configFile.save();
-        } catch (IOException e) {
-            RyMessageUtils.sendPluginError("&cFailed to load " + name + " file! The plugin will now shutdown.", e, true, true);
+    public void load() {
+        this.file = new File(plugin.getDataFolder(), name);
+
+        if (!this.file.exists()) {
+            plugin.saveResource(name, false);
+        }
+        try {
+            this.load(this.file);
+        } catch (IOException | InvalidConfigurationException e) {
+            e.printStackTrace();
         }
     }
 
     public void save() {
         try {
-            configFile.save();
+            this.save(this.file);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public void reload() {
-        try {
-            configFile.reload();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        load();
     }
 
+    @Override
     public int getInt(String path) {
-        return configFile.getInt(path, 0);
+        return super.getInt(path, 0);
     }
 
+    @Override
     public double getDouble(String path) {
-        return configFile.getDouble(path, 0.0);
+        return super.getDouble(path, 0.0);
     }
 
-    public long getLong(String path) {
-        return configFile.getLong(path, 0L);
-    }
-
+    @Override
     public boolean getBoolean(String path) {
-        return configFile.getBoolean(path, false);
+        return super.getBoolean(path, false);
     }
 
-    public String getString(String path, Object defined) {
-        return configFile.getString(path, ((String) defined));
+    public String getString(String path, boolean check) {
+        return super.getString(path, null);
     }
 
+    @Override
     public String getString(String path) {
-        if (configFile.contains(path)) {
-            return configFile.getString(path, "String at path '" + path + "' not found.");
+        if (super.contains(path)) {
+            return super.getString(path, "String at path '" + path + "' not found.").replace("|", "\u2503");
         }
 
         return null;
     }
 
+    @Override
     public List<String> getStringList(String path) {
-        if (configFile.contains(path))
-            return configFile.getStringList(path, List.of("String at path '" + path + "' not found."));
-
-        return null;
+        return super.getStringList(path).stream().map(String::new).collect(Collectors.toList());
     }
 
-    public Section getSection(String path) {
-        return configFile.getSection(path);
+    public List<String> getStringList(String path, boolean check) {
+        if (!super.contains(path)) return null;
+        return super.getStringList(path).stream().map(String::new).collect(Collectors.toList());
     }
+
+    public boolean getOption(String option) {
+        return this.getBoolean("options." + option);
+    }
+
 }

@@ -12,8 +12,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
- * @Author: Rosewood Development
- * https://github.com/Rosewood-Development/RoseGarden/blob/master/src/main/java/dev/rosewood/rosegarden/utils/HexUtils.java
+ * @author <a href="https://github.com/RoseWood-Development/">RoseWood Development</a>
  */
 @SuppressWarnings("deprecation")
 public final class HexUtils {

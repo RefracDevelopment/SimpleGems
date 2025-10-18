@@ -12,7 +12,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -68,7 +67,7 @@ public abstract class Menu implements InventoryHolder {
 
     //Overridden method from the InventoryHolder interface
     @Override
-    public @NotNull Inventory getInventory() {
+    public Inventory getInventory() {
         return inventory;
     }
 

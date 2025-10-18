@@ -22,13 +22,11 @@ import org.bukkit.inventory.meta.ItemMeta;
 public class PlayerListener implements Listener {
 
     @EventHandler
-    public void onLogin(PlayerLoginEvent event) {
-        SimpleGems.getInstance().getProfileManager().handleProfileCreation(event.getPlayer().getUniqueId(), event.getPlayer().getName());
-    }
-
-    @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
+
+        SimpleGems.getInstance().getProfileManager().handleProfileCreation(event.getPlayer().getUniqueId(), event.getPlayer().getName());
+
         Profile profile = SimpleGems.getInstance().getProfileManager().getProfile(player.getUniqueId());
 
         Tasks.runAsync(() -> profile.getData().load(player));

@@ -13,7 +13,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.persistence.PersistentDataContainer;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -212,7 +211,7 @@ public class ItemBuilder {
         return this;
     }
 
-    public @NotNull PersistentDataContainer getPersistentDataContainer() {
+    public PersistentDataContainer getPersistentDataContainer() {
         ItemMeta im = is.getItemMeta();
         return im.getPersistentDataContainer();
     }

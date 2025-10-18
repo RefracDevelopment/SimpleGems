@@ -3,7 +3,6 @@ package me.refracdevelopment.simplegems.utilities.command;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,7 +28,7 @@ class CoreCommand extends Command {
     }
 
     @Override
-    public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, String[] args) {
+    public boolean execute(CommandSender sender, String commandLabel, String[] args) {
 
         if (args.length > 0) {
             for (int i = 0; i < getSubCommands().size(); i++) {
@@ -53,7 +52,7 @@ class CoreCommand extends Command {
     }
 
     @Override
-    public @NotNull List<String> tabComplete(@NotNull CommandSender sender, @NotNull String alias, String[] args) throws IllegalArgumentException {
+    public List<String> tabComplete(CommandSender sender, String alias, String[] args) throws IllegalArgumentException {
         if (args.length == 1) { //prank <subcommand> <args>
             ArrayList<String> subcommandsArguments = new ArrayList<>();
 

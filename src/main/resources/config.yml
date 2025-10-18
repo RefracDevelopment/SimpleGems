@@ -26,9 +26,6 @@
 # [back] - Go back to the last menu
 #---------------------------------------------------------------------------
 
-# This is used for automatic file updating purposes
-config-version: '11'
-
 # The locale to use in the /locale folder
 locale: "en_US"
 
