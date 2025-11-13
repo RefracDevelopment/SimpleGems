@@ -4,7 +4,7 @@
 
 SimpleGems is a plugin that adds a custom gems economy into minecraft.
 
-[Spigot](https://www.spigotmc.org/resources/96827/) [BuiltByBit](https://builtbybit.com/resources/simplegems.21583/) [Hangar](https://hangar.papermc.io/RefracDevelopment/SimpleGems/)
+[Spigot](https://www.spigotmc.org/resources/96827/) [Hangar](https://hangar.papermc.io/RefracDevelopment/SimpleGems/)
 
 ### Issue Reporting/Support
 
@@ -38,7 +38,7 @@ depend:
 softdepend:
   - SimpleGems
 ```
-You can use this to access all methods.
+You can use this to access all methods found in the [SimpleGemsAPI](https://github.com/RefracDevelopment/SimpleGems/blob/main/src/main/java/me/refracdevelopment/simplegems/api/SimpleGemsAPI.java)
 ```JAVA
 SimpleGemsAPI gemsAPI = SimpleGems.getInstance().getGemsAPI();
 ```
