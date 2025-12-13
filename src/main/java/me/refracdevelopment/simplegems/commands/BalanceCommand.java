@@ -45,10 +45,10 @@ public class BalanceCommand extends SubCommand {
         }
 
         if (args.length != 2) {
-            if (!(commandSender instanceof Player))
+            if (!(commandSender instanceof Player player))
                 return;
 
-            RyMessageUtils.sendPluginMessage(commandSender, "gems-balance");
+            RyMessageUtils.sendPluginMessage(player, "gems-balance");
             return;
         }
 

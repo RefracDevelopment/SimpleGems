@@ -44,7 +44,7 @@ public class ShopCommand extends SubCommand {
         }
 
         if (!player.hasPermission(Permissions.GEMS_SHOP_COMMAND)) {
-            RyMessageUtils.sendPluginMessage(commandSender, "no-permission");
+            RyMessageUtils.sendPluginMessage(player, "no-permission");
             return;
         }
 

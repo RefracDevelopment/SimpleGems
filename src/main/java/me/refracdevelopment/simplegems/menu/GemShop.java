@@ -30,11 +30,13 @@ public class GemShop {
         section.getKeys(false).forEach(gemShopCategory -> {
             ConfigurationSection category = section.getConfigurationSection(gemShopCategory + ".items");
 
-            category.getKeys(false).forEach(item -> {
-                items.add(new GemShopItem(gemShopCategory, item));
-            });
+            if (category != null) {
+                category.getKeys(false).forEach(item -> {
+                    items.add(new GemShopItem(gemShopCategory, item));
+                });
 
-            getCategories().put(gemShopCategory, items);
+                getCategories().put(gemShopCategory, items);
+            }
         });
     }
 

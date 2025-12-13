@@ -29,7 +29,7 @@ public class DownloadUtil {
             Library lib4 = Library.builder()
                     .groupId("com{}zaxxer") // "{}" is replaced with ".", useful to avoid unwanted changes made by maven-shade-plugin
                     .artifactId("HikariCP")
-                    .version("5.1.0")
+                    .version("4.0.3")
                     .build();
 
             libraryManager.addMavenCentral();

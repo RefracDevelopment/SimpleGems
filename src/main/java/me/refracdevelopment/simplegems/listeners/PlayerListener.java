@@ -32,12 +32,14 @@ public class PlayerListener implements Listener {
         Tasks.runAsync(() -> profile.getData().load(player));
 
         if (profile == null || profile.getData() == null) {
-            player.kick(RyMessageUtils.adventureTranslate(player, SimpleGems.getInstance().getLocaleFile().getString("kick-messages-error")));
+            player.kickPlayer(RyMessageUtils.translate(player, SimpleGems.getInstance().getLocaleFile().getString("kick-messages-error")));
             return;
         }
 
-        if (!player.hasPlayedBefore())
+        if (!player.hasPlayedBefore() && SimpleGems.getInstance().getSettings().STARTING_GEMS > 0) {
             SimpleGems.getInstance().getGemsAPI().giveGems(player, SimpleGems.getInstance().getSettings().STARTING_GEMS);
+            RyMessageUtils.sendPluginMessage(player, "starting-gems-received", StringPlaceholders.of("gems_formatted", SimpleGems.getInstance().getSettings().STARTING_GEMS));
+        }
     }
 
     @EventHandler
@@ -92,7 +94,7 @@ public class PlayerListener implements Listener {
             if (!item.isSimilar(gemsItem))
                 return;
 
-            if (event.getAction().isLeftClick() || event.getAction() == Action.PHYSICAL)
+            if (event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.PHYSICAL)
                 return;
 
             StringPlaceholders placeholders = StringPlaceholders.builder()

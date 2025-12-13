@@ -1,6 +1,5 @@
 package me.refracdevelopment.simplegems;
 
-import com.cryptomorin.xseries.reflection.XReflection;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.tcoded.folialib.FoliaLib;
@@ -13,6 +12,7 @@ import me.refracdevelopment.simplegems.hooks.ItemsAdderListener;
 import me.refracdevelopment.simplegems.listeners.PlayerListener;
 import me.refracdevelopment.simplegems.managers.ProfileManager;
 import me.refracdevelopment.simplegems.managers.configuration.ConfigFile;
+import me.refracdevelopment.simplegems.managers.configuration.Locale;
 import me.refracdevelopment.simplegems.managers.configuration.cache.Commands;
 import me.refracdevelopment.simplegems.managers.configuration.cache.Config;
 import me.refracdevelopment.simplegems.managers.configuration.cache.Menus;
@@ -30,8 +30,8 @@ import me.refracdevelopment.simplegems.utilities.command.SubCommand;
 import me.refracdevelopment.simplegems.utilities.menu.MenuManager;
 import me.refracdevelopment.simplegems.utilities.menu.actions.BackAction;
 import me.refracdevelopment.simplegems.utilities.menu.actions.MenuAction;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bstats.bukkit.Metrics;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -42,7 +42,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
-import java.util.Objects;
 
 @Getter
 @Setter
@@ -67,6 +66,7 @@ public final class SimpleGems extends JavaPlugin {
     private ConfigFile commandsFile;
     private ConfigFile menusFile;
     private ConfigFile localeFile;
+    private Locale locale;
 
     // Cache
     private Config settings;
@@ -74,10 +74,10 @@ public final class SimpleGems extends JavaPlugin {
     private Menus menus;
 
     // Utilities
-    private DownloadUtil downloadUtil;
     private SimpleGemsAPI gemsAPI;
     private List<SubCommand> commandsList;
     private FoliaLib foliaLib;
+    private BukkitAudiences adventure;
 
     @Override
     public void onEnable() {
@@ -85,13 +85,7 @@ public final class SimpleGems extends JavaPlugin {
         instance = this;
 
         foliaLib = new FoliaLib(this);
-
-        if (!XReflection.supports(18) || getFoliaLib().isSpigot()) {
-            getLogger().info("This version and or software (" + Bukkit.getName() + " v" + Bukkit.getMinecraftVersion() + ") is not supported.");
-            getLogger().info("Please update to at least Paper 1.18.x or above.");
-            getServer().getPluginManager().disablePlugin(this);
-            return;
-        }
+        adventure = BukkitAudiences.create(this);
 
         DownloadUtil.downloadAndEnable(this);
 
@@ -127,6 +121,11 @@ public final class SimpleGems extends JavaPlugin {
                 getSqLiteManager().shutdown();
 
             getFoliaLib().getScheduler().cancelAllTasks();
+
+            if (this.adventure != null) {
+                this.adventure.close();
+                this.adventure = null;
+            }
         } catch (Exception ignored) {
         }
     }
@@ -136,7 +135,9 @@ public final class SimpleGems extends JavaPlugin {
         configFile = new ConfigFile(this, "config.yml");
         menusFile = new ConfigFile(this, "menus.yml");
         commandsFile = new ConfigFile(this, "commands/gems.yml");
-        localeFile = new ConfigFile(this, "locale/" + configFile.getString("locale", "en_US") + ".yml");
+
+        locale = new Locale();
+        locale.load();
 
         // Cache
         settings = new Config();
@@ -269,7 +270,7 @@ public final class SimpleGems extends JavaPlugin {
         }
     }
 
-    public void updateCheck() {
+    private void updateCheck() {
         try {
             String urlString = "https://refracdev-updatecheck.refracdev.workers.dev/";
             URL url = new URL(urlString);
@@ -279,13 +280,11 @@ public final class SimpleGems extends JavaPlugin {
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             String input;
             StringBuilder response = new StringBuilder();
-
             while ((input = reader.readLine()) != null) {
                 response.append(input);
             }
-
             reader.close();
-            JsonObject object = JsonParser.parseString(response.toString()).getAsJsonObject();
+            JsonObject object = new JsonParser().parse(response.toString()).getAsJsonObject();
 
             if (object.has("plugins")) {
                 JsonObject plugins = object.get("plugins").getAsJsonObject();

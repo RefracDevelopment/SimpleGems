@@ -49,60 +49,58 @@ public class ResetCommand extends SubCommand {
             return;
         }
 
-        Tasks.runAsync(() -> {
-            if (args.length == 1) {
+        if (args.length == 1) {
+            switch (SimpleGems.getInstance().getDataType()) {
+                case MYSQL:
+                    SimpleGems.getInstance().getMySQLManager().delete();
+
+                    Bukkit.getOnlinePlayers().forEach(p -> {
+                        p.kickPlayer(RyMessageUtils.translate(p, SimpleGems.getInstance().getLocaleFile().getString("kick-messages-error")));
+                    });
+                    break;
+                default:
+                    SimpleGems.getInstance().getSqLiteManager().delete();
+
+                    Bukkit.getOnlinePlayers().forEach(p -> {
+                        p.kickPlayer(RyMessageUtils.translate(p, SimpleGems.getInstance().getLocaleFile().getString("kick-messages-error")));
+                    });
+                    break;
+            }
+        } else if (args.length == 2) {
+            OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
+
+            if (target.getPlayer() != null && target.getPlayer().isOnline()) {
                 switch (SimpleGems.getInstance().getDataType()) {
                     case MYSQL:
-                        SimpleGems.getInstance().getMySQLManager().delete();
+                        SimpleGems.getInstance().getMySQLManager().deletePlayer(target.getPlayer().getUniqueId().toString());
 
                         Bukkit.getOnlinePlayers().forEach(p -> {
-                            p.kick(RyMessageUtils.adventureTranslate(p, SimpleGems.getInstance().getLocaleFile().getString("kick-messages-error")));
+                            p.kickPlayer(RyMessageUtils.translate(p, SimpleGems.getInstance().getLocaleFile().getString("kick-messages-error")));
                         });
                         break;
                     default:
-                        SimpleGems.getInstance().getSqLiteManager().delete();
+                        SimpleGems.getInstance().getSqLiteManager().deletePlayer(target.getPlayer().getUniqueId().toString());
 
                         Bukkit.getOnlinePlayers().forEach(p -> {
-                            p.kick(RyMessageUtils.adventureTranslate(p, SimpleGems.getInstance().getLocaleFile().getString("kick-messages-error")));
+                            p.kickPlayer(RyMessageUtils.translate(p, SimpleGems.getInstance().getLocaleFile().getString("kick-messages-error")));
                         });
                         break;
                 }
-            } else if (args.length == 2) {
-                OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
+            } else if (target.hasPlayedBefore()) {
+                switch (SimpleGems.getInstance().getDataType()) {
+                    case MYSQL:
+                        SimpleGems.getInstance().getMySQLManager().deletePlayer(target.getPlayer().getUniqueId().toString());
 
-                if (target.getPlayer() != null && target.getPlayer().isOnline()) {
-                    switch (SimpleGems.getInstance().getDataType()) {
-                        case MYSQL:
-                            SimpleGems.getInstance().getMySQLManager().deletePlayer(target.getPlayer().getUniqueId().toString());
+                        RyMessageUtils.sendPluginMessage(player, "gems-reset-player");
+                        break;
+                    default:
+                        SimpleGems.getInstance().getSqLiteManager().deletePlayer(target.getPlayer().getUniqueId().toString());
 
-                            Bukkit.getOnlinePlayers().forEach(p -> {
-                                p.kick(RyMessageUtils.adventureTranslate(p, SimpleGems.getInstance().getLocaleFile().getString("kick-messages-error")));
-                            });
-                            break;
-                        default:
-                            SimpleGems.getInstance().getSqLiteManager().deletePlayer(target.getPlayer().getUniqueId().toString());
-
-                            Bukkit.getOnlinePlayers().forEach(p -> {
-                                p.kick(RyMessageUtils.adventureTranslate(p, SimpleGems.getInstance().getLocaleFile().getString("kick-messages-error")));
-                            });
-                            break;
-                    }
-                } else if (target.hasPlayedBefore()) {
-                    switch (SimpleGems.getInstance().getDataType()) {
-                        case MYSQL:
-                            SimpleGems.getInstance().getMySQLManager().deletePlayer(target.getPlayer().getUniqueId().toString());
-
-                            Tasks.executeAtEntity(player, () -> RyMessageUtils.sendPluginMessage(player, "gems-reset-player"));
-                            break;
-                        default:
-                            SimpleGems.getInstance().getSqLiteManager().deletePlayer(target.getPlayer().getUniqueId().toString());
-
-                            Tasks.executeAtEntity(player, () -> RyMessageUtils.sendPluginMessage(player, "gems-reset-player"));
-                            break;
-                    }
+                        RyMessageUtils.sendPluginMessage(player, "gems-reset-player");
+                        break;
                 }
             }
-        });
+        }
     }
 
     @Override

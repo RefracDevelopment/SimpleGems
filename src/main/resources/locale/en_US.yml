@@ -39,6 +39,7 @@ gems-set: '&eYou''ve set &d%player%''s &egems to &c%gems_formatted%&e.'
 gems-setted: '&eYour gems have been set to &c%gems_formatted%&e.'
 gems-reset: '&eReset player data.'
 gems-reset-player: '&eReset %player%''s player data.'
+starting-gems-received: "&eYou've received &c%gems_formatted% &egems for being a new player!"
 
 # Help Command
 command-help-title: '&fAvailable Commands:'

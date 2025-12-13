@@ -41,8 +41,6 @@ public class MenuManager {
      * @param plugin The instance of the plugin using this API. Can provide in plugin class by passing this keyword
      */
     public static void setup(Server server, Plugin plugin) {
-        plugin.getLogger().info("MENU MANAGER HAS BEEN SETUP");
-
         registerMenuListener(server, plugin);
         isSetup = true;
     }

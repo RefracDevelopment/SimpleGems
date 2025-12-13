@@ -90,7 +90,6 @@ public class SQLiteManager {
         new Thread(() -> {
             try (Connection resource = getConnection(); PreparedStatement statement = resource.prepareStatement("CREATE TABLE IF NOT EXISTS " + name + "(" + info + ");")) {
                 statement.execute();
-                statement.closeOnCompletion();
             } catch (SQLException exception) {
                 RyMessageUtils.sendConsole(true, "An error occurred while creating database table " + name + ".");
                 exception.printStackTrace();
@@ -111,7 +110,6 @@ public class SQLiteManager {
                     statement.setObject((i + 1), values[i]);
 
                 statement.execute();
-                statement.closeOnCompletion();
             } catch (SQLException exception) {
                 RyMessageUtils.sendConsole(true, "An error occurred while executing an update on the database.");
                 RyMessageUtils.sendConsole(true, "SQLite#execute : " + query);
@@ -134,7 +132,6 @@ public class SQLiteManager {
                     statement.setObject((i + 1), values[i]);
 
                 callback.call(statement.executeQuery());
-                statement.closeOnCompletion();
             } catch (SQLException exception) {
                 RyMessageUtils.sendConsole(true, "An error occurred while executing a query on the database.");
                 RyMessageUtils.sendConsole(true, "SQLite#select : " + query);

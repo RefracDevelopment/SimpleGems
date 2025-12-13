@@ -57,19 +57,6 @@ public class ItemBuilder {
         return this;
     }
 
-    public ItemBuilder setUnColoredName(Component name) {
-        ItemMeta im = is.getItemMeta();
-        im.displayName(name);
-        is.setItemMeta(im);
-        return this;
-    }
-
-    public ItemBuilder setUnTranslatedName(Component name) {
-        ItemMeta im = is.getItemMeta();
-        im.displayName(name);
-        is.setItemMeta(im);
-        return this;
-    }
 
     public ItemBuilder addUnsafeEnchantment(Enchantment ench, int level) {
         if (level < 1) {

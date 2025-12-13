@@ -15,7 +15,6 @@ import me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils;
 import me.refracdevelopment.simplegems.utilities.chat.StringPlaceholders;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
@@ -160,7 +159,7 @@ public class GemShopItem {
 
         if (isGlow()) {
             finalItem.addEnchant(XEnchantment.POWER.get(), 1);
-            finalItem.setItemFlags(ItemFlag.HIDE_ENCHANTS);
+            finalItem.setItemFlags(XItemFlag.HIDE_ENCHANTS.get());
         }
 
         finalItem.setName(RyMessageUtils.translate(player, getName()));
