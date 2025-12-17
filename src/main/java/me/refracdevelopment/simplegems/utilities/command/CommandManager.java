@@ -1,5 +1,6 @@
 package me.refracdevelopment.simplegems.utilities.command;
 
+import lombok.Getter;
 import org.bukkit.command.CommandMap;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -15,6 +16,9 @@ import java.util.List;
  * An Advanced Command-Managing system allowing you to register subcommands under a core command.
  */
 public class CommandManager {
+
+    @Getter
+    private static List<SubCommand> subCommands;
 
     /**
      * @param plugin             An instance of your plugin that is using this API. If called within plugin main class, provide this keyword
@@ -50,6 +54,8 @@ public class CommandManager {
         commandField.setAccessible(true);
         CommandMap commandMap = (CommandMap) commandField.get(plugin.getServer());
         commandMap.register(commandName, new CoreCommand(commandName, commandDescription, commandUsage, commandList, aliases, commands));
+
+        CommandManager.subCommands = commands;
     }
 
 

@@ -1,9 +1,10 @@
 package me.refracdevelopment.simplegems.utilities;
 
 import com.cryptomorin.xseries.XEnchantment;
+import com.cryptomorin.xseries.XItemFlag;
 import com.cryptomorin.xseries.XMaterial;
 import com.google.common.util.concurrent.AtomicDouble;
-import de.tr7zw.nbtapi.NBTItem;
+import de.tr7zw.nbtapi.NBT;
 import dev.lone.itemsadder.api.CustomStack;
 import lombok.experimental.UtilityClass;
 import me.refracdevelopment.simplegems.SimpleGems;
@@ -13,7 +14,6 @@ import me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils;
 import me.refracdevelopment.simplegems.utilities.chat.StringPlaceholders;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
 import java.sql.SQLException;
@@ -175,11 +175,11 @@ public class Methods {
         String material = SimpleGems.getInstance().getSettings().GEMS_ITEM_MATERIAL;
         int durability = SimpleGems.getInstance().getSettings().GEMS_ITEM_DURABILITY;
         List<String> lore = SimpleGems.getInstance().getSettings().GEMS_ITEM_LORE;
-        ItemBuilder item = new ItemBuilder(getMaterial(material).parseMaterial(), 1);
+        ItemBuilder item = new ItemBuilder(getMaterial(material).get(), 1);
 
         if (SimpleGems.getInstance().getSettings().GEMS_ITEM_GLOW) {
-            item.addEnchant(XEnchantment.POWER.getEnchant(), 1);
-            item.setItemFlags(ItemFlag.HIDE_ENCHANTS);
+            item.addEnchant(XEnchantment.POWER.get(), 1);
+            item.setItemFlags(XItemFlag.HIDE_ENCHANTS.get());
         }
 
         if (SimpleGems.getInstance().getSettings().GEMS_ITEM_CUSTOM_DATA) {
@@ -195,33 +195,31 @@ public class Methods {
                 RyMessageUtils.sendConsole(true, "&cAn error occurred when trying to set an items adder custom item. Make sure you are typing the correct namespaced id.");
         }
 
-        ItemBuilder finalItem = item;
-
         // Attempt to insert a NBT tag of the gems value instead of filling the inventory
 
-        NBTItem nbtItem = new NBTItem(finalItem.toItemStack());
-        nbtItem.setDouble("gems-item-value", amount);
-        nbtItem.applyNBT(finalItem.toItemStack());
+        item.setDurability(durability);
 
-        if (nbtItem.hasTag("gems-item-value")) {
-            double foundValue = nbtItem.getDouble("gems-item-value");
+        NBT.modify(item.toItemStack(), nbt -> {
+            nbt.setDouble("gems-item-value", amount);
+        });
 
-            finalItem.setName(RyMessageUtils.translate(player, name
-                    .replace("%value%", String.valueOf(foundValue))
-                    .replace("%gems%", String.valueOf(foundValue))
-                    .replace("%gems_formatted%", Methods.format(foundValue))
-                    .replace("%gems_decimal%", Methods.formatDecimal(foundValue))
-            ));
+        ItemBuilder finalItem = item;
 
-            lore.forEach(line -> finalItem.addLoreLine(RyMessageUtils.translate(player, line
-                    .replace("%value%", String.valueOf(foundValue))
-                    .replace("%gems%", String.valueOf(foundValue))
-                    .replace("%gems_formatted%", Methods.format(foundValue))
-                    .replace("%gems_decimal%", Methods.formatDecimal(foundValue))
-            )));
-        }
+        double foundValue = NBT.get(finalItem.toItemStack(), nbt -> (Double) nbt.getDouble("gems-item-value"));
 
-        finalItem.setDurability(durability);
+        finalItem.setName(RyMessageUtils.translate(player, name
+                .replace("%value%", String.valueOf(foundValue))
+                .replace("%gems%", String.valueOf(foundValue))
+                .replace("%gems_formatted%", Methods.format(foundValue))
+                .replace("%gems_decimal%", Methods.formatDecimal(foundValue))
+        ));
+
+        lore.forEach(line -> finalItem.addLoreLine(RyMessageUtils.translate(player, line
+                .replace("%value%", String.valueOf(foundValue))
+                .replace("%gems%", String.valueOf(foundValue))
+                .replace("%gems_formatted%", Methods.format(foundValue))
+                .replace("%gems_decimal%", Methods.formatDecimal(foundValue))
+        )));
 
         return finalItem.toItemStack();
     }

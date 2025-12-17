@@ -26,7 +26,6 @@ import me.refracdevelopment.simplegems.utilities.chat.PAPIExpansion;
 import me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils;
 import me.refracdevelopment.simplegems.utilities.chat.StringPlaceholders;
 import me.refracdevelopment.simplegems.utilities.command.CommandManager;
-import me.refracdevelopment.simplegems.utilities.command.SubCommand;
 import me.refracdevelopment.simplegems.utilities.menu.MenuManager;
 import me.refracdevelopment.simplegems.utilities.menu.actions.BackAction;
 import me.refracdevelopment.simplegems.utilities.menu.actions.MenuAction;
@@ -41,7 +40,6 @@ import java.io.File;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.List;
 
 @Getter
 @Setter
@@ -75,7 +73,6 @@ public final class SimpleGems extends JavaPlugin {
 
     // Utilities
     private SimpleGemsAPI gemsAPI;
-    private List<SubCommand> commandsList;
     private FoliaLib foliaLib;
     private BukkitAudiences adventure;
 
@@ -95,8 +92,8 @@ public final class SimpleGems extends JavaPlugin {
                 "<#A020F0> _____ _           _     _____                 " + "Running <#7D0DC3>v" + getDescription().getVersion(),
                 "<#A020F0>|   __|_|_____ ___| |___|   __|___ _____ ___   " + "Server <#7D0DC3>" + getServer().getName() + " <#A020F0>v" + getServer().getVersion(),
                 "<#A020F0>|__   | |     | . | | -_|  |  | -_|     |_ -|  " + "Discord support: <#7D0DC3>" + getDescription().getWebsite(),
-                "<#7D0DC3>|_____|_|_|_|_|  _|_|___|_____|___|_|_|_|___|  " + "Thanks for using my plugin ❤ !",
-                "<#7D0DC3>              |_|                            ",
+                "<#A020F0>|_____|_|_|_|_|  _|_|___|_____|___|_|_|_|___|  " + "Thanks for using my plugin ❤ !",
+                "<#A020F0>              |_|                            ",
                 "        <#A020F0>Developed by <#7D0DC3>RefracDevelopment",
                 ""
         );
@@ -136,10 +133,8 @@ public final class SimpleGems extends JavaPlugin {
         menusFile = new ConfigFile(this, "menus.yml");
         commandsFile = new ConfigFile(this, "commands/gems.yml");
 
-        locale = new Locale();
-        locale.load();
-
         // Cache
+        locale = new Locale();
         settings = new Config();
         menus = new Menus();
         commands = new Commands();
@@ -182,8 +177,6 @@ public final class SimpleGems extends JavaPlugin {
                     localeFile.getString("command-help-description"),
                     "/" + commands.GEMS_COMMAND_NAME,
                     (commandSender, list) -> {
-                        commandsList = list;
-
                         if (!(commandSender instanceof Player player)) {
                             list.forEach(command -> {
                                 StringPlaceholders placeholders;

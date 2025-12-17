@@ -1,7 +1,6 @@
 package me.refracdevelopment.simplegems.utilities;
 
 import com.cryptomorin.xseries.XMaterial;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.DyeColor;

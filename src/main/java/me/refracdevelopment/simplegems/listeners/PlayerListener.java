@@ -1,6 +1,6 @@
 package me.refracdevelopment.simplegems.listeners;
 
-import de.tr7zw.nbtapi.NBTItem;
+import de.tr7zw.nbtapi.NBT;
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.player.Profile;
 import me.refracdevelopment.simplegems.utilities.Methods;
@@ -38,7 +38,8 @@ public class PlayerListener implements Listener {
 
         if (!player.hasPlayedBefore() && SimpleGems.getInstance().getSettings().STARTING_GEMS > 0) {
             SimpleGems.getInstance().getGemsAPI().giveGems(player, SimpleGems.getInstance().getSettings().STARTING_GEMS);
-            RyMessageUtils.sendPluginMessage(player, "starting-gems-received", StringPlaceholders.of("gems_formatted", SimpleGems.getInstance().getSettings().STARTING_GEMS));
+            RyMessageUtils.sendPluginMessage(player, "starting-gems-received",
+                    StringPlaceholders.of("gems_formatted", SimpleGems.getInstance().getSettings().STARTING_GEMS));
         }
     }
 
@@ -84,12 +85,13 @@ public class PlayerListener implements Listener {
         if (itemMeta == null)
             return;
 
-        NBTItem nbtItem = new NBTItem(item);
+        double foundValue = NBT.get(item, nbt -> (Double) nbt.getDouble("gems-item-value"));
 
-        if (nbtItem.hasTag("gems-item-value")) {
-            double foundValue = nbtItem.getDouble("gems-item-value");
-
+        if (foundValue > 0) {
             gemsItem = SimpleGems.getInstance().getGemsAPI().getGemsItem(player, foundValue);
+
+            if (gemsItem == null)
+                return;
 
             if (!item.isSimilar(gemsItem))
                 return;
@@ -131,9 +133,7 @@ public class PlayerListener implements Listener {
         if (itemMeta == null)
             return;
 
-        NBTItem nbtItem = new NBTItem(item);
-
-        if (nbtItem.hasTag("gems-item-value"))
+        if (NBT.get(item, nbt -> (boolean) nbt.getBoolean("gems-item-value")))
             event.setCancelled(true);
     }
 
@@ -145,9 +145,7 @@ public class PlayerListener implements Listener {
         if (itemMeta == null)
             return;
 
-        NBTItem nbtItem = new NBTItem(item);
-
-        if (nbtItem.hasTag("gems-item-value"))
+        if (NBT.get(item, nbt -> (boolean) nbt.getBoolean("gems-item-value")))
             event.setCancelled(true);
     }
 }

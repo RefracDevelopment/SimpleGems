@@ -24,7 +24,6 @@ public class MenuManager {
     private static void registerMenuListener(Server server, Plugin plugin) {
         boolean isAlreadyRegistered = false;
         for (RegisteredListener rl : InventoryClickEvent.getHandlerList().getRegisteredListeners()) {
-            plugin.getLogger().info(rl.getListener().getClass().getSimpleName());
             if (rl.getListener() instanceof MenuListener) {
                 isAlreadyRegistered = true;
                 break;

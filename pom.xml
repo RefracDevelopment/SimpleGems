@@ -6,7 +6,7 @@
 
     <groupId>me.refracdevelopment</groupId>
     <artifactId>SimpleGems</artifactId>
-    <version>4.1.1</version>
+    <version>26.1.0</version>
     <packaging>jar</packaging>
 
     <name>SimpleGems</name>

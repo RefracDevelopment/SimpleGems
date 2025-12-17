@@ -1,5 +1,6 @@
 package me.refracdevelopment.simplegems.utilities.chat;
 
+import com.cryptomorin.xseries.XMaterial;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -46,7 +47,7 @@ public final class HexUtils {
      * Gets a capture group from a regex Matcher if it exists
      *
      * @param matcher The Matcher
-     * @param group   The group name
+     * @param group The group name
      * @return the capture group value, or null if not found
      */
     private static String getCaptureGroup(Matcher matcher, String group) {
@@ -99,24 +100,21 @@ public final class HexUtils {
             if (speedGroup != null) {
                 try {
                     speed = Integer.parseInt(speedGroup);
-                } catch (NumberFormatException ignored) {
-                }
+                } catch (NumberFormatException ignored) { }
             }
 
             String saturationGroup = getCaptureGroup(matcher, "saturation");
             if (saturationGroup != null) {
                 try {
                     saturation = Float.parseFloat(saturationGroup);
-                } catch (NumberFormatException ignored) {
-                }
+                } catch (NumberFormatException ignored) { }
             }
 
             String brightnessGroup = getCaptureGroup(matcher, "brightness");
             if (brightnessGroup != null) {
                 try {
                     brightness = Float.parseFloat(brightnessGroup);
-                } catch (NumberFormatException ignored) {
-                }
+                } catch (NumberFormatException ignored) { }
             }
 
             int stop = findStop(parsed, matcher.end());
@@ -179,8 +177,7 @@ public final class HexUtils {
             if (speedGroup != null) {
                 try {
                     speed = Integer.parseInt(speedGroup);
-                } catch (NumberFormatException ignored) {
-                }
+                } catch (NumberFormatException ignored) { }
             }
 
             int stop = findStop(parsed, matcher.end());
@@ -277,11 +274,79 @@ public final class HexUtils {
      * @return The closest ChatColor value
      */
     public static ChatColor translateHex(String hex) {
-        return ChatColor.of(hex);
+        if (XMaterial.supports(16))
+            return ChatColor.of(hex);
+        return translateHex(Color.decode(hex));
     }
 
     public static ChatColor translateHex(Color color) {
-        return ChatColor.of(color);
+        if (XMaterial.supports(16))
+            return ChatColor.of(color);
+
+        int minDist = Integer.MAX_VALUE;
+        ChatColor legacy = ChatColor.WHITE;
+        for (ChatColorHexMapping mapping : ChatColorHexMapping.values()) {
+            int r = mapping.getRed() - color.getRed();
+            int g = mapping.getGreen() - color.getGreen();
+            int b = mapping.getBlue() - color.getBlue();
+            int dist = r * r + g * g + b * b;
+            if (dist < minDist) {
+                minDist = dist;
+                legacy = mapping.getChatColor();
+            }
+        }
+
+        return legacy;
+    }
+
+    /**
+     * Maps hex codes to ChatColors
+     */
+    public enum ChatColorHexMapping {
+
+        BLACK(0x000000, ChatColor.BLACK),
+        DARK_BLUE(0x0000AA, ChatColor.DARK_BLUE),
+        DARK_GREEN(0x00AA00, ChatColor.DARK_GREEN),
+        DARK_AQUA(0x00AAAA, ChatColor.DARK_AQUA),
+        DARK_RED(0xAA0000, ChatColor.DARK_RED),
+        DARK_PURPLE(0xAA00AA, ChatColor.DARK_PURPLE),
+        GOLD(0xFFAA00, ChatColor.GOLD),
+        GRAY(0xAAAAAA, ChatColor.GRAY),
+        DARK_GRAY(0x555555, ChatColor.DARK_GRAY),
+        BLUE(0x5555FF, ChatColor.BLUE),
+        GREEN(0x55FF55, ChatColor.GREEN),
+        AQUA(0x55FFFF, ChatColor.AQUA),
+        RED(0xFF5555, ChatColor.RED),
+        LIGHT_PURPLE(0xFF55FF, ChatColor.LIGHT_PURPLE),
+        YELLOW(0xFFFF55, ChatColor.YELLOW),
+        WHITE(0xFFFFFF, ChatColor.WHITE);
+
+        private final int r, g, b;
+        private final ChatColor chatColor;
+
+        ChatColorHexMapping(int hex, ChatColor chatColor) {
+            this.r = (hex >> 16) & 0xFF;
+            this.g = (hex >> 8) & 0xFF;
+            this.b = hex & 0xFF;
+            this.chatColor = chatColor;
+        }
+
+        public int getRed() {
+            return this.r;
+        }
+
+        public int getGreen() {
+            return this.g;
+        }
+
+        public int getBlue() {
+            return this.b;
+        }
+
+        public ChatColor getChatColor() {
+            return this.chatColor;
+        }
+
     }
 
     public interface ColorGenerator {
@@ -323,16 +388,14 @@ public final class HexUtils {
         @Override
         public ChatColor nextChatColor() {
             // Gradients will use the first color if the entire spectrum won't be available to preserve prettiness
-            if (this.steps <= 1)
-                return translateHex(this.gradients.get(0).colorAt(0));
+            if (XMaterial.supports(16) || this.steps <= 1)
+                return translateHex(this.gradients.getFirst().colorAt(0));
             return translateHex(this.nextColor());
         }
 
         @Override
         public Color nextColor() {
-            // Do some wizardry to get a function that bounces back and forth between 0 and a cap given an increasing input
-            // Thanks to BomBardyGamer for assisting with this
-            int adjustedStep = (int) Math.round(Math.abs(((2 * Math.asin(Math.sin(this.step * (Math.PI / (2 * this.steps))))) / Math.PI) * this.steps));
+            int adjustedStep = this.adjustStep(this.step, this.steps);
 
             Color color;
             if (this.gradients.size() < 2) {
@@ -345,6 +408,16 @@ public final class HexUtils {
 
             this.step++;
             return color;
+        }
+
+        private int adjustStep(long t, int steps) {
+            int period = steps * 2;
+            int modT = (int) (t % period);
+            if (modT <= steps) {
+                return modT;
+            } else {
+                return period - modT;
+            }
         }
 
         public static class TwoStopGradient {

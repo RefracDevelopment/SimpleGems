@@ -10,6 +10,10 @@ public class Locale {
         en_US
     }
 
+    public Locale() {
+        load();
+    }
+
     public void load() {
         SimpleGems instance = SimpleGems.getInstance();
 
