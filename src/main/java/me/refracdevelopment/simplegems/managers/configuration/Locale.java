@@ -15,16 +15,16 @@ public class Locale {
     }
 
     public void load() {
-        SimpleGems instance = SimpleGems.getInstance();
+        SimpleGems plugin = SimpleGems.getInstance();
 
         for (LocaleType locale : LocaleType.values()) {
-            File file = new File(instance.getDataFolder(), "locale/" + locale.toString() + ".yml");
+            File file = new File(plugin.getDataFolder(), "locale/" + locale.toString() + ".yml");
 
             if (!file.exists()) {
-                instance.saveResource("locale/" + locale + ".yml", false);
+                plugin.saveResource("locale/" + locale + ".yml", false);
             }
         }
 
-        instance.setLocaleFile(new ConfigFile(instance, "locale/" + instance.getConfigFile().getString("locale", "en_US") + ".yml"));
+        plugin.setLocaleFile(new ConfigFile(plugin, "locale/" + plugin.getConfigFile().getString("locale", "en_US") + ".yml"));
     }
 }

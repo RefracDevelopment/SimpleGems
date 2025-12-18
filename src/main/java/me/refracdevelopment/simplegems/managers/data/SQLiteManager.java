@@ -28,11 +28,7 @@ public class SQLiteManager {
         } else
             RyMessageUtils.sendConsole(true, "&aManaged to successfully connect to: &e" + path + "&a!");
 
-        createT();
-    }
-
-    public void createT() {
-        Tasks.runAsync(this::createTables);
+        createTables();
     }
 
     private Exception connect(String path) {
