@@ -8,27 +8,19 @@ import lombok.Setter;
 import me.gabytm.util.actions.ActionManager;
 import me.refracdevelopment.simplegems.api.SimpleGemsAPI;
 import me.refracdevelopment.simplegems.commands.*;
-import me.refracdevelopment.simplegems.hooks.ItemsAdderListener;
-import me.refracdevelopment.simplegems.listeners.PlayerListener;
-import me.refracdevelopment.simplegems.managers.ProfileManager;
-import me.refracdevelopment.simplegems.managers.configuration.ConfigFile;
-import me.refracdevelopment.simplegems.managers.configuration.Locale;
-import me.refracdevelopment.simplegems.managers.configuration.cache.Commands;
-import me.refracdevelopment.simplegems.managers.configuration.cache.Config;
-import me.refracdevelopment.simplegems.managers.configuration.cache.Menus;
-import me.refracdevelopment.simplegems.managers.data.DataType;
-import me.refracdevelopment.simplegems.managers.data.MySQLManager;
-import me.refracdevelopment.simplegems.managers.data.SQLiteManager;
-import me.refracdevelopment.simplegems.managers.leaderboards.LeaderboardManager;
-import me.refracdevelopment.simplegems.menu.GemShop;
-import me.refracdevelopment.simplegems.utilities.DownloadUtil;
-import me.refracdevelopment.simplegems.utilities.chat.PAPIExpansion;
-import me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils;
-import me.refracdevelopment.simplegems.utilities.chat.StringPlaceholders;
-import me.refracdevelopment.simplegems.utilities.command.CommandManager;
-import me.refracdevelopment.simplegems.utilities.menu.MenuManager;
-import me.refracdevelopment.simplegems.utilities.menu.actions.BackAction;
-import me.refracdevelopment.simplegems.utilities.menu.actions.MenuAction;
+import me.refracdevelopment.simplegems.hooks.*;
+import me.refracdevelopment.simplegems.listeners.*;
+import me.refracdevelopment.simplegems.managers.*;
+import me.refracdevelopment.simplegems.managers.configuration.*;
+import me.refracdevelopment.simplegems.managers.configuration.cache.*;
+import me.refracdevelopment.simplegems.managers.data.*;
+import me.refracdevelopment.simplegems.managers.leaderboards.*;
+import me.refracdevelopment.simplegems.menu.*;
+import me.refracdevelopment.simplegems.utilities.*;
+import me.refracdevelopment.simplegems.utilities.chat.*;
+import me.refracdevelopment.simplegems.utilities.command.*;
+import me.refracdevelopment.simplegems.utilities.menu.*;
+import me.refracdevelopment.simplegems.utilities.menu.actions.*;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.entity.Player;
@@ -217,7 +209,6 @@ public final class SimpleGems extends JavaPlugin {
                     SetCommand.class,
                     ReloadCommand.class,
                     VersionCommand.class,
-                    ResetCommand.class,
                     RandomGiveCommand.class
             );
         } catch (NoSuchFieldException | IllegalAccessException e) {

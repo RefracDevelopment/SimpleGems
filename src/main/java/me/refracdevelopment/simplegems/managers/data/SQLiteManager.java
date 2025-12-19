@@ -28,7 +28,7 @@ public class SQLiteManager {
         } else
             RyMessageUtils.sendConsole(true, "&aManaged to successfully connect to: &e" + path + "&a!");
 
-        createTables();
+        Tasks.runAsync(this::createTables);
     }
 
     private Exception connect(String path) {
@@ -86,6 +86,7 @@ public class SQLiteManager {
         new Thread(() -> {
             try (Connection resource = getConnection(); PreparedStatement statement = resource.prepareStatement("CREATE TABLE IF NOT EXISTS " + name + "(" + info + ");")) {
                 statement.execute();
+                statement.closeOnCompletion();
             } catch (SQLException exception) {
                 RyMessageUtils.sendConsole(true, "An error occurred while creating database table " + name + ".");
                 exception.printStackTrace();
@@ -106,11 +107,16 @@ public class SQLiteManager {
                     statement.setObject((i + 1), values[i]);
 
                 statement.execute();
+                statement.closeOnCompletion();
             } catch (SQLException exception) {
                 RyMessageUtils.sendConsole(true, "An error occurred while executing an update on the database.");
                 RyMessageUtils.sendConsole(true, "SQLite#execute : " + query);
                 exception.printStackTrace();
+            } finally {
+                Thread.currentThread().interrupt();
             }
+
+            Thread.currentThread().interrupt();
         }).start();
     }
 
@@ -128,11 +134,16 @@ public class SQLiteManager {
                     statement.setObject((i + 1), values[i]);
 
                 callback.call(statement.executeQuery());
+                statement.closeOnCompletion();
             } catch (SQLException exception) {
                 RyMessageUtils.sendConsole(true, "An error occurred while executing a query on the database.");
                 RyMessageUtils.sendConsole(true, "SQLite#select : " + query);
                 exception.printStackTrace();
+            } finally {
+                Thread.currentThread().interrupt();
             }
+
+            Thread.currentThread().interrupt();
         }).start();
     }
 
@@ -142,13 +153,5 @@ public class SQLiteManager {
 
     public void updatePlayerName(String uuid, String name) {
         execute("UPDATE SimpleGems SET name=? WHERE uuid=?", name, uuid);
-    }
-
-    public void delete() {
-        execute("TRUNCATE TABLE SimpleGems");
-    }
-
-    public void deletePlayer(String uuid) {
-        execute("DELETE FROM SimpleGems WHERE uuid=?", uuid);
     }
 }
