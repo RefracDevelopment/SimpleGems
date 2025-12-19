@@ -4,6 +4,7 @@ import de.tr7zw.nbtapi.NBT;
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.player.Profile;
 import me.refracdevelopment.simplegems.utilities.Methods;
+import me.refracdevelopment.simplegems.utilities.Permissions;
 import me.refracdevelopment.simplegems.utilities.Tasks;
 import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
 import me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils;
@@ -43,6 +44,13 @@ public class PlayerListener implements Listener {
             SimpleGems.getInstance().getGemsAPI().giveGems(player, SimpleGems.getInstance().getSettings().STARTING_GEMS);
             RyMessageUtils.sendPluginMessage(player, "starting-gems-received",
                     StringPlaceholders.of("gems_formatted", SimpleGems.getInstance().getSettings().STARTING_GEMS));
+        }
+
+        if (SimpleGems.getInstance().getSettings().CHECK_FOR_UPDATES && player.hasPermission(Permissions.GEMS_VERSION_COMMAND)) {
+            if (SimpleGems.getInstance().updateCheck(false)) {
+                RyMessageUtils.sendPlayer(player, "There is an update of <gradient:#8A2387:#E94057:#F27121:0>SimpleGems &ravailable!", false);
+                RyMessageUtils.sendPlayer(player, "Download the latest version here: &bhttps://github.com/RefracDevelopment/SimpleGems/releases/latest", false);
+            }
         }
     }
 

@@ -12,7 +12,5 @@ public class Permissions {
     public static final String GEMS_RELOAD_COMMAND = "simplegems.command.reload";
     public static final String GEMS_VERSION_COMMAND = "simplegems.command.version";
     public static final String GEMS_TOP_COMMAND = "simplegems.command.top";
-    public static final String GEMS_UPDATE_COMMAND = "simplegems.command.update";
-    public static final String GEMS_RESET_COMMAND = "simplegems.command.reset";
 
 }

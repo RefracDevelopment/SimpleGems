@@ -82,7 +82,7 @@ public final class SimpleGems extends JavaPlugin {
 
         RyMessageUtils.sendConsole(false,
                 "<#A020F0> _____ _           _     _____                 " + "Running <#7D0DC3>v" + getDescription().getVersion(),
-                "<#A020F0>|   __|_|_____ ___| |___|   __|___ _____ ___   " + "Server <#7D0DC3>" + getServer().getName() + " <#A020F0>v" + getServer().getVersion(),
+                "<#A020F0>|   __|_|_____ ___| |___|   __|___ _____ ___   " + "Server <#7D0DC3>" + getServer().getName() + " <#A020F0>v<#7D0DC3>" + getServer().getVersion(),
                 "<#A020F0>|__   | |     | . | | -_|  |  | -_|     |_ -|  " + "Discord support: <#7D0DC3>" + getDescription().getWebsite(),
                 "<#A020F0>|_____|_|_|_|_|  _|_|___|_____|___|_|_|_|___|  " + "Thanks for using my plugin ❤ !",
                 "<#A020F0>              |_|                            ",
@@ -95,7 +95,7 @@ public final class SimpleGems extends JavaPlugin {
         loadListeners();
         loadHooks();
 
-        updateCheck();
+        updateCheck(true);
 
         new Metrics(this, 13117);
     }
@@ -148,10 +148,9 @@ public final class SimpleGems extends JavaPlugin {
                 break;
         }
 
-        gemsAPI = new SimpleGemsAPI();
         profileManager = new ProfileManager();
+        gemsAPI = new SimpleGemsAPI();
         actionManager = new ActionManager(this);
-        leaderboardManager = new LeaderboardManager();
 
         // Setup menus
         MenuManager.setup(getServer(), this);
@@ -159,6 +158,8 @@ public final class SimpleGems extends JavaPlugin {
         // Register custom actions
         actionManager.register(new BackAction(), true);
         actionManager.register(new MenuAction(), true);
+
+        leaderboardManager = new LeaderboardManager();
 
         RyMessageUtils.sendConsole(true, "&aLoaded managers.");
     }
@@ -254,7 +255,7 @@ public final class SimpleGems extends JavaPlugin {
         }
     }
 
-    private void updateCheck() {
+    public boolean updateCheck(boolean sendMessages) {
         try {
             String urlString = "https://refracdev-updatecheck.refracdev.workers.dev/";
             URL url = new URL(urlString);
@@ -277,19 +278,28 @@ public final class SimpleGems extends JavaPlugin {
                 boolean archived = info.get("archived").getAsBoolean();
 
                 if (archived) {
-                    RyMessageUtils.sendConsole(true, "&cThis plugin has been marked as &e&l'Archived' &cby RefracDevelopment.");
-                    RyMessageUtils.sendConsole(true, "&cThis version will continue to work but will not receive updates or support.");
+                    if (sendMessages) {
+                        RyMessageUtils.sendConsole(true, "&cThis plugin has been marked as &e&l'Archived' &cby RefracDevelopment.");
+                        RyMessageUtils.sendConsole(true, "&cThis version will continue to work but will not receive updates or support.");
+                    }
                 } else if (version.equals(getDescription().getVersion())) {
-                    RyMessageUtils.sendConsole(true, "&a" + getDescription().getName() + " is on the latest version.");
+                    if (sendMessages) {
+                        RyMessageUtils.sendConsole(true, "&a" + getDescription().getName() + " is on the latest version.");
+                    }
                 } else {
-                    RyMessageUtils.sendConsole(true, "&cYour " + getDescription().getName() + " version &7(" + getDescription().getVersion() + ") &cis out of date! Newest: &e&lv" + version);
+                    if (sendMessages)
+                        RyMessageUtils.sendConsole(true, "&cYour " + getDescription().getName() + " version &7(" + getDescription().getVersion() + ") &cis out of date! Newest: &e&lv" + version);
+                    return true;
                 }
             } else {
-                RyMessageUtils.sendConsole(true, "&cWrong response from update API, contact plugin developer!");
+                if (sendMessages)
+                    RyMessageUtils.sendConsole(true, "&cWrong response from update API, contact plugin developer!");
             }
         } catch (
                 Exception ex) {
             RyMessageUtils.sendConsole(true, "&cFailed to get updater check. (" + ex.getMessage() + ")");
         }
+
+        return false;
     }
 }

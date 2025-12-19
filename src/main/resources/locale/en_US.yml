@@ -1,12 +1,12 @@
 # en_US translation by Refrac
 
 # Plugin Message Prefix
-prefix: '<gradient:#8A2387:#E94057:#F27121:0>SimpleGems &8| &f'
+prefix: '<gradient:#8A2387:#E94057:#F27121:0>SimpleGems &8| &r'
 
 # Generic Command Messages
 no-permission: '&cYou don''t have permission for that!'
 no-console: '&cOnly players may execute this command.'
-unknown-command: Unknown command, use &d/%cmd%&f help for more info
+unknown-command: 'Unknown command, use &d/%cmd%&f help for more info'
 invalid-player: '&cYou provided an invalid player.'
 leaderboard-update: '&eThe leaderboard has been updated.'
 invalid-gems: '&cThat player doesn''t have enough gems to take.'
@@ -39,50 +39,51 @@ gems-set: '&eYou''ve set &d%player%''s &egems to &c%gems_formatted%&e.'
 gems-setted: '&eYour gems have been set to &c%gems_formatted%&e.'
 gems-reset: '&eReset player data.'
 gems-reset-player: '&eReset %player%''s player data.'
-starting-gems-received: "&eYou've received &c%gems_formatted% &egems for being a new player!"
+starting-gems-received: '&eYou''ve received &c%gems_formatted% &egems for being a new player!'
+no-leaderboard-data: '&cNo leaderboard data could be found.'
 
 # Help Command
 command-help-title: '&fAvailable Commands:'
-command-help-description: Displays the help menu.
+command-help-description: 'Displays the help menu.'
 command-help-list-description: '&8 - &d/%cmd% %subcmd% %args% &7- %desc%'
 command-help-list-description-no-args: '&8 - &d/%cmd% %subcmd% &7- %desc%'
 
 # Shop Command
-command-shop-description: Opens the gems shop.
+command-shop-description: 'Opens the gems shop.'
 
 # Deposit Command
-command-deposit-description: Allows you to deposit all gems in your inventory.
+command-deposit-description: 'Allows you to deposit all gems in your inventory.'
 
 # Balance Command
-command-balance-description: Display either your or other players gems balance.
+command-balance-description: 'Display either your or other players gems balance.'
 
 # Withdraw Command
-command-withdraw-description: Allows you to withdraw gems in item form.
+command-withdraw-description: 'Allows you to withdraw gems in item form.'
 
 # Pay Command
-command-pay-description: Allows you to pay someones' gems.
+command-pay-description: 'Allows you to pay someones'' gems.'
 
 # Give Command
-command-give-description: Allows you to give someones' gems.
+command-give-description: 'Allows you to give someones'' gems.'
 
 # Take Command
-command-take-description: Allows you to take away others' gems.
+command-take-description: 'Allows you to take away others'' gems.'
 
 # Set Command
-command-set-description: Allows you to set someones' gems.
+command-set-description: 'Allows you to set someones'' gems.'
 
 # Reload Command
-command-reload-description: Reloads the plugin
+command-reload-description: 'Reloads the plugin'
 command-reload-success: '&aConfiguration and locale files were reloaded.'
 
 # Version Command
-command-version-description: Display the version info for SimpleGems
+command-version-description: 'Display the version info for SimpleGems'
 
 # Top Command
-command-top-description: Display the top leaderboard info for SimpleGems
+command-top-description: 'Display the top leaderboard info for SimpleGems'
 
 # Reset Command
-command-reset-description: Allows you to reset a player's data or the entire database
+command-reset-description: 'Allows you to reset a player''s data or the entire database'
 
 # Random Give Command
-command-random-give-description: Allows you to give someone a random amount of gems.
+command-random-give-description: 'Allows you to give someone a random amount of gems.'

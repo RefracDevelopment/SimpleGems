@@ -19,7 +19,6 @@ public class LeaderboardManager {
     public LeaderboardManager() {
         cachedMap = new LinkedHashMap<>();
 
-        update();
         updateTask();
 
         RyMessageUtils.sendConsole(true, "&aLoaded leaderboards.");
@@ -59,8 +58,10 @@ public class LeaderboardManager {
     }
 
     public void sendLeaderboard(Player player) {
-        if (cachedMap.isEmpty())
-            update();
+        if (cachedMap.isEmpty()) {
+            RyMessageUtils.sendPluginMessage(player, "no-leaderboard-data");
+            return;
+        }
 
         RyMessageUtils.sendPlayer(player, SimpleGems.getInstance().getSettings().GEMS_TOP_TITLE
                 .replace("%entries%", String.valueOf(SimpleGems.getInstance().getSettings().GEMS_TOP_ENTRIES))

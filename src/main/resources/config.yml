@@ -57,6 +57,11 @@ mysql:
   # Default:
   password: ""
 
+# Check for updates on join
+# This uses the /gems version command permission
+# permission: simplegems.command.version
+check-for-updates: true
+
 gems-top:
   # This is used for viewing top players
   # Default: &e&lGems %arrow% &6&lTop %entries%

@@ -10,6 +10,7 @@ public class Config {
     public double STARTING_GEMS;
     public long LEADERBOARD_UPDATE_INTERVAL;
     public String DATA_TYPE;
+    public boolean CHECK_FOR_UPDATES;
 
     // Top
     public boolean LUCKPERMS;
@@ -36,6 +37,7 @@ public class Config {
         STARTING_GEMS = SimpleGems.getInstance().getConfigFile().getDouble("starting-gems");
         LEADERBOARD_UPDATE_INTERVAL = SimpleGems.getInstance().getConfigFile().getLong("leaderboard-update-interval");
         DATA_TYPE = SimpleGems.getInstance().getConfigFile().getString("data-type");
+        CHECK_FOR_UPDATES = SimpleGems.getInstance().getConfigFile().getBoolean("check-for-updates");
 
         // Top
         LUCKPERMS = SimpleGems.getInstance().getConfigFile().getBoolean("gems-top.luckperms");

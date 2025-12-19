@@ -216,7 +216,25 @@ public class RyMessageUtils {
         if (message.equalsIgnoreCase("%empty%") || message.contains("%empty%") || message.isEmpty())
             return;
 
-        audiences.player(player).sendMessage(adventureTranslate(player, getPrefix() + message));
+        if (audiences == null) player.sendMessage(translate(player, getPrefix() + message));
+        else audiences.player(player).sendMessage(adventureTranslate(player, getPrefix() + message));
+    }
+
+    /**
+     * Send a player a message.
+     *
+     * @param player  The player who you wish to receive the message.
+     * @param message The message you wish to send the player.
+     */
+    public static void sendPlayer(Player player, String message, boolean prefix) {
+        if (message.equalsIgnoreCase("%empty%") || message.contains("%empty%") || message.isEmpty())
+            return;
+
+        if (prefix)
+            message = getPrefix() + message;
+
+        if (audiences == null) player.sendMessage(translate(player, message));
+        else audiences.player(player).sendMessage(adventureTranslate(player, message));
     }
 
     /**
@@ -265,6 +283,25 @@ public class RyMessageUtils {
 
         if (audiences == null) sender.sendMessage(translate(getPrefix() + message));
         else audiences.sender(sender).sendMessage(adventureTranslate(getPrefix() + message));
+    }
+
+    /**
+     * Send a sender a message.
+     *
+     * @param sender  The sender who you wish to receive the messages.
+     * @param message The message you wish to send to the sender.
+     */
+    public static void sendSender(CommandSender sender, String message, boolean prefix) {
+        if (message.equalsIgnoreCase("%empty%") || message.contains("%empty%"))
+            return;
+
+        message = Placeholders.setPlaceholders(sender, message);
+
+        if (prefix)
+            message = getPrefix() + message;
+
+        if (audiences == null) sender.sendMessage(translate(message));
+        else audiences.sender(sender).sendMessage(adventureTranslate(message));
     }
 
     /**
