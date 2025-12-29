@@ -8,7 +8,6 @@ import lombok.Setter;
 import me.gabytm.util.actions.ActionManager;
 import me.refracdevelopment.simplegems.api.SimpleGemsAPI;
 import me.refracdevelopment.simplegems.commands.*;
-import me.refracdevelopment.simplegems.hooks.*;
 import me.refracdevelopment.simplegems.listeners.*;
 import me.refracdevelopment.simplegems.managers.*;
 import me.refracdevelopment.simplegems.managers.configuration.*;
@@ -105,16 +104,16 @@ public final class SimpleGems extends JavaPlugin {
         // Plugin shutdown logic
         try {
             if (dataType == DataType.MYSQL)
-                getMySQLManager().shutdown();
+                mySQLManager.shutdown();
             else if (dataType == DataType.SQLITE)
-                getSqLiteManager().shutdown();
-
-            getFoliaLib().getScheduler().cancelAllTasks();
+                sqLiteManager.shutdown();
 
             if (this.adventure != null) {
                 this.adventure.close();
                 this.adventure = null;
             }
+
+            getFoliaLib().getScheduler().cancelAllTasks();
         } catch (Exception ignored) {
         }
     }

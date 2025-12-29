@@ -49,8 +49,7 @@ public class VersionCommand extends SubCommand {
         RyMessageUtils.sendSender(commandSender, " ");
 
         if (SimpleGems.getInstance().updateCheck(false)) {
-            RyMessageUtils.sendSender(commandSender, baseColor + "There is an update of <gradient:#8A2387:#E94057:#F27121:0>SimpleGems &r" + baseColor + "available!");
-            RyMessageUtils.sendSender(commandSender, baseColor + "Download the latest version here: &bhttps://github.com/RefracDevelopment/SimpleGems/releases/latest");
+            RyMessageUtils.sendSender(commandSender, "There is an update of <gradient:#8A2387:#E94057:#F27121:0>SimpleGems &ravailable! Download the latest version here:\n&bhttps://github.com/RefracDevelopment/SimpleGems/releases/latest", false);
         }
     }
 

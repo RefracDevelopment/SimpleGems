@@ -121,6 +121,10 @@
             <id>sonatype-oss-snapshots1</id>
             <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
         </repository>
+        <repository>
+            <id>tcoded-releases</id>
+            <url>https://repo.tcoded.com/releases</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -155,9 +159,9 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>com.github.Tweetzy</groupId>
-            <artifactId>Skulls</artifactId>
-            <version>3.23.0</version>
+            <groupId>ca.tweetzy</groupId>
+            <artifactId>skulls</artifactId>
+            <version>v3.23.0</version>
             <scope>provided</scope>
             <exclusions>
                 <exclusion>
@@ -227,10 +231,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.technicallycoded</groupId>
+            <groupId>com.tcoded</groupId>
             <artifactId>FoliaLib</artifactId>
-            <version>0.4.4</version>
-            <scope>compile</scope>
+            <version>0.5.1</version>
         </dependency>
         <dependency>
             <groupId>de.tr7zw</groupId>

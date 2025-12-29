@@ -130,7 +130,7 @@ public class SimpleGemsAPI {
             return;
 
         getProfileData(target).getGems().incrementAmount(amount);
-        Tasks.runAsync(() -> getProfileData(target).save(target));
+        Tasks.runAsync(() -> getProfileData(target).save());
     }
 
     /**
@@ -151,7 +151,7 @@ public class SimpleGemsAPI {
             return;
 
         getProfileData(target).getGems().incrementAmount(amount);
-        Tasks.runAsync(() -> getProfileData(target).save(target));
+        Tasks.runAsync(() -> getProfileData(target).save());
     }
 
     /**
@@ -181,7 +181,7 @@ public class SimpleGemsAPI {
             return;
 
         getProfileData(target).getGems().decrementAmount(amount);
-        Tasks.runAsync(() -> getProfileData(target).save(target));
+        Tasks.runAsync(() -> getProfileData(target).save());
     }
 
     /**
@@ -202,7 +202,7 @@ public class SimpleGemsAPI {
             return;
 
         getProfileData(target).getGems().decrementAmount(amount);
-        Tasks.runAsync(() -> getProfileData(target).save(target));
+        Tasks.runAsync(() -> getProfileData(target).save());
     }
 
     /**
@@ -232,7 +232,7 @@ public class SimpleGemsAPI {
             return;
 
         getProfileData(target).getGems().setAmount(amount);
-        Tasks.runAsync(() -> getProfileData(target).save(target));
+        Tasks.runAsync(() -> getProfileData(target).save());
     }
 
     /**
@@ -253,7 +253,7 @@ public class SimpleGemsAPI {
             return;
 
         getProfileData(target).getGems().setAmount(amount);
-        Tasks.runAsync(() -> getProfileData(target).save(target));
+        Tasks.runAsync(() -> getProfileData(target).save());
     }
 
     /**
@@ -344,7 +344,7 @@ public class SimpleGemsAPI {
             return;
 
         getProfileData(player).getGems().incrementAmount(amount);
-        Tasks.runAsync(() -> getProfileData(player).save(player));
+        Tasks.runAsync(() -> getProfileData(player).save());
     }
 
 }

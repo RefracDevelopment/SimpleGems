@@ -15,16 +15,6 @@ public class ProfileManager {
 
     private Map<UUID, Profile> profiles = new HashMap<>();
 
-    public ProfileManager() {
-        // Refresh to remove profiles from a previous instance of plugin
-        // This is basically /reload support (not recommended)
-        Bukkit.getOnlinePlayers().forEach(onlinePlayer -> {
-            getProfiles().clear();
-            handleProfileCreation(onlinePlayer.getUniqueId(), onlinePlayer.getName());
-            Tasks.runAsync(() -> getProfile(onlinePlayer.getUniqueId()).getData().load(onlinePlayer));
-        });
-    }
-
     public void handleProfileCreation(UUID uuid, String name) {
         if (!this.profiles.containsKey(uuid))
             profiles.put(uuid, new Profile(uuid, name));

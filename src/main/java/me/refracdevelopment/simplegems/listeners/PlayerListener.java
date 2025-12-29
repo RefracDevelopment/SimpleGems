@@ -23,8 +23,31 @@ import org.bukkit.inventory.meta.ItemMeta;
 public class PlayerListener implements Listener {
 
     @EventHandler
-    public void onLogin(PlayerLoginEvent event) {
-        SimpleGems.getInstance().getProfileManager().handleProfileCreation(event.getPlayer().getUniqueId(), event.getPlayer().getName());
+    public void onLogin(AsyncPlayerPreLoginEvent event) {
+        SimpleGems.getInstance().getProfileManager().handleProfileCreation(event.getUniqueId(), event.getName());
+
+        Profile profile = SimpleGems.getInstance().getProfileManager().getProfile(event.getUniqueId());
+
+        profile.getData().load();
+    }
+
+    @EventHandler
+    public void handlePlayerLogin(PlayerLoginEvent event) {
+        Player player = event.getPlayer();
+
+        Profile profile = SimpleGems.getInstance().getProfileManager().getProfile(player.getUniqueId());
+
+        if (profile == null || profile.getData() == null) {
+            RyMessageUtils.sendConsole(true, "Profile " + player.getName() + " has returned null, attempting to load data again");
+
+            SimpleGems.getInstance().getProfileManager().handleProfileCreation(player.getUniqueId(), player.getName());
+            RyMessageUtils.sendConsole(true, "Profile created for " + player.getName() + " (" + player.getUniqueId() + ")");
+
+            Profile newProfile = SimpleGems.getInstance().getProfileManager().getProfile(player.getUniqueId());
+
+            Tasks.runAsync(() -> newProfile.getData().load());
+            RyMessageUtils.sendConsole(true, "Data loaded for " + player.getName() + " (" + player.getUniqueId() + ")");
+        }
     }
 
     @EventHandler
@@ -33,10 +56,9 @@ public class PlayerListener implements Listener {
 
         Profile profile = SimpleGems.getInstance().getProfileManager().getProfile(player.getUniqueId());
 
-        Tasks.runAsync(() -> profile.getData().load(player));
-
         if (profile == null || profile.getData() == null) {
             player.kickPlayer(RyMessageUtils.translate(player, SimpleGems.getInstance().getLocaleFile().getString("kick-messages-error")));
+            RyMessageUtils.sendConsole(true, "Player " + player.getName() + " (" + player.getUniqueId() + ") was not able to join due to: profile not found.");
             return;
         }
 
@@ -48,8 +70,7 @@ public class PlayerListener implements Listener {
 
         if (SimpleGems.getInstance().getSettings().CHECK_FOR_UPDATES && player.hasPermission(Permissions.GEMS_VERSION_COMMAND)) {
             if (SimpleGems.getInstance().updateCheck(false)) {
-                RyMessageUtils.sendPlayer(player, "There is an update of <gradient:#8A2387:#E94057:#F27121:0>SimpleGems &ravailable!", false);
-                RyMessageUtils.sendPlayer(player, "Download the latest version here: &bhttps://github.com/RefracDevelopment/SimpleGems/releases/latest", false);
+                RyMessageUtils.sendPlayer(player, "There is an update of <gradient:#8A2387:#E94057:#F27121:0>SimpleGems &ravailable! Download the latest version here:\n&bhttps://github.com/RefracDevelopment/SimpleGems/releases/latest", false);
             }
         }
     }
@@ -78,7 +99,7 @@ public class PlayerListener implements Listener {
             RyMessageUtils.sendPluginError("THE MENU MANAGER HAS NOT BEEN CONFIGURED. CALL MENUMANAGER.SETUP()");
         }
 
-        Tasks.runAsync(() -> profile.getData().save(player));
+        Tasks.runAsync(() -> profile.getData().save());
     }
 
     @EventHandler

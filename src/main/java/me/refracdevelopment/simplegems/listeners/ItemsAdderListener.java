@@ -1,4 +1,4 @@
-package me.refracdevelopment.simplegems.hooks;
+package me.refracdevelopment.simplegems.listeners;
 
 import dev.lone.itemsadder.api.Events.ItemsAdderLoadDataEvent;
 import lombok.Getter;

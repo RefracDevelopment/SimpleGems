@@ -1,6 +1,7 @@
 package me.refracdevelopment.simplegems.utilities;
 
 import com.cryptomorin.xseries.XMaterial;
+import me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.DyeColor;
@@ -51,7 +52,7 @@ public class ItemBuilder {
 
     public ItemBuilder setName(String name) {
         ItemMeta im = is.getItemMeta();
-        im.setDisplayName(name);
+        im.setDisplayName(RyMessageUtils.translate(name));
         is.setItemMeta(im);
         return this;
     }
@@ -141,7 +142,7 @@ public class ItemBuilder {
         List<String> lore = new ArrayList<>();
         if (im.hasLore())
             lore = new ArrayList<>(im.getLore());
-        lore.add(line);
+        lore.add(RyMessageUtils.translate(line));
         im.setLore(lore);
         is.setItemMeta(im);
         return this;
