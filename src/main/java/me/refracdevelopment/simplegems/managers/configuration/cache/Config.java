@@ -13,10 +13,10 @@ public class Config {
     public boolean CHECK_FOR_UPDATES;
 
     // Top
-    public boolean LUCKPERMS;
     public String GEMS_TOP_TITLE;
     public String GEMS_TOP_FORMAT;
     public int GEMS_TOP_ENTRIES;
+    public boolean BROADCAST_MESSAGE;
 
     // Messages
     public List<String> GEMS_BALANCE;
@@ -40,10 +40,10 @@ public class Config {
         CHECK_FOR_UPDATES = SimpleGems.getInstance().getConfigFile().getBoolean("check-for-updates");
 
         // Top
-        LUCKPERMS = SimpleGems.getInstance().getConfigFile().getBoolean("gems-top.luckperms");
         GEMS_TOP_TITLE = SimpleGems.getInstance().getConfigFile().getString("gems-top.title");
         GEMS_TOP_FORMAT = SimpleGems.getInstance().getConfigFile().getString("gems-top.format");
         GEMS_TOP_ENTRIES = SimpleGems.getInstance().getConfigFile().getInt("gems-top.top-entries");
+        BROADCAST_MESSAGE = SimpleGems.getInstance().getConfigFile().getBoolean("gems-top.broadcast-message");
 
         // Messages
         GEMS_BALANCE = SimpleGems.getInstance().getConfigFile().getStringList("gems-balance");

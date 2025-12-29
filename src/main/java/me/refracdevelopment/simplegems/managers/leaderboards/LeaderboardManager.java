@@ -50,8 +50,9 @@ public class LeaderboardManager {
                 break;
         }
 
-        Bukkit.getOnlinePlayers().forEach(onlinePlayer ->
-                RyMessageUtils.sendPluginMessage(onlinePlayer, "leaderboard-update"));
+        if (SimpleGems.getInstance().getSettings().BROADCAST_MESSAGE)
+            Bukkit.getOnlinePlayers().forEach(onlinePlayer ->
+                    RyMessageUtils.sendPluginMessage(onlinePlayer, "leaderboard-update"));
 
         cachedMap = sortByValue(cachedMap);
     }

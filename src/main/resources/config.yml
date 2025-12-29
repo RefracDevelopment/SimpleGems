@@ -64,13 +64,12 @@ check-for-updates: true
 
 gems-top:
   # This is used for viewing top players
-  # Default: &e&lGems %arrow% &6&lTop %entries%
   title: "&e&lGems %arrow% &6&lTop %entries%"
-  # Default: &6&l%number%. &e%player% &7- &e%gems_formatted%
   # This format will be used for the command and placeholders
   format: "&6&l%number%. &e%player% &7- &e%gems_formatted%"
-  # Default: 10
   top-entries: 10
+  # This is for the "Leaderboard has been updated" message
+  broadcast-message: true
 
 gems-balance:
   - ""
