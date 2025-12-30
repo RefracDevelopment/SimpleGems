@@ -72,16 +72,12 @@ public class ConfigFile extends YamlConfiguration {
     }
 
     public String getString(String path, boolean check) {
-        return super.getString(path, null);
+        return super.getString(path, "String at path '" + path + "' not found.").replace("|", "\u2503");
     }
 
     @Override
     public String getString(String path) {
-        if (super.contains(path)) {
-            return super.getString(path, "String at path '" + path + "' not found.").replace("|", "\u2503");
-        }
-
-        return null;
+        return super.getString(path, "String at path '" + path + "' not found.").replace("|", "\u2503");
     }
 
     @Override
