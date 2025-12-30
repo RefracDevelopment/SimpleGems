@@ -125,7 +125,7 @@ public class GemShopItem {
 
     public void runActions(Player player) {
         getActions().forEach(action ->
-                SimpleGems.getInstance().getActionManager().executeAsync(player, Placeholders.setPlaceholders(player, action
+                SimpleGems.getInstance().getActionManager().execute(player, Placeholders.setPlaceholders(player, action
                         .replace("%item%", getName())
                         .replace("%cost%", String.valueOf(getCost()))
                         .replace("%price%", String.valueOf(getCost())))
