@@ -73,7 +73,7 @@ gems-top:
 
 gems-balance:
   - ""
-  - "&e&l&eYou currently have &f&n%gems_formatted%&e gems!"
+  - "&eYou currently have &f%gems_formatted%&e gems!"
   - "&7&o(( &f&oTip&7&o: You can get gems by doing &e&oevents&7&o! ))"
   - ""
 
