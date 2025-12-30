@@ -68,7 +68,7 @@ public class ConfigFile extends YamlConfiguration {
 
     @Override
     public boolean getBoolean(String path) {
-        return super.getBoolean(path, false);
+        return super.getBoolean(path, true);
     }
 
     public String getString(String path, boolean check) {
