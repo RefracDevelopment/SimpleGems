@@ -21,7 +21,7 @@ public class GemShop {
     }
 
     public void setupCustomMenuData() {
-        getCategories().clear();
+        categories.clear();
 
         List<GemShopItem> items = new ArrayList<>();
 
@@ -31,16 +31,14 @@ public class GemShop {
             ConfigurationSection category = section.getConfigurationSection(gemShopCategory + ".items");
 
             if (category != null) {
-                category.getKeys(false).forEach(item -> {
-                    items.add(new GemShopItem(gemShopCategory, item));
-                });
+                category.getKeys(false).forEach(item -> items.add(new GemShopItem(gemShopCategory, item)));
 
-                getCategories().put(gemShopCategory, items);
+                categories.put(gemShopCategory, items);
             }
         });
     }
 
     public List<GemShopItem> getItems(String categoryName) {
-        return getCategories().get(categoryName);
+        return categories.get(categoryName);
     }
 }
