@@ -1,7 +1,7 @@
 package me.refracdevelopment.simplegems.utilities.menu;
 
+import me.refracdevelopment.simplegems.utilities.ItemBuilder;
 import me.refracdevelopment.simplegems.utilities.Methods;
-import me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils;
 import me.refracdevelopment.simplegems.utilities.exceptions.MenuManagerException;
 import me.refracdevelopment.simplegems.utilities.exceptions.MenuManagerNotSetupException;
 import org.bukkit.Bukkit;
@@ -11,10 +11,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-
-import java.util.Arrays;
-import java.util.stream.Collectors;
 
 /*
     Defines the behavior and attributes of all menus in our plugin
@@ -101,17 +97,11 @@ public abstract class Menu implements InventoryHolder {
      * @return The constructed ItemStack object
      */
     public ItemStack makeItem(Material material, String displayName, String... lore) {
+        ItemBuilder item = new ItemBuilder(material);
+        item.setName(displayName);
+        item.setLore(lore);
 
-        ItemStack item = new ItemStack(material);
-        ItemMeta itemMeta = item.getItemMeta();
-        assert itemMeta != null;
-        itemMeta.setDisplayName(RyMessageUtils.translate(displayName));
-
-        //Automatically translate color codes provided
-        itemMeta.setLore(Arrays.stream(lore).map(RyMessageUtils::translate).collect(Collectors.toList()));
-        item.setItemMeta(itemMeta);
-
-        return item;
+        return item.toItemStack();
     }
 
 }

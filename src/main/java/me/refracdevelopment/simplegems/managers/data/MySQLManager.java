@@ -92,15 +92,10 @@ public class MySQLManager {
         new Thread(() -> {
             try (Connection resource = getConnection(); PreparedStatement statement = resource.prepareStatement("CREATE TABLE IF NOT EXISTS " + name + "(" + info + ");")) {
                 statement.execute();
-                statement.closeOnCompletion();
             } catch (SQLException exception) {
                 RyMessageUtils.sendConsole(true, "An error occurred while creating database table " + name + ".");
                 exception.printStackTrace();
-            } finally {
-                Thread.currentThread().interrupt();
             }
-
-            Thread.currentThread().interrupt();
         }).start();
     }
 
@@ -117,16 +112,11 @@ public class MySQLManager {
                     statement.setObject((i + 1), values[i]);
 
                 statement.execute();
-                statement.closeOnCompletion();
             } catch (SQLException exception) {
                 RyMessageUtils.sendConsole(true, "An error occurred while executing an update on the database.");
                 RyMessageUtils.sendConsole(true, "MySQL#execute : " + query);
                 exception.printStackTrace();
-            } finally {
-                Thread.currentThread().interrupt();
             }
-
-            Thread.currentThread().interrupt();
         }).start();
     }
 
@@ -144,16 +134,11 @@ public class MySQLManager {
                     statement.setObject((i + 1), values[i]);
 
                 callback.call(statement.executeQuery());
-                statement.closeOnCompletion();
             } catch (SQLException exception) {
                 RyMessageUtils.sendConsole(true, "An error occurred while executing a query on the database.");
                 RyMessageUtils.sendConsole(true, "MySQL#select : " + query);
                 exception.printStackTrace();
-            } finally {
-                Thread.currentThread().interrupt();
             }
-
-            Thread.currentThread().interrupt();
         }).start();
     }
 
