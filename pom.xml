@@ -161,7 +161,7 @@
         <dependency>
             <groupId>ca.tweetzy</groupId>
             <artifactId>skulls</artifactId>
-            <version>v3.23.0</version>
+            <version>3.10.0</version>
             <scope>provided</scope>
             <exclusions>
                 <exclusion>
@@ -253,3 +253,4 @@
         </dependency>
     </dependencies>
 </project>
+
