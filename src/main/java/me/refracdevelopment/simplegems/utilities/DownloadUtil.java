@@ -1,7 +1,7 @@
 package me.refracdevelopment.simplegems.utilities;
 
-import com.alessiodp.libby.BukkitLibraryManager;
-import com.alessiodp.libby.Library;
+import net.byteflux.libby.BukkitLibraryManager;
+import net.byteflux.libby.Library;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class DownloadUtil {
