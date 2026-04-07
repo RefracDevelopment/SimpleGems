@@ -63,16 +63,16 @@ public class GiveCommand extends SubCommand {
 
         if (target.isOnline()) {
             Player targetPlayer = target.getPlayer();
-            long amount;
+            double amount;
 
             try {
-                amount = Long.parseLong(args[2]);
+                amount = Double.parseDouble(args[2]);
             } catch (NumberFormatException exception) {
                 RyMessageUtils.sendPluginMessage(commandSender, "invalid-number", Placeholders.setPlaceholders(commandSender));
                 return;
             }
 
-            if (amount <= 0) {
+            if (amount < 0) {
                 RyMessageUtils.sendPluginMessage(commandSender, "invalid-number", Placeholders.setPlaceholders(commandSender));
                 return;
             }
@@ -85,9 +85,9 @@ public class GiveCommand extends SubCommand {
                     .build();
 
             if (commandSender instanceof Player player)
-                SimpleGems.getInstance().getGemsAPI().giveGems(player, targetPlayer, (double)amount);
+                SimpleGems.getInstance().getGemsAPI().giveGems(player, targetPlayer, amount);
             else
-                SimpleGems.getInstance().getGemsAPI().giveGems(targetPlayer, (double)amount);
+                SimpleGems.getInstance().getGemsAPI().giveGems(targetPlayer, amount);
 
             if (message.contains("-s"))
                 return;
@@ -95,10 +95,10 @@ public class GiveCommand extends SubCommand {
             RyMessageUtils.sendPluginMessage(commandSender, "gems-given", placeholders);
             RyMessageUtils.sendPluginMessage(targetPlayer, "gems-gained", placeholders);
         } else if (target.hasPlayedBefore()) {
-            long amount;
+            double amount;
 
             try {
-                amount = Long.parseLong(args[2]);
+                amount = Double.parseDouble(args[2]);
             } catch (NumberFormatException exception) {
                 RyMessageUtils.sendPluginMessage(commandSender, "invalid-number", Placeholders.setPlaceholders(commandSender));
                 return;

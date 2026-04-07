@@ -57,10 +57,10 @@ public class WithdrawCommand extends SubCommand {
             return;
         }
 
-        long amount;
+        double amount;
 
         try {
-            amount = Long.parseLong(args[1]);
+            amount = Double.parseDouble(args[1]);
         } catch (NumberFormatException exception) {
             RyMessageUtils.sendPluginMessage(commandSender, "invalid-number", Placeholders.setPlaceholders(commandSender));
             return;

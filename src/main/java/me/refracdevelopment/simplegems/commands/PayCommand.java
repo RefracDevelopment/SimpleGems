@@ -66,10 +66,10 @@ public class PayCommand extends SubCommand {
         }
 
         if (target.isOnline()) {
-            long amount;
+            double amount;
 
             try {
-                amount = Long.parseLong(args[2]);
+                amount = Double.parseDouble(args[2]);
             } catch (NumberFormatException exception) {
                 RyMessageUtils.sendPluginMessage(commandSender, "invalid-number", Placeholders.setPlaceholders(commandSender));
                 return;
@@ -80,12 +80,12 @@ public class PayCommand extends SubCommand {
                 return;
             }
 
-            SimpleGems.getInstance().getGemsAPI().payGems(player, target.getPlayer(), (double)amount, message.contains("-s"));
+            SimpleGems.getInstance().getGemsAPI().payGems(player, target.getPlayer(), amount, message.contains("-s"));
         } else if (target.hasPlayedBefore()) {
-            long amount;
+            double amount;
 
             try {
-                amount = Long.parseLong(args[2]);
+                amount = Double.parseDouble(args[2]);
             } catch (NumberFormatException exception) {
                 RyMessageUtils.sendPluginMessage(commandSender, "invalid-number", Placeholders.setPlaceholders(commandSender));
                 return;
@@ -96,7 +96,7 @@ public class PayCommand extends SubCommand {
                 return;
             }
 
-            SimpleGems.getInstance().getGemsAPI().payOfflineGems(player, target, (double)amount);
+            SimpleGems.getInstance().getGemsAPI().payOfflineGems(player, target, amount);
         } else
             RyMessageUtils.sendPluginMessage(player, "invalid-player");
     }

@@ -57,28 +57,28 @@ public class RandomGiveCommand extends SubCommand {
         if (target.isOnline()) {
             Player targetPlayer = target.getPlayer();
 
-            long min;
-            long max;
-            long amount;
+            double min;
+            double max;
+            double amount;
 
             try {
-                min = Long.parseLong(args[2]);
-                max = Long.parseLong(args[3]);
-                amount = ThreadLocalRandom.current().nextLong(min, max);
+                min = Double.parseDouble(args[2]);
+                max = Double.parseDouble(args[3]);
+                amount = ThreadLocalRandom.current().nextDouble(min, max);
             } catch (NumberFormatException exception) {
                 RyMessageUtils.sendSender(commandSender, "invalid-number");
                 return;
             }
 
-            if (amount <= 0) {
+            if (amount < 0) {
                 RyMessageUtils.sendPluginMessage(commandSender, "invalid-number", Placeholders.setPlaceholders(commandSender));
                 return;
             }
 
             if (commandSender instanceof Player player)
-                SimpleGems.getInstance().getGemsAPI().giveGems(player, targetPlayer, (double)amount);
+                SimpleGems.getInstance().getGemsAPI().giveGems(player, targetPlayer, amount);
             else
-                SimpleGems.getInstance().getGemsAPI().giveGems(targetPlayer, (double)amount);
+                SimpleGems.getInstance().getGemsAPI().giveGems(targetPlayer, amount);
 
             StringPlaceholders placeholders = StringPlaceholders.builder()
                     .addAll(Placeholders.setPlaceholders(targetPlayer))
@@ -94,25 +94,25 @@ public class RandomGiveCommand extends SubCommand {
             RyMessageUtils.sendPluginMessage(commandSender, "gems-given", placeholders);
             RyMessageUtils.sendPluginMessage(targetPlayer, "gems-gained", placeholders);
         } else if (target.hasPlayedBefore()) {
-            long min;
-            long max;
-            long amount;
+            double min;
+            double max;
+            double amount;
 
             try {
-                min = Long.parseLong(args[2]);
-                max = Long.parseLong(args[3]);
-                amount = ThreadLocalRandom.current().nextLong(min, max);
+                min = Double.parseDouble(args[2]);
+                max = Double.parseDouble(args[3]);
+                amount = ThreadLocalRandom.current().nextDouble(min, max);
             } catch (NumberFormatException exception) {
                 RyMessageUtils.sendSender(commandSender, "invalid-number");
                 return;
             }
 
-            if (amount <= 0) {
+            if (amount < 0) {
                 RyMessageUtils.sendPluginMessage(commandSender, "invalid-number", Placeholders.setPlaceholders(commandSender));
                 return;
             }
 
-            SimpleGems.getInstance().getGemsAPI().giveOfflineGems(target, (double)amount);
+            SimpleGems.getInstance().getGemsAPI().giveOfflineGems(target, amount);
 
             StringPlaceholders placeholders = StringPlaceholders.builder()
                     .addAll(Placeholders.setPlaceholders(commandSender))

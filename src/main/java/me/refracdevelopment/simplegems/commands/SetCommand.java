@@ -63,7 +63,7 @@ public class SetCommand extends SubCommand {
 
         if (target.isOnline()) {
             Player targetPlayer = target.getPlayer();
-            long amount;
+            double amount;
 
             try {
                 amount = Long.parseLong(args[2]);
@@ -72,7 +72,7 @@ public class SetCommand extends SubCommand {
                 return;
             }
 
-            if (amount <= 0) {
+            if (amount < 0) {
                 RyMessageUtils.sendPluginMessage(commandSender, "invalid-number", Placeholders.setPlaceholders(commandSender));
                 return;
             }
@@ -85,9 +85,9 @@ public class SetCommand extends SubCommand {
                     .build();
 
             if (commandSender instanceof Player player)
-                SimpleGems.getInstance().getGemsAPI().setGems(player, targetPlayer, (double)amount);
+                SimpleGems.getInstance().getGemsAPI().setGems(player, targetPlayer, amount);
             else
-                SimpleGems.getInstance().getGemsAPI().setGems(targetPlayer, (double)amount);
+                SimpleGems.getInstance().getGemsAPI().setGems(targetPlayer, amount);
 
             if (message.contains("-s"))
                 return;
@@ -95,10 +95,10 @@ public class SetCommand extends SubCommand {
             RyMessageUtils.sendPluginMessage(commandSender, "gems-set", placeholders);
             RyMessageUtils.sendPluginMessage(targetPlayer, "gems-setted", placeholders);
         } else if (target.hasPlayedBefore()) {
-            long amount;
+            double amount;
 
             try {
-                amount = Long.parseLong(args[2]);
+                amount = Double.parseDouble(args[2]);
             } catch (NumberFormatException exception) {
                 RyMessageUtils.sendPluginMessage(commandSender, "invalid-number");
                 return;
@@ -109,7 +109,7 @@ public class SetCommand extends SubCommand {
                 return;
             }
 
-            SimpleGems.getInstance().getGemsAPI().setOfflineGems(target, (double)amount);
+            SimpleGems.getInstance().getGemsAPI().setOfflineGems(target, amount);
 
             StringPlaceholders placeholders = StringPlaceholders.builder()
                     .addAll(Placeholders.setOfflinePlaceholders(target))
