@@ -30,6 +30,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 
 @Getter
@@ -94,9 +95,9 @@ public final class SimpleGems extends JavaPlugin {
         loadListeners();
         loadHooks();
 
-        updateCheck(true);
-
         new Metrics(this, 13117);
+
+        Tasks.runAsync(() -> updateCheck(true));
     }
 
     @Override
@@ -257,18 +258,13 @@ public final class SimpleGems extends JavaPlugin {
     public boolean updateCheck(boolean sendMessages) {
         try {
             String urlString = "https://refracdev-updatecheck.refracdev.workers.dev/";
-            URL url = new URL(urlString);
+            URL url = URI.create(urlString).toURL();
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
             connection.setRequestProperty("User-Agent", "Mozilla/5.0");
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            String input;
-            StringBuilder response = new StringBuilder();
-            while ((input = reader.readLine()) != null) {
-                response.append(input);
-            }
+            JsonObject object = JsonParser.parseReader(reader).getAsJsonObject();
             reader.close();
-            JsonObject object = new JsonParser().parse(response.toString()).getAsJsonObject();
 
             if (object.has("plugins")) {
                 JsonObject plugins = object.get("plugins").getAsJsonObject();

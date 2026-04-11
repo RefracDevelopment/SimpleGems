@@ -69,9 +69,11 @@ public class PlayerListener implements Listener {
         }
 
         if (SimpleGems.getInstance().getSettings().CHECK_FOR_UPDATES && player.hasPermission(Permissions.GEMS_VERSION_COMMAND)) {
-            if (SimpleGems.getInstance().updateCheck(false)) {
-                RyMessageUtils.sendPlayer(player, "There is an update of <gradient:#8A2387:#E94057:#F27121:0>SimpleGems &ravailable! Download the latest version here:\n&bhttps://github.com/RefracDevelopment/SimpleGems/releases/latest", false);
-            }
+            Tasks.runAsync(() -> {
+                if (SimpleGems.getInstance().updateCheck(false)) {
+                    RyMessageUtils.sendSender(player, "There is an update of <gradient:#8A2387:#E94057:#F27121:0>SimpleGems &ravailable! Download the latest version here:\n&bhttps://github.com/RefracDevelopment/SimpleGems/releases/latest", false);
+                }
+            });
         }
     }
 

@@ -2,6 +2,7 @@ package me.refracdevelopment.simplegems.commands;
 
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.utilities.Permissions;
+import me.refracdevelopment.simplegems.utilities.Tasks;
 import me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils;
 import me.refracdevelopment.simplegems.utilities.chat.StringPlaceholders;
 import me.refracdevelopment.simplegems.utilities.command.SubCommand;
@@ -48,9 +49,11 @@ public class VersionCommand extends SubCommand {
 
         RyMessageUtils.sendSender(commandSender, " ");
 
-        if (SimpleGems.getInstance().updateCheck(false)) {
-            RyMessageUtils.sendSender(commandSender, "There is an update of <gradient:#8A2387:#E94057:#F27121:0>SimpleGems &ravailable! Download the latest version here:\n&bhttps://github.com/RefracDevelopment/SimpleGems/releases/latest", false);
-        }
+        Tasks.runAsync(() -> {
+            if (SimpleGems.getInstance().updateCheck(false)) {
+                RyMessageUtils.sendSender(commandSender, "There is an update of <gradient:#8A2387:#E94057:#F27121:0>SimpleGems &ravailable! Download the latest version here:\n&bhttps://github.com/RefracDevelopment/SimpleGems/releases/latest", false);
+            }
+        });
     }
 
     @Override
