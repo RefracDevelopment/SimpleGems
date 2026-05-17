@@ -1,6 +1,7 @@
 package me.refracdevelopment.simplegems.utilities.chat;
 
 import com.cryptomorin.xseries.XMaterial;
+import com.cryptomorin.xseries.reflection.XReflection;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -274,13 +275,13 @@ public final class HexUtils {
      * @return The closest ChatColor value
      */
     public static ChatColor translateHex(String hex) {
-        if (XMaterial.supports(16))
+        if (XReflection.supports(1, 16))
             return ChatColor.of(hex);
         return translateHex(Color.decode(hex));
     }
 
     public static ChatColor translateHex(Color color) {
-        if (XMaterial.supports(16))
+        if (XReflection.supports(1, 16))
             return ChatColor.of(color);
 
         int minDist = Integer.MAX_VALUE;
@@ -388,7 +389,7 @@ public final class HexUtils {
         @Override
         public ChatColor nextChatColor() {
             // Gradients will use the first color if the entire spectrum won't be available to preserve prettiness
-            if (XMaterial.supports(16) || this.steps <= 1)
+            if (XReflection.supports(1, 16) || this.steps <= 1)
                 return translateHex(this.gradients.getFirst().colorAt(0));
             return translateHex(this.nextColor());
         }
