@@ -4,23 +4,24 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.utilities.Methods;
 import org.bukkit.entity.Player;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Map;
 
 public class PAPIExpansion extends PlaceholderExpansion {
 
     @Override
-    public String getAuthor() {
-        return SimpleGems.getInstance().getDescription().getAuthors().get(0);
+    public @NonNull String getAuthor() {
+        return SimpleGems.getInstance().getDescription().getAuthors().getFirst();
     }
 
     @Override
-    public String getIdentifier() {
+    public @NonNull String getIdentifier() {
         return SimpleGems.getInstance().getDescription().getName();
     }
 
     @Override
-    public String getVersion() {
+    public @NonNull String getVersion() {
         return SimpleGems.getInstance().getDescription().getVersion();
     }
 
@@ -44,7 +45,8 @@ public class PAPIExpansion extends PlaceholderExpansion {
                 if (params.startsWith("player_")) {
                     try {
                         int value = Integer.parseInt(params.replace("player_", "")) - 1;
-                        Map.Entry<String, Double> leaderboardMap = SimpleGems.getInstance().getLeaderboardManager().getCachedMap().entrySet().stream().toList().get(value);
+                        Map.Entry<String, Double> leaderboardMap = SimpleGems.getInstance().getLeaderboardManager()
+                                .getCachedMap().entrySet().stream().toList().get(value);
                         String name = leaderboardMap.getKey();
                         gems = leaderboardMap.getValue();
 

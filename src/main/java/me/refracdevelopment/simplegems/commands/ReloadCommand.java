@@ -4,6 +4,7 @@ import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.utilities.Permissions;
 import me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils;
 import me.refracdevelopment.simplegems.utilities.command.SubCommand;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -39,7 +40,7 @@ public class ReloadCommand extends SubCommand {
             return;
         }
 
-        SimpleGems.getInstance().getFoliaLib().getScheduler().cancelAllTasks();
+        Bukkit.getScheduler().cancelTasks(SimpleGems.getInstance());
         reloadFiles();
         SimpleGems.getInstance().getGemShop().setupCustomMenuData();
         SimpleGems.getInstance().getLeaderboardManager().updateTask();

@@ -9,7 +9,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 @Data
 public class LeaderboardManager {
@@ -19,6 +18,7 @@ public class LeaderboardManager {
     public LeaderboardManager() {
         cachedMap = new LinkedHashMap<>();
 
+        update();
         updateTask();
 
         RyMessageUtils.sendConsole(true, "&aLoaded leaderboards.");
@@ -38,7 +38,7 @@ public class LeaderboardManager {
                     }
                 });
                 break;
-            default:
+            case SQLITE:
                 SimpleGems.getInstance().getSqLiteManager().select("SELECT * FROM SimpleGems ORDER BY gems DESC", resultSet -> {
                     while (resultSet.next()) {
                         String name = resultSet.getString("name");
@@ -107,8 +107,8 @@ public class LeaderboardManager {
 
     public void updateTask() {
         try {
-            Tasks.runAsyncTimer(this::load, SimpleGems.getInstance().getSettings().LEADERBOARD_UPDATE_INTERVAL,
-                    SimpleGems.getInstance().getSettings().LEADERBOARD_UPDATE_INTERVAL, TimeUnit.SECONDS);
+            Tasks.runAsyncTimer(this::load, SimpleGems.getInstance().getSettings().LEADERBOARD_UPDATE_INTERVAL*20L,
+                    SimpleGems.getInstance().getSettings().LEADERBOARD_UPDATE_INTERVAL*20L);
         } catch (Throwable throwable) {
             RyMessageUtils.sendConsole(true, "An error occurred while updating the leaderboard.");
             throwable.printStackTrace();

@@ -112,7 +112,7 @@ public class RandomGiveCommand extends SubCommand {
                 return;
             }
 
-            SimpleGems.getInstance().getGemsAPI().giveOfflineGems(target, amount);
+            Methods.giveOfflineGems(target, amount);
 
             StringPlaceholders placeholders = StringPlaceholders.builder()
                     .addAll(Placeholders.setPlaceholders(commandSender))

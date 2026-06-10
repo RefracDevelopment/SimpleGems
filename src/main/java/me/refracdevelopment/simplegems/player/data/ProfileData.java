@@ -3,7 +3,6 @@ package me.refracdevelopment.simplegems.player.data;
 import lombok.Data;
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.player.stats.Stat;
-import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
@@ -28,18 +27,16 @@ public class ProfileData {
                 getPlugin().getMySQLManager().select("SELECT * FROM SimpleGems WHERE uuid=?", resultSet -> {
                     if (resultSet.next()) {
                         getGems().setAmount(resultSet.getDouble("gems"));
-                        getPlugin().getMySQLManager().updatePlayerName(uuid.toString(), name);
                     } else {
                         getPlugin().getMySQLManager().execute("INSERT INTO SimpleGems (uuid, name, gems) VALUES (?,?,?)",
                                 uuid.toString(), name, 0L);
                     }
                 }, uuid.toString());
                 break;
-            default:
+            case SQLITE:
                 getPlugin().getSqLiteManager().select("SELECT * FROM SimpleGems WHERE uuid=?", resultSet -> {
                     if (resultSet.next()) {
                         getGems().setAmount(resultSet.getDouble("gems"));
-                        getPlugin().getSqLiteManager().updatePlayerName(uuid.toString(), name);
                     } else {
                         getPlugin().getSqLiteManager().execute("INSERT INTO SimpleGems (uuid, name, gems) VALUES (?,?,?)",
                                 uuid.toString(), name, 0L);
@@ -53,10 +50,10 @@ public class ProfileData {
     public void save() {
         switch (getPlugin().getDataType()) {
             case MYSQL:
-                getPlugin().getMySQLManager().updatePlayerGems(uuid.toString(), getGems().getAmount());
+                getPlugin().getMySQLManager().updatePlayer(uuid.toString(), getGems().getAmount());
                 break;
-            default:
-                getPlugin().getSqLiteManager().updatePlayerGems(uuid.toString(), getGems().getAmount());
+            case SQLITE:
+                getPlugin().getSqLiteManager().updatePlayer(uuid.toString(), getGems().getAmount());
                 break;
         }
     }

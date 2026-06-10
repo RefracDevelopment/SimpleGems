@@ -109,7 +109,7 @@ public class SetCommand extends SubCommand {
                 return;
             }
 
-            SimpleGems.getInstance().getGemsAPI().setOfflineGems(target, amount);
+            Methods.setOfflineGems(target, amount);
 
             StringPlaceholders placeholders = StringPlaceholders.builder()
                     .addAll(Placeholders.setOfflinePlaceholders(target))

@@ -48,7 +48,7 @@ public class SQLiteManager {
     }
 
     private void createTables() {
-        createTable("SimpleGems", "uuid VARCHAR(36) NOT NULL PRIMARY KEY, name VARCHAR(16), gems BIGINT(50)");
+        createTable("SimpleGems", "uuid VARCHAR(36) NOT NULL PRIMARY KEY, name VARCHAR(255), gems BIGINT(50)");
     }
 
     public boolean isInitiated() {
@@ -136,11 +136,7 @@ public class SQLiteManager {
         }).start();
     }
 
-    public void updatePlayerGems(String uuid, double gems) {
+    public void updatePlayer(String uuid, double gems) {
         execute("UPDATE SimpleGems SET gems=? WHERE uuid=?", gems, uuid);
-    }
-
-    public void updatePlayerName(String uuid, String name) {
-        execute("UPDATE SimpleGems SET name=? WHERE uuid=?", name, uuid);
     }
 }

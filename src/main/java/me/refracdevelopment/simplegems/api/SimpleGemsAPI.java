@@ -2,6 +2,7 @@ package me.refracdevelopment.simplegems.api;
 
 import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.api.events.impl.*;
+import me.refracdevelopment.simplegems.player.Profile;
 import me.refracdevelopment.simplegems.player.data.ProfileData;
 import me.refracdevelopment.simplegems.utilities.Methods;
 import me.refracdevelopment.simplegems.utilities.Tasks;
@@ -16,8 +17,12 @@ import org.bukkit.inventory.ItemStack;
  * or to add new features and events.
  */
 public class SimpleGemsAPI {
-
+    
+    private final SimpleGems plugin;
+    
     public SimpleGemsAPI() {
+        plugin = SimpleGems.getInstance();
+        
         RyMessageUtils.sendConsole(true, "&aSimpleGemsAPI has been enabled!");
         RyMessageUtils.sendConsole(true, "&aWiki: &ehttps://refracdevelopment.gitbook.io/simplegems/");
     }
@@ -26,7 +31,7 @@ public class SimpleGemsAPI {
      * @return Is the SimpleGemsAPI enabled and registered?
      */
     public boolean isRegistered() {
-        return SimpleGems.getInstance() != null;
+        return plugin != null;
     }
 
     /**
@@ -35,7 +40,26 @@ public class SimpleGemsAPI {
      * @return online player's cached profile data
      */
     public ProfileData getProfileData(Player player) {
-        return SimpleGems.getInstance().getProfileManager().getProfile(player.getUniqueId()).getData();
+        return plugin.getProfileManager().getProfile(player.getUniqueId()).getData();
+    }
+
+    /**
+     * Used to get a cached online player's profile data.
+     *
+     * @return offline player's profile data
+     */
+    public ProfileData getProfileData(OfflinePlayer player) {
+        Profile profile = plugin.getProfileManager().getProfile(player.getUniqueId());
+
+        if (profile == null) {
+            plugin.getProfileManager().handleProfileCreation(player.getUniqueId(), player.getName());
+
+            profile = plugin.getProfileManager().getProfile(player.getUniqueId());
+
+            Tasks.runAsync(profile.getData()::load);
+        }
+
+        return profile.getData();
     }
 
     /**
@@ -130,7 +154,6 @@ public class SimpleGemsAPI {
             return;
 
         getProfileData(target).getGems().incrementAmount(amount);
-        Tasks.runAsync(() -> getProfileData(target).save());
     }
 
     /**
@@ -151,7 +174,6 @@ public class SimpleGemsAPI {
             return;
 
         getProfileData(target).getGems().incrementAmount(amount);
-        Tasks.runAsync(() -> getProfileData(target).save());
     }
 
     /**
@@ -181,7 +203,6 @@ public class SimpleGemsAPI {
             return;
 
         getProfileData(target).getGems().decrementAmount(amount);
-        Tasks.runAsync(() -> getProfileData(target).save());
     }
 
     /**
@@ -202,7 +223,6 @@ public class SimpleGemsAPI {
             return;
 
         getProfileData(target).getGems().decrementAmount(amount);
-        Tasks.runAsync(() -> getProfileData(target).save());
     }
 
     /**
@@ -232,7 +252,6 @@ public class SimpleGemsAPI {
             return;
 
         getProfileData(target).getGems().setAmount(amount);
-        Tasks.runAsync(() -> getProfileData(target).save());
     }
 
     /**
@@ -253,7 +272,6 @@ public class SimpleGemsAPI {
             return;
 
         getProfileData(target).getGems().setAmount(amount);
-        Tasks.runAsync(() -> getProfileData(target).save());
     }
 
     /**
@@ -344,7 +362,5 @@ public class SimpleGemsAPI {
             return;
 
         getProfileData(player).getGems().incrementAmount(amount);
-        Tasks.runAsync(() -> getProfileData(player).save());
     }
-
 }

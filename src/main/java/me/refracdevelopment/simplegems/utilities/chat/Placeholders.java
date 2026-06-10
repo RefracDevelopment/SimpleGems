@@ -73,7 +73,7 @@ public class Placeholders {
             placeholders.add("gems_decimal", Methods.formatDecimal(gems));
             placeholders.add("displayname", player.getDisplayName());
         } else {
-            double gems = SimpleGems.getInstance().getGemsAPI().getOfflineGems(sender);
+            double gems = Methods.getOfflineGems(sender);
 
             placeholders.add("player", sender.getName());
             placeholders.add("gems", String.valueOf(gems));

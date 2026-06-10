@@ -71,7 +71,8 @@ public class PlayerListener implements Listener {
         if (SimpleGems.getInstance().getSettings().CHECK_FOR_UPDATES && player.hasPermission(Permissions.GEMS_VERSION_COMMAND)) {
             Tasks.runAsync(() -> {
                 if (SimpleGems.getInstance().updateCheck(false)) {
-                    RyMessageUtils.sendSender(player, "There is an update of <gradient:#8A2387:#E94057:#F27121:0>SimpleGems &ravailable! Download the latest version here:\n&bhttps://github.com/RefracDevelopment/SimpleGems/releases/latest", false);
+                    RyMessageUtils.sendSender(player, "There is an update of <gradient:#8A2387:#E94057:#F27121:0>SimpleGems &ravailable!"
+                            + " Download the latest version here:\n&bhttps://github.com/RefracDevelopment/SimpleGems/releases/latest", false);
                 }
             });
         }
@@ -84,7 +85,8 @@ public class PlayerListener implements Listener {
         if (!event.getMessage().equalsIgnoreCase("/reload confirm"))
             return;
 
-        RyMessageUtils.sendPlayer(player, "&cUse of /reload is not recommended as it can cause issues often cases. Please restart your server when possible.");
+        RyMessageUtils.sendPlayer(player, "&cUse of /reload is not recommended as it can cause issues often cases." +
+                " Please restart your server when possible.");
     }
 
     @EventHandler
@@ -95,13 +97,13 @@ public class PlayerListener implements Listener {
         if (profile == null || profile.getData() == null)
             return;
 
+        Tasks.runAsync(() -> profile.getData().save());
+
         try {
             MenuManager.remove(player);
         } catch (MenuManagerNotSetupException e) {
             RyMessageUtils.sendPluginError("THE MENU MANAGER HAS NOT BEEN CONFIGURED. CALL MENUMANAGER.SETUP()");
         }
-
-        Tasks.runAsync(() -> profile.getData().save());
     }
 
     @EventHandler
@@ -122,7 +124,7 @@ public class PlayerListener implements Listener {
         double foundValue = NBT.get(item, nbt -> (Double) nbt.getDouble("gems-item-value"));
 
         if (foundValue > 0) {
-            gemsItem = SimpleGems.getInstance().getGemsAPI().getGemsItem(player, foundValue);
+            gemsItem = Methods.getGemsItem(player, foundValue);
 
             if (gemsItem == null)
                 return;
@@ -130,7 +132,8 @@ public class PlayerListener implements Listener {
             if (!item.isSimilar(gemsItem))
                 return;
 
-            if (event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.PHYSICAL)
+            if (event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_AIR
+                    || event.getAction() == Action.PHYSICAL)
                 return;
 
             StringPlaceholders placeholders = StringPlaceholders.builder()
@@ -146,9 +149,7 @@ public class PlayerListener implements Listener {
             else
                 item.setAmount(item.getAmount() - 1);
 
-            player.updateInventory();
-
-            SimpleGems.getInstance().getGemsAPI().depositGems(player, foundValue);
+            profile.getData().getGems().incrementAmount(foundValue);
 
             RyMessageUtils.sendPluginMessage(player, "gems-deposited", placeholders);
         }
@@ -167,7 +168,7 @@ public class PlayerListener implements Listener {
         if (itemMeta == null)
             return;
 
-        if (NBT.get(item, nbt -> (boolean) nbt.getBoolean("gems-item-value")))
+        if (NBT.get(item, nbt -> (double) nbt.getDouble("gems-item-value")) != null)
             event.setCancelled(true);
     }
 
@@ -179,7 +180,7 @@ public class PlayerListener implements Listener {
         if (itemMeta == null)
             return;
 
-        if (NBT.get(item, nbt -> (boolean) nbt.getBoolean("gems-item-value")))
+        if (NBT.get(item, nbt -> (double) nbt.getDouble("gems-item-value")) != null)
             event.setCancelled(true);
     }
 }

@@ -1,6 +1,7 @@
 package me.refracdevelopment.simplegems.commands;
 
 import me.refracdevelopment.simplegems.SimpleGems;
+import me.refracdevelopment.simplegems.utilities.Methods;
 import me.refracdevelopment.simplegems.utilities.Permissions;
 import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
 import me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils;
@@ -71,7 +72,7 @@ public class WithdrawCommand extends SubCommand {
             return;
         }
 
-        SimpleGems.getInstance().getGemsAPI().withdrawGems(player, amount);
+        Methods.withdrawGems(player, amount);
     }
 
     @Override

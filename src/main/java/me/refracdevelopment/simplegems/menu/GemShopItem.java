@@ -149,7 +149,8 @@ public class GemShopItem {
             if (api != null)
                 item = new ItemBuilder(api.getItemStack());
             else
-                RyMessageUtils.sendPluginError("&cAn error occurred when trying to set an items adder custom item. Make sure you are typing the correct namespaced id.");
+                RyMessageUtils.sendPluginError("&cAn error occurred when trying to set an items adder custom item." +
+                        " Make sure you are typing the correct namespaced id.");
         }
 
         ItemBuilder finalItem = item;

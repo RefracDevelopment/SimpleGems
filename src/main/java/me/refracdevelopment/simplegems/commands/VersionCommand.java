@@ -43,15 +43,19 @@ public class VersionCommand extends SubCommand {
 
         String baseColor = SimpleGems.getInstance().getLocaleFile().getString("base-command-color");
 
-        RyMessageUtils.sendSender(commandSender, baseColor + "Running <gradient:#8A2387:#E94057:#F27121:0>" + SimpleGems.getInstance().getDescription().getName() + baseColor + " v" + SimpleGems.getInstance().getDescription().getVersion());
-        RyMessageUtils.sendSender(commandSender, baseColor + "Plugin created by: <gradient:#41E0F0:#FF8DCE:0>" + SimpleGems.getInstance().getDescription().getAuthors().get(0));
-        RyMessageUtils.sendPluginMessage(commandSender, "base-command-help", StringPlaceholders.of("cmd", SimpleGems.getInstance().getCommands().GEMS_COMMAND_NAME));
+        RyMessageUtils.sendSender(commandSender, baseColor + "Running <gradient:#8A2387:#E94057:#F27121:0>"
+                + SimpleGems.getInstance().getDescription().getName() + baseColor + " v" + SimpleGems.getInstance().getDescription().getVersion());
+        RyMessageUtils.sendSender(commandSender, baseColor + "Plugin created by: <gradient:#41E0F0:#FF8DCE:0>"
+                + SimpleGems.getInstance().getDescription().getAuthors().getFirst());
+        RyMessageUtils.sendPluginMessage(commandSender, "base-command-help",
+                StringPlaceholders.of("cmd", SimpleGems.getInstance().getCommands().GEMS_COMMAND_NAME));
 
         RyMessageUtils.sendSender(commandSender, " ");
 
         Tasks.runAsync(() -> {
             if (SimpleGems.getInstance().updateCheck(false)) {
-                RyMessageUtils.sendSender(commandSender, "There is an update of <gradient:#8A2387:#E94057:#F27121:0>SimpleGems &ravailable! Download the latest version here:\n&bhttps://github.com/RefracDevelopment/SimpleGems/releases/latest", false);
+                RyMessageUtils.sendSender(commandSender, "There is an update of <gradient:#8A2387:#E94057:#F27121:0>SimpleGems &ravailable!" +
+                        " Download the latest version here:\n&bhttps://github.com/RefracDevelopment/SimpleGems/releases/latest", false);
             }
         });
     }

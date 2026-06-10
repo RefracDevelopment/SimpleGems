@@ -3,7 +3,6 @@ package me.refracdevelopment.simplegems.utilities;
 import com.cryptomorin.xseries.XEnchantment;
 import com.cryptomorin.xseries.XItemFlag;
 import com.cryptomorin.xseries.XMaterial;
-import com.google.common.util.concurrent.AtomicDouble;
 import de.tr7zw.nbtapi.NBT;
 import dev.lone.itemsadder.api.CustomStack;
 import lombok.experimental.UtilityClass;
@@ -16,7 +15,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
@@ -26,60 +24,46 @@ import java.util.Locale;
 @UtilityClass
 public class Methods {
 
-    /**
-     * The #saveOffline method allows you to
-     * save a specified player's data
-     */
-    public void saveOffline(OfflinePlayer player, double amount) {
-        Tasks.runAsync(() -> {
-            switch (SimpleGems.getInstance().getDataType()) {
-                case MYSQL:
-                    SimpleGems.getInstance().getMySQLManager().updatePlayerGems(player.getUniqueId().toString(), amount);
-                    break;
-                default:
-                    SimpleGems.getInstance().getSqLiteManager().updatePlayerGems(player.getUniqueId().toString(), amount);
-                    break;
-            }
-        });
-    }
-
     public void setOfflineGems(OfflinePlayer player, double amount) {
-        saveOffline(player, amount);
+        ProfileData profile = SimpleGems.getInstance().getGemsAPI().getProfileData(player);
+
+        if (profile == null)
+            return;
+
+        profile.getGems().setAmount(amount);
+
+        Tasks.runAsync(profile::save);
     }
 
     public void giveOfflineGems(OfflinePlayer player, double amount) {
-        setOfflineGems(player, getOfflineGems(player) + amount);
+        ProfileData profile = SimpleGems.getInstance().getGemsAPI().getProfileData(player);
+
+        if (profile == null)
+            return;
+
+        profile.getGems().incrementAmount(amount);
+
+        Tasks.runAsync(profile::save);
     }
 
     public void takeOfflineGems(OfflinePlayer player, double amount) {
-        setOfflineGems(player, getOfflineGems(player) - amount);
+        ProfileData profile = SimpleGems.getInstance().getGemsAPI().getProfileData(player);
+
+        if (profile == null)
+            return;
+
+        profile.getGems().decrementAmount(amount);
+
+        Tasks.runAsync(profile::save);
     }
 
     public double getOfflineGems(OfflinePlayer player) {
-        AtomicDouble gems = new AtomicDouble(0);
+        ProfileData profile = SimpleGems.getInstance().getGemsAPI().getProfileData(player);
 
-        switch (SimpleGems.getInstance().getDataType()) {
-            case MYSQL:
-                SimpleGems.getInstance().getMySQLManager().select("SELECT gems FROM SimpleGems WHERE uuid=?", resultSet -> {
-                    try {
-                        if (resultSet.next())
-                            gems.set(resultSet.getDouble("gems"));
-                    } catch (SQLException exception) {
-                        RyMessageUtils.sendConsole(true, exception.getMessage());
-                    }
-                }, player.getUniqueId().toString());
-                return gems.get();
-            default:
-                SimpleGems.getInstance().getSqLiteManager().select("SELECT gems FROM SimpleGems WHERE uuid=?", resultSet -> {
-                    try {
-                        if (resultSet.next())
-                            gems.set(resultSet.getDouble("gems"));
-                    } catch (SQLException exception) {
-                        RyMessageUtils.sendConsole(true, exception.getMessage());
-                    }
-                }, player.getUniqueId().toString());
-                return gems.get();
-        }
+        if (profile == null)
+            return 0.0;
+
+        return profile.getGems().getAmount();
     }
 
     public boolean hasOfflineGems(OfflinePlayer player, double amount) {
@@ -88,6 +72,7 @@ public class Methods {
 
     public void payGems(Player player, Player target, double amount, boolean silent) {
         ProfileData profile = SimpleGems.getInstance().getProfileManager().getProfile(player.getUniqueId()).getData();
+        ProfileData targetProfile = SimpleGems.getInstance().getProfileManager().getProfile(target.getUniqueId()).getData();
 
         if (player == target) {
             RyMessageUtils.sendPluginMessage(player, "cant-pay-yourself");
@@ -97,8 +82,8 @@ public class Methods {
         StringPlaceholders placeholders = StringPlaceholders.builder()
                 .addAll(Placeholders.setPlaceholders(target))
                 .add("gems", String.valueOf(amount))
-                .add("gems_formatted", Methods.format(amount))
-                .add("gems_decimal", Methods.formatDecimal(amount))
+                .add("gems_formatted", format(amount))
+                .add("gems_decimal", formatDecimal(amount))
                 .build();
 
         if (!profile.getGems().hasAmount(amount)) {
@@ -106,8 +91,8 @@ public class Methods {
             return;
         }
 
-        SimpleGems.getInstance().getGemsAPI().takeGems(player, amount);
-        SimpleGems.getInstance().getGemsAPI().giveGems(target, amount);
+        profile.getGems().decrementAmount(amount);
+        targetProfile.getGems().incrementAmount(amount);
 
         RyMessageUtils.sendPluginMessage(player, "gems-paid", placeholders);
 
@@ -124,8 +109,8 @@ public class Methods {
                 .addAll(Placeholders.setOfflinePlaceholders(target))
                 .add("player", target.getName())
                 .add("gems", String.valueOf(amount))
-                .add("gems_formatted", Methods.format(amount))
-                .add("gems_decimal", Methods.formatDecimal(amount))
+                .add("gems_formatted", format(amount))
+                .add("gems_decimal", formatDecimal(amount))
                 .build();
 
         if (!profile.getGems().hasAmount(amount)) {
@@ -133,13 +118,15 @@ public class Methods {
             return;
         }
 
-        SimpleGems.getInstance().getGemsAPI().takeGems(player, amount);
-        SimpleGems.getInstance().getGemsAPI().giveOfflineGems(target, amount);
+        profile.getGems().decrementAmount(amount);
+        giveOfflineGems(target, amount);
 
         RyMessageUtils.sendPluginMessage(player, "gems-paid", placeholders);
     }
 
     public void withdrawGems(Player player, double amount) {
+        ProfileData profile = SimpleGems.getInstance().getProfileManager().getProfile(player.getUniqueId()).getData();
+
         StringPlaceholders placeholders = StringPlaceholders.builder()
                 .addAll(Placeholders.setPlaceholders(player))
                 .add("gems", String.valueOf(amount))
@@ -147,13 +134,13 @@ public class Methods {
                 .add("gems_decimal", Methods.formatDecimal(amount))
                 .build();
 
-        if (!SimpleGems.getInstance().getGemsAPI().hasGems(player, amount)) {
+        if (!profile.getGems().hasAmount(amount)) {
             RyMessageUtils.sendPluginMessage(player, "not-enough-withdraw", placeholders);
             return;
         }
 
-        SimpleGems.getInstance().getGemsAPI().takeGems(player, amount);
-        SimpleGems.getInstance().getGemsAPI().giveGemsItem(player, amount);
+        profile.getGems().decrementAmount(amount);
+        giveGemsItem(player, amount);
 
         RyMessageUtils.sendPluginMessage(player, "gems-withdrawn", placeholders);
     }
@@ -210,15 +197,15 @@ public class Methods {
         finalItem.setName(RyMessageUtils.translate(player, name
                 .replace("%value%", String.valueOf(foundValue))
                 .replace("%gems%", String.valueOf(foundValue))
-                .replace("%gems_formatted%", Methods.format(foundValue))
-                .replace("%gems_decimal%", Methods.formatDecimal(foundValue))
+                .replace("%gems_formatted%", format(foundValue))
+                .replace("%gems_decimal%", formatDecimal(foundValue))
         ));
 
         lore.forEach(line -> finalItem.addLoreLine(RyMessageUtils.translate(player, line
                 .replace("%value%", String.valueOf(foundValue))
                 .replace("%gems%", String.valueOf(foundValue))
-                .replace("%gems_formatted%", Methods.format(foundValue))
-                .replace("%gems_decimal%", Methods.formatDecimal(foundValue))
+                .replace("%gems_formatted%", format(foundValue))
+                .replace("%gems_decimal%", formatDecimal(foundValue))
         )));
 
         return finalItem.toItemStack();

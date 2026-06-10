@@ -2,7 +2,6 @@ package me.refracdevelopment.simplegems;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.tcoded.folialib.FoliaLib;
 import lombok.Getter;
 import lombok.Setter;
 import me.gabytm.util.actions.ActionManager;
@@ -65,7 +64,6 @@ public final class SimpleGems extends JavaPlugin {
 
     // Utilities
     private SimpleGemsAPI gemsAPI;
-    private FoliaLib foliaLib;
     private BukkitAudiences adventure;
 
     @Override
@@ -73,10 +71,9 @@ public final class SimpleGems extends JavaPlugin {
         // Plugin startup logic
         instance = this;
 
-        foliaLib = new FoliaLib(this);
-        adventure = BukkitAudiences.create(this);
-
         DownloadUtil.downloadAndEnable(this);
+
+        adventure = BukkitAudiences.create(this);
 
         loadFiles();
 
@@ -95,9 +92,9 @@ public final class SimpleGems extends JavaPlugin {
         loadListeners();
         loadHooks();
 
-        new Metrics(this, 13117);
-
         Tasks.runAsync(() -> updateCheck(true));
+
+        new Metrics(this, 13117);
     }
 
     @Override
@@ -113,8 +110,6 @@ public final class SimpleGems extends JavaPlugin {
                 this.adventure.close();
                 this.adventure = null;
             }
-
-            getFoliaLib().getScheduler().cancelAllTasks();
         } catch (Exception ignored) {
         }
     }

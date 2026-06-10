@@ -36,7 +36,7 @@ locale: "en_US"
 starting-gems: 100
 
 # Leaderboard update interval in seconds
-leaderboard-update-interval: 600
+leaderboard-update-interval: 3600
 
 # Choose your data saving type:
 # MYSQL/MARIADB - Database saving
@@ -51,11 +51,13 @@ mysql:
   # Default: 3306
   port: "3306"
   # Default: SimpleGems
-  database: "SimpleGems"
+  database: "gems"
   # Default: root
   username: "root"
   # Default:
   password: ""
+  # Default: false
+  use-ssl: false
 
 # Check for updates on join
 # This uses the /gems version command permission

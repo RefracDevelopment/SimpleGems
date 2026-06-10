@@ -2,6 +2,7 @@ package me.refracdevelopment.simplegems.commands;
 
 import com.google.common.base.Joiner;
 import me.refracdevelopment.simplegems.SimpleGems;
+import me.refracdevelopment.simplegems.utilities.Methods;
 import me.refracdevelopment.simplegems.utilities.Permissions;
 import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
 import me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils;
@@ -80,7 +81,7 @@ public class PayCommand extends SubCommand {
                 return;
             }
 
-            SimpleGems.getInstance().getGemsAPI().payGems(player, target.getPlayer(), amount, message.contains("-s"));
+            Methods.payGems(player, target.getPlayer(), amount, message.contains("-s"));
         } else if (target.hasPlayedBefore()) {
             double amount;
 
@@ -96,7 +97,7 @@ public class PayCommand extends SubCommand {
                 return;
             }
 
-            SimpleGems.getInstance().getGemsAPI().payOfflineGems(player, target, amount);
+            Methods.payOfflineGems(player, target, amount);
         } else
             RyMessageUtils.sendPluginMessage(player, "invalid-player");
     }

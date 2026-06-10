@@ -86,7 +86,7 @@ categories:
           enabled: true
           actions:
             - "[console] give %player% stick 1" # gives the player an item from console
-            - "[message] &e%player% bought %item% &efrom &f/gemshop&e." # sends a message to the player
+            - "[broadcast] &e%player% bought %item% &efrom &f/gemshop&e." # sends a message to the player
             - "[close]" # Closes the inventory
         commands:
           - "give %player% stick 1"

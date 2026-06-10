@@ -121,7 +121,7 @@ public class TakeCommand extends SubCommand {
                     .add("gems_decimal", Methods.formatDecimal(amount))
                     .build();
 
-            if (!SimpleGems.getInstance().getGemsAPI().hasOfflineGems(target, amount)) {
+            if (!Methods.hasOfflineGems(target, amount)) {
                 RyMessageUtils.sendPluginMessage(commandSender, "invalid-gems", placeholders);
                 return;
             }

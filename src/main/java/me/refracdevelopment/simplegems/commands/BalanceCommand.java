@@ -52,12 +52,12 @@ public class BalanceCommand extends SubCommand {
             return;
         }
 
-        if (Bukkit.getPlayer(args[1]) != null) {
-            Player target = Bukkit.getPlayer(args[1]);
-            RyMessageUtils.sendPluginMessage(commandSender, "gems-balance", Placeholders.setPlaceholders(target));
-        } else if (Bukkit.getOfflinePlayer(args[1]) != null && Bukkit.getOfflinePlayer(args[0]).hasPlayedBefore()) {
-            OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
-            double amount = SimpleGems.getInstance().getGemsAPI().getOfflineGems(target);
+        OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
+
+        if (target.isOnline()) {
+            RyMessageUtils.sendPluginMessage(commandSender, "gems-balance", Placeholders.setPlaceholders(target.getPlayer()));
+        } else if (target.hasPlayedBefore()) {
+            double amount = Methods.getOfflineGems(target);
 
             StringPlaceholders placeholders = StringPlaceholders.builder()
                     .addAll(Placeholders.setOfflinePlaceholders(target))

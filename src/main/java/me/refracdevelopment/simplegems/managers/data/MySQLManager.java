@@ -41,7 +41,11 @@ public class MySQLManager {
 
             Class.forName("org.mariadb.jdbc.Driver");
             config.setDriverClassName("org.mariadb.jdbc.Driver");
-            config.setJdbcUrl("jdbc:mariadb://" + host + ':' + port + '/' + database);
+
+            String url = "jdbc:mysql://" + host + ":" + port + "/" + database;
+
+            String sslTail = "&useSSL=" + SimpleGems.getInstance().getConfigFile().getBoolean("mysql.use-ssl");
+            config.setJdbcUrl(url + "?autoReconnect=true" + sslTail + "&allowPublicKeyRetrieval=true");
             config.setUsername(username);
             config.setPassword(password);
             config.addDataSourceProperty("cachePrepStmts", "true");
@@ -62,7 +66,7 @@ public class MySQLManager {
     }
 
     public void createTables() {
-        createTable("SimpleGems", "uuid VARCHAR(36) NOT NULL PRIMARY KEY, name VARCHAR(16), gems BIGINT(50)");
+        createTable("SimpleGems", "uuid VARCHAR(36) NOT NULL PRIMARY KEY, name VARCHAR(255), gems BIGINT(50)");
     }
 
     public boolean isInitiated() {
@@ -142,11 +146,7 @@ public class MySQLManager {
         }).start();
     }
 
-    public void updatePlayerGems(String uuid, double gems) {
+    public void updatePlayer(String uuid, double gems) {
         execute("UPDATE SimpleGems SET gems=? WHERE uuid=?", gems, uuid);
-    }
-
-    public void updatePlayerName(String uuid, String name) {
-        execute("UPDATE SimpleGems SET name=? WHERE uuid=?", name, uuid);
     }
 }
