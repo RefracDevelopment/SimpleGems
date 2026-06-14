@@ -168,7 +168,7 @@ public class PlayerListener implements Listener {
         if (itemMeta == null)
             return;
 
-        if (NBT.get(item, nbt -> (double) nbt.getDouble("gems-item-value")) != null)
+        if (NBT.get(item, nbt -> (boolean) nbt.getBoolean("gems-item-value")))
             event.setCancelled(true);
     }
 
@@ -180,7 +180,7 @@ public class PlayerListener implements Listener {
         if (itemMeta == null)
             return;
 
-        if (NBT.get(item, nbt -> (double) nbt.getDouble("gems-item-value")) != null)
+        if (NBT.get(item, nbt -> (boolean) nbt.getBoolean("gems-item-value")))
             event.setCancelled(true);
     }
 }
