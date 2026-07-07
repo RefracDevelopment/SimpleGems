@@ -50,10 +50,10 @@ public class ProfileData {
     public void save() {
         switch (getPlugin().getDataType()) {
             case MYSQL:
-                getPlugin().getMySQLManager().updatePlayer(uuid.toString(), getGems().getAmount());
+                getPlugin().getMySQLManager().updatePlayer(uuid.toString(), name, getGems().getAmount());
                 break;
             case SQLITE:
-                getPlugin().getSqLiteManager().updatePlayer(uuid.toString(), getGems().getAmount());
+                getPlugin().getSqLiteManager().updatePlayer(uuid.toString(), name, getGems().getAmount());
                 break;
         }
     }

@@ -94,6 +94,9 @@ public class Methods {
         profile.getGems().decrementAmount(amount);
         targetProfile.getGems().incrementAmount(amount);
 
+        Tasks.runAsync(profile::save);
+        Tasks.runAsync(targetProfile::save);
+
         RyMessageUtils.sendPluginMessage(player, "gems-paid", placeholders);
 
         if (silent)
@@ -121,6 +124,8 @@ public class Methods {
         profile.getGems().decrementAmount(amount);
         giveOfflineGems(target, amount);
 
+        Tasks.runAsync(profile::save);
+
         RyMessageUtils.sendPluginMessage(player, "gems-paid", placeholders);
     }
 
@@ -142,6 +147,8 @@ public class Methods {
         profile.getGems().decrementAmount(amount);
         giveGemsItem(player, amount);
 
+        Tasks.runAsync(profile::save);
+
         RyMessageUtils.sendPluginMessage(player, "gems-withdrawn", placeholders);
     }
 
@@ -154,7 +161,6 @@ public class Methods {
         }
 
         player.getInventory().addItem(gemsItem);
-        player.updateInventory();
     }
 
     public ItemStack getGemsItem(Player player, double amount) {

@@ -146,7 +146,7 @@ public class MySQLManager {
         }).start();
     }
 
-    public void updatePlayer(String uuid, double gems) {
-        execute("UPDATE SimpleGems SET gems=? WHERE uuid=?", gems, uuid);
+    public void updatePlayer(String uuid, String name, double gems) {
+        execute("UPDATE SimpleGems SET name=?, gems=? WHERE uuid=?", name, gems, uuid);
     }
 }

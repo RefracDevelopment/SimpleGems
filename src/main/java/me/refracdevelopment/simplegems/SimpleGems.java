@@ -253,13 +253,18 @@ public final class SimpleGems extends JavaPlugin {
     public boolean updateCheck(boolean sendMessages) {
         try {
             String urlString = "https://refracdev-updatecheck.refracdev.workers.dev/";
-            URL url = URI.create(urlString).toURL();
+            URL url = new URL(urlString);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
             connection.setRequestProperty("User-Agent", "Mozilla/5.0");
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            JsonObject object = JsonParser.parseReader(reader).getAsJsonObject();
+            String input;
+            StringBuilder response = new StringBuilder();
+            while ((input = reader.readLine()) != null) {
+                response.append(input);
+            }
             reader.close();
+            JsonObject object = new JsonParser().parse(response.toString()).getAsJsonObject();
 
             if (object.has("plugins")) {
                 JsonObject plugins = object.get("plugins").getAsJsonObject();

@@ -51,15 +51,21 @@ public class SimpleGemsAPI {
     public ProfileData getProfileData(OfflinePlayer player) {
         Profile profile = plugin.getProfileManager().getProfile(player.getUniqueId());
 
-        if (profile == null) {
+        if (profile == null && player.hasPlayedBefore()) {
             plugin.getProfileManager().handleProfileCreation(player.getUniqueId(), player.getName());
 
             profile = plugin.getProfileManager().getProfile(player.getUniqueId());
 
-            Tasks.runAsync(profile.getData()::load);
+            Profile finalProfile = profile;
+
+            if (finalProfile != null)
+                Tasks.runAsync(() -> finalProfile.getData().load());
         }
 
-        return profile.getData();
+        if (profile.getData() != null)
+            return profile.getData();
+
+        return null;
     }
 
     /**
@@ -154,6 +160,8 @@ public class SimpleGemsAPI {
             return;
 
         getProfileData(target).getGems().incrementAmount(amount);
+
+        Tasks.runAsync(() -> getProfileData(target).save());
     }
 
     /**
@@ -174,6 +182,8 @@ public class SimpleGemsAPI {
             return;
 
         getProfileData(target).getGems().incrementAmount(amount);
+
+        Tasks.runAsync(() -> getProfileData(target).save());
     }
 
     /**
@@ -203,6 +213,8 @@ public class SimpleGemsAPI {
             return;
 
         getProfileData(target).getGems().decrementAmount(amount);
+
+        Tasks.runAsync(() -> getProfileData(target).save());
     }
 
     /**
@@ -223,6 +235,8 @@ public class SimpleGemsAPI {
             return;
 
         getProfileData(target).getGems().decrementAmount(amount);
+
+        Tasks.runAsync(() -> getProfileData(target).save());
     }
 
     /**
@@ -252,6 +266,8 @@ public class SimpleGemsAPI {
             return;
 
         getProfileData(target).getGems().setAmount(amount);
+
+        Tasks.runAsync(() -> getProfileData(target).save());
     }
 
     /**
@@ -272,6 +288,8 @@ public class SimpleGemsAPI {
             return;
 
         getProfileData(target).getGems().setAmount(amount);
+
+        Tasks.runAsync(() -> getProfileData(target).save());
     }
 
     /**
@@ -362,5 +380,6 @@ public class SimpleGemsAPI {
             return;
 
         getProfileData(player).getGems().incrementAmount(amount);
+        Tasks.runAsync(() -> getProfileData(player).save());
     }
 }
