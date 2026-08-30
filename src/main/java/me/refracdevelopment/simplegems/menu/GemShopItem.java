@@ -8,11 +8,14 @@ import dev.lone.itemsadder.api.CustomStack;
 import lombok.Data;
 import me.arcaniax.hdb.api.HeadDatabaseAPI;
 import me.refracdevelopment.simplegems.SimpleGems;
+import me.refracdevelopment.simplegems.menu.utilities.ConfirmationMenu;
 import me.refracdevelopment.simplegems.utilities.ItemBuilder;
 import me.refracdevelopment.simplegems.utilities.Methods;
 import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
 import me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils;
 import me.refracdevelopment.simplegems.utilities.chat.StringPlaceholders;
+import me.refracdevelopment.simplegems.utilities.exceptions.MenuManagerNotSetupException;
+import me.refracdevelopment.simplegems.utilities.menu.MenuManager;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -27,20 +30,23 @@ public class GemShopItem {
 
     private String material;
     private String skullOwner, name, permission;
-    private boolean skulls, headDatabase, messageEnabled, broadcastMessage, customData, glow, action, buyable, itemsAdder;
+    private boolean skulls, headDatabase, messageEnabled, broadcastMessage, customData, glow, action, buyable, itemsAdder, openConfirmMenu;
     private int durability, slot, customModelData, amount;
     private List<String> lore, actions, commands, messages;
     private double cost;
 
-    public GemShopItem(String category, String item) {
+    public GemShopItem(String category, String item, boolean confirmationItem) {
         this.category = category;
         this.item = item;
 
-        setupMenuItemData();
+        setupMenuItemData(confirmationItem);
     }
 
-    private void setupMenuItemData() {
+    private void setupMenuItemData(boolean confirmationItem) {
         ConfigurationSection section = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES;
+
+        if (confirmationItem)
+            section = SimpleGems.getInstance().getMenusFile();
 
         this.material = section.getString(getCategory() + ".items." + getItem() + ".material");
         this.durability = section.getInt(getCategory() + ".items." + getItem() + ".durability");
@@ -93,6 +99,11 @@ public class GemShopItem {
             this.itemsAdder = section.getBoolean(getCategory() + ".items." + getItem() + ".itemsAdder", false);
         else
             this.itemsAdder = false;
+
+        if (section.get(getCategory() + ".openConfirmMenu") != null)
+            this.openConfirmMenu = section.getBoolean(getCategory() + ".openConfirmMenu", true);
+        else
+            this.openConfirmMenu = true;
     }
 
     public void sendMessage(Player player) {
@@ -181,7 +192,7 @@ public class GemShopItem {
      * Handles an item's parameters such as whether to
      * open a category or purchase an item.
      */
-    public void handleItem(Player player) {
+    public void handleItem(Player player, boolean confirmed, boolean cancelled) {
         StringPlaceholders placeholders = StringPlaceholders.builder()
                 .addAll(Placeholders.setPlaceholders(player))
                 .add("item", getName())
@@ -201,7 +212,26 @@ public class GemShopItem {
                 return;
             }
 
+            if (openConfirmMenu && !confirmed && !cancelled) {
+                try {
+                    ConfirmationMenu confirmationMenu = new ConfirmationMenu(MenuManager.getPlayerMenuUtil(player), this);
+                    confirmationMenu.open();
+                } catch (MenuManagerNotSetupException e) {
+                    RyMessageUtils.sendPluginError("THE MENU MANAGER HAS NOT BEEN CONFIGURED. CALL MENUMANAGER.SETUP()");
+                }
+                return;
+            }
+
+            if (openConfirmMenu && cancelled) {
+                player.closeInventory();
+                RyMessageUtils.sendPluginMessage(player, "purchase-cancelled");
+                return;
+            }
+
             SimpleGems.getInstance().getGemsAPI().takeGems(player, getCost());
+
+            if (openConfirmMenu && confirmed)
+                RyMessageUtils.sendPluginMessage(player, "purchase-confirmed");
         }
 
         if (isAction()) {

@@ -41,7 +41,7 @@ public class GemShopCategory extends Menu {
 
         SimpleGems.getInstance().getGemShop().getItems(categoryName).forEach(item -> {
             if (item.getCategory().equalsIgnoreCase(categoryName) && item.getSlot() == event.getRawSlot())
-                item.handleItem(playerMenuUtil.getOwner());
+                item.handleItem(playerMenuUtil.getOwner(), false, false);
         });
     }
 

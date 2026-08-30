@@ -3,7 +3,7 @@
 # Plugin Message Prefix
 prefix: '<gradient:#8A2387:#E94057:#F27121:0>SimpleGems &8| &r'
 
-# Generic Command Messages
+# Generic Messages
 no-permission: '&cYou don''t have permission for that!'
 no-console: '&cOnly players may execute this command.'
 unknown-command: 'Unknown command, use &d/%cmd%&f help for more info'
@@ -12,6 +12,8 @@ leaderboard-update: '&eThe leaderboard has been updated.'
 invalid-gems: '&cThat player doesn''t have enough gems to take.'
 invalid-number: '&cYou provided an invalid or negative number.'
 invalid-category: '&cYou provided a shop category that doesn''t exist.'
+purchase-cancelled: '&cYou''re purchase has been cancelled.'
+purchase-confirmed: '&aYou''re purchase has been confirmed.'
 
 # Kick Messages
 kick-messages-error: '&cERROR: Profile returned null.'

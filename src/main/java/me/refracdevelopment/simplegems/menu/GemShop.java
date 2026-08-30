@@ -26,14 +26,25 @@ public class GemShop {
         List<GemShopItem> items = new ArrayList<>();
 
         ConfigurationSection section = SimpleGems.getInstance().getMenus().GEM_SHOP_CATEGORIES;
+        ConfigurationSection confirmationSection = SimpleGems.getInstance().getMenus().CONFIRMATION_MENU;
 
         section.getKeys(false).forEach(gemShopCategory -> {
             ConfigurationSection category = section.getConfigurationSection(gemShopCategory + ".items");
 
             if (category != null) {
-                category.getKeys(false).forEach(item -> items.add(new GemShopItem(gemShopCategory, item)));
+                category.getKeys(false).forEach(item -> items.add(new GemShopItem(gemShopCategory, item, false)));
 
                 categories.put(gemShopCategory, items);
+            }
+        });
+
+        confirmationSection.getKeys(false).forEach(confirmation -> {
+            ConfigurationSection configItems = confirmationSection.getConfigurationSection("items");
+
+            if (configItems != null) {
+                configItems.getKeys(false).forEach(item -> items.add(new GemShopItem("confirmation-menu", item, true)));
+
+                categories.put("confirmation-menu", items);
             }
         });
     }

@@ -35,6 +35,8 @@ categories:
     # if you want only certain people
     # to be able to access this menu
     permission: ""
+    # Should a confirmation screen appear when purchasing items from the gems shop?
+    openConfirmMenu: true
     fill:
       enabled: true
       material: "BLACK_STAINED_GLASS_PANE"
@@ -93,3 +95,43 @@ categories:
         cost: 1
         slot: 10
         amount: 1
+
+confirmation-menu:
+  title: "&8Confirmation Menu"
+  size: 27
+  fill:
+    enabled: true
+    material: "BLACK_STAINED_GLASS_PANE"
+    durability: 0
+    name: "&7"
+  items:
+    confirm:
+      material: "EMERALD_BLOCK"
+      durability: 0
+      skulls: false
+      headDatabase: false
+      skullOwner: ""
+      customData: false
+      customModelData: "YOURIDHERE"
+      name: "&a&lCONFIRM PURCHASE"
+      lore:
+        - "&aClick to confirm purchase."
+      # Set to false so the menu knows this is not a buyable item
+      buyable: false
+      slot: 12
+      amount: 1
+    cancel:
+      material: "REDSTONE_BLOCK"
+      durability: 0
+      skulls: false
+      headDatabase: false
+      skullOwner: ""
+      customData: false
+      customModelData: "YOURIDHERE"
+      name: "&c&lCANCEL PURCHASE"
+      lore:
+        - "&cClick to cancel purchase."
+      # Set to false so the menu knows this is not a buyable item
+      buyable: false
+      slot: 12
+      amount: 1

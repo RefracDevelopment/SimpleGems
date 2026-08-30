@@ -6,13 +6,13 @@
 
     <groupId>me.refracdevelopment</groupId>
     <artifactId>SimpleGems</artifactId>
-    <version>26.7.1</version>
+    <version>26.9.0</version>
     <packaging>jar</packaging>
 
     <name>SimpleGems</name>
 
     <properties>
-        <java.version>25</java.version>
+        <java.version>17</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
