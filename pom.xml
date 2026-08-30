@@ -188,7 +188,7 @@
         <dependency>
             <groupId>org.mariadb.jdbc</groupId>
             <artifactId>mariadb-java-client</artifactId>
-            <version>3.5.9</version>
+            <version>3.5.10</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -200,7 +200,7 @@
         <dependency>
             <groupId>org.xerial</groupId>
             <artifactId>sqlite-jdbc</artifactId>
-            <version>3.53.2.0</version>
+            <version>3.53.2.1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -230,7 +230,7 @@
         <dependency>
             <groupId>de.tr7zw</groupId>
             <artifactId>item-nbt-api-plugin</artifactId>
-            <version>2.15.7</version>
+            <version>2.16.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
