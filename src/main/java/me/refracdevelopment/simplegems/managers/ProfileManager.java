@@ -50,7 +50,8 @@ public class ProfileManager {
             profileData.save();
         }
 
-        RyMessageUtils.broadcast(SimpleGems.getInstance().getLocaleFile().getString("auto-saving"));
+        if (SimpleGems.getInstance().getSettings().SHOULD_BROADCAST_AUTO_SAVING)
+            RyMessageUtils.broadcast(SimpleGems.getInstance().getLocaleFile().getString("auto-saving"));
     }
 
     public void saveTask() {
