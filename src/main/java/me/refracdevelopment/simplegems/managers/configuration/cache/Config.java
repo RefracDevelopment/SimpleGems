@@ -11,6 +11,7 @@ public class Config {
     public long LEADERBOARD_UPDATE_INTERVAL;
     public String DATA_TYPE;
     public boolean CHECK_FOR_UPDATES;
+    public long AUTO_SAVING_INTERVAL;
 
     // Top
     public String GEMS_TOP_TITLE;
@@ -38,6 +39,7 @@ public class Config {
         LEADERBOARD_UPDATE_INTERVAL = SimpleGems.getInstance().getConfigFile().getLong("leaderboard-update-interval");
         DATA_TYPE = SimpleGems.getInstance().getConfigFile().getString("data-type");
         CHECK_FOR_UPDATES = SimpleGems.getInstance().getConfigFile().getBoolean("check-for-updates");
+        AUTO_SAVING_INTERVAL = SimpleGems.getInstance().getConfigFile().getLong("auto-saving-interval");
 
         // Top
         GEMS_TOP_TITLE = SimpleGems.getInstance().getConfigFile().getString("gems-top.title");

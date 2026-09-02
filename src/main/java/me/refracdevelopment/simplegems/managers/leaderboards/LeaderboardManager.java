@@ -13,9 +13,11 @@ import java.util.*;
 @Data
 public class LeaderboardManager {
 
+    private SimpleGems plugin;
     private Map<String, Double> cachedMap;
 
     public LeaderboardManager() {
+        plugin = SimpleGems.getInstance();
         cachedMap = new LinkedHashMap<>();
 
         update();
@@ -25,6 +27,12 @@ public class LeaderboardManager {
     }
 
     private void load() {
+        if (plugin.getMySQLManager() == null || plugin.getSqLiteManager() == null)
+            return;
+
+        if (!plugin.getMySQLManager().isInitiated() && !plugin.getSqLiteManager().isInitiated())
+            return;
+
         cachedMap.clear();
 
         switch (SimpleGems.getInstance().getDataType()) {
@@ -109,9 +117,9 @@ public class LeaderboardManager {
         try {
             Tasks.runAsyncTimer(this::load, SimpleGems.getInstance().getSettings().LEADERBOARD_UPDATE_INTERVAL*20L,
                     SimpleGems.getInstance().getSettings().LEADERBOARD_UPDATE_INTERVAL*20L);
-        } catch (Throwable throwable) {
+        } catch (Exception exception) {
             RyMessageUtils.sendConsole(true, "An error occurred while updating the leaderboard.");
-            throwable.printStackTrace();
+            exception.printStackTrace();
         }
     }
 }

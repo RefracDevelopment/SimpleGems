@@ -48,7 +48,7 @@ public class SQLiteManager {
     }
 
     private void createTables() {
-        createTable("SimpleGems", "uuid VARCHAR(36) NOT NULL PRIMARY KEY, name VARCHAR(255), gems BIGINT(50)");
+        createTable("SimpleGems", "uuid VARCHAR(36) NOT NULL PRIMARY KEY, name VARCHAR(255), gems BIGINT(255)");
     }
 
     public boolean isInitiated() {
@@ -86,6 +86,7 @@ public class SQLiteManager {
         new Thread(() -> {
             try (Connection resource = getConnection(); PreparedStatement statement = resource.prepareStatement("CREATE TABLE IF NOT EXISTS " + name + "(" + info + ");")) {
                 statement.execute();
+                statement.closeOnCompletion();
             } catch (SQLException exception) {
                 RyMessageUtils.sendConsole(true, "An error occurred while creating database table " + name + ".");
                 exception.printStackTrace();
@@ -106,6 +107,7 @@ public class SQLiteManager {
                     statement.setObject((i + 1), values[i]);
 
                 statement.execute();
+                statement.closeOnCompletion();
             } catch (SQLException exception) {
                 RyMessageUtils.sendConsole(true, "An error occurred while executing an update on the database.");
                 RyMessageUtils.sendConsole(true, "SQLite#execute : " + query);
@@ -128,6 +130,7 @@ public class SQLiteManager {
                     statement.setObject((i + 1), values[i]);
 
                 callback.call(statement.executeQuery());
+                statement.closeOnCompletion();
             } catch (SQLException exception) {
                 RyMessageUtils.sendConsole(true, "An error occurred while executing a query on the database.");
                 RyMessageUtils.sendConsole(true, "SQLite#select : " + query);

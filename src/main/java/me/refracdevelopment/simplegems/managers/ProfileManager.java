@@ -1,8 +1,11 @@
 package me.refracdevelopment.simplegems.managers;
 
 import lombok.Data;
+import me.refracdevelopment.simplegems.SimpleGems;
 import me.refracdevelopment.simplegems.player.Profile;
+import me.refracdevelopment.simplegems.player.data.ProfileData;
 import me.refracdevelopment.simplegems.utilities.Tasks;
+import me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -39,5 +42,19 @@ public class ProfileManager {
             return this.profiles.values().stream().filter(profile -> profile.getPlayerName().equalsIgnoreCase(object.toString())).findFirst().orElse(null);
 
         return null;
+    }
+
+    public void saveAllProfiles() {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            ProfileData profileData = getProfile(player.getUniqueId()).getData();
+            profileData.save();
+        }
+
+        RyMessageUtils.broadcast(SimpleGems.getInstance().getLocaleFile().getString("auto-saving"));
+    }
+
+    public void saveTask() {
+        Tasks.runAsyncTimer(this::saveAllProfiles, SimpleGems.getInstance().getSettings().AUTO_SAVING_INTERVAL*20L,
+                SimpleGems.getInstance().getSettings().AUTO_SAVING_INTERVAL*20L);
     }
 }

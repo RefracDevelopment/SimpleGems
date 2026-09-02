@@ -37,13 +37,10 @@ public class MySQLManager {
 
     public Exception connect() {
         try {
-            HikariConfig config = new HikariConfig();
-
             Class.forName("org.mariadb.jdbc.Driver");
+            HikariConfig config = new HikariConfig();
             config.setDriverClassName("org.mariadb.jdbc.Driver");
-
-            String url = "jdbc:mysql://" + host + ":" + port + "/" + database;
-
+            String url = "jdbc:mariadb://" + host + ":" + port + "/" + database;
             String sslTail = "&useSSL=" + SimpleGems.getInstance().getConfigFile().getBoolean("mysql.use-ssl");
             config.setJdbcUrl(url + "?autoReconnect=true" + sslTail + "&allowPublicKeyRetrieval=true");
             config.setUsername(username);
@@ -51,7 +48,6 @@ public class MySQLManager {
             config.addDataSourceProperty("cachePrepStmts", "true");
             config.addDataSourceProperty("prepStmtCacheSize", "250");
             config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
-
             hikariDataSource = new HikariDataSource(config);
         } catch (Exception exception) {
             hikariDataSource = null;
@@ -66,7 +62,7 @@ public class MySQLManager {
     }
 
     public void createTables() {
-        createTable("SimpleGems", "uuid VARCHAR(36) NOT NULL PRIMARY KEY, name VARCHAR(255), gems BIGINT(50)");
+        createTable("SimpleGems", "uuid VARCHAR(36) NOT NULL PRIMARY KEY, name VARCHAR(255), gems BIGINT(255)");
     }
 
     public boolean isInitiated() {
@@ -96,6 +92,7 @@ public class MySQLManager {
         new Thread(() -> {
             try (Connection resource = getConnection(); PreparedStatement statement = resource.prepareStatement("CREATE TABLE IF NOT EXISTS " + name + "(" + info + ");")) {
                 statement.execute();
+                statement.closeOnCompletion();
             } catch (SQLException exception) {
                 RyMessageUtils.sendConsole(true, "An error occurred while creating database table " + name + ".");
                 exception.printStackTrace();
@@ -116,6 +113,7 @@ public class MySQLManager {
                     statement.setObject((i + 1), values[i]);
 
                 statement.execute();
+                statement.closeOnCompletion();
             } catch (SQLException exception) {
                 RyMessageUtils.sendConsole(true, "An error occurred while executing an update on the database.");
                 RyMessageUtils.sendConsole(true, "MySQL#execute : " + query);
@@ -138,6 +136,7 @@ public class MySQLManager {
                     statement.setObject((i + 1), values[i]);
 
                 callback.call(statement.executeQuery());
+                statement.closeOnCompletion();
             } catch (SQLException exception) {
                 RyMessageUtils.sendConsole(true, "An error occurred while executing a query on the database.");
                 RyMessageUtils.sendConsole(true, "MySQL#select : " + query);

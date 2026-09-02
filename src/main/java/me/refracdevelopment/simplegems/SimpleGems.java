@@ -94,6 +94,8 @@ public final class SimpleGems extends JavaPlugin {
 
         Tasks.runAsync(() -> updateCheck(true));
 
+        profileManager.saveTask();
+
         new Metrics(this, 13117);
     }
 
@@ -101,6 +103,8 @@ public final class SimpleGems extends JavaPlugin {
     public void onDisable() {
         // Plugin shutdown logic
         try {
+            profileManager.saveAllProfiles();
+
             if (dataType == DataType.MYSQL)
                 mySQLManager.shutdown();
             else if (dataType == DataType.SQLITE)
@@ -110,7 +114,10 @@ public final class SimpleGems extends JavaPlugin {
                 this.adventure.close();
                 this.adventure = null;
             }
-        } catch (Exception ignored) {
+
+            getServer().getScheduler().cancelTasks(this);
+        } catch (Exception exception) {
+            exception.printStackTrace();
         }
     }
 

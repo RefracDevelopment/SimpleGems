@@ -17,6 +17,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.*;
+import org.bukkit.event.server.ServerCommandEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -81,12 +82,12 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onReload(PlayerCommandPreprocessEvent event) {
         Player player = event.getPlayer();
+        String msg = event.getMessage().toLowerCase();
 
-        if (!event.getMessage().equalsIgnoreCase("/reload confirm"))
-            return;
-
-        RyMessageUtils.sendPlayer(player, "&cUse of /reload is not recommended as it can cause issues often cases." +
-                " Please restart your server when possible.");
+        if (msg.startsWith("/reload") || msg.startsWith("/rl") || msg.startsWith("/bukkit:reload")) {
+            RyMessageUtils.sendPlayer(player, "&cUse of /reload is not recommended as it can cause issues often cases.");
+            RyMessageUtils.sendPlayer(player, "&cPlease restart your server when possible.");
+        }
     }
 
     @EventHandler
@@ -182,5 +183,15 @@ public class PlayerListener implements Listener {
 
         if (NBT.get(item, nbt -> (boolean) nbt.getBoolean("gems-item-value")))
             event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onServerReload(ServerCommandEvent event) {
+        String msg = event.getCommand().toLowerCase();
+
+        if (msg.startsWith("reload") || msg.startsWith("rl") || msg.startsWith("bukkit:reload")) {
+            RyMessageUtils.sendConsole(true, "&cUse of /reload is not recommended as it can cause issues often cases.");
+            RyMessageUtils.sendConsole(true, "&cPlease restart your server when possible.");
+        }
     }
 }

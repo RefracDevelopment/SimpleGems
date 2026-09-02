@@ -35,8 +35,14 @@ locale: "en_US"
 # Default: 100
 starting-gems: 100
 
-# Leaderboard update interval in seconds
+# Leaderboard update interval in seconds (Default is 30 minutes)
 leaderboard-update-interval: 3600
+
+# Auto save player data interval in seconds (Default is 30 minutes)
+auto-saving-interval: 3600
+
+# Should the "All player data has been saved" message be sent?
+broadcast-auto-saving: true
 
 # Choose your data saving type:
 # MYSQL/MARIADB - Database saving

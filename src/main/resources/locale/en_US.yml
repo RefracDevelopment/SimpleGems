@@ -14,6 +14,7 @@ invalid-number: '&cYou provided an invalid or negative number.'
 invalid-category: '&cYou provided a shop category that doesn''t exist.'
 purchase-cancelled: '&cYou''re purchase has been cancelled.'
 purchase-confirmed: '&aYou''re purchase has been confirmed.'
+auto-saving: '&eAll player data has been saved.'
 
 # Kick Messages
 kick-messages-error: '&cERROR: Profile returned null.'
