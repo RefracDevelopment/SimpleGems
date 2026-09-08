@@ -118,7 +118,7 @@ confirmation-menu:
         - "&aClick to confirm purchase."
       # Set to false so the menu knows this is not a buyable item
       buyable: false
-      slot: 12
+      slot: 11
       amount: 1
     cancel:
       material: "REDSTONE_BLOCK"
@@ -133,5 +133,5 @@ confirmation-menu:
         - "&cClick to cancel purchase."
       # Set to false so the menu knows this is not a buyable item
       buyable: false
-      slot: 12
+      slot: 15
       amount: 1
