@@ -40,14 +40,18 @@ public class ConfirmationMenu extends Menu {
     public void handleMenu(InventoryClickEvent event) {
         event.setCancelled(true);
 
-        SimpleGems.getInstance().getGemShop().getItems(getConfigName()).forEach(item -> {
+        for (GemShopItem item : SimpleGems.getInstance().getGemShop().getItems(getConfigName())) {
             if (item.getCategory().equalsIgnoreCase(getConfigName()) && item.getSlot() == event.getRawSlot()) {
-                if (item.getItem().equalsIgnoreCase("confirm"))
+                if (item.getItem().equalsIgnoreCase("confirm")) {
                     gemShopItem.handleItem(player, true, false);
-                else if (item.getItem().equalsIgnoreCase("cancel"))
+                    break;
+                }
+                else if (item.getItem().equalsIgnoreCase("cancel")) {
                     gemShopItem.handleItem(player, false, true);
+                    break;
+                }
             }
-        });
+        }
     }
 
     @Override
