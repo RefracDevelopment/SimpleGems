@@ -27,16 +27,13 @@ public class LeaderboardManager {
     }
 
     private void load() {
-        if (plugin.getMySQLManager() == null || plugin.getSqLiteManager() == null)
-            return;
-
-        if (!plugin.getMySQLManager().isInitiated() && !plugin.getSqLiteManager().isInitiated())
-            return;
-
         cachedMap.clear();
 
         switch (SimpleGems.getInstance().getDataType()) {
             case MYSQL:
+                if (plugin.getMySQLManager() == null)
+                    return;
+
                 SimpleGems.getInstance().getMySQLManager().select("SELECT * FROM SimpleGems ORDER BY gems DESC", resultSet -> {
                     while (resultSet.next()) {
                         String name = resultSet.getString("name");
@@ -47,6 +44,9 @@ public class LeaderboardManager {
                 });
                 break;
             case SQLITE:
+                if (plugin.getSqLiteManager() == null)
+                    return;
+
                 SimpleGems.getInstance().getSqLiteManager().select("SELECT * FROM SimpleGems ORDER BY gems DESC", resultSet -> {
                     while (resultSet.next()) {
                         String name = resultSet.getString("name");
