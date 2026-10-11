@@ -25,11 +25,11 @@ jobs:
           mvn clean install -B
           echo "PROJECT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
 
-      - name: Upload JAR Artifact
+      - name: Upload Spigot JAR Artifact
         uses: actions/upload-artifact@v7
         with:
-          name: SimpleGems-${{ env.PROJECT_VERSION }}
-          path: '**/target/SimpleGems-${{ env.PROJECT_VERSION }}.jar'
+          name: SimpleGems
+          path: '**/target/'
 
       - name: Create Release
         uses: ncipollo/release-action@v1
