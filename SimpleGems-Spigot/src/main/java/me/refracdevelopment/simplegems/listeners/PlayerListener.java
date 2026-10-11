@@ -1,0 +1,197 @@
+package me.refracdevelopment.simplegems.listeners;
+
+import de.tr7zw.nbtapi.NBT;
+import me.refracdevelopment.simplegems.SimpleGems;
+import me.refracdevelopment.simplegems.player.Profile;
+import me.refracdevelopment.simplegems.utilities.Methods;
+import me.refracdevelopment.simplegems.utilities.Permissions;
+import me.refracdevelopment.simplegems.utilities.Tasks;
+import me.refracdevelopment.simplegems.utilities.chat.Placeholders;
+import me.refracdevelopment.simplegems.utilities.chat.RyMessageUtils;
+import me.refracdevelopment.simplegems.utilities.chat.StringPlaceholders;
+import me.refracdevelopment.simplegems.utilities.exceptions.MenuManagerNotSetupException;
+import me.refracdevelopment.simplegems.utilities.menu.MenuManager;
+import org.bukkit.entity.ItemFrame;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.player.*;
+import org.bukkit.event.server.ServerCommandEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
+public class PlayerListener implements Listener {
+
+    @EventHandler
+    public void onLogin(AsyncPlayerPreLoginEvent event) {
+        SimpleGems.getInstance().getProfileManager().handleProfileCreation(event.getUniqueId(), event.getName());
+
+        Profile profile = SimpleGems.getInstance().getProfileManager().getProfile(event.getUniqueId());
+
+        profile.getData().load();
+    }
+
+    @EventHandler
+    public void handlePlayerLogin(PlayerLoginEvent event) {
+        Player player = event.getPlayer();
+
+        Profile profile = SimpleGems.getInstance().getProfileManager().getProfile(player.getUniqueId());
+
+        if (profile == null || profile.getData() == null) {
+            RyMessageUtils.sendConsole(true, "Profile " + player.getName() + " has returned null, attempting to load data again");
+
+            SimpleGems.getInstance().getProfileManager().handleProfileCreation(player.getUniqueId(), player.getName());
+            RyMessageUtils.sendConsole(true, "Profile created for " + player.getName() + " (" + player.getUniqueId() + ")");
+
+            Profile newProfile = SimpleGems.getInstance().getProfileManager().getProfile(player.getUniqueId());
+
+            Tasks.runAsync(() -> newProfile.getData().load());
+            RyMessageUtils.sendConsole(true, "Data loaded for " + player.getName() + " (" + player.getUniqueId() + ")");
+        }
+    }
+
+    @EventHandler
+    public void onJoin(PlayerJoinEvent event) {
+        Player player = event.getPlayer();
+
+        Profile profile = SimpleGems.getInstance().getProfileManager().getProfile(player.getUniqueId());
+
+        if (profile == null || profile.getData() == null) {
+            player.kickPlayer(RyMessageUtils.translate(player, SimpleGems.getInstance().getLocaleFile().getString("kick-messages-error")));
+            RyMessageUtils.sendConsole(true, "Player " + player.getName() + " (" + player.getUniqueId() + ") was not able to join due to: profile not found.");
+            return;
+        }
+
+        if (!player.hasPlayedBefore() && SimpleGems.getInstance().getSettings().STARTING_GEMS > 0) {
+            SimpleGems.getInstance().getGemsAPI().giveGems(player, SimpleGems.getInstance().getSettings().STARTING_GEMS);
+            RyMessageUtils.sendPluginMessage(player, "starting-gems-received",
+                    StringPlaceholders.of("gems_formatted", SimpleGems.getInstance().getSettings().STARTING_GEMS));
+        }
+
+        if (SimpleGems.getInstance().getSettings().CHECK_FOR_UPDATES && player.hasPermission(Permissions.GEMS_VERSION_COMMAND)) {
+            Tasks.runAsync(() -> {
+                if (SimpleGems.getInstance().updateCheck(false)) {
+                    RyMessageUtils.sendSender(player, "There is an update of <gradient:#8A2387:#E94057:#F27121:0>SimpleGems &ravailable!"
+                            + " Download the latest version here:\n&bhttps://github.com/RefracDevelopment/SimpleGems/releases/latest", false);
+                }
+            });
+        }
+    }
+
+    @EventHandler
+    public void onReload(PlayerCommandPreprocessEvent event) {
+        Player player = event.getPlayer();
+        String msg = event.getMessage().toLowerCase();
+
+        if (msg.startsWith("/reload") || msg.startsWith("/rl") || msg.startsWith("/bukkit:reload")) {
+            RyMessageUtils.sendPlayer(player, "&cUse of /reload is not recommended as it can cause issues often cases.");
+            RyMessageUtils.sendPlayer(player, "&cPlease restart your server when possible.");
+        }
+    }
+
+    @EventHandler
+    public void onQuit(PlayerQuitEvent event) {
+        Player player = event.getPlayer();
+        Profile profile = SimpleGems.getInstance().getProfileManager().getProfile(player.getUniqueId());
+
+        if (profile == null || profile.getData() == null)
+            return;
+
+        Tasks.runAsync(() -> profile.getData().save());
+
+        try {
+            MenuManager.remove(player);
+        } catch (MenuManagerNotSetupException e) {
+            RyMessageUtils.sendPluginError("THE MENU MANAGER HAS NOT BEEN CONFIGURED. CALL MENUMANAGER.SETUP()");
+        }
+    }
+
+    @EventHandler
+    public void onDeposit(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
+        Profile profile = SimpleGems.getInstance().getProfileManager().getProfile(player.getUniqueId());
+
+        if (profile == null || profile.getData() == null)
+            return;
+
+        ItemStack item = player.getInventory().getItemInMainHand();
+        ItemStack gemsItem;
+        ItemMeta itemMeta = item.getItemMeta();
+
+        if (itemMeta == null)
+            return;
+
+        double foundValue = NBT.get(item, nbt -> (Double) nbt.getDouble("gems-item-value"));
+
+        if (foundValue > 0) {
+            gemsItem = Methods.getGemsItem(player, foundValue);
+
+            if (gemsItem == null)
+                return;
+
+            if (!item.isSimilar(gemsItem))
+                return;
+
+            if (event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_AIR
+                    || event.getAction() == Action.PHYSICAL)
+                return;
+
+            StringPlaceholders placeholders = StringPlaceholders.builder()
+                    .addAll(Placeholders.setPlaceholders(player))
+                    .add("value", String.valueOf(foundValue))
+                    .add("gems", String.valueOf(foundValue))
+                    .add("gems_formatted", Methods.format(foundValue))
+                    .add("gems_decimal", Methods.formatDecimal(foundValue))
+                    .build();
+
+            if (item.getAmount() == 1)
+                player.getInventory().setItemInMainHand(null);
+            else
+                item.setAmount(item.getAmount() - 1);
+
+            profile.getData().getGems().incrementAmount(foundValue);
+
+            RyMessageUtils.sendPluginMessage(player, "gems-deposited", placeholders);
+        }
+    }
+
+    @EventHandler
+    public void onItemFrame(PlayerInteractEntityEvent event) {
+        if (!(event.getRightClicked() instanceof ItemFrame))
+            return;
+
+        Player player = event.getPlayer();
+
+        ItemStack item = player.getInventory().getItemInMainHand();
+        ItemMeta itemMeta = item.getItemMeta();
+
+        if (itemMeta == null)
+            return;
+
+        if (NBT.get(item, nbt -> (boolean) nbt.getBoolean("gems-item-value")))
+            event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onDropItem(PlayerDropItemEvent event) {
+        ItemStack item = event.getItemDrop().getItemStack();
+        ItemMeta itemMeta = item.getItemMeta();
+
+        if (itemMeta == null)
+            return;
+
+        if (NBT.get(item, nbt -> (boolean) nbt.getBoolean("gems-item-value")))
+            event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onServerReload(ServerCommandEvent event) {
+        String msg = event.getCommand().toLowerCase();
+
+        if (msg.startsWith("reload") || msg.startsWith("rl") || msg.startsWith("bukkit:reload")) {
+            RyMessageUtils.sendConsole(true, "&cUse of /reload is not recommended as it can cause issues often cases.");
+            RyMessageUtils.sendConsole(true, "&cPlease restart your server when possible.");
+        }
+    }
+}

@@ -1,0 +1,106 @@
+#   ___________                __           ________
+#  /   _____/__| _____ ______ |  |   ____  /  _____/  ____   _____   ______
+#  \_____  \|  |/     \\____ \|  | _/ __ \/   \  ____/ __ \ /     \ /  ___/
+#  /        \  |  | |  \  |_\ \  |__  ___/_    \_\  \  ___/_  | |  \\___ \
+# /_______  /__|__|_|  /   ___/____/\___  /\______  /\___  /__|_|  /____  \
+#         \/         \/|__|             \/        \/     \/      \/     \/
+#---------------------------------------------------------------------------
+# Placeholders:
+# %player% - Get the player's name
+# %gems% - Get the player's gems
+# %gems_formatted% - Get the player's formatted gems
+# %gems_decimal% - Get the player's decimal formatted gems
+# %arrowright% - Get right arrow for a message
+# %arrowleft% - Get left arrow for a message
+# %star% - Get a star for a message
+# %circle% - Get a circle for a message
+# PlaceholderAPI:
+# %simplegems_balance% - Get the unformatted gems amount (100000)
+# %simplegems_balance_formatted% - Get the formatted gems amount (100k)
+# %simplegems_balance_decimal% - Get the decimal formatted gems amount (100000.0)
+# Actions:
+# [console] - Send a console command
+# [message] - Send a message to the player
+# [menu] menu-name - Open a new category menu, replace menu-name with the category name
+# [close] - Close the current menu
+# [back] - Go back to the last menu
+#---------------------------------------------------------------------------
+
+# The locale to use in the /locale folder
+locale: "en_US"
+
+# This is used to allow players to start with
+# a defined amount of gems on first join
+# setting this to 0 will effectively disable it
+# Default: 100
+starting-gems: 100
+
+# Leaderboard update interval in seconds (Default is 1 hour)
+leaderboard-update-interval: 3600
+
+# Auto save player data interval in seconds (Default is 1 hour)
+auto-saving-interval: 3600
+
+# Should the "All player data has been saved" message be sent?
+broadcast-auto-saving: true
+
+# Choose your data saving type:
+# MYSQL/MARIADB - Database saving
+# SQLITE - Local Database saving
+# Default: SQLITE
+data-type: "SQLITE"
+
+# Either MySQL or MariaDB will work here.
+mysql:
+  # Default: 127.0.0.1
+  host: "127.0.0.1"
+  # Default: 3306
+  port: "3306"
+  # Default: SimpleGems
+  database: "gems"
+  # Default: root
+  username: "root"
+  # Default:
+  password: ""
+  # Default: false
+  use-ssl: false
+
+# Check for updates on join
+# This uses the /gems version command permission
+# permission: simplegems.command.version
+check-for-updates: true
+
+gems-top:
+  # This is used for viewing top players
+  title: "&e&lGems %arrow% &6&lTop %entries%"
+  # This format will be used for the command and placeholders
+  format: "&6&l%number%. &e%player% &7- &e%gems_formatted%"
+  top-entries: 10
+  # This is for the "Leaderboard has been updated" message
+  broadcast-message: true
+
+gems-balance:
+  - ""
+  - "&eYou currently have &f%gems_formatted%&e gems!"
+  - "&7&o(( &f&oTip&7&o: You can get gems by doing &e&oevents&7&o! ))"
+  - ""
+
+gems-item:
+  # This is used for withdrawing gems
+  # Default: DIAMOND
+  material: "DIAMOND"
+  # Default: 0
+  data: 0
+  # Default: false
+  customData: false
+  # Default: 0
+  customModelData: 0
+  # Default: false
+  itemsAdder: false
+  # Default: &e&lGems &7(Right Click)
+  name: "&e&lGems &7(Right Click)"
+  # Default: false
+  glow: false
+  lore:
+    - "&7&oRight click to redeem these gems you"
+    - "&7&ohave obtained through your journey"

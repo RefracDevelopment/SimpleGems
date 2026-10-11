@@ -1,0 +1,90 @@
+# en_US translation by Refrac
+
+# Plugin Message Prefix
+prefix: '<gradient:#8A2387:#E94057:#F27121:0>SimpleGems &8| &r'
+
+# Generic Messages
+no-permission: '&cYou don''t have permission for that!'
+no-console: '&cOnly players may execute this command.'
+unknown-command: 'Unknown command, use &d/%cmd%&f help for more info'
+invalid-player: '&cYou provided an invalid player.'
+leaderboard-update: '&eThe leaderboard has been updated.'
+invalid-gems: '&cThat player doesn''t have enough gems to take.'
+invalid-number: '&cYou provided an invalid or negative number.'
+invalid-category: '&cYou provided a shop category that doesn''t exist.'
+purchase-cancelled: '&cYou''re purchase has been cancelled.'
+purchase-confirmed: '&aYou''re purchase has been confirmed.'
+auto-saving: '&eAll player data has been saved.'
+
+# Kick Messages
+kick-messages-error: '&cERROR: Profile returned null.'
+
+# Base Command Message
+base-command-color: '&e'
+base-command-help: '&eUse &b/%cmd% help &efor command information.'
+
+# Gems Command Messages
+cant-pay-yourself: '&cYou can''t pay yourself.'
+not-enough-gems: '&cYou don''t have enough gems to buy %item%&c.'
+not-enough-pay: '&cYou don''t have enough gems to pay %target%.'
+not-enough-withdraw: '&cYou don''t have enough gems to withdraw.'
+shop-disabled: '&cThe shop is currently disabled.'
+gems-balance: '&d%target% &ehas &c%gems_formatted% &egems.'
+gems-paid: '&eYou paid &d%target% &c%gems_formatted% &egems.'
+gems-withdrawn: '&eYou''ve withdrawn &cx%gems_formatted% &egems.'
+gems-deposited: '&eYou''ve deposited &c%gems_formatted% &egems.'
+gems-received: '&d%player% &ejust paid you &c%gems_formatted% &egems.'
+gems-given: '&eYou''ve given &c%gems_formatted% &egems to &d%target%&e.'
+gems-gained: '&eYou''ve received &c%gems_formatted% &egems.'
+gems-taken: '&eYou''ve taken &c%gems_formatted% &egems from &d%target%&b.'
+gems-lost: '&eYou''ve lost &c%gems_formatted% &egems.'
+gems-set: '&eYou''ve set &d%target%''s &egems to &c%gems_formatted%&e.'
+gems-setted: '&eYour gems have been set to &c%gems_formatted%&e.'
+starting-gems-received: '&eYou''ve received &c%gems_formatted% &egems for being a new player!'
+no-leaderboard-data: '&cNo leaderboard data could be found.'
+
+# Help Command
+command-help-title: '&fAvailable Commands:'
+command-help-description: 'Displays the help menu.'
+command-help-list-description: '&8 - &d/%cmd% %subcmd% %args% &7- %desc%'
+command-help-list-description-no-args: '&8 - &d/%cmd% %subcmd% &7- %desc%'
+
+# Shop Command
+command-shop-description: 'Opens the gems shop.'
+
+# Deposit Command
+command-deposit-description: 'Allows you to deposit all gems in your inventory.'
+
+# Balance Command
+command-balance-description: 'Display either your or other players gems balance.'
+
+# Withdraw Command
+command-withdraw-description: 'Allows you to withdraw gems in item form.'
+
+# Pay Command
+command-pay-description: 'Allows you to pay someones'' gems.'
+
+# Give Command
+command-give-description: 'Allows you to give someones'' gems.'
+
+# Take Command
+command-take-description: 'Allows you to take away others'' gems.'
+
+# Set Command
+command-set-description: 'Allows you to set someones'' gems.'
+
+# Reload Command
+command-reload-description: 'Reloads the plugin'
+command-reload-success: '&aConfiguration and locale files were reloaded.'
+
+# Version Command
+command-version-description: 'Display the version info for SimpleGems'
+
+# Top Command
+command-top-description: 'Display the top leaderboard info for SimpleGems'
+
+# Reset Command
+command-reset-description: 'Allows you to reset a player''s data or the entire database'
+
+# Random Give Command
+command-random-give-description: 'Allows you to give someone a random amount of gems.'
