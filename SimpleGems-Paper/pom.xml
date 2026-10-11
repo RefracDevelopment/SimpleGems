@@ -7,11 +7,10 @@
   <parent>
     <artifactId>SimpleGems</artifactId>
     <groupId>me.refracdevelopment</groupId>
-    <version>1.0-SNAPSHOT</version>
+    <version>26.7.2</version>
   </parent>
 
   <artifactId>SimpleGems-Paper</artifactId>
-  <version>26.7.2</version>
   <packaging>jar</packaging>
 
   <name>SimpleGems-Paper</name>
@@ -22,16 +21,15 @@
   </properties>
 
   <build>
+    <finalName>SimpleGems-Paper-${project.version}</finalName>
     <defaultGoal>clean install</defaultGoal>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.16.0</version>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>3.5.1</version>
         <configuration>
-          <source>${java.version}</source>
-          <target>${java.version}</target>
-          <proc>full</proc>
+          <outputDirectory>../target/</outputDirectory>
         </configuration>
       </plugin>
       <plugin>
