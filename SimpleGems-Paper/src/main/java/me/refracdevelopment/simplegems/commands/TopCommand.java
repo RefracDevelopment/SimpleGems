@@ -45,7 +45,12 @@ public class TopCommand extends SubCommand {
             return;
         }
 
-        SimpleGems.getInstance().getLeaderboardManager().sendLeaderboard(player);
+        int page = 1;
+
+        if (args.length == 2)
+            page = Integer.parseInt(args[1]);
+
+        SimpleGems.getInstance().getLeaderboardManager().sendLeaderboard(player, page);
     }
 
     @Override

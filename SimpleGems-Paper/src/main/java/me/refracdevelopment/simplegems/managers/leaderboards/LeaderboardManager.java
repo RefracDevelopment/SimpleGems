@@ -65,7 +65,9 @@ public class LeaderboardManager {
         cachedMap = sortByValue(cachedMap);
     }
 
-    public void sendLeaderboard(Player player) {
+    public void sendLeaderboard(Player player, int page) {
+        page = page - 1;
+
         if (cachedMap.isEmpty()) {
             RyMessageUtils.sendPluginMessage(player, "no-leaderboard-data");
             return;
@@ -73,27 +75,49 @@ public class LeaderboardManager {
 
         RyMessageUtils.sendPlayer(player, SimpleGems.getInstance().getSettings().GEMS_TOP_TITLE
                 .replace("%entries%", String.valueOf(SimpleGems.getInstance().getSettings().GEMS_TOP_ENTRIES))
+                .replace("%page%", String.valueOf(page))
         );
 
         int placement = 1;
 
-        for (Map.Entry<String, Double> entry : cachedMap.entrySet()) {
-            String key = entry.getKey();
-            double gems = entry.getValue();
+        if (page >= 1 && cachedMap.size() >= 10 * page) {
+            for (Map.Entry<String, Double> entry : cachedMap.entrySet().stream().skip(10L * page).toList()) {
+                String key = entry.getKey();
+                long gems = Long.parseLong(String.valueOf(entry.getValue()));
 
-            if (placement == SimpleGems.getInstance().getSettings().GEMS_TOP_ENTRIES + 1)
-                break;
+                if (placement == SimpleGems.getInstance().getSettings().GEMS_TOP_ENTRIES + 1)
+                    break;
 
-            RyMessageUtils.sendPlayer(player, SimpleGems.getInstance().getSettings().GEMS_TOP_FORMAT
-                    .replace("%number%", String.valueOf(placement))
-                    .replace("%value%", String.valueOf(gems))
-                    .replace("%gems%", String.valueOf(gems))
-                    .replace("%gems_formatted%", Methods.format(gems))
-                    .replace("%gems_decimal%", Methods.formatDecimal(gems))
-                    .replace("%player%", key)
-            );
+                RyMessageUtils.sendPlayer(player, SimpleGems.getInstance().getSettings().GEMS_TOP_FORMAT
+                        .replace("%number%", String.valueOf(placement))
+                        .replace("%value%", String.valueOf(gems))
+                        .replace("%gems%", String.valueOf(gems))
+                        .replace("%gems_formatted%", Methods.format(gems))
+                        .replace("%gems_decimal%", Methods.formatDecimal(gems))
+                        .replace("%player%", key)
+                );
 
-            placement++;
+                placement++;
+            }
+        } else {
+            for (Map.Entry<String, Double> entry : cachedMap.entrySet()) {
+                String key = entry.getKey();
+                long gems = Long.parseLong(String.valueOf(entry.getValue()));
+
+                if (placement == SimpleGems.getInstance().getSettings().GEMS_TOP_ENTRIES + 1)
+                    break;
+
+                RyMessageUtils.sendPlayer(player, SimpleGems.getInstance().getSettings().GEMS_TOP_FORMAT
+                        .replace("%number%", String.valueOf(placement))
+                        .replace("%value%", String.valueOf(gems))
+                        .replace("%gems%", String.valueOf(gems))
+                        .replace("%gems_formatted%", Methods.format(gems))
+                        .replace("%gems_decimal%", Methods.formatDecimal(gems))
+                        .replace("%player%", key)
+                );
+
+                placement++;
+            }
         }
     }
 

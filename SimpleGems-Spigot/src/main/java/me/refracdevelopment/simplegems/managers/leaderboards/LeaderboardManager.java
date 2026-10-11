@@ -75,6 +75,7 @@ public class LeaderboardManager {
 
         RyMessageUtils.sendPlayer(player, SimpleGems.getInstance().getSettings().GEMS_TOP_TITLE
                 .replace("%entries%", String.valueOf(SimpleGems.getInstance().getSettings().GEMS_TOP_ENTRIES))
+                .replace("%page%", String.valueOf(page))
         );
 
         int placement = 1;
