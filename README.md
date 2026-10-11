@@ -42,7 +42,7 @@ depend:
 softdepend:
   - SimpleGems
 ```
-You can use this to access all methods found in the [SimpleGemsAPI](https://github.com/RefracDevelopment/SimpleGems/blob/main/src/main/java/me/refracdevelopment/simplegems/api/SimpleGemsAPI.java)
+You can use this to access all methods found in the [SimpleGemsAPI](https://github.com/RefracDevelopment/SimpleGems/blob/main/SimpleGems-Spigot/src/main/java/me/refracdevelopment/simplegems/api/SimpleGemsAPI.java)
 ```JAVA
 SimpleGemsAPI gemsAPI = SimpleGems.getInstance().getGemsAPI();
 ```
