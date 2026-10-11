@@ -66,7 +66,7 @@ public class RandomGiveCommand extends SubCommand {
                 max = Integer.parseInt(args[3]);
                 amount = ThreadLocalRandom.current().nextInt(min, max);
             } catch (NumberFormatException exception) {
-                RyMessageUtils.sendSender(commandSender, "invalid-number");
+                RyMessageUtils.sendPluginMessage(commandSender, "invalid-number", Placeholders.setPlaceholders(commandSender));
                 return;
             }
 
@@ -103,7 +103,7 @@ public class RandomGiveCommand extends SubCommand {
                 max = Integer.parseInt(args[3]);
                 amount = ThreadLocalRandom.current().nextInt(min, max);
             } catch (NumberFormatException exception) {
-                RyMessageUtils.sendSender(commandSender, "invalid-number");
+                RyMessageUtils.sendPluginMessage(commandSender, "invalid-number", Placeholders.setPlaceholders(commandSender));
                 return;
             }
 
