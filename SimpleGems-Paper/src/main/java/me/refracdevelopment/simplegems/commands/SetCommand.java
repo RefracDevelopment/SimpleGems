@@ -72,7 +72,7 @@ public class SetCommand extends SubCommand {
                 return;
             }
 
-            if (amount < 1) {
+            if (amount < 0) {
                 RyMessageUtils.sendPluginMessage(commandSender, "invalid-number", Placeholders.setPlaceholders(commandSender));
                 return;
             }
@@ -105,7 +105,7 @@ public class SetCommand extends SubCommand {
                 return;
             }
 
-            if (amount < 1) {
+            if (amount < 0) {
                 RyMessageUtils.sendPluginMessage(commandSender, "invalid-number", Placeholders.setPlaceholders(commandSender));
                 return;
             }
