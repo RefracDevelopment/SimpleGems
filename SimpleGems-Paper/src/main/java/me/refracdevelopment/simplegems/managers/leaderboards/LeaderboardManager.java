@@ -80,12 +80,14 @@ public class LeaderboardManager {
 
         int placement = 1;
 
-        if (page >= 1 && cachedMap.size() >= 10 * page) {
-            for (Map.Entry<String, Double> entry : cachedMap.entrySet().stream().skip(10L * page).toList()) {
+        int entries = (SimpleGems.getInstance().getSettings().GEMS_TOP_ENTRIES + 1);
+
+        if (page >= 1 && cachedMap.size() >= (long)entries * page) {
+            for (Map.Entry<String, Double> entry : cachedMap.entrySet().stream().skip((long)entries * page).toList()) {
                 String key = entry.getKey();
                 long gems = Long.parseLong(String.valueOf(entry.getValue()));
 
-                if (placement == SimpleGems.getInstance().getSettings().GEMS_TOP_ENTRIES + 1)
+                if (placement == entries)
                     break;
 
                 RyMessageUtils.sendPlayer(player, SimpleGems.getInstance().getSettings().GEMS_TOP_FORMAT
@@ -104,7 +106,7 @@ public class LeaderboardManager {
                 String key = entry.getKey();
                 long gems = Long.parseLong(String.valueOf(entry.getValue()));
 
-                if (placement == SimpleGems.getInstance().getSettings().GEMS_TOP_ENTRIES + 1)
+                if (placement == entries)
                     break;
 
                 RyMessageUtils.sendPlayer(player, SimpleGems.getInstance().getSettings().GEMS_TOP_FORMAT

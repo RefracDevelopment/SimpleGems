@@ -79,16 +79,15 @@ public class Methods {
             return;
         }
 
-        StringPlaceholders placeholders = StringPlaceholders.builder()
+        StringPlaceholders.Builder placeholders = StringPlaceholders.builder()
                 .addAll(Placeholders.setPlaceholders(target))
                 .add("target", target.getName())
                 .add("gems", String.valueOf(amount))
                 .add("gems_formatted", format(amount))
-                .add("gems_decimal", formatDecimal(amount))
-                .build();
+                .add("gems_decimal", formatDecimal(amount));
 
         if (!profile.getGems().hasAmount(amount)) {
-            RyMessageUtils.sendPluginMessage(player, "not-enough-pay", placeholders);
+            RyMessageUtils.sendPluginMessage(player, "not-enough-pay", placeholders.build());
             return;
         }
 
@@ -98,12 +97,12 @@ public class Methods {
         Tasks.runAsync(profile::save);
         Tasks.runAsync(targetProfile::save);
 
-        RyMessageUtils.sendPluginMessage(player, "gems-paid", placeholders);
+        RyMessageUtils.sendPluginMessage(player, "gems-paid", placeholders.build());
 
         if (silent)
             return;
 
-        RyMessageUtils.sendPluginMessage(target, "gems-received", placeholders);
+        RyMessageUtils.sendPluginMessage(target, "gems-received", placeholders.add("player", player.getName()).build());
     }
 
     public void payOfflineGems(Player player, OfflinePlayer target, double amount) {
